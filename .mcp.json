@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "xds": {
+      "type": "url",
+      "url": "https://astryx.atmeta.com/mcp"
+    },
+    "playwright": { "command": "npx", "args": ["@playwright/mcp@latest"] }
+  }
+}
