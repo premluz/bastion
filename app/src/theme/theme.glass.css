@@ -1,0 +1,57 @@
+/* glass ◆ — suspended panes, additive light, unhurried. Legibility never traded for translucency. */
+[data-theme='glass'] {
+  /* Pins Astryx's own light-dark() variables to dark, same reasoning as theme.default.css. */
+  color-scheme: dark;
+
+  /* Surfaces (same L-ramp, alpha channel active, blur on) */
+  --surface-0: transparent; /* canvas shows through — app supplies deep backdrop */
+  --surface-1: oklch(.19 .015 250 / .40);
+  --surface-2: oklch(.22 .015 250 / .55);
+  --surface-3: oklch(.26 .015 250 / .70);
+
+  /* Ink — identical trio to ops-dark, legibility constant across themes */
+  --ink-primary: oklch(.93 .01 250);
+  --ink-secondary: oklch(.70 .01 250);
+  --ink-muted: oklch(.50 .01 250);
+
+  /* Accents — identical values to ops-dark, plus a derived glow (signal only, never on ink) */
+  --accent-signal: oklch(.78 .14 225);
+  --accent-alert: oklch(.68 .19 25);
+  --accent-warn: oklch(.78 .16 75);
+  --accent-ok: oklch(.76 .15 165);
+
+  /* Structure */
+  --edge: oklch(1 0 0 / .10);
+  --edge-highlight: oklch(1 0 0 / .25); /* top edge only, 1px — refracted light */
+  --surface-blur: 24px;
+  --glow: 0 0 12px oklch(from var(--accent-signal) l c h / .35);
+  --scrim: oklch(.13 .015 250 / .35); /* raise alpha here, nothing else, if a contrast audit fails */
+
+  /* Motion binding */
+  --motion-enter-duration: var(--duration-320);
+  --motion-enter-ease: var(--ease-float);
+  --motion-exit-duration: var(--duration-200);
+  --motion-exit-ease: var(--ease-decel);
+  --motion-assembly-stagger: 90ms;
+
+  /* Astryx cascade bridge — identical target set to theme.default.css; see astryx-bridge.md */
+  --color-background-body: var(--surface-0);
+  --color-background-surface: var(--surface-1);
+  --color-background-card: var(--surface-2);
+  --color-background-popover: var(--surface-3);
+  --color-text-primary: var(--ink-primary);
+  --color-text-secondary: var(--ink-secondary);
+  --color-text-disabled: var(--ink-muted);
+  --color-icon-primary: var(--ink-primary);
+  --color-icon-secondary: var(--ink-secondary);
+  --color-icon-disabled: var(--ink-muted);
+  --color-accent: var(--accent-signal);
+  --color-text-accent: var(--accent-signal);
+  --color-icon-accent: var(--accent-signal);
+  --color-error: var(--accent-alert);
+  --color-icon-red: var(--accent-alert);
+  --color-warning: var(--accent-warn);
+  --color-success: var(--accent-ok);
+  --color-border: var(--edge);
+  --color-shadow: oklch(0 0 0 / .4);
+}

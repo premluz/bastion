@@ -11,7 +11,7 @@ export default defineConfig({
     baseURL: 'http://localhost:6006',
   },
   webServer: {
-    command: 'pnpm storybook -- --ci --quiet',
+    command: 'pnpm exec storybook dev -c .storybook -p 6006 --ci --quiet',
     url: 'http://localhost:6006',
     reuseExistingServer: true,
     timeout: 60_000,

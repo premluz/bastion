@@ -1,0 +1,39 @@
+/* default — pure pass-through. Semantic tokens resolve TO Astryx's own cascade
+   variables, inheriting Astryx's own light-dark() behavior. No Meridian-authored
+   color here — that's what makes this "default" rather than a fourth ◆ theme.
+   Full mapping log in astryx-bridge.md. */
+:root {
+  /* Surfaces */
+  --surface-0: var(--color-background-body);
+  --surface-1: var(--color-background-surface);
+  --surface-2: var(--color-background-card);
+  --surface-3: var(--color-background-popover);
+
+  /* Ink */
+  --ink-primary: var(--color-text-primary);
+  --ink-secondary: var(--color-text-secondary);
+  --ink-muted: var(--color-text-disabled);
+
+  /* Accents */
+  --accent-signal: var(--color-accent);
+  --accent-alert: var(--color-error);
+  --accent-warn: var(--color-warning);
+  --accent-ok: var(--color-success);
+
+  /* Structure — no Astryx equivalent for these; neutral/off, not a color decision */
+  --edge: var(--color-border);
+  --edge-highlight: transparent;
+  --surface-blur: 0px;
+  --surface-opacity: 1;
+  --glow: none;
+  --scrim: transparent;
+}
+
+/* Canvas — surface-0/ink-primary paint the page itself; nothing else in the
+   stack does. Lives here (unconditional) rather than per-theme, since var()
+   resolves late: whichever theme is active supplies the actual color. */
+:where(html, body) {
+  background: var(--surface-0);
+  color: var(--ink-primary);
+  min-height: 100%;
+}

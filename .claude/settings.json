@@ -1,7 +1,43 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm search *)"
+      "Bash(pnpm exec *)",
+      "Bash(pnpm install *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(read -r f)",
+      "Bash(node -e ' *)",
+      "Bash(grep -rinE \"#[0-9a-fA-F]{3,8}\\\\b|rgba?\\\\\\(|hsla?\\\\\\(\" app/src tests .storybook --include=\"*.ts\" --include=\"*.tsx\" --include=\"*.css\")",
+      "Bash(pkill -9 -f \"storybook\")",
+      "Bash(lsof -ti:6006)",
+      "Bash(xargs kill -9)",
+      "Bash(pnpm storybook *)",
+      "Bash(timeout 8 pnpm exec storybook dev -c .storybook -p 6006 --ci --quiet)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>console.log\\(Object.keys\\(JSON.parse\\(d\\).scripts\\).join\\('\\\\n'\\)\\)\\)\")",
+      "Bash(cd /Users/przemek/Meridian *)",
+      "Read(//private/tmp/scratch-shots/**)",
+      "Read(//tmp/scratch-shots/**)",
+      "Bash(echo \"app exit: $?\")",
+      "Bash(echo \"root exit: $?\")",
+      "Bash(rsync -a --exclude node_modules --exclude .git --exclude dist --exclude storybook-static --exclude test-results --exclude playwright-report --exclude *.tsbuildinfo --exclude app/vite.config.js --exclude app/vite.config.d.ts --exclude .DS_Store /Users/przemek/Meridian/ /private/tmp/claude-501/-Users-przemek-Meridian/049a792d-a27f-441b-ac88-3b1121650943/scratchpad/instantiation-test/renamed-canvas/)",
+      "Bash(echo \"=== exit: $? ===\")",
+      "Read(//tmp/**)",
+      "Read(//private/tmp/**)",
+      "Bash(pkill -9 -f \"vite\")",
+      "Bash(lsof -ti:5173)",
+      "Bash(rm -rf __TRACKED_VAR__/instantiation-test)",
+      "Bash(rm -f /tmp/clone-*.log /tmp/clone-render-check.png)",
+      "Read(//Users/przemek/.claude/**)",
+      "Bash(find / -iname \"*merlin-theme-token*\" -not -path \"*/node_modules/*\")",
+      "Read(//Users/przemek/**)",
+      "Bash(ls -la ~/ 2>/dev/null | grep -iE \"merlin|holding|phase\" *)",
+      "Read(//Users/przemek/Documents/**)",
+      "Read(//Users/przemek/Desktop/**)",
+      "Read(//Users/przemek/.claude/skills/**)",
+      "Bash(git add *)"
+    ],
+    "additionalDirectories": [
+      "/private/tmp/scratch-shots",
+      "/Users/przemek/.claude"
     ]
   }
 }

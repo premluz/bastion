@@ -1,0 +1,61 @@
+/* ops-dark ◆ — matte, dense, precise. Nothing floats, nothing glows except signal states. */
+[data-theme='ops-dark'] {
+  /* Scheme-locked: pins Astryx's own light-dark() variables (everything we don't
+     bridge) to dark, regardless of the astryxScheme toggle — that toggle only
+     applies under theme=default. See astryx-bridge.md. */
+  color-scheme: dark;
+
+  /* Surfaces (L-ramp, C .015, H 250) */
+  --surface-0: oklch(.16 .015 250);
+  --surface-1: oklch(.19 .015 250);
+  --surface-2: oklch(.22 .015 250);
+  --surface-3: oklch(.26 .015 250);
+
+  /* Ink (L-ramp, C .01, H 250) */
+  --ink-primary: oklch(.93 .01 250);
+  --ink-secondary: oklch(.70 .01 250);
+  --ink-muted: oklch(.50 .01 250);
+
+  /* Accents — equal perceptual weight, one signal hue system-wide */
+  --accent-signal: oklch(.78 .14 225);
+  --accent-alert: oklch(.68 .19 25);
+  --accent-warn: oklch(.78 .16 75);
+  --accent-ok: oklch(.76 .15 165);
+
+  /* Structure */
+  --edge: oklch(1 0 0 / .08);
+  --edge-highlight: transparent;
+  --surface-blur: 0px;
+  --surface-opacity: 1;
+  --glow: none;
+  --scrim: transparent;
+
+  /* Motion binding */
+  --motion-enter-duration: var(--duration-200);
+  --motion-enter-ease: var(--ease-standard);
+  --motion-exit-duration: var(--duration-120);
+  --motion-exit-ease: var(--ease-standard);
+  --motion-assembly-stagger: 60ms;
+
+  /* Astryx cascade bridge (semantic → Astryx, i.e. Astryx's own components pick up
+     our colors too) — full mapping log in astryx-bridge.md */
+  --color-background-body: var(--surface-0);
+  --color-background-surface: var(--surface-1);
+  --color-background-card: var(--surface-2);
+  --color-background-popover: var(--surface-3);
+  --color-text-primary: var(--ink-primary);
+  --color-text-secondary: var(--ink-secondary);
+  --color-text-disabled: var(--ink-muted);
+  --color-icon-primary: var(--ink-primary);
+  --color-icon-secondary: var(--ink-secondary);
+  --color-icon-disabled: var(--ink-muted);
+  --color-accent: var(--accent-signal);
+  --color-text-accent: var(--accent-signal);
+  --color-icon-accent: var(--accent-signal);
+  --color-error: var(--accent-alert);
+  --color-icon-red: var(--accent-alert);
+  --color-warning: var(--accent-warn);
+  --color-success: var(--accent-ok);
+  --color-border: var(--edge);
+  --color-shadow: oklch(0 0 0 / .4);
+}

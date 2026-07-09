@@ -30,7 +30,7 @@ Meridian/
 ```
 
 ## 4. Stack (closed)
-react, react-dom · @astryxdesign/core + two stock theme packages · dev: typescript, vite, @vitejs/plugin-react, vitest, storybook, @storybook/react-vite, @storybook/test-runner, @playwright/test, @astryxdesign/cli. Nothing else.
+react, react-dom · @astryxdesign/core + two stock theme packages · dev: typescript, vite, @vitejs/plugin-react, vitest, storybook, @storybook/react-vite, @playwright/test, @astryxdesign/cli. Nothing else.
 
 ## 5. Token & theme architecture
 Three tiers, strictly cascading:
@@ -38,7 +38,7 @@ Three tiers, strictly cascading:
 2. **Semantic** (theme files): surfaces, ink, accents, edges, blur/opacity/glow/scrim — full set and values in tokens-spec.md. Components consume semantic tokens ONLY, never Astryx variables directly.
 3. **Component tokens** last resort; added to every registered theme file in the same change.
 
-`theme.default.css` maps every semantic token to the active Astryx cascade variable; log each mapping in astryx-bridge.md. Theme switching via `data-theme` on the root, live, no remount. Adding a theme = adding one mapping file. If any component would need to change to support a new theme, that is an architecture defect — report it.
+`theme.default.css` maps every semantic token to the active Astryx cascade variable (pass-through: zero Meridian-authored color in this file); log each mapping in astryx-bridge.md. Theme switching via `data-theme` on the root, live, no remount. Adding a theme = adding one mapping file. If any component would need to change to support a new theme, that is an architecture defect — report it.
 
 ## 6. Phases
 **Phase S — Environment setup. PREM ONLY.** Toolchain, editor, .mcp.json, governance files. You verify prerequisites and report gaps; never install global tooling.
