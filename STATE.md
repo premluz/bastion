@@ -17,7 +17,7 @@ Append-only session memory. Sonnet: read at session start, append at session end
 
 ## Raw learnings
 <!-- Sonnet: append here mid-session when something worth remembering surfaces but hasn't earned a rule yet. Prem: periodic promotion review clears this into Approved decisions (promote/keep/delete), same shape as 2026-07-09's first cycle. Empty after a review — that's expected, not a gap. -->
-(empty — cleared by the 2026-07-09 promotion review above)
+- 2026-07-09: A manual check documented as process must become a script in the same change — docs describing human discipline rot; docs describing scripts don't. (Surfaced when the README claimed "grep before committing" for the hex/rgb/hsl ban, which had been a manual check I ran by hand every session rather than an enforced gate — fixed same-change by adding `pnpm lint:tokens`, not left as a documented intention.)
 
 ## Pending approval
 <!-- Sonnet proposals awaiting Prem -->
