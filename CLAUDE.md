@@ -251,6 +251,19 @@ Scaffold `shell-side-nav` to scratch, read fully, cite every adoption by file+li
 *WO-2 — Section content + routing.* Entities / Sources / Watchlist / History panes per the section specs above (universe-driven; fictional statuses authored in universe, logged as extrapolation; Sources' citation counter computed live from turns). ROUTING LAW (add to node-vocabulary.md Shell section verbatim): "Content homes by kind: investigations always land in the artifact pane, replacing in place; index panes are stable and never replaced by clicks within them; the transcript never closes." Watch actions on entity-header and index rows → `watchlistStore`. Empty states designed, session-scoped stated in-line (principle 6).
 *Gate:* entity clicked in a chart → investigation lands in artifact pane while the originating pane stays open · rail toggles verified all panes · three themes · report, STOP.
 
+**Phase 8H — Pages architecture (Shell v3).** Supersedes Phase 8G WO-2's pane-based nav — the pane CONTENT built there (Entities, Sources, Watchlist, History) is reused as page content, nothing thrown away, everything rehomed. Two work orders.
+
+*WO-1 — Nav, pages, artifact stack.*
+1. `pageStore` (no router dependency — a page enum in the store, optional `location.hash` sync). Left sidebar becomes main nav per mockup: New investigation · Investigations · Entities · Watchlist · Data Sources; Recent list below (last N turns, view-all → Investigations page, filter control); bottom: identity chip (static) + notifications bell (badge = unseen alert turns, click focuses Monitor; hidden at zero).
+2. Pages reuse 8G pane content 1:1: Investigations (module-grouped + flat toggle, absorbing History), Entities, Watchlist. Data Sources page ships as the current Sources content (WO-2 upgrades it). Workflows nav entry does NOT ship until Phase 11 does — no dead nav.
+3. Home = the investigation surface (transcript + composer). Top bar: current investigation name, left; artifact control, right.
+4. Right side: Artifacts is the ONLY pane. Control = icon + count, hidden until the first artifact. Stack: list (title · one-line description · version chip · status; current marked active) → select → artifact detail with Back-to-list → resizable as today. Versions: session lineage — refine turns version their parent (lineage key = scene family; display grouping only, no persistence). All opens still flow through the artifactStore→openPane subscription.
+5. Routing law amended in node-vocabulary.md: "Left nav = places; the artifact pane = the one overlay; investigations always land there; pages never host scene renders."
+*Gate:* every nav destination live in 3 themes · multi-turn run shows correct lineage grouping · alert flow end-to-end (push → bell badge → Monitor focus → artifact) · `test:visual` once · report, STOP.
+
+*WO-2 — Data Sources page.* Runs after WO-1's gate. Connected sources (the seven, status/last-sync/cited-in-N) + a public catalog section (5–6 plausible fictional public feeds, authored in universe, logged) + a mock connect flow (select → permissions summary → confirm → appears as connected, session-scoped) — enterprise-integration design surface, UI-complete, wired to nothing real, stated honestly in its empty state.
+*Gate:* connect flow walked live, three themes, report, STOP.
+
 **Phase 9 — MCP server.** `mcp-server` package: `list_scenes`, `get_scene(id)`, `query_data(sceneId, key)`, `push_scene(scene)` (Zod-validated, broadcast over SSE); app `liveChannel` subscribes, pushed scene triggers trail + assembly as if typed.
 *Gate:* Claude connected to the MCP server pushes a novel valid scene and it materializes in the running app; invalid push returns a structured error and the app is untouched.
 

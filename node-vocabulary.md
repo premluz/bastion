@@ -188,51 +188,75 @@ artifact; auto-opening on trail completion is a configurable default
 (app/src/config.ts, artifacts.autoOpen), not law — turning it off must never
 change what a card click does.
 
-Workbench (Phase 8G): the shell is a VS Code-model workbench — a fixed icon
-rail toggles named panes open/collapsed, each independently resizable, the
-transcript itself never one of them (it cannot close). Routing law, binding
-on every pane and every future one: "Content homes by kind: investigations
-always land in the artifact pane, replacing in place; index panes are stable
-and never replaced by clicks within them; the transcript never closes."
-Entities, Sources, Watchlist, and History are the index panes — each a
-stable, universe- or session-derived view that never itself changes content
-in response to a click inside it; clicking an entity anywhere (a chart, an
-index row, an entity-header) always starts a new investigation and always
-lands it in the artifact pane, leaving whichever pane the click originated
-in exactly as it was. Entities lists every universe entity with a Watch
-action and, where an investigation intent exists, an Investigate action.
-Sources lists every universe source with an honest "cited in N
-investigations this session" counter computed live from turns — zero, never
-seeded, until a real trail cites it. Watchlist holds seeded entities plus
-anything watched this session (from an entity-header, an Entities row, or
-automatically once an alert turn lands) — session-scoped, stated in the
-empty state's own copy, not a modal. History is the session's full turn
-list, newest first, independent of Sidebar's module grouping — opening a
-past turn from here uses the same artifact-reopen path a Sidebar row or an
-ArtifactCard click already does.
+Pages architecture (Phase 8H, supersedes Phase 8G's workbench/pane-rail
+model — the index-pane CONTENT survives, rehomed as page content; the
+rail-of-toggleable-panes mechanism does not). Routing law, amended and
+binding on every page and every future one: "Left nav = places; the
+artifact pane = the one overlay; investigations always land there; pages
+never host scene renders." A scene is rendered in exactly one place in
+this entire app: the artifact stack. No page ever mounts SceneRenderer or
+Canvas directly — a page that wants to show what an investigation found
+links to it (an Investigate action, a stack row), it never reproduces it
+inline.
 
-Sidebar is investigation navigation, not a project browser — it reads the
-session, it never becomes one. Groups are Merlin's modules (Discover,
-Research, Investigate, Monitor, Portfolio, in that fixed order), never
-projects or workspaces; a module's group only exists once it has a turn in
-it. Monitor is not special-cased beyond that same rule — it renders the
-moment it has a turn, which in practice means the moment an unprompted
-MCP-pushed alert (Phase 9) has landed, since nothing else currently resolves
-into that module. Portfolio is a forward reference (no scene targets it yet,
-same precedent as entity-graph/geo-panel before Phase 7) — it will render
-once something does, no code change required. A row's status dot names what
-happened to that turn: answered (a normal resolved investigation), alert (a
-Monitor-module turn), no match (unresolved) — never color alone, every dot
-carries an accessible label. Clicking a row opens that turn's artifact, the
-same action a card click already performs; a no-match row has no artifact to
-open and is rendered disabled, not silently dead. Deliberate deviation from
-the two-state module list above, written in rather than left undocumented:
-no-match turns don't fit any module by definition, so they collect in their
-own always-last "Unresolved" group instead of being grouped, or dropped.
-"New investigation" resets the session outright — no confirm dialog, since
-nothing persists to lose by design; the reassurance that this is safe lives
-in the empty state's own copy (LandingState), not a modal at the moment of
-the click.
+Left nav (Sidebar) is now the app's primary navigation, not a
+turn-history list — it names PLACES: New investigation (resets the
+session outright, including the artifact stack — no confirm dialog,
+nothing persists to lose by design, the reassurance lives in the empty
+state's own copy, not a modal), then Investigations / Entities /
+Watchlist / Data Sources, then a Recent list (the last few turns, a
+filter control, "view all" into the Investigations page), then a static
+identity chip and a notification bell (badge = alert-module turns whose
+artifact has never been opened; hidden at zero; click jumps to
+Investigations, module-grouped view, scrolled to Monitor). A Workflows
+nav entry is deliberately absent until Phase 11 ships it — no nav entry
+points at nothing.
+
+Home is the investigation surface — transcript (oldest first, user right
+/ agent left, unchanged from the v2 model) plus the composer, plus its
+own top bar: the current artifact's title on the left, the artifact
+stack's open/count control on the right (hidden until the first artifact
+exists). Every other page (Investigations, Entities, Watchlist, Data
+Sources) replaces Home's own content area entirely while reusing the
+exact same left nav and the exact same artifact stack on the right — the
+stack is global, not Home-local; investigating an entity from the
+Entities page still lands its result in the stack without leaving that
+page.
+
+The artifact stack is the one place a scene ever renders. It has two
+sub-views: a list (every artifact this session — title, one-line origin,
+a version chip, a status tag; the currently active one marked) and a
+detail view (the scene itself, exactly as ArtifactPanel rendered it,
+"Back to list" instead of a close button — closing the whole stack is
+the top-bar control's job, not a per-artifact action). Opening any
+artifact — autoOpen, a stack row, an Investigate action anywhere, a
+pushed alert — always switches the stack to detail on that artifact;
+every one of those paths is the same store action, never a
+parallel mechanism. Versions are session lineage, not persistence: a
+refine turn shares its parent's scene family (today: a scene id's
+`-refine` suffix) and versions within that family are numbered by turn
+order — display grouping only, computed live, nothing is written to
+disk.
+
+Investigations absorbs the old Sidebar/History content verbatim, offered
+as two views of the same data: module-grouped (Discover, Research,
+Investigate, Monitor, Portfolio, fixed order, a group exists only once
+it has a turn — Monitor renders the moment an alert lands, Portfolio is
+a forward reference same as entity-graph/geo-panel before Phase 7) and
+flat (every turn, newest first). A row's status dot names what happened
+to that turn: answered, alert (Monitor-module), no match — never color
+alone. No-match turns collect in their own always-last "Unresolved"
+group in module view (they don't fit any module by definition) and sit
+inline in flat view. Entities lists every universe entity with a Watch
+action and, where an investigation intent exists, an Investigate action.
+Watchlist holds seeded entities (fictional statuses authored in the
+universe) plus anything watched this session — from an entity-header, an
+Entities row, or automatically once an alert turn lands — session-scoped,
+stated in its own empty state, not a modal. Data Sources (Phase 8H WO-1)
+ships as Sources' content unchanged: every universe source with an
+honest "cited in N investigations this session" counter, zero until a
+real trail cites it, never seeded — WO-2 adds a public-catalog section
+and a mock connect flow on top, not a replacement of this.
 
 ## Trail vocabulary (Phase 6 — engine components, NOT registry nodes)
 The reasoning surface is streamed by the trail player; scenes cannot lay it out.
