@@ -1,0 +1,30 @@
+{
+  "MarketTape": {
+    "name": "MarketTape",
+    "description": "Real-time price, volume, and order-flow feed for all listed assets."
+  },
+  "IssuerRegistry": {
+    "name": "IssuerRegistry",
+    "description": "Issuer filings, prospectuses, and KYC/audit status."
+  },
+  "LedgerWatch": {
+    "name": "LedgerWatch",
+    "description": "On-chain analytics: wallet clusters, transfer patterns, settlement events."
+  },
+  "CompliancePulse": {
+    "name": "CompliancePulse",
+    "description": "Regulatory watchlists, jurisdiction rules, sanction screens."
+  },
+  "CustodyGrid": {
+    "name": "CustodyGrid",
+    "description": "Custody balances, settlement confirmations, failed-delivery log."
+  },
+  "RiskLens": {
+    "name": "RiskLens",
+    "description": "Internal risk models: volatility, concentration, counterparty scores."
+  },
+  "PortfolioAtlas": {
+    "name": "PortfolioAtlas",
+    "description": "Positions, mandates, exposures, performance, historical decisions."
+  }
+}

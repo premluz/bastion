@@ -1,0 +1,171 @@
+{
+  "id": "asset-discovery-refine",
+  "title": "Conservative Screen, Refined — EU-Regulated, ≥€50M, Distribution History",
+  "intents": [
+    "only eu regulated minimum 50 million",
+    "narrow to eu regulated assets over 50m",
+    "add distribution history",
+    "refine to eu regulated 50m minimum",
+    "show distribution history for these",
+    "eu regulated only, 50 million minimum",
+    "narrow the results"
+  ],
+  "thinking": [
+    {
+      "id": "plan",
+      "kind": "plan",
+      "label": "Applying refined filters — EU jurisdiction, €50M minimum, distribution history",
+      "durationMs": 850
+    },
+    {
+      "id": "search",
+      "kind": "search",
+      "label": "Re-scanning candidates against jurisdiction and size constraints",
+      "sources": [{ "name": "CompliancePulse", "ref": "jurisdiction-rules" }],
+      "durationMs": 1150
+    },
+    {
+      "id": "retrieve",
+      "kind": "retrieve",
+      "label": "Pulling distribution history for surviving candidates",
+      "sources": [{ "name": "IssuerRegistry", "ref": "distribution-filings" }],
+      "durationMs": 1450
+    },
+    {
+      "id": "synthesize",
+      "kind": "synthesize",
+      "label": "Confirming Aldergate and Helios clear the refined mandate; Vantara excluded on jurisdiction",
+      "confidence": 0.79,
+      "durationMs": 1550
+    },
+    {
+      "id": "verify",
+      "kind": "verify",
+      "label": "Cross-checking distribution continuity against IssuerRegistry filings",
+      "confidence": 0.83,
+      "durationMs": 1050
+    }
+  ],
+  "data": {
+    "refined-assets-table": {
+      "kind": "table",
+      "columns": [
+        { "key": "asset", "label": "Asset", "type": "entity" },
+        { "key": "yield", "label": "Yield", "type": "string" },
+        { "key": "jurisdiction", "label": "Jurisdiction", "type": "string" },
+        { "key": "outstanding", "label": "Outstanding", "type": "string" }
+      ],
+      "rows": [
+        { "asset": { "entityId": "aldergate-estates", "label": "Aldergate Estates" }, "yield": "7.2%", "jurisdiction": "Germany", "outstanding": "€62M" },
+        { "asset": "Helios Yield Fund", "yield": "9.1%", "jurisdiction": "Luxembourg", "outstanding": "€98M" }
+      ]
+    },
+    "aldergate-estates-distribution": { "$ref": "aldergate-estates-distribution-history" },
+    "helios-yield-fund-distribution": {
+      "kind": "table",
+      "columns": [
+        { "key": "quarter", "label": "Quarter", "type": "string" },
+        { "key": "amount", "label": "Distribution", "type": "string" },
+        { "key": "status", "label": "Status", "type": "string" }
+      ],
+      "rows": [
+        { "quarter": "Q1 2025", "amount": "€2.05M", "status": "Paid" },
+        { "quarter": "Q2 2025", "amount": "€2.30M", "status": "Paid" },
+        { "quarter": "Q3 2025", "amount": "€2.10M", "status": "Paid" },
+        { "quarter": "Q4 2025", "amount": "€2.45M", "status": "Paid" },
+        { "quarter": "Q1 2026", "amount": "€2.20M", "status": "Paid" },
+        { "quarter": "Q2 2026", "amount": "€2.23M", "status": "Paid" }
+      ]
+    },
+    "eu-jurisdiction-map": {
+      "kind": "geo",
+      "points": [
+        { "id": "aldergate-estates", "label": "Aldergate Estates — Germany", "x": 0.58, "y": 0.42, "kind": "eu" },
+        { "id": "helios-yield-fund", "label": "Helios Yield Fund — Luxembourg", "x": 0.5, "y": 0.46, "kind": "eu" },
+        { "id": "vantara-metals", "label": "Vantara Metals — Switzerland", "x": 0.54, "y": 0.56, "kind": "excluded" }
+      ],
+      "regions": [
+        {
+          "id": "eu-region",
+          "label": "EU-regulated jurisdictions",
+          "path": "M 0.35 0.30 Q 0.55 0.20 0.70 0.35 Q 0.75 0.55 0.60 0.65 Q 0.40 0.70 0.30 0.50 Q 0.28 0.35 0.35 0.30 Z"
+        }
+      ]
+    }
+  },
+  "layout": {
+    "id": "root",
+    "type": "scene-grid",
+    "reveal": 0,
+    "children": [
+      {
+        "id": "refine-filter-summary",
+        "type": "filter-summary",
+        "reveal": 1,
+        "props": { "constraints": ["Yield > 6%", "Conservative mandate", "EU-regulated", "≥ €50M outstanding"] }
+      },
+      {
+        "id": "summary-metrics",
+        "type": "metric-grid",
+        "reveal": 2,
+        "children": [
+          {
+            "id": "candidates-remaining",
+            "type": "metric",
+            "reveal": 3,
+            "props": { "label": "Candidates remaining", "value": 2, "unit": "assets" }
+          },
+          {
+            "id": "candidate-excluded",
+            "type": "metric",
+            "reveal": 4,
+            "props": { "label": "Excluded", "value": "Vantara Metals", "detail": "Jurisdiction" }
+          }
+        ]
+      },
+      {
+        "id": "refined-assets-panel",
+        "type": "panel",
+        "reveal": 5,
+        "props": { "title": "Refined candidates" },
+        "children": [
+          {
+            "id": "refined-assets-table-node",
+            "type": "data-table",
+            "reveal": 6,
+            "bind": { "data": "refined-assets-table" }
+          }
+        ]
+      },
+      {
+        "id": "distributions-panel",
+        "type": "panel",
+        "reveal": 7,
+        "props": { "title": "Distribution history" },
+        "children": [
+          {
+            "id": "aldergate-estates-distribution-table",
+            "type": "data-table",
+            "reveal": 8,
+            "props": { "title": "Aldergate Estates" },
+            "bind": { "data": "aldergate-estates-distribution" }
+          },
+          {
+            "id": "helios-yield-fund-distribution-table",
+            "type": "data-table",
+            "reveal": 9,
+            "props": { "title": "Helios Yield Fund" },
+            "bind": { "data": "helios-yield-fund-distribution" }
+          }
+        ]
+      },
+      {
+        "id": "eu-jurisdiction-map-node",
+        "type": "geo-panel",
+        "reveal": 10,
+        "props": { "title": "Candidates by jurisdiction" },
+        "bind": { "data": "eu-jurisdiction-map" }
+      }
+    ]
+  }
+}

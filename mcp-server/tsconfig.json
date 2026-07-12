@@ -1,0 +1,23 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "types": ["node"],
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    // Scoped to this package only, not the shared base: @modelcontextprotocol/sdk
+    // 1.29.0's StreamableHTTPServerTransport declares `set onclose(handler:
+    // (() => void) | undefined)`, wider than its own Transport interface's
+    // `onclose?: () => void` under exactOptionalPropertyTypes — a genuine
+    // third-party typing gap (the SDK's own class doesn't satisfy its own
+    // interface at this strictness), not fixable by changing how it's used here.
+    "exactOptionalPropertyTypes": false
+  },
+  "include": [
+    "src/**/*.ts",
+    "../app/src/contracts/scene.ts",
+    "../app/src/contracts/data.ts",
+    "../app/src/contracts/thinking.ts"
+  ]
+}

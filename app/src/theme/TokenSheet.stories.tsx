@@ -5,6 +5,7 @@ import { ThemeSwitch, isTheme, type Theme } from '../components/ThemeSwitch/Them
 const SURFACES = ['surface-0', 'surface-1', 'surface-2', 'surface-3'] as const;
 const INK = ['ink-primary', 'ink-secondary', 'ink-muted'] as const;
 const ACCENTS = ['accent-signal', 'accent-alert', 'accent-warn', 'accent-ok'] as const;
+const VIZ = ['viz-1', 'viz-2', 'viz-3', 'viz-4', 'viz-5', 'viz-6'] as const;
 
 function Swatch({ token }: { token: string }) {
   return (
@@ -53,6 +54,11 @@ function TokenSheet({ initialTheme = 'default' }: { initialTheme?: Theme }) {
       </section>
       <section style={{ display: 'grid', gap: 'var(--space-8)', gridTemplateColumns: 'repeat(4, 1fr)' }}>
         {ACCENTS.map((token) => (
+          <Swatch key={token} token={token} />
+        ))}
+      </section>
+      <section style={{ display: 'grid', gap: 'var(--space-8)', gridTemplateColumns: 'repeat(6, 1fr)' }}>
+        {VIZ.map((token) => (
           <Swatch key={token} token={token} />
         ))}
       </section>

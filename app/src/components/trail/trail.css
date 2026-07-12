@@ -1,0 +1,14 @@
+/* Active state is the only animated thing on screen at that moment
+   (node-vocabulary.md principle 5) — a calm opacity pulse, theme-agnostic
+   primitives directly (this is a universal "something is happening"
+   indicator, not part of the per-theme assembly motion binding). Stops
+   the instant a step settles (isActive becomes false, style removed). */
+@keyframes merlin-step-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}

@@ -1,5 +1,6 @@
 packages:
   - app
+  - mcp-server
 allowBuilds:
   '@swc/core': true
   esbuild: true

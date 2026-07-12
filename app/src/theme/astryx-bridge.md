@@ -34,6 +34,25 @@ A theme file uses one direction or the other, never both for the same variable.
 | `--accent-warn` | `--color-warning` | `#E9AF08` / `#F2C00B` |
 | `--accent-ok` | `--color-success` | `#0D8626` / `#0D8626` |
 | `--edge` | `--color-border` | `#05365919` / `#F2F4F619` |
+| `--viz-1` | `--color-icon-blue` | `#0064E0` / `#2694FE` |
+| `--viz-2` | `--color-icon-teal` | `#009688` / `#26A69A` |
+| `--viz-3` | `--color-icon-yellow` | `#FBC02D` / `#FFEE58` |
+| `--viz-4` | `--color-icon-purple` | `#5B08D8` / `#7952FF` |
+| `--viz-5` | `--color-icon-red` | `#D31130` / `#E3193B` |
+| `--viz-6` | `--color-icon-green` | `#0D8626` / `#26A756` |
+
+`--viz-1`…`--viz-6` (2026-07-10 addition, ruled by Prem): a 6-slot categorical
+series palette for chart nodes (recharts), distinct from the single-hue
+`--accent-*` set. `theme.default.css` maps them to 6 of Astryx's 10 named
+`--color-icon-*` hue families (blue/teal/yellow/purple/red/green — chosen for
+rough hue correspondence with the ◆ OKLCH hues below; cyan/gray/pink/orange
+left unused). No direction-B bridge-back exists for these: unlike surfaces/
+ink/accent/edge, Astryx's named hue families aren't a single semantic slot —
+they're reused by many unrelated Astryx components, so forcing e.g.
+`--color-icon-blue: var(--viz-1)` would silently recolor anything else on the
+page using Astryx's "blue," not just charts. ops-dark/glass author their own
+OKLCH values directly instead (see each file) — provisional pending Prem's ◆
+tuning, not yet finalized.
 
 `--edge-highlight`, `--surface-blur`, `--surface-opacity`, `--glow`, `--scrim`
 have no Astryx equivalent — set to neutral/off (`transparent`, `0px`, `1`,
@@ -64,8 +83,9 @@ Astryx ships colors as hex/`light-dark()` internally (their package, not ours
 — the hex ban applies to code we author).
 
 Not yet mapped in any direction: `--color-warning-muted`, `--color-success-muted`,
-`--color-error-muted`, and the categorical data-viz palette
-(`--color-*-blue/cyan/gray/...`) — no component consumes them yet; map when one does.
+`--color-error-muted` — no component consumes them yet; map when one does. The
+categorical data-viz palette (`--color-*-blue/cyan/gray/...`) is now partially
+mapped — see `--viz-1`…`--viz-6` above (direction A only, by design).
 
 ## Stock theme wiring (data-astryx-theme)
 
@@ -117,3 +137,42 @@ have silently broken the scheme lock.
 Three independent Storybook axes: `theme` (default|ops-dark|glass),
 `astryxTheme` (stock preset: neutral|stone), `astryxScheme` (Astryx-internal
 dark|light, meaningful only under `theme=default`).
+
+## Typography audit (Phase 8E) — the serif leak, root-caused
+
+Live audit (real computed-`font-family` DOM walk, not eyeballed) found two
+categories of unintended serif, both resolving to bare `Times` — the
+browser's raw UA default, not any font Astryx or this project ever chose:
+
+1. **Astryx-internal elements with no font class of their own**: `Badge`'s
+   label span (StatusTag), `MetadataList`'s `<dt>` (EntityHeader's
+   attribute labels), `ConfidenceMeter`'s label/value spans, `Blockquote`'s
+   own text (Recommendation). Astryx applies `--font-family-body` only via
+   its own scoped `.astryx-text`/`.astryx-heading` classes (confirmed by
+   reading `astryx.css` directly — `--font-family-body` itself is a
+   correctly sans-serif stack, `Figtree`/`Nunito Sans`/system-ui, nothing
+   serif anywhere in Astryx's own CSS) — components that don't wrap their
+   text in one of those two classes get nothing, and fall through to the
+   browser default.
+2. **This project's own hand-rolled SVG `<text>`**: `ConcentrationMap`,
+   `EntityGraph`, `GeoPanel`, `chartCraft.tsx`'s `TabularTick` (used by
+   `bar-series`/`time-series`) — none ever set `font-family` at all.
+
+Root cause for both: this project's own `:where(html, body)` canvas rule
+(theme.default.css, applies globally regardless of active theme via late
+`var()` resolution — see "Canvas" above) set `background`/`color` but never
+`font-family`, so nothing in the cascade ever supplied a sane default for
+anything Astryx's own scoped classes didn't already cover.
+
+Fix: three new semantic tokens, identical across all three registered
+themes since typeface isn't a ◆ per-theme register (bridging
+`tokens.base.css`'s `--font-ui`/`--font-data`/`--font-voice` primitives):
+`--face-ui` (labels, UI chrome), `--face-data` (numerals/values, always
+paired with `tabular-nums`), `--face-voice` (serif, Crimson — the agent's
+interpretive prose only: text-block, recommendation; three-voice ◆ ruling,
+node-vocabulary.md principle 2). `--face-ui` added to the existing
+`:where(html, body)` rule closes category 1 for free, zero component
+changes. Category 2 needed explicit `fontFamily` on every raw SVG `<text>`
+element found (component changes, since SVG doesn't get a free ride from
+the html/body default the way normal DOM text does when the split between
+UI/data faces matters per-element).

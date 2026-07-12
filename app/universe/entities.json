@@ -1,0 +1,126 @@
+{
+  "nordbond-2029": {
+    "kind": "entity",
+    "entity": {
+      "id": "nordbond-2029",
+      "name": "NordBond 2029",
+      "type": "Tokenized Covered Bond",
+      "attributes": [
+        { "label": "Issuer", "value": "Fjellbank" },
+        { "label": "Yield", "value": "5.8%" },
+        { "label": "Credit rating", "value": "AA-" },
+        { "label": "Outstanding", "value": "€140M" },
+        { "label": "Jurisdiction", "value": "Norway" },
+        { "label": "RiskLens score", "value": "18/100" },
+        { "label": "Liquidity", "value": "Deep" },
+        { "label": "Desk role", "value": "Benchmark safe asset" }
+      ],
+      "tags": ["covered-bond", "benchmark", "norway"]
+    },
+    "intent": "why did two nordbond settlements fail this week"
+  },
+  "aldergate-estates": {
+    "kind": "entity",
+    "entity": {
+      "id": "aldergate-estates",
+      "name": "Aldergate Estates",
+      "type": "Tokenized Real Estate Portfolio",
+      "attributes": [
+        { "label": "Underlying", "value": "Berlin commercial real estate portfolio" },
+        { "label": "Yield", "value": "7.2%" },
+        { "label": "Outstanding", "value": "€62M" },
+        { "label": "Audit status", "value": "Renewal lapsed — IssuerRegistry filing not received" },
+        { "label": "Auditor", "value": "Nordkap Assurance" },
+        { "label": "Distribution frequency", "value": "Quarterly" },
+        { "label": "Distribution record", "value": "8 consecutive quarters paid" },
+        { "label": "Jurisdiction", "value": "Germany" },
+        { "label": "RiskLens score", "value": "34/100" },
+        { "label": "Liquidity", "value": "Moderate" },
+        { "label": "Custodian", "value": "Solent Custody" }
+      ],
+      "tags": ["real-estate", "eu-regulated", "audit-lapsed"]
+    },
+    "intent": "give me the full picture on aldergate estates"
+  },
+  "helios-yield-fund": {
+    "kind": "entity",
+    "entity": {
+      "id": "helios-yield-fund",
+      "name": "Helios Yield Fund",
+      "type": "Tokenized Diversified Credit Fund",
+      "attributes": [
+        { "label": "Yield", "value": "9.1%" },
+        { "label": "RiskLens score", "value": "61/100" },
+        { "label": "Retail concentration", "value": "Largest retail-held asset on the venue" },
+        { "label": "Outstanding", "value": "€98M" },
+        { "label": "Jurisdiction", "value": "Luxembourg" },
+        { "label": "Liquidity", "value": "Moderate" }
+      ],
+      "tags": ["credit-fund", "higher-volatility", "retail-concentrated"]
+    }
+  },
+  "vantara-metals": {
+    "kind": "entity",
+    "entity": {
+      "id": "vantara-metals",
+      "name": "Vantara Metals",
+      "type": "Tokenized Copper-Royalty Note",
+      "attributes": [
+        { "label": "Yield", "value": "6.4%" },
+        { "label": "Liquidity", "value": "Thin" },
+        { "label": "Correlation", "value": "Commodities, not credit" },
+        { "label": "Role", "value": "Portfolio diversifier" },
+        { "label": "Outstanding", "value": "€54M" },
+        { "label": "Jurisdiction", "value": "Switzerland" },
+        { "label": "RiskLens score", "value": "45/100" }
+      ],
+      "tags": ["commodities", "diversifier", "non-eu"]
+    }
+  },
+  "kestrel-holdings": {
+    "kind": "entity",
+    "entity": {
+      "id": "kestrel-holdings",
+      "name": "Kestrel Holdings",
+      "type": "Counterparty (Cyprus-registered)",
+      "attributes": [
+        { "label": "Registration", "value": "Cyprus" },
+        { "label": "NordBond float accumulated", "value": "11%" },
+        { "label": "Wallet clusters", "value": 14 },
+        { "label": "Accumulation window", "value": "6 weeks" },
+        { "label": "Sanctions screen (CompliancePulse)", "value": "Clean" },
+        { "label": "Counterparty rating (RiskLens)", "value": "Unrated" },
+        { "label": "Adverse filings", "value": "None on record" }
+      ],
+      "tags": ["counterparty", "cyprus", "unrated"]
+    }
+  },
+  "solent-custody": {
+    "kind": "entity",
+    "entity": {
+      "id": "solent-custody",
+      "name": "Solent Custody",
+      "type": "Venue Custodian",
+      "attributes": [
+        { "label": "Role", "value": "Custodian for Solent Markets" },
+        { "label": "Failed settlements this month", "value": 2 },
+        { "label": "Failed settlements linked to", "value": "Kestrel-linked wallets (both)" }
+      ],
+      "tags": ["custodian", "infrastructure"]
+    }
+  },
+  "mira-voss": {
+    "kind": "entity",
+    "entity": {
+      "id": "mira-voss",
+      "name": "Mira Voss",
+      "type": "Person — Head of Issuance, Fjellbank",
+      "attributes": [
+        { "label": "Role", "value": "Head of Issuance at Fjellbank" },
+        { "label": "Associated issuer", "value": "NordBond 2029" },
+        { "label": "Context", "value": "Quoted in filings" }
+      ],
+      "tags": ["person", "fjellbank"]
+    }
+  }
+}

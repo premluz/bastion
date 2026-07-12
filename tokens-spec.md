@@ -17,6 +17,10 @@ Radii: 2 · 4 · 8 · 12 · full
 Type ◆
 - UI face: bridge to Astryx's default sans (log in astryx-bridge.md)
 - Data face: monospace stack for numerals, ids, coordinates, timestamps
+- Voice face (Phase 8E typography audit ruling — three-voice system): serif,
+  Crimson (`"Crimson Text", "Crimson Pro", Crimson, Georgia, "Times New Roman",
+  serif`) — reserved for the agent's interpretive prose only (text-block,
+  recommendation); never numerals, never labels, never data
 - Ramp: 11 / 12 / 13 / 14 / 16 / 20 / 24 / 32 — dense-data bias; 13 is body, not 16
 - Tabular numerals on all data faces (`font-variant-numeric: tabular-nums`)
 

@@ -1,0 +1,169 @@
+{
+  "id": "settlement-anomaly",
+  "title": "NordBond 2029 — Settlement Failure Investigation",
+  "intents": [
+    "why did two nordbond settlements fail this week",
+    "nordbond settlement failures",
+    "investigate nordbond settlement anomaly",
+    "what happened with nordbond settlements",
+    "nordbond failed deliveries",
+    "settlement anomaly investigation",
+    "why is nordbond failing settlement"
+  ],
+  "thinking": [
+    {
+      "id": "plan",
+      "kind": "plan",
+      "label": "Scoping the investigation — two failed NordBond settlements this week",
+      "durationMs": 800
+    },
+    {
+      "id": "search",
+      "kind": "search",
+      "label": "Pulling the failed-delivery log from CustodyGrid",
+      "sources": [{ "name": "CustodyGrid", "ref": "failed-delivery-log" }],
+      "durationMs": 1100
+    },
+    {
+      "id": "retrieve-wallets",
+      "kind": "retrieve",
+      "label": "Tracing wallet clusters behind the failed deliveries via LedgerWatch",
+      "sources": [{ "name": "LedgerWatch", "ref": "wallet-cluster-analysis" }],
+      "durationMs": 1500
+    },
+    {
+      "id": "retrieve-compliance",
+      "kind": "retrieve",
+      "label": "Cross-checking counterparty screening in CompliancePulse",
+      "sources": [{ "name": "CompliancePulse", "ref": "kestrel-screen" }],
+      "durationMs": 1200
+    },
+    {
+      "id": "correlate",
+      "kind": "correlate",
+      "label": "Correlating wallet accumulation against MarketTape volume spikes preceding both failures",
+      "sources": [{ "name": "MarketTape", "ref": "nordbond-volume-history" }],
+      "durationMs": 1700
+    },
+    {
+      "id": "synthesize",
+      "kind": "synthesize",
+      "label": "Attributing failures to Kestrel-cluster wallets settling faster than custody confirmation cycles",
+      "confidence": 0.88,
+      "durationMs": 1500
+    },
+    {
+      "id": "verify",
+      "kind": "verify",
+      "label": "Weighing motive — position-building ahead of a yield event versus fraud",
+      "confidence": 0.62,
+      "durationMs": 1100
+    }
+  ],
+  "data": {
+    "nordbond-2029-entity": { "$ref": "nordbond-2029" },
+    "kestrel-holdings-entity": { "$ref": "kestrel-holdings" },
+    "solent-custody-entity": { "$ref": "solent-custody" },
+    "failed-deliveries-table": { "$ref": "custody-failed-deliveries-this-month" },
+    "wallet-cluster-graph": { "$ref": "kestrel-wallet-cluster-graph" },
+    "volume-spikes-series": { "$ref": "nordbond-2029-volume-spikes" }
+  },
+  "layout": {
+    "id": "root",
+    "type": "scene-grid",
+    "reveal": 0,
+    "children": [
+      {
+        "id": "summary-metrics",
+        "type": "metric-grid",
+        "reveal": 1,
+        "children": [
+          {
+            "id": "failed-count-metric",
+            "type": "metric",
+            "reveal": 2,
+            "props": { "label": "Failed settlements this week", "value": 2 }
+          },
+          {
+            "id": "float-accumulated-metric",
+            "type": "metric",
+            "reveal": 3,
+            "props": { "label": "NordBond float accumulated by Kestrel", "value": "11%" }
+          },
+          {
+            "id": "sanctions-status-tag",
+            "type": "status-tag",
+            "reveal": 4,
+            "props": { "label": "Clean", "tone": "ok" }
+          },
+          {
+            "id": "counterparty-status-tag",
+            "type": "status-tag",
+            "reveal": 5,
+            "props": { "label": "Unrated", "tone": "warn" }
+          }
+        ]
+      },
+      {
+        "id": "failed-deliveries-panel",
+        "type": "panel",
+        "reveal": 6,
+        "props": { "title": "Failed deliveries this month" },
+        "children": [
+          {
+            "id": "failed-deliveries-table-node",
+            "type": "signal-feed",
+            "reveal": 7,
+            "bind": { "data": "failed-deliveries-table" }
+          }
+        ]
+      },
+      {
+        "id": "volume-context-panel",
+        "type": "panel",
+        "reveal": 8,
+        "props": { "title": "MarketTape volume, 10-day window" },
+        "children": [
+          {
+            "id": "volume-spikes-node",
+            "type": "time-series",
+            "reveal": 9,
+            "props": {
+              "variant": "combo",
+              "annotations": [
+                { "x": "2026-07-06", "label": "Settlement failed" },
+                { "x": "2026-07-08", "label": "Settlement failed" }
+              ]
+            },
+            "bind": { "data": "volume-spikes-series" }
+          }
+        ]
+      },
+      {
+        "id": "wallet-cluster-node",
+        "type": "entity-graph",
+        "reveal": 10,
+        "props": { "title": "Kestrel wallet cluster — NordBond float accumulation" },
+        "bind": { "data": "wallet-cluster-graph" }
+      },
+      {
+        "id": "settlement-anomaly-findings",
+        "type": "text-block",
+        "reveal": 11,
+        "props": {
+          "text": "Failures trace to Kestrel-cluster wallets settling faster than custody confirmation cycles — a pattern consistent with position-building ahead of an expected yield event, not fraud."
+        }
+      },
+      {
+        "id": "settlement-anomaly-recommendation",
+        "type": "recommendation",
+        "reveal": 12,
+        "props": {
+          "text": "Recommend a counterparty review of Kestrel Holdings and a settlement hold on its wallet cluster.",
+          "confidence": 0.62,
+          "caveat": "Wallet attribution is high-confidence (0.88); the position-building motive read is moderate."
+        }
+      }
+    ]
+  }
+}

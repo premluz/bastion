@@ -20,6 +20,14 @@
   --accent-warn: var(--color-warning);
   --accent-ok: var(--color-success);
 
+  /* Data-viz series palette — provisional starting values, pending Prem's ◆ tuning */
+  --viz-1: var(--color-icon-blue);
+  --viz-2: var(--color-icon-teal);
+  --viz-3: var(--color-icon-yellow);
+  --viz-4: var(--color-icon-purple);
+  --viz-5: var(--color-icon-red);
+  --viz-6: var(--color-icon-green);
+
   /* Structure — no Astryx equivalent for these; neutral/off, not a color decision */
   --edge: var(--color-border);
   --edge-highlight: transparent;
@@ -27,13 +35,44 @@
   --surface-opacity: 1;
   --glow: none;
   --scrim: transparent;
+
+  /* Motion binding — default has no bespoke ◆ register to dictate its own
+     pacing, so this mirrors ops-dark's values exactly (Phase 4 gap: the
+     renderer's assembly stagger had no binding to read under this theme
+     until now — durations/easings still only from tokens.base.css primitives). */
+  --motion-enter-duration: var(--duration-200);
+  --motion-enter-ease: var(--ease-standard);
+  --motion-exit-duration: var(--duration-120);
+  --motion-exit-ease: var(--ease-standard);
+  --motion-assembly-stagger: 60ms;
+
+  /* Type faces (Phase 8E typography audit) — identical across all three
+     registered themes, since typeface choice isn't a ◆ per-theme register
+     the way color/motion are; bridging the primitives here is what makes
+     them semantic tokens components are allowed to reference. */
+  --face-ui: var(--font-ui);
+  --face-data: var(--font-data);
+  --face-voice: var(--font-voice);
 }
 
 /* Canvas — surface-0/ink-primary paint the page itself; nothing else in the
    stack does. Lives here (unconditional) rather than per-theme, since var()
-   resolves late: whichever theme is active supplies the actual color. */
+   resolves late: whichever theme is active supplies the actual color.
+   font-family added here for the same reason (Phase 8E): Astryx applies
+   --font-family-body only via its own scoped .astryx-text/.astryx-heading
+   classes, never as a page-level default — anything Astryx doesn't wrap in
+   one of those classes (Badge's label, MetadataList's <dt>, Blockquote's
+   own text, ConfidenceMeter's spans), plus every hand-rolled SVG <text>
+   this project writes, was falling through to the browser's raw default
+   (Times) with nothing in the cascade to catch it. One rule here fixes
+   every non-SVG leak for free; SVG text still needs its own explicit
+   face per element regardless — this root rule only supplies one default
+   (UI), but SVG text needs the UI/data split per element (labels vs.
+   numerals), which one inherited value can't express — see
+   ConcentrationMap.tsx/chartCraft.tsx. */
 :where(html, body) {
   background: var(--surface-0);
   color: var(--ink-primary);
+  font-family: var(--face-ui);
   min-height: 100%;
 }

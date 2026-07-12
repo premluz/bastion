@@ -21,6 +21,10 @@
   --font-ui: var(--font-family-body, system-ui, sans-serif);
   --font-data: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
   --font-variant-data: tabular-nums;
+  /* Voice face (Phase 8E typography audit, Prem's ◆ ruling: three-voice
+     system, Crimson) — reserved for the agent's interpretive prose only
+     (findings, recommendations); never numerals, never labels, never data. */
+  --font-voice: "Crimson Text", "Crimson Pro", Crimson, Georgia, "Times New Roman", serif;
 
   /* Type ramp — dense-data bias, 13 is body */
   --text-11: 11px;

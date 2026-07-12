@@ -20,6 +20,16 @@
   --accent-warn: oklch(.78 .16 75);
   --accent-ok: oklch(.76 .15 165);
 
+  /* Data-viz series palette — identical to ops-dark (same "themes differ in
+     surface physics and light, not in color identity" logic as accents/ink),
+     provisional starting values pending Prem's ◆ tuning */
+  --viz-1: oklch(.75 .14 225);
+  --viz-2: oklch(.75 .14 165);
+  --viz-3: oklch(.75 .14 75);
+  --viz-4: oklch(.75 .14 285);
+  --viz-5: oklch(.75 .14 25);
+  --viz-6: oklch(.75 .14 115);
+
   /* Structure */
   --edge: oklch(1 0 0 / .10);
   --edge-highlight: oklch(1 0 0 / .25); /* top edge only, 1px — refracted light */
@@ -33,6 +43,15 @@
   --motion-exit-duration: var(--duration-200);
   --motion-exit-ease: var(--ease-decel);
   --motion-assembly-stagger: 90ms;
+
+  /* Type faces (Phase 8E typography audit) — identical across all three
+     registered themes; typeface isn't a ◆ per-theme register. Not bridged
+     back to Astryx's own --font-family-* variables, same precedent as
+     the rest of Astryx's typography scale (astryx-bridge.md: none of the
+     three Meridian themes bridge it). */
+  --face-ui: var(--font-ui);
+  --face-data: var(--font-data);
+  --face-voice: var(--font-voice);
 
   /* Astryx cascade bridge — identical target set to theme.default.css; see astryx-bridge.md */
   --color-background-body: var(--surface-0);

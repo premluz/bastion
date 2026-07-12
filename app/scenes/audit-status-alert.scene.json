@@ -1,0 +1,153 @@
+{
+  "id": "audit-status-alert",
+  "title": "Aldergate Estates — Audit Renewal Lapsed",
+  "intents": [
+    "aldergate audit alert",
+    "monitor alert aldergate",
+    "what changed with aldergate's audit",
+    "aldergate audit status update"
+  ],
+  "thinking": [
+    {
+      "id": "plan",
+      "kind": "plan",
+      "label": "Correlating an incoming IssuerRegistry status change for Aldergate Estates",
+      "durationMs": 900
+    },
+    {
+      "id": "search",
+      "kind": "search",
+      "label": "Confirming the audit renewal lapse in IssuerRegistry",
+      "sources": [{ "name": "IssuerRegistry", "ref": "aldergate-audit-status" }],
+      "durationMs": 1100
+    },
+    {
+      "id": "retrieve",
+      "kind": "retrieve",
+      "label": "Pulling exposed positions and mandate terms from PortfolioAtlas",
+      "sources": [{ "name": "PortfolioAtlas", "ref": "aldergate-exposure" }],
+      "durationMs": 1300
+    },
+    {
+      "id": "correlate",
+      "kind": "correlate",
+      "label": "Checking MarketTape for a price or volume reaction since the update",
+      "sources": [{ "name": "MarketTape", "ref": "aldergate-price-check" }],
+      "durationMs": 1200
+    },
+    {
+      "id": "synthesize",
+      "kind": "synthesize",
+      "label": "Weighing the lapsed audit against distribution continuity and the dossier's gating recommendation",
+      "confidence": 0.71,
+      "durationMs": 1500
+    },
+    {
+      "id": "verify",
+      "kind": "verify",
+      "label": "Confirming no other Aldergate-linked positions are exposed beyond this one",
+      "confidence": 0.64,
+      "durationMs": 1000
+    }
+  ],
+  "data": {
+    "aldergate-estates-entity": { "$ref": "aldergate-estates" },
+    "alert-event-table": {
+      "kind": "table",
+      "columns": [
+        { "key": "date", "label": "Date", "type": "date" },
+        { "key": "entity", "label": "Entity", "type": "entity" },
+        { "key": "detail", "label": "Detail", "type": "string" }
+      ],
+      "rows": [
+        {
+          "date": "2026-07-11",
+          "entity": { "entityId": "aldergate-estates", "label": "Aldergate Estates" },
+          "detail": "Audit renewal lapsed — IssuerRegistry filing not received before deadline"
+        },
+        {
+          "date": "2026-07-11",
+          "entity": { "entityId": "nordbond-2029", "label": "NordBond 2029" },
+          "detail": "Kestrel-linked settlement pattern remains under active review"
+        }
+      ]
+    }
+  },
+  "layout": {
+    "id": "root",
+    "type": "scene-grid",
+    "reveal": 0,
+    "children": [
+      {
+        "id": "summary-metrics",
+        "type": "metric-grid",
+        "reveal": 1,
+        "children": [
+          {
+            "id": "audit-status-metric",
+            "type": "metric",
+            "reveal": 2,
+            "props": { "label": "Audit status", "value": "Lapsed", "detail": "IssuerRegistry filing not received" }
+          },
+          {
+            "id": "position-exposure-metric",
+            "type": "metric",
+            "reveal": 3,
+            "props": { "label": "Position exposure", "value": "€62M", "detail": "Full outstanding" }
+          },
+          {
+            "id": "alert-status-tag",
+            "type": "status-tag",
+            "reveal": 4,
+            "props": { "label": "Settlement hold recommended", "tone": "alert" }
+          }
+        ]
+      },
+      {
+        "id": "alert-panel",
+        "type": "panel",
+        "reveal": 5,
+        "props": { "title": "Monitor alert" },
+        "children": [
+          {
+            "id": "alert-signal-feed",
+            "type": "signal-feed",
+            "reveal": 6,
+            "bind": { "data": "alert-event-table" }
+          }
+        ]
+      },
+      {
+        "id": "aldergate-header",
+        "type": "entity-header",
+        "reveal": 7,
+        "bind": { "data": "aldergate-estates-entity" },
+        "props": { "status": { "label": "Renewal lapsed", "tone": "alert" } }
+      },
+      {
+        "id": "audit-status-alert-findings",
+        "type": "text-block",
+        "reveal": 8,
+        "props": {
+          "text": "The Aldergate Estates dossier flagged the pending audit renewal as the single open risk and recommended sizing the position but gating settlement on confirmation.\n\nThat renewal has now lapsed — IssuerRegistry did not receive the filing before deadline. Distribution history remains unbroken at eight consecutive quarters paid; the open risk is no longer pending, it is realized."
+        }
+      },
+      {
+        "id": "audit-status-alert-confidence",
+        "type": "confidence-meter",
+        "reveal": 9,
+        "props": { "label": "Forward-looking confidence", "value": 0.42 }
+      },
+      {
+        "id": "audit-status-alert-recommendation",
+        "type": "recommendation",
+        "reveal": 10,
+        "props": {
+          "text": "Move Aldergate Estates to the settlement-hold watchlist and pause new position sizing until IssuerRegistry confirms a resolution.",
+          "confidence": 0.64,
+          "caveat": "The gate this recommendation was waiting on has now failed rather than cleared — treat as an escalation of the Scene 2 dossier's open risk, not a new finding."
+        }
+      }
+    ]
+  }
+}

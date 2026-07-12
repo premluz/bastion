@@ -1,0 +1,27 @@
+/* The interface-assembling effect: driven by node order (reveal) and
+   motion tokens only (CLAUDE.md rule 15) — no animation library, no
+   per-component mount animation. SceneRenderer applies this to every
+   node via inline style, delay computed from reveal * assembly-stagger. */
+@keyframes merlin-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scene-swap exit (Canvas, Phase 5): the outgoing scene fades out using
+   --motion-exit-duration/-ease before the incoming scene mounts and runs
+   its own merlin-reveal assembly — sequenced via onAnimationEnd, not a
+   guessed JS timeout, so it always matches the CSS duration exactly. */
+@keyframes merlin-exit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

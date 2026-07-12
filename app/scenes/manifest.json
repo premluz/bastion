@@ -1,0 +1,66 @@
+{
+  "scenes": [
+    {
+      "id": "asset-discovery",
+      "file": "asset-discovery.scene.json",
+      "module": "discover",
+      "intents": [
+        "show me tokenized assets yielding above 6%",
+        "assets yielding above 6 percent",
+        "conservative portfolio opportunities",
+        "what's yielding above 6%",
+        "find conservative yield opportunities",
+        "high yield conservative assets",
+        "yield screen"
+      ]
+    },
+    {
+      "id": "asset-discovery-refine",
+      "file": "asset-discovery-refine.scene.json",
+      "module": "discover",
+      "intents": [
+        "only eu regulated minimum 50 million",
+        "narrow to eu regulated assets over 50m",
+        "add distribution history",
+        "refine to eu regulated 50m minimum",
+        "show distribution history for these",
+        "eu regulated only, 50 million minimum",
+        "narrow the results"
+      ]
+    },
+    {
+      "id": "issuer-dossier",
+      "file": "issuer-dossier.scene.json",
+      "module": "research",
+      "intents": [
+        "give me the full picture on aldergate estates",
+        "aldergate estates dossier",
+        "tell me about aldergate before i commit",
+        "aldergate issuer profile",
+        "what do we know about aldergate",
+        "full picture on aldergate",
+        "aldergate research"
+      ]
+    },
+    {
+      "id": "settlement-anomaly",
+      "file": "settlement-anomaly.scene.json",
+      "module": "investigate",
+      "intents": [
+        "why did two nordbond settlements fail this week",
+        "nordbond settlement failures",
+        "investigate nordbond settlement anomaly",
+        "what happened with nordbond settlements",
+        "nordbond failed deliveries",
+        "settlement anomaly investigation",
+        "why is nordbond failing settlement"
+      ]
+    },
+    {
+      "id": "audit-status-alert",
+      "file": "audit-status-alert.scene.json",
+      "module": "monitor",
+      "intents": []
+    }
+  ]
+}
