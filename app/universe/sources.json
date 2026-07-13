@@ -1,30 +1,44 @@
 {
   "MarketTape": {
     "name": "MarketTape",
-    "description": "Real-time price, volume, and order-flow feed for all listed assets."
+    "description": "Real-time price, volume, and order-flow feed for all listed assets.",
+    "status": "Active",
+    "lastSync": "2 minutes ago"
   },
   "IssuerRegistry": {
     "name": "IssuerRegistry",
-    "description": "Issuer filings, prospectuses, and KYC/audit status."
+    "description": "Issuer filings, prospectuses, and KYC/audit status.",
+    "status": "Degraded",
+    "lastSync": "58 minutes ago"
   },
   "LedgerWatch": {
     "name": "LedgerWatch",
-    "description": "On-chain analytics: wallet clusters, transfer patterns, settlement events."
+    "description": "On-chain analytics: wallet clusters, transfer patterns, settlement events.",
+    "status": "Active",
+    "lastSync": "5 minutes ago"
   },
   "CompliancePulse": {
     "name": "CompliancePulse",
-    "description": "Regulatory watchlists, jurisdiction rules, sanction screens."
+    "description": "Regulatory watchlists, jurisdiction rules, sanction screens.",
+    "status": "Active",
+    "lastSync": "12 minutes ago"
   },
   "CustodyGrid": {
     "name": "CustodyGrid",
-    "description": "Custody balances, settlement confirmations, failed-delivery log."
+    "description": "Custody balances, settlement confirmations, failed-delivery log.",
+    "status": "Active",
+    "lastSync": "8 minutes ago"
   },
   "RiskLens": {
     "name": "RiskLens",
-    "description": "Internal risk models: volatility, concentration, counterparty scores."
+    "description": "Internal risk models: volatility, concentration, counterparty scores.",
+    "status": "Active",
+    "lastSync": "31 minutes ago"
   },
   "PortfolioAtlas": {
     "name": "PortfolioAtlas",
-    "description": "Positions, mandates, exposures, performance, historical decisions."
+    "description": "Positions, mandates, exposures, performance, historical decisions.",
+    "status": "Active",
+    "lastSync": "1 hour ago"
   }
 }

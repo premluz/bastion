@@ -2,7 +2,6 @@ import { ChatMessage, ChatMessageBubble, ChatMessageMetadata } from '@astryxdesi
 import { Text } from '@astryxdesign/core/Text';
 import { useSessionStore } from '../../engine/stores/sessionStore';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
-import { useSceneStore } from '../../engine/stores/sceneStore';
 import { useTrailStore } from '../../engine/stores/trailStore';
 import { StatusTag } from '../nodes/StatusTag';
 import { ThinkingTrail } from '../trail/ThinkingTrail';
@@ -23,7 +22,6 @@ export function Transcript() {
   const turns = useSessionStore((state) => state.turns);
   const artifacts = useArtifactStore((state) => state.artifacts);
   const setOpenArtifact = useArtifactStore((state) => state.setOpenArtifact);
-  const setActiveScene = useSceneStore((state) => state.setActiveScene);
   const liveSteps = useTrailStore((state) => state.steps);
   const liveActiveIndex = useTrailStore((state) => state.activeIndex);
   const liveIsComplete = useTrailStore((state) => state.isComplete);
@@ -52,8 +50,14 @@ export function Transcript() {
                   <ChatMessageMetadata
                     footer={
                       <StatusTag
-                        label={turn.status === 'resolved' ? 'Answered' : 'No scene matched'}
-                        tone={turn.status === 'resolved' ? 'ok' : 'neutral'}
+                        label={
+                          turn.status === 'resolved'
+                            ? 'Answered'
+                            : turn.status === 'interrupted'
+                              ? 'Interrupted'
+                              : 'No scene matched'
+                        }
+                        tone="neutral"
                       />
                     }
                   />
@@ -85,10 +89,7 @@ export function Transcript() {
                     <ArtifactCard
                       title={artifact.scene.title}
                       module={artifact.module}
-                      onOpen={() => {
-                        setOpenArtifact(turn.artifactRef ?? null);
-                        setActiveScene(artifact.scene);
-                      }}
+                      onOpen={() => setOpenArtifact(turn.artifactRef ?? null)}
                     />
                   )}
                 </div>

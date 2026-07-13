@@ -79,40 +79,47 @@
     "reveal": 0,
     "children": [
       {
-        "id": "summary-metrics",
-        "type": "metric-grid",
+        "id": "summary-metrics-panel",
+        "type": "panel",
         "reveal": 1,
         "children": [
           {
-            "id": "audit-status-metric",
-            "type": "metric",
+            "id": "summary-metrics",
+            "type": "metric-grid",
             "reveal": 2,
-            "props": { "label": "Audit status", "value": "Lapsed", "detail": "IssuerRegistry filing not received" }
-          },
-          {
-            "id": "position-exposure-metric",
-            "type": "metric",
-            "reveal": 3,
-            "props": { "label": "Position exposure", "value": "€62M", "detail": "Full outstanding" }
-          },
-          {
-            "id": "alert-status-tag",
-            "type": "status-tag",
-            "reveal": 4,
-            "props": { "label": "Settlement hold recommended", "tone": "alert" }
+            "children": [
+              {
+                "id": "audit-status-metric",
+                "type": "metric",
+                "reveal": 3,
+                "props": { "label": "Audit status", "value": "Lapsed", "detail": "IssuerRegistry filing not received" }
+              },
+              {
+                "id": "position-exposure-metric",
+                "type": "metric",
+                "reveal": 4,
+                "props": { "label": "Position exposure", "value": "€62M", "detail": "Full outstanding" }
+              },
+              {
+                "id": "alert-status-tag",
+                "type": "status-tag",
+                "reveal": 5,
+                "props": { "label": "Settlement hold recommended", "tone": "alert" }
+              }
+            ]
           }
         ]
       },
       {
         "id": "alert-panel",
         "type": "panel",
-        "reveal": 5,
+        "reveal": 6,
         "props": { "title": "Monitor alert" },
         "children": [
           {
             "id": "alert-signal-feed",
             "type": "signal-feed",
-            "reveal": 6,
+            "reveal": 7,
             "bind": { "data": "alert-event-table" }
           }
         ]
@@ -120,14 +127,14 @@
       {
         "id": "aldergate-header",
         "type": "entity-header",
-        "reveal": 7,
+        "reveal": 8,
         "bind": { "data": "aldergate-estates-entity" },
         "props": { "status": { "label": "Renewal lapsed", "tone": "alert" } }
       },
       {
         "id": "audit-status-alert-findings",
         "type": "text-block",
-        "reveal": 8,
+        "reveal": 9,
         "props": {
           "text": "The Aldergate Estates dossier flagged the pending audit renewal as the single open risk and recommended sizing the position but gating settlement on confirmation.\n\nThat renewal has now lapsed — IssuerRegistry did not receive the filing before deadline. Distribution history remains unbroken at eight consecutive quarters paid; the open risk is no longer pending, it is realized."
         }
@@ -135,13 +142,13 @@
       {
         "id": "audit-status-alert-confidence",
         "type": "confidence-meter",
-        "reveal": 9,
+        "reveal": 10,
         "props": { "label": "Forward-looking confidence", "value": 0.42 }
       },
       {
         "id": "audit-status-alert-recommendation",
         "type": "recommendation",
-        "reveal": 10,
+        "reveal": 11,
         "props": {
           "text": "Move Aldergate Estates to the settlement-hold watchlist and pause new position sizing until IssuerRegistry confirms a resolution.",
           "confidence": 0.64,

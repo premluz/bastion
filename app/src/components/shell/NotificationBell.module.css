@@ -1,0 +1,20 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.badgeWrapper {
+  /* Same phantom-line-height / translucent-badge fix as
+     ArtifactStackControl.module.css — identical root causes, identical
+     fix, not re-derived. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  pointer-events: none;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--surface-0);
+  background: var(--surface-0);
+}

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { ThinkingStep } from "../../contracts/thinking";
 
-export type TurnStatus = "resolved" | "unresolved";
+export type TurnStatus = "resolved" | "unresolved" | "interrupted";
 
 // A turn is the durable record of one utterance — status is set the
 // moment the resolver answers (matches the prior ChatEntry semantics
@@ -37,7 +37,27 @@ interface SessionState {
 
 export const useSessionStore = create<SessionState>((set) => ({
   turns: [],
-  addTurn: (turn) => set((state) => ({ turns: [...state.turns, turn] })),
+  // Only one trail plays at a time (trailPlayer's own generation counter),
+  // so submitting a new query while a previous one is still resolved-but-
+  // unsettled (status "resolved", no artifactRef yet — trailPlayer.ts's
+  // isCurrent() guard means that old turn's settleTurn will now never
+  // fire) permanently orphans it. Left as "resolved" it would satisfy
+  // every "isThinking"/"pulsing" check forever, alongside the genuinely
+  // active new turn — the real cause of two Recent rows reading as
+  // simultaneously selected. Marking it "interrupted" here, the one place
+  // a turn can be superseded, keeps every consumer honest without each
+  // one re-deriving "is this actually still in flight."
+  addTurn: (turn) =>
+    set((state) => ({
+      turns: [
+        ...state.turns.map((existing) =>
+          existing.status === "resolved" && !existing.artifactRef
+            ? { ...existing, status: "interrupted" as const }
+            : existing,
+        ),
+        turn,
+      ],
+    })),
   settleTurn: (id, settled) =>
     set((state) => ({
       turns: state.turns.map((turn) => (turn.id === id ? { ...turn, ...settled } : turn)),

@@ -20,19 +20,21 @@ export const config = {
     // starting default, not a lock.
     expanded: true,
   },
-  workbench: {
-    // Default pane layout (Phase 8G). 'artifact' (WO-1) keeps its original
-    // width bounds and is the only pane open by default (autoOpen honors
-    // it, not config). The four WO-2 index panes (entities/sources/
-    // watchlist/history) start closed — they're reference surfaces, not
-    // forced-open clutter — same rail mechanism, just narrower defaults
-    // since they hold simple lists, not scene content.
-    panes: [
-      { kind: 'artifact', open: true, width: 480, minWidth: 360, maxWidth: 720 },
-      { kind: 'entities', open: false, width: 320, minWidth: 280, maxWidth: 480 },
-      { kind: 'sources', open: false, width: 320, minWidth: 280, maxWidth: 480 },
-      { kind: 'watchlist', open: false, width: 320, minWidth: 280, maxWidth: 480 },
-      { kind: 'history', open: false, width: 320, minWidth: 280, maxWidth: 480 },
-    ],
+  artifactStack: {
+    // Default width bounds for the one right-side pane (Phase 8H —
+    // supersedes Phase 8G's multi-pane workbench.panes list; Artifacts is
+    // the only pane now, so a single width triple replaces what used to
+    // be an array). Values unchanged from the original ArtifactPanel
+    // defaults (Phase 8B WO-2) — this phase changes what surrounds the
+    // pane, not its own sizing.
+    defaultWidth: 480,
+    minWidth: 360,
+    maxWidth: 720,
+  },
+  recent: {
+    // How many turns Sidebar's Recent list shows before "View all" is the
+    // only way to see more (Phase 8H) — a nav aid, not the investigation
+    // record itself (that's the Investigations page, unbounded).
+    count: 5,
   },
 } as const;

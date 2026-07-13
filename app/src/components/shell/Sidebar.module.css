@@ -1,0 +1,23 @@
+/* Footer icons order: DOM order is [Profile, Notification] in both
+   states, only flex-direction differs — row keeps that as left-to-right
+   (profile leftmost), column-reverse flips it without touching markup
+   (notification ends up top, profile bottom). Two states, one DOM order,
+   no JS reordering. width:100% + space-between (expanded only) is what
+   actually pushes Notification flush to the sidebar's own right edge —
+   without a width the row only ever sized to its own content, so the
+   two controls just sat adjacent with a small gap, never reaching the
+   edge regardless of gap value. */
+.footerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--space-8);
+}
+
+.footerRowCollapsed {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: var(--space-8);
+}

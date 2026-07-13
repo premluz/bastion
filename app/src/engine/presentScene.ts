@@ -1,5 +1,4 @@
 import type { HydratedScene } from "../contracts/scene";
-import { useSceneStore } from "./stores/sceneStore";
 import { useSessionStore } from "./stores/sessionStore";
 import { useArtifactStore } from "./stores/artifactStore";
 import { useTrailStore } from "./stores/trailStore";
@@ -36,9 +35,20 @@ export function presentScene(utterance: string, scene: HydratedScene): void {
       trailElapsedMs: useTrailStore.getState().elapsedMs,
       artifactRef: artifactId,
     });
+    // setOpenArtifact syncs sceneStore.activeScene itself (artifactStore.ts,
+    // Phase 8H) — one call does both. A Monitor-module autoOpen uses the
+    // silent variant instead: the content still appears immediately, but
+    // doesn't mark itself "seen" — a push landing while the user is on a
+    // different page shouldn't clear NotificationBell's badge before they
+    // ever looked. Every other autoOpen (a typed query, an Investigate
+    // action) is real, deliberate human intent and marks viewed normally.
+    const isAlert = getModuleForScene(scene.id) === "monitor";
     if (config.artifacts.autoOpen) {
-      useArtifactStore.getState().setOpenArtifact(artifactId);
-      useSceneStore.getState().setActiveScene(scene);
+      if (isAlert) {
+        useArtifactStore.getState().openArtifactSilently(artifactId);
+      } else {
+        useArtifactStore.getState().setOpenArtifact(artifactId);
+      }
     }
     // Watchlist auto-append (Phase 8G WO-2): a Monitor-module turn tracks
     // its own subject automatically, the same "alert turns append" law
@@ -46,7 +56,7 @@ export function presentScene(utterance: string, scene: HydratedScene): void {
     // manual Watch click for something that already pushed itself into
     // view unprompted. Idempotent via watchlistStore's own keyed-by-id
     // guard, so a second alert for an already-watched entity is a no-op.
-    if (getModuleForScene(scene.id) === "monitor") {
+    if (isAlert) {
       const subject = getAlertSubjectEntity(scene);
       if (subject) useWatchlistStore.getState().watch(subject.entityId, subject.label, "alert");
     }

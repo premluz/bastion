@@ -20,8 +20,8 @@ export function EntityHeader({ data, status }: EntityHeaderProps) {
         {status && <StatusTag label={status.label} tone={status.tone} />}
         {/* Watch action (Phase 8G WO-2): rule 7's escape hatch, same
             pattern as EntityLink — pure data attributes, no onClick, no
-            engine/app import. ArtifactPanel's delegated listener (shell
-            layer) is what actually reaches watchlistStore. */}
+            engine/app import. ArtifactStack's delegated listener (shell
+            layer, Phase 8H) is what actually reaches watchlistStore. */}
         <button
           type="button"
           data-watch-entity-id={entity.id}

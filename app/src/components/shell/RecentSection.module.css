@@ -1,0 +1,17 @@
+/* SideNavItem accepts no className/style — confirmed in its own source,
+   not guessed (its destructure has no className/style/xstyle and no
+   ...rest spread, despite BaseProps typing them). The only sanctioned
+   override point is astryx-side-nav-item, the stable class List's own
+   sibling components document as their theming hook, reached from a
+   wrapping element since the item itself can't carry a class directly.
+   display:contents keeps this wrapper out of SideNavSection's own flex
+   layout — "View all" behaves exactly as if unwrapped, only its color
+   changes. The label span itself sets no explicit color (confirmed in
+   source), so this inherits down correctly with no specificity fight. */
+.viewAllMuted {
+  display: contents;
+}
+
+.viewAllMuted :global(.astryx-side-nav-item) {
+  color: var(--ink-secondary);
+}

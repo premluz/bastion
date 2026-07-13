@@ -176,3 +176,34 @@ changes. Category 2 needed explicit `fontFamily` on every raw SVG `<text>`
 element found (component changes, since SVG doesn't get a free ride from
 the html/body default the way normal DOM text does when the split between
 UI/data faces matters per-element).
+
+## Universal list-row hover (`astryx-list-item`, `--color-overlay-hover`)
+
+Astryx's `ListItem` only applies its own `:hover` background when the row
+is genuinely interactive (`onClick`/`href` present — confirmed by reading
+`Item.tsx`: the `interactive` stylex class, which is what actually carries
+the `:hover` rule, is conditionally applied based on those two props, never
+unconditionally). A List/ListItem with no defined per-row action — Data
+Sources' "Connected" rows, some Entities/Watchlist rows — never gets that
+class and so never shows a hover background, even though it's visually
+indistinguishable from a hoverable row otherwise. Architect-reported live:
+"we should have a hover state for all lists... while all should have."
+
+Fix, theme.default.css only (unconditional/resolves-late, same reasoning
+as the canvas rule above — one rule covers every registered theme):
+targets `.astryx-list-item`, the stable class List's own "Theming" doc
+table names as its intended override hook (`themeProps('list-item')`,
+always applied regardless of interactivity), setting `background-color:
+var(--color-overlay-hover)` on `:hover`. `--color-overlay-hover` itself is
+Astryx's own variable — consumed as-is here, not bridged or reassigned,
+same "direction A" reasoning as typography/motion: it already resolves
+correctly per Astryx's own stock-theme + `color-scheme` pinning regardless
+of which Meridian theme is active. Excludes `[aria-selected='true']`
+(Astryx's own `.selected` class has lower specificity than this rule's
+class+pseudo-class+hover, and would otherwise be visually overridden by
+the plain hover background on the currently-open investigation's row —
+found by reasoning through CSS specificity before shipping, not by a live
+regression) and `[aria-disabled='true']` (already unreachable by `:hover`
+via Astryx's own `pointer-events: none` on disabled items; excluded here
+too so the rule states that guarantee rather than silently depending on
+it).

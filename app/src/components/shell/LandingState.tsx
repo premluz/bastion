@@ -5,30 +5,25 @@ import { Icon } from '@astryxdesign/core/Icon';
 import { ChatComposer, ChatComposerInput } from '@astryxdesign/core/Chat';
 import { ClickableCard } from '@astryxdesign/core/ClickableCard';
 import { Grid } from '@astryxdesign/core/Grid';
+import marketPulseJson from '../../../universe/marketPulse.json';
 import { createKeywordResolver } from '../../engine/resolver/keywordResolver';
 import { submitQuery } from '../../engine/submitQuery';
 
-// Real fixture intents (app/scenes/manifest.json), one representative
-// prompt per primary entry-point scene — asset-discovery-refine is a
-// follow-up intent ("narrow to eu regulated..."), not a sensible
-// cold-start suggestion, so it's excluded.
-const SUGGESTIONS = [
-  {
-    heading: 'Screen for yield',
-    body: 'Find conservative assets above a yield threshold',
-    prompt: 'show me tokenized assets yielding above 6%',
-  },
-  {
-    heading: 'Research an issuer',
-    body: 'Full profile: filings, distributions, holder concentration',
-    prompt: 'give me the full picture on aldergate estates',
-  },
-  {
-    heading: 'Investigate an anomaly',
-    body: 'Trace failed settlements back to their cause',
-    prompt: 'why did two nordbond settlements fail this week',
-  },
-];
+interface MarketPulseCard {
+  headline: string;
+  stake: string;
+  intent: string;
+  featured: boolean;
+}
+
+// Phase 8I: a 2-3 card echo of Market Pulse's own data (single source,
+// two renderings) — not separately authored content. Only `featured`
+// entries show here; the full set (plus anything already investigated)
+// lives on the Market Pulse page. asset-discovery-refine's own intent is
+// deliberately NOT featured — a follow-up query reads oddly as a
+// cold-start suggestion even though it's a fine standalone Market Pulse
+// card.
+const SUGGESTIONS = Object.values(marketPulseJson as Record<string, MarketPulseCard>).filter((card) => card.featured);
 
 // Landing state per Astryx's ai-chat-landing template
 // (.astryx-scratch/ai-chat-landing/page.tsx lines 303-322 for the
@@ -82,18 +77,24 @@ export function LandingState() {
       <Grid columns={{ minWidth: 220, max: 3 }} gap={3} width="100%" maxWidth={720}>
         {SUGGESTIONS.map((suggestion) => (
           <ClickableCard
-            key={suggestion.heading}
-            label={suggestion.heading}
+            key={suggestion.headline}
+            label={suggestion.headline}
             variant="muted"
             padding={3}
-            onClick={() => handleSubmit(suggestion.prompt)}
+            onClick={() => handleSubmit(suggestion.intent)}
           >
             <VStack gap={0.5}>
               <Text type="label" weight="semibold">
-                {suggestion.heading}
+                {suggestion.headline}
               </Text>
-              <Text type="supporting" color="secondary">
-                {suggestion.body}
+              {/* Surfaced register (node-vocabulary.md Shell section,
+                  Phase 8I): agent-authored, no evidence yet — the voice
+                  face, same as Market Pulse's own un-investigated cards.
+                  A card is a signal (headline + stake), never an action
+                  description — the correction that renamed heading/body
+                  to headline/stake. */}
+              <Text type="supporting" color="secondary" style={{ fontFamily: 'var(--face-voice)' }}>
+                {suggestion.stake}
               </Text>
             </VStack>
           </ClickableCard>

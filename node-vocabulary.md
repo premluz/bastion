@@ -17,7 +17,7 @@ this at Phase 3/7 alongside the merlin-new-node skill; components built without 
    the agent is.
 4. Every recommendation is prose with its evidence adjacent — recommendations
    are language, not buttons; Merlin recommends, it does not execute in v1.
-5. Motion indicates progress, never decoration (CLAUDE.md rule 14).
+5. Motion indicates progress, never decoration (CLAUDE.md rule 15).
 6. Missing data is rendered explicitly — designed empty/partial states and
    FallbackNode, never blank space.
 7. One node answers one question.
@@ -25,6 +25,22 @@ this at Phase 3/7 alongside the merlin-new-node skill; components built without 
    user focus deserve it. Everything else stays quiet.
 9. Entity-first: users investigate entities and relationships — documents,
    metrics, alerts and recommendations exist to deepen understanding of them.
+10. State that names a human experience (seen, read, acknowledged) is set only
+    by human action — machine convenience paths (auto-open, prefetch,
+    background render) never claim it. Ratified 2026-07-12 after the third
+    incident in this family (Phase 8H WO-1's notification-bell bug, where
+    autoOpen silently marked a pushed alert "seen" before anyone looked).
+11. Controls are honest, in both directions. A control with nothing behind it
+    is removed, not shipped inert — this is the usual arm, invoked whenever a
+    template or pattern offers an affordance this project has no real action
+    for. But a control that's part of stable, permanent chrome (a toolbar
+    position, a nav slot) stays visible and truthfully disabled rather than
+    popping in and out of existence as its target state changes — permanent
+    chrome reads as more stable than chrome that appears and disappears.
+    Context decides which arm applies: if the control ITSELF would be empty
+    (no action to wire), remove it; if a stable fixture's target is
+    temporarily empty (no artifacts yet), disable it. Ratified 2026-07-12
+    (the artifact stack's always-visible, disabled-at-zero control).
 
 Register (applies to every node): dense, matte, precise — data ink dominant, one
 signal hue, no decoration that isn't information. Numbers in the data face with
@@ -257,6 +273,30 @@ ships as Sources' content unchanged: every universe source with an
 honest "cited in N investigations this session" counter, zero until a
 real trail cites it, never seeded — WO-2 adds a public-catalog section
 and a mock connect flow on top, not a replacement of this.
+
+Market Pulse (Phase 8I) is the agent's own surfaced-but-not-yet-
+investigated observations — authored per-session in universe data, never
+live-generated, positioned after Data Sources and before Investigations:
+a step between the reference pages and the investigated record.
+LandingState's suggestion chips are a 2-3 card echo of this same data
+(single source, two renderings), never separately authored content.
+Register law, verbatim, binding on this page and Home's own suggestion
+chips alike: "Surfaced (Market Pulse: agent-authored, no evidence, no
+trail) vs Investigated (has run the reasoning loop, has confidence) are
+different registers and never share a row style." A card never leaves
+Market Pulse once surfaced, investigated or not — it's a record of what
+was surfaced, not a queue that empties. Clicking a surfaced card starts a
+real investigation through the existing submitQuery path; clicking an
+already-investigated one opens its artifact instead of asking the same
+question twice — the resulting turn lands in Investigations exactly like
+any other. Content law, verbatim (architect-ordered correction,
+2026-07-12): "Cards are signals, not capabilities — headline + stake,
+never an action description. What-needs-action lives in the assembled
+investigation's recommendation, not the card." A card's `headline` names
+what happened, past tense, specific; its `stake` says why it matters,
+never what to do about it. An optional `persona` tag (`analyst` |
+`risk-officer`) is authored per card, data-ready only — nothing filters
+on it yet.
 
 ## Trail vocabulary (Phase 6 — engine components, NOT registry nodes)
 The reasoning surface is streamed by the trail player; scenes cannot lay it out.

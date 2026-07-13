@@ -89,34 +89,41 @@
         "props": { "status": { "label": "Renewal pending (12 days)", "tone": "warn" } }
       },
       {
-        "id": "aldergate-yield-metric",
-        "type": "metric",
+        "id": "yield-metric-panel",
+        "type": "panel",
         "reveal": 2,
-        "props": {
-          "label": "Yield",
-          "value": "7.2%",
-          "detail": "90-day trend",
-          "trend": [
-            { "x": "2026-04-09", "y": 6.9 },
-            { "x": "2026-04-23", "y": 6.52 },
-            { "x": "2026-05-07", "y": 6.59 },
-            { "x": "2026-05-21", "y": 6.25 },
-            { "x": "2026-06-04", "y": 7.04 },
-            { "x": "2026-06-18", "y": 7.26 },
-            { "x": "2026-07-02", "y": 7.2 }
-          ]
-        }
+        "children": [
+          {
+            "id": "aldergate-yield-metric",
+            "type": "metric",
+            "reveal": 3,
+            "props": {
+              "label": "Yield",
+              "value": "7.2%",
+              "detail": "90-day trend",
+              "trend": [
+                { "x": "2026-04-09", "y": 6.9 },
+                { "x": "2026-04-23", "y": 6.52 },
+                { "x": "2026-05-07", "y": 6.59 },
+                { "x": "2026-05-21", "y": 6.25 },
+                { "x": "2026-06-04", "y": 7.04 },
+                { "x": "2026-06-18", "y": 7.26 },
+                { "x": "2026-07-02", "y": 7.2 }
+              ]
+            }
+          }
+        ]
       },
       {
         "id": "distribution-panel",
         "type": "panel",
-        "reveal": 3,
+        "reveal": 4,
         "props": { "title": "Distribution record" },
         "children": [
           {
             "id": "distribution-bar-series-node",
             "type": "bar-series",
-            "reveal": 4,
+            "reveal": 5,
             "props": { "valueSuffix": "M" },
             "bind": { "data": "aldergate-estates-distribution-series" }
           }
@@ -125,13 +132,13 @@
       {
         "id": "holder-concentration-panel",
         "type": "panel",
-        "reveal": 5,
+        "reveal": 6,
         "props": { "title": "Top holder concentration" },
         "children": [
           {
             "id": "holder-concentration-map-node",
             "type": "concentration-map",
-            "reveal": 6,
+            "reveal": 7,
             "props": {
               "labelColumn": "holder",
               "valueColumn": "share",
@@ -145,7 +152,7 @@
       {
         "id": "issuer-dossier-findings",
         "type": "text-block",
-        "reveal": 7,
+        "reveal": 8,
         "props": {
           "text": "Aldergate's fundamentals are sound and distributions have run unbroken for eight consecutive quarters.\n\nThe single open risk is the pending audit renewal — IssuerRegistry has not yet confirmed the outcome."
         }
@@ -153,13 +160,13 @@
       {
         "id": "issuer-dossier-forward-confidence",
         "type": "confidence-meter",
-        "reveal": 8,
+        "reveal": 9,
         "props": { "label": "Forward-looking confidence", "value": 0.58 }
       },
       {
         "id": "issuer-dossier-recommendation",
         "type": "recommendation",
-        "reveal": 9,
+        "reveal": 10,
         "props": {
           "text": "Size the Aldergate Estates position, but gate settlement on audit confirmation.",
           "caveat": "History confidence is high (0.86); this recommendation carries the lower forward-looking confidence pending IssuerRegistry's audit update."

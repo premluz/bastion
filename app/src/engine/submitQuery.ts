@@ -28,7 +28,7 @@ export async function submitQuery(query: string, resolver: IntentResolver): Prom
     // An unresolved turn changes nothing about which artifact is open —
     // the old single-slot architecture nulled sceneStore.activeScene
     // here, which was correct when Canvas was the only source of truth.
-    // Now that Canvas only mounts inside ArtifactPanel (driven by
+    // Now that Canvas only mounts inside the artifact stack (driven by
     // artifactStore.openArtifactId, untouched by this branch), nulling
     // activeScene here would desync it from a still-open panel — Canvas
     // would show "No scene yet" while the panel's own chrome kept

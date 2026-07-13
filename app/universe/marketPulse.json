@@ -1,0 +1,38 @@
+{
+  "screen-for-yield": {
+    "id": "screen-for-yield",
+    "headline": "Three tokenized assets now clear the 6% yield floor, led by Helios Yield Fund at 9.1%.",
+    "stake": "The conservative screen's candidate pool has grown since the mandate was last run.",
+    "intent": "show me tokenized assets yielding above 6%",
+    "module": "discover",
+    "persona": "analyst",
+    "featured": true
+  },
+  "research-an-issuer": {
+    "id": "research-an-issuer",
+    "headline": "Aldergate Estates' audit renewal has lapsed — IssuerRegistry never received the filing.",
+    "stake": "It's the one open risk on an otherwise investment-grade profile.",
+    "intent": "give me the full picture on aldergate estates",
+    "module": "research",
+    "persona": "risk-officer",
+    "featured": true
+  },
+  "investigate-an-anomaly": {
+    "id": "investigate-an-anomaly",
+    "headline": "Two NordBond 2029 settlements failed this week, both traced to Kestrel-linked wallets.",
+    "stake": "Kestrel has accumulated 11% of the float over six weeks.",
+    "intent": "why did two nordbond settlements fail this week",
+    "module": "investigate",
+    "persona": "risk-officer",
+    "featured": true
+  },
+  "yield-spread-widening": {
+    "id": "yield-spread-widening",
+    "headline": "The yield spread between the two EU-regulated candidates has widened to 190bps.",
+    "stake": "A month ago that same gap was closer to 120bps — it's moving faster than the mandate review cycle.",
+    "intent": "only eu regulated minimum 50 million",
+    "module": "discover",
+    "persona": "analyst",
+    "featured": false
+  }
+}

@@ -7,7 +7,7 @@ import entitiesJson from '../../../universe/entities.json';
 import { useWatchlistStore } from '../../engine/stores/watchlistStore';
 import { submitQuery } from '../../engine/submitQuery';
 import { createKeywordResolver } from '../../engine/resolver/keywordResolver';
-import { IndexPaneShell } from './IndexPaneShell';
+import { PageShell } from './PageShell';
 
 interface UniverseEntityRecord {
   entity: { id: string; name: string; type: string };
@@ -16,21 +16,20 @@ interface UniverseEntityRecord {
 
 const entities = Object.values(entitiesJson as Record<string, UniverseEntityRecord>);
 
-// Index pane (Phase 8G WO-2): every universe entity, browsable
-// independent of any investigation. Stable per the routing law — a row's
-// actions start a *new* investigation in the artifact pane or add to the
-// watchlist; this pane's own list never changes in response to either.
-// Watch and Investigate are both real, wired actions (never dead
-// controls) — Investigate only renders for entities that actually carry
-// an investigation intent (aldergate-estates, nordbond-2029 today; the
-// rest stay watchable but not click-to-investigate, same asymmetry
-// Phase 8F's EntityLink already established for Helios).
-export function EntitiesPane({ width }: { width: number }) {
+// Page (Phase 8H, rehomed verbatim from Phase 8G's EntitiesPane — content
+// unchanged, only its chrome: PageShell instead of a resizable side pane).
+// Every universe entity, browsable independent of any investigation.
+// Watch and Investigate are both real, wired actions — Investigate only
+// renders for entities that carry an investigation intent (aldergate-
+// estates, nordbond-2029 today; the rest stay watchable but not
+// click-to-investigate). Per the routing law, this page never renders a
+// scene itself — Investigate always lands in the artifact stack.
+export function EntitiesPage() {
   const watch = useWatchlistStore((state) => state.watch);
   const resolver = useMemo(() => createKeywordResolver(), []);
 
   return (
-    <IndexPaneShell paneKind="entities" title="Entities" width={width}>
+    <PageShell title="Entities">
       {entities.length === 0 ? (
         <EmptyState title="No entities" description="The universe has no entities to browse yet." />
       ) : (
@@ -66,6 +65,6 @@ export function EntitiesPane({ width }: { width: number }) {
           ))}
         </List>
       )}
-    </IndexPaneShell>
+    </PageShell>
   );
 }

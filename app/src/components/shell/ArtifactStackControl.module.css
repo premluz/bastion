@@ -1,0 +1,26 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.badgeWrapper {
+  /* display was unset (block default) — a block box around inline
+     content picks up phantom line-height spacing, which is exactly
+     where the "taller than wide" gap and transparent-looking border
+     came from (found live via computed-style inspection, not guessed).
+     flex hugs the badge's real content box with no extra space. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  pointer-events: none;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--surface-0);
+  /* Astryx's Badge "neutral" variant background is itself translucent
+     (10%-opacity white, confirmed via computed style) — a solid fill
+     behind it is what actually makes the ring opaque, not the border
+     alone. */
+  background: var(--surface-0);
+}

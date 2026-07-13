@@ -1,49 +1,30 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { AppShell } from '@astryxdesign/core/AppShell';
 import { Layout, LayoutHeader } from '@astryxdesign/core/Layout';
+import { Text } from '@astryxdesign/core/Text';
 import { ThemeSwitch, type Theme } from '../ThemeSwitch/ThemeSwitch';
 import { ChatBar } from './ChatBar';
 import { Transcript } from './Transcript';
 import { LandingState } from './LandingState';
-import { ArtifactPanel } from './ArtifactPanel';
-import { EntitiesPane } from './EntitiesPane';
-import { SourcesPane } from './SourcesPane';
-import { WatchlistPane } from './WatchlistPane';
-import { HistoryPane } from './HistoryPane';
-import { PaneResizeHandle } from './PaneResizeHandle';
-import { WorkbenchRail } from './WorkbenchRail';
-import { PANE_META } from './paneMeta';
+import { ArtifactStack } from './ArtifactStack';
+import { ArtifactStackControl } from './ArtifactStackControl';
+import { InvestigationsPage } from './InvestigationsPage';
+import { EntitiesPage } from './EntitiesPage';
+import { WatchlistPage } from './WatchlistPage';
+import { DataSourcesPage } from './DataSourcesPage';
+import { MarketPulsePage } from './MarketPulsePage';
 import { Sidebar } from './Sidebar';
 import { useSceneStore } from '../../engine/stores/sceneStore';
 import { useSessionStore } from '../../engine/stores/sessionStore';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
 import { useTrailStore } from '../../engine/stores/trailStore';
-import { useWorkbenchStore, type PaneKind } from '../../engine/stores/workbenchStore';
+import { usePageStore, type Page } from '../../engine/stores/pageStore';
 import { connectLiveChannel } from '../../engine/liveChannel';
-
-// One entry per registered pane kind (Phase 8G WO-2) — the only place
-// that maps a kind to its content component, so adding a future pane is
-// a one-line addition here plus a config.ts/paneMeta.ts entry, not a
-// change to the render loop below.
-function renderPaneContent(kind: PaneKind, width: number): ReactNode {
-  switch (kind) {
-    case 'artifact':
-      return <ArtifactPanel width={width} />;
-    case 'entities':
-      return <EntitiesPane width={width} />;
-    case 'sources':
-      return <SourcesPane width={width} />;
-    case 'watchlist':
-      return <WatchlistPane width={width} />;
-    case 'history':
-      return <HistoryPane width={width} />;
-  }
-}
 
 // Landing surface is the question, never a workspace (node-vocabulary.md
 // Shell law) — LandingState (centered greeting + composer + suggestion
-// cards) shows before the first turn; once a turn exists, the shell
-// switches to the transcript + bottom-docked composer layout below.
+// cards) shows before the first turn; once a turn exists, Home switches
+// to the transcript + bottom-docked composer layout below.
 //
 // Astryx's ChatLayout was tried first (rule 5) — it's the real primitive
 // for "composer fixed bottom, content auto-scrolls" — but its auto-scroll
@@ -91,11 +72,60 @@ function ScrollAnchor({ children }: { children: ReactNode }) {
   );
 }
 
+// Home's own top bar (Phase 8H) — current artifact's title on the left
+// (the most recent turn's title before anything is open), the artifact
+// stack control on the right. Distinct from the persistent AppShell
+// header below, which only ever holds ThemeSwitch.
+function HomeTopBar() {
+  const openArtifactId = useArtifactStore((state) => state.openArtifactId);
+  const artifacts = useArtifactStore((state) => state.artifacts);
+  const turns = useSessionStore((state) => state.turns);
+  const activeTitle =
+    (openArtifactId && artifacts[openArtifactId]?.scene.title) ?? turns[turns.length - 1]?.utterance ?? 'New investigation';
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 'var(--space-12) var(--space-16)',
+        borderBottom: '1px solid var(--edge)',
+        flexShrink: 0,
+      }}
+    >
+      <Text type="label" weight="semibold">
+        {activeTitle}
+      </Text>
+      <ArtifactStackControl />
+    </div>
+  );
+}
+
+function renderPage(page: Page): ReactNode {
+  switch (page) {
+    case 'investigations':
+      return <InvestigationsPage />;
+    case 'entities':
+      return <EntitiesPage />;
+    case 'watchlist':
+      return <WatchlistPage />;
+    case 'data-sources':
+      return <DataSourcesPage />;
+    case 'market-pulse':
+      return <MarketPulsePage />;
+    case 'home':
+      return null;
+  }
+}
+
 export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
   const [theme, setTheme] = useState<Theme>(initialTheme);
   const turnCount = useSessionStore((state) => state.turns.length);
-  const openArtifactId = useArtifactStore((state) => state.openArtifactId);
-  const panes = useWorkbenchStore((state) => state.panes);
+  const artifactCount = useArtifactStore((state) => Object.keys(state.artifacts).length);
+  const isStackOpen = useArtifactStore((state) => state.isStackOpen);
+  const isMaximized = useArtifactStore((state) => state.isMaximized);
+  const page = usePageStore((state) => state.page);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -108,6 +138,8 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
   useEffect(() => connectLiveChannel(), []);
 
   const hasStarted = turnCount > 0;
+  const showStack = isStackOpen && artifactCount > 0;
+  const isMaximizedStack = showStack && isMaximized;
 
   return (
     <div style={{ height: '100dvh' }}>
@@ -128,28 +160,47 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
             </LayoutHeader>
           }
           content={
-            hasStarted ? (
-              <div style={{ display: 'flex', height: '100%', minHeight: 0 }}>
-                <div style={{ display: 'flex', flexDirection: 'column', flex: '1 1 auto', minWidth: 0, height: '100%' }}>
-                  <ScrollAnchor>
-                    <Transcript />
-                  </ScrollAnchor>
-                  <div style={{ flexShrink: 0, padding: 'var(--space-16)' }}>
-                    <ChatBar />
-                  </div>
-                </div>
-                {panes
-                  .filter((pane) => pane.open && (pane.kind !== 'artifact' || openArtifactId))
-                  .map((pane) => (
-                    <PaneResizeHandle key={pane.kind} paneKind={pane.kind} label={`Resize ${PANE_META[pane.kind].label}`}>
-                      {(width) => renderPaneContent(pane.kind, width)}
-                    </PaneResizeHandle>
-                  ))}
-                <WorkbenchRail />
+            <div style={{ display: 'flex', height: '100%', minHeight: 0 }}>
+              {/* Maximize (Phase 8H): the stack takes the full content
+                  width and this column hides — display:none, not
+                  unmounted, so an in-progress composer draft survives a
+                  maximize/restore round trip. Best-practice "maximize a
+                  panel" pattern (VS Code, most IDE-style workbenches):
+                  one pane goes full-width, its sibling steps aside
+                  entirely rather than sharing a now-meaningless split. */}
+              <div
+                style={{
+                  display: isMaximizedStack ? 'none' : 'flex',
+                  flexDirection: 'column',
+                  flex: '1 1 auto',
+                  minWidth: 0,
+                  height: '100%',
+                }}
+              >
+                {page === 'home' ? (
+                  hasStarted ? (
+                    <>
+                      <HomeTopBar />
+                      <ScrollAnchor>
+                        <Transcript />
+                      </ScrollAnchor>
+                      <div style={{ flexShrink: 0, padding: 'var(--space-16)' }}>
+                        <ChatBar />
+                      </div>
+                    </>
+                  ) : (
+                    <LandingState />
+                  )
+                ) : (
+                  renderPage(page)
+                )}
               </div>
-            ) : (
-              <LandingState />
-            )
+              {/* Right side: Artifacts is the ONLY pane, global across every
+                  page per the routing law ("pages never host scene
+                  renders") — investigating an entity from a page still
+                  lands its result here without leaving that page. */}
+              {showStack && <ArtifactStack />}
+            </div>
           }
         />
       </AppShell>

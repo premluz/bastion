@@ -76,3 +76,20 @@
   font-family: var(--face-ui);
   min-height: 100%;
 }
+
+/* Astryx's ListItem only applies its own :hover treatment when the row is
+   genuinely interactive (onClick/href present) — confirmed in Astryx's own
+   source, not guessed. Every list in this app should read as hoverable
+   regardless of whether a given row happens to carry an action, so this
+   targets astryx-list-item, the stable class List's own docs name as its
+   theming hook, unconditional/resolves-late like the canvas rule above —
+   one rule covers every theme, since --color-overlay-hover is Astryx's own
+   variable, never bridged or reassigned here, only consumed as-is.
+   Excludes selected rows (aria-selected) so hovering the currently-open
+   investigation doesn't replace its accent background with a plain one;
+   disabled rows (aria-disabled) are already unreachable by :hover since
+   Astryx's own disabled state sets pointer-events: none, excluded here too
+   for a rule that documents that guarantee rather than silently relying on it. */
+.astryx-list-item:hover:not([aria-selected='true']):not([aria-disabled='true']) {
+  background-color: var(--color-overlay-hover);
+}

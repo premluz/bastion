@@ -1,13 +1,12 @@
 import { useMemo } from 'react';
 import { List, ListItem } from '@astryxdesign/core/List';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
-import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
 import entitiesJson from '../../../universe/entities.json';
 import { useWatchlistStore } from '../../engine/stores/watchlistStore';
 import { submitQuery } from '../../engine/submitQuery';
 import { createKeywordResolver } from '../../engine/resolver/keywordResolver';
-import { IndexPaneShell } from './IndexPaneShell';
+import { PageShell } from './PageShell';
 
 interface UniverseEntityRecord {
   intent?: string;
@@ -19,15 +18,13 @@ const intentById = new Map(
 
 const SOURCE_LABEL = { seeded: 'Seeded', manual: 'Added', alert: 'From alert' } as const;
 
-// Index pane (Phase 8G WO-2): seeded entities (universe/watchlist.json,
-// fictional statuses authored there — logged as extrapolation) plus
-// anything watched this session — from an entity-header's Watch action,
-// an Entities-pane row, or automatically once a Monitor-module turn
-// lands (presentScene.ts). Session-scoped: nothing here survives a
-// session reset, stated in the empty state's own copy rather than a
-// modal, same pattern Sidebar's "New investigation" already established.
-// Newest-watched first — watchedAt is real data, not decoration.
-export function WatchlistPane({ width }: { width: number }) {
+// Page (Phase 8H, rehomed verbatim from Phase 8G's WatchlistPane).
+// Seeded entities (universe/watchlist.json, fictional statuses authored
+// there) plus anything watched this session — from an entity-header, the
+// Entities page, or automatically once a Monitor-module turn lands
+// (presentScene.ts). Session-scoped: nothing here survives a reset,
+// stated in the empty state's own copy, not a modal.
+export function WatchlistPage() {
   const items = useWatchlistStore((state) => state.items);
   const resolver = useMemo(() => createKeywordResolver(), []);
   const rows = useMemo(
@@ -36,38 +33,36 @@ export function WatchlistPane({ width }: { width: number }) {
   );
 
   return (
-    <IndexPaneShell paneKind="watchlist" title="Watchlist" width={width}>
+    <PageShell title="Watchlist">
       {rows.length === 0 ? (
         <EmptyState
           title="Nothing watched yet"
-          description="Watch an entity from its header or the Entities pane to track it here — session-scoped, nothing persists after a reset."
+          description="Watch an entity from its header or the Entities page to track it here — session-scoped, nothing persists after a reset."
         />
       ) : (
         <List hasDividers density="compact">
           {rows.map((item) => {
             const intent = intentById.get(item.entityId);
+            // The row itself is the click target when there's somewhere to
+            // go — Astryx's ListItem only gains hover/press styling once
+            // it's genuinely interactive (onClick/href), and its own docs
+            // warn against nesting a second interactive element for the
+            // same action, so this replaces the old inner IconButton
+            // rather than sitting alongside it. A row with no intent has
+            // nothing to click into and correctly stays plain — no hover
+            // implying an action that isn't there.
             return (
               <ListItem
                 key={item.entityId}
                 label={item.label}
                 description={`${item.status} · ${SOURCE_LABEL[item.source]}`}
-                endContent={
-                  intent ? (
-                    <IconButton
-                      label={`Investigate ${item.label}`}
-                      tooltip="Investigate"
-                      icon={<Icon icon="externalLink" size="sm" />}
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => void submitQuery(intent, resolver)}
-                    />
-                  ) : null
-                }
+                endContent={intent ? <Icon icon="externalLink" size="sm" /> : undefined}
+                {...(intent ? { onClick: () => void submitQuery(intent, resolver) } : {})}
               />
             );
           })}
         </List>
       )}
-    </IndexPaneShell>
+    </PageShell>
   );
 }
