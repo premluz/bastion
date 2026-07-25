@@ -10,11 +10,31 @@ import { SeriesDataSetSchema } from "../data";
 // as two distinct, narrowly-typed shapes rather than one generic
 // "marker" union, since the vocabulary's registers treat a threshold and
 // a named event differently (a threshold is context, an event is a fact).
+// statStrip (Phase 12 WO-2): additive prop only, no new node type — each
+// entry renders through the existing Metric component directly (same
+// reuse precedent as Metric importing Sparkline, EntityHeader importing
+// StatusTag). Capped at 4, matching metric-grid's own "2-4, one gestalt
+// read" vocabulary law.
+const StatStripEntrySchema = z.object({
+  label: z.string().min(1),
+  value: z.union([z.string(), z.number()]),
+  detail: z.string().min(1).optional(),
+});
+
 export const TimeSeriesPropsSchema = z.object({
   title: z.string().min(1).optional(),
   variant: z.enum(["line", "combo"]).optional(),
   referenceLines: z.array(z.object({ value: z.number(), label: z.string().min(1).optional() })).optional(),
   annotations: z.array(z.object({ x: z.string().min(1), label: z.string().min(1) })).optional(),
+  statStrip: z.array(StatStripEntrySchema).max(4).optional(),
+  // Phase 16 revision: additive prop only, no new node type — names one
+  // series (by its own `id`) to render against a second, right-side
+  // Y-axis instead of sharing the primary's scale. For a genuinely
+  // second-unit dimension (volatility % alongside yield %, volume
+  // alongside price) — not decorative, the two lines are real different
+  // measures. Absent, behavior is unchanged (single shared axis, as
+  // every existing fixture already renders).
+  rightAxisSeriesId: z.string().min(1).optional(),
   data: SeriesDataSetSchema.refine((d) => d.series.length <= 3, {
     message: "time-series supports at most 3 series lines",
   }),

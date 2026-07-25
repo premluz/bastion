@@ -1,0 +1,26 @@
+/* Panel slide (architect order): the whole artifact stack (resize handle
+   + card together, one unit) enters/exits from the trailing edge.
+   translateX(100%) is relative to the element's OWN rendered width, which
+   is why this needs no pixel measurement even though the panel's width is
+   itself resizable/persisted (ArtifactStack.tsx's own resizable.size). */
+@keyframes merlin-panel-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes merlin-panel-slide-out {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}

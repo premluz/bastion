@@ -1,0 +1,248 @@
+{
+  "id": "risk-desk-dashboard",
+  "title": "FX & Derivatives — Portfolio Risk Dashboard",
+  "intents": [
+    "show me the risk desk dashboard",
+    "portfolio risk overview",
+    "how exposed are we on derivatives",
+    "fx and rates exposure",
+    "aggregate derivatives risk",
+    "what's flagged on the derivatives book",
+    "risk desk dashboard"
+  ],
+  "thinking": [
+    {
+      "id": "plan",
+      "kind": "plan",
+      "label": "Assembling the aggregate FX & derivatives risk picture",
+      "durationMs": 800
+    },
+    {
+      "id": "search",
+      "kind": "search",
+      "label": "Pulling open derivative positions from PortfolioAtlas",
+      "sources": [{ "name": "PortfolioAtlas", "ref": "derivatives-book" }],
+      "durationMs": 1100
+    },
+    {
+      "id": "retrieve",
+      "kind": "retrieve",
+      "label": "Retrieving counterparty and exposure scores from RiskLens",
+      "sources": [{ "name": "RiskLens", "ref": "derivatives-exposure-scores" }],
+      "durationMs": 1300
+    },
+    {
+      "id": "correlate",
+      "kind": "correlate",
+      "label": "Cross-referencing Kestrel Holdings' derivatives exposure against its existing NordBond flag",
+      "durationMs": 1500
+    },
+    {
+      "id": "synthesize",
+      "kind": "synthesize",
+      "label": "Weighing aggregate exposure against the desk's risk limit",
+      "confidence": 0.79,
+      "durationMs": 1400
+    },
+    {
+      "id": "verify",
+      "kind": "verify",
+      "label": "Confirming no limit breach despite the Kestrel-linked concentration",
+      "confidence": 0.71,
+      "durationMs": 1000
+    }
+  ],
+  "data": {
+    "top-contributors-series": {
+      "kind": "series",
+      "series": [
+        {
+          "id": "exposure",
+          "label": "Exposure",
+          "points": [
+            { "x": "5Y EUR IRS", "y": 9 },
+            { "x": "EUR/USD 3M RR", "y": 6 },
+            { "x": "10Y USD IRS", "y": 5 },
+            { "x": "GBP/EUR 6M Fwd", "y": 1 }
+          ]
+        }
+      ]
+    },
+    "flagged-positions-table": {
+      "kind": "table",
+      "columns": [
+        { "key": "date", "label": "Date", "type": "date" },
+        { "key": "position", "label": "Position", "type": "string" },
+        { "key": "detail", "label": "Detail", "type": "string" }
+      ],
+      "rows": [
+        {
+          "date": "2026-07-16",
+          "position": "EUR/USD 3M Risk Reversal",
+          "detail": "Counterparty Kestrel Holdings unrated — largest single exposure at 29% of aggregate"
+        },
+        {
+          "date": "2026-07-16",
+          "position": "10Y USD Interest Rate Swap",
+          "detail": "Long-dated tenor (10Y) carries elevated rate-sensitivity"
+        }
+      ]
+    },
+    "position-status-table": {
+      "kind": "table",
+      "columns": [
+        { "key": "position", "label": "Position", "type": "string" },
+        { "key": "tone", "label": "Tone", "type": "string" }
+      ],
+      "rows": [
+        { "position": "EUR/USD 3M Risk Reversal", "tone": "alert" },
+        { "position": "5Y EUR Interest Rate Swap", "tone": "ok" },
+        { "position": "GBP/EUR 6M FX Forward", "tone": "ok" },
+        { "position": "10Y USD Interest Rate Swap", "tone": "warn" }
+      ]
+    },
+    "counterparty-exposure-table": {
+      "kind": "table",
+      "columns": [
+        { "key": "counterparty", "label": "Counterparty", "type": "string" },
+        { "key": "exposure", "label": "Exposure", "type": "number" }
+      ],
+      "rows": [
+        { "counterparty": "Fjellbank", "exposure": 9 },
+        { "counterparty": "Kestrel Holdings", "exposure": 6 },
+        { "counterparty": "Solent Markets Prime", "exposure": 6 }
+      ]
+    }
+  },
+  "layout": {
+    "id": "root",
+    "type": "dashboard-layout",
+    "reveal": 0,
+    "children": [
+      {
+        "id": "risk-desk-summary",
+        "type": "scene-summary",
+        "reveal": 1,
+        "props": {
+          "recommendation": "Aggregate derivatives exposure sits at €21M against a €25M risk limit (84% utilized) — no breach, but the Kestrel-linked EUR/USD risk reversal concentrates nearly a third of that exposure with an unrated counterparty and warrants review.",
+          "confidence": 0.71,
+          "confidenceLabel": "Aggregate risk confidence",
+          "sourceRefs": ["PortfolioAtlas", "RiskLens"],
+          "caveat": "Kestrel Holdings is already flagged elsewhere on the venue for NordBond float accumulation — treat this counterparty's derivatives exposure as compounding risk, not an isolated flag."
+        }
+      },
+      {
+        "id": "exposure-metrics-panel",
+        "type": "panel",
+        "reveal": 2,
+        "props": { "title": "Book summary" },
+        "children": [
+          {
+            "id": "exposure-metrics",
+            "type": "metric-grid",
+            "reveal": 3,
+            "children": [
+              {
+                "id": "aggregate-exposure-metric",
+                "type": "metric",
+                "reveal": 4,
+                "props": { "label": "Aggregate exposure", "value": "€21M", "detail": "84% of €25M limit" }
+              },
+              {
+                "id": "total-notional-metric",
+                "type": "metric",
+                "reveal": 5,
+                "props": { "label": "Total notional", "value": "€170M" }
+              },
+              {
+                "id": "open-positions-metric",
+                "type": "metric",
+                "reveal": 6,
+                "props": { "label": "Open positions", "value": 4 }
+              },
+              {
+                "id": "flagged-positions-metric",
+                "type": "metric",
+                "reveal": 7,
+                "props": { "label": "Flagged positions", "value": 2 }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "risk-limit-panel",
+        "type": "panel",
+        "reveal": 8,
+        "props": { "title": "Risk limit" },
+        "children": [
+          {
+            "id": "risk-limit-ring-gauge",
+            "type": "ring-gauge",
+            "reveal": 9,
+            "props": { "label": "Risk limit utilization", "value": 21, "max": 25, "unit": "€M", "tone": "warn" }
+          }
+        ]
+      },
+      {
+        "id": "position-status-panel",
+        "type": "panel",
+        "reveal": 10,
+        "props": { "title": "Position status" },
+        "children": [
+          {
+            "id": "position-status-grid",
+            "type": "status-grid",
+            "reveal": 11,
+            "props": { "labelColumn": "position", "toneColumn": "tone" },
+            "bind": { "data": "position-status-table" }
+          }
+        ]
+      },
+      {
+        "id": "counterparty-exposure-panel",
+        "type": "panel",
+        "reveal": 12,
+        "props": { "title": "Exposure by counterparty" },
+        "children": [
+          {
+            "id": "counterparty-exposure-ring-chart",
+            "type": "ring-chart",
+            "reveal": 13,
+            "props": { "labelColumn": "counterparty", "valueColumn": "exposure", "valueSuffix": "M" },
+            "bind": { "data": "counterparty-exposure-table" }
+          }
+        ]
+      },
+      {
+        "id": "top-contributors-panel",
+        "type": "panel",
+        "reveal": 14,
+        "props": { "title": "Top contributors by exposure" },
+        "children": [
+          {
+            "id": "top-contributors-bar-series",
+            "type": "bar-series",
+            "reveal": 15,
+            "props": { "valueSuffix": "M" },
+            "bind": { "data": "top-contributors-series" }
+          }
+        ]
+      },
+      {
+        "id": "flagged-positions-panel",
+        "type": "panel",
+        "reveal": 16,
+        "props": { "title": "Flagged positions" },
+        "children": [
+          {
+            "id": "flagged-positions-signal-feed",
+            "type": "signal-feed",
+            "reveal": 17,
+            "bind": { "data": "flagged-positions-table" }
+          }
+        ]
+      }
+    ]
+  }
+}

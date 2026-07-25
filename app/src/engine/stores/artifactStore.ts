@@ -2,6 +2,7 @@ import { create } from "zustand";
 import type { HydratedScene } from "../../contracts/scene";
 import { config } from "../../config";
 import { useSceneStore } from "./sceneStore";
+import { useSessionStore } from "./sessionStore";
 
 export interface Artifact {
   scene: HydratedScene;
@@ -28,6 +29,7 @@ interface ArtifactState {
   stackWidth: number;
   viewedArtifactIds: Record<string, true>;
   registerArtifact: (id: string, artifact: Artifact) => void;
+  patchOpenArtifactScene: (scene: HydratedScene) => void;
   setOpenArtifact: (id: string | null) => void;
   openArtifactSilently: (id: string) => void;
   toggleStack: () => void;
@@ -45,6 +47,26 @@ export const useArtifactStore = create<ArtifactState>((set, get) => ({
   stackWidth: config.artifactStack.defaultWidth,
   viewedArtifactIds: {},
   registerArtifact: (id, artifact) => set((state) => ({ artifacts: { ...state.artifacts, [id]: artifact } })),
+  // liveChannel's update-in-place path (2026-07-25): a pushed scene whose
+  // id matches the CURRENTLY OPEN artifact swaps that artifact's scene in
+  // place instead of presentScene.ts registering a brand-new turn/artifact
+  // — the whole point being a smoothly-updating dashboard, not a fresh
+  // turn appearing in the transcript. No-op if nothing is open (the id
+  // match this requires can only happen with something open anyway, but
+  // this stays honest rather than assuming). Node ids in the new scene's
+  // layout are expected to match the old one's (same scene, revised
+  // values) — SceneRenderer's own `wrap()` keys each node by `node.id`,
+  // so matching ids is what keeps React from remounting the subtree and
+  // losing the CSS transition on ring-gauge/metric's changed values;
+  // liveChannel.ts's own id-match gate is what guarantees this is only
+  // ever called with exactly that kind of revision.
+  patchOpenArtifactScene: (scene) => {
+    const id = get().openArtifactId;
+    const artifact = id ? get().artifacts[id] : undefined;
+    if (!id || !artifact) return;
+    set((state) => ({ artifacts: { ...state.artifacts, [id]: { ...artifact, scene } } }));
+    useSceneStore.getState().setActiveScene(scene);
+  },
   // Setting a real id is "open this artifact" — same law WO-1's autoOpen
   // relied on (a new artifact always forces the stack open on it), now
   // inline instead of a separate subscription. Also syncs sceneStore's
@@ -68,6 +90,16 @@ export const useArtifactStore = create<ArtifactState>((set, get) => ({
     if (id) {
       const artifact = get().artifacts[id];
       if (artifact) useSceneStore.getState().setActiveScene(artifact.scene);
+      // Investigation threading order: opening an artifact always means
+      // "show me this investigation" — the transcript (keyed on
+      // sessionStore.activeThreadId) and the artifact stack move together
+      // by construction, the same centralization precedent as the
+      // sceneStore.setActiveScene call above. This also replaces the
+      // earlier isLandingOverride-clearing call: activeThreadId !== null
+      // is now the single signal Frame.tsx uses to leave the landing
+      // composer, so setting it here already has that effect for free.
+      const owningTurn = useSessionStore.getState().turns.find((turn) => turn.artifactRef === id);
+      if (owningTurn) useSessionStore.getState().setActiveThread(owningTurn.threadId);
     }
   },
   // Used only by presentScene.ts's autoOpen path for a Monitor-module

@@ -4,18 +4,20 @@ Status: DRAFT. Edit freely — names, numbers, tone. Once ratified, this file mo
 
 ## World
 
-Merlin is the AI intelligence layer above **Solent Markets**, a fictional EU-regulated
-venue for tokenized real-world assets — bonds, real estate, commodities and funds
-issued as digital securities. Merlin is not another data source, dashboard or report: it is the reasoning layer above the venue's
-operational systems (issuance, custody, settlement), connecting research, market
-activity, compliance and risk into one conversational surface. The underlying systems
+Merlin is a cross-venue AI intelligence layer — not another data source, dashboard
+or report, but the reasoning layer that connects research, market activity,
+compliance and risk into one conversational surface across every venue it connects
+to. **Solent Markets**, a fictional EU-regulated venue for tokenized real-world
+assets — bonds, real estate, commodities and funds issued as digital securities —
+is one connected venue Merlin monitors, and the one this prototype reasons over end
+to end: issuance, custody, settlement, fully instrumented. The underlying systems
 remain the source of truth; Merlin is the interface through which they become
 intelligence. Every investigation follows the same loop — plan, search, retrieve, correlate,
 synthesize, verify — surfacing confidence and recommending the next action. Merlin
 never predicts; it assembles evidence, and every recommendation carries its
 provenance, its confidence — including what remains unverified — and the data used
 to reach it. Desk users are analysts and portfolio managers: they ask questions
-in natural language, watch the agent reason across the venue's systems, and act on
+in natural language, watch the agent reason across connected venues' systems, and act on
 what it assembles. The register is professional and calm: money, risk, and regulation
 — confidence earned by showing work, never hype.
 

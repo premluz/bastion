@@ -1,0 +1,99 @@
+- generic [ref=f184e6]:
+  - link "Skip to content" [ref=f184e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f184e10]:
+    - navigation "Side navigation" [ref=f184e12]:
+      - generic [ref=f184e17]: Merlin
+      - generic [ref=f184e18]:
+        - group "Places" [ref=f184e19]:
+          - generic [ref=f184e22]: Places
+          - generic [ref=f184e23]:
+            - button "New investigation" [ref=f184e25] [cursor=pointer]:
+              - img [ref=f184e26]
+              - generic [ref=f184e28]: New investigation
+            - button "Discover" [ref=f184e30] [cursor=pointer]:
+              - img [ref=f184e32]
+              - generic [ref=f184e35]: Discover
+            - button "Watchlist" [ref=f184e37] [cursor=pointer]:
+              - img [ref=f184e39]
+              - generic [ref=f184e42]: Watchlist
+            - button "Data Sources" [ref=f184e44] [cursor=pointer]:
+              - img [ref=f184e46]
+              - generic [ref=f184e50]: Data Sources
+            - button "Market Pulse" [ref=f184e52] [cursor=pointer]:
+              - img [ref=f184e54]
+              - generic [ref=f184e56]: Market Pulse
+            - button "Investigations" [ref=f184e58] [cursor=pointer]:
+              - img [ref=f184e60]
+              - generic [ref=f184e63]: Investigations
+            - button "Portfolio" [ref=f184e65] [cursor=pointer]:
+              - img [ref=f184e67]
+              - generic [ref=f184e69]: Portfolio
+            - button "Risk" [ref=f184e71] [cursor=pointer]:
+              - img [ref=f184e73]
+              - generic [ref=f184e75]: Risk
+        - group "Recent" [ref=f184e76]:
+          - generic [ref=f184e77]:
+            - generic [ref=f184e79]: Recent
+            - button "Filter recent" [ref=f184e82] [cursor=pointer]:
+              - img [ref=f184e86]
+              - status
+          - generic [ref=f184e88]:
+            - generic [ref=f184e89]: Nothing yet.
+            - button "View all" [ref=f184e92] [cursor=pointer]:
+              - generic [ref=f184e93]: View all
+      - generic [ref=f184e95]:
+        - button "Collapse sidebar" [ref=f184e97] [cursor=pointer]:
+          - img [ref=f184e101]
+          - status
+        - generic [ref=f184e103]:
+          - button "Analyst Analyst" [ref=f184e104] [cursor=pointer]:
+            - generic [ref=f184e105]:
+              - img "Analyst" [ref=f184e107]:
+                - generic [ref=f184e109]: A
+              - generic [ref=f184e110]: Analyst
+              - img [ref=f184e113]
+            - status
+          - button "Notifications" [ref=f184e116] [cursor=pointer]:
+            - img [ref=f184e119]
+            - status
+    - main [ref=f184e123]:
+      - generic [ref=f184e1945]:
+        - generic [ref=f184e1946]:
+          - generic [ref=f184e1947]: Halberg Materials AG
+          - button "Watch Halberg Materials AG" [ref=f184e1949] [cursor=pointer]:
+            - img [ref=f184e1953]
+            - status
+        - generic [ref=f184e1957]:
+          - generic [ref=f184e1958]: Equity — Listed Common Stock
+          - generic [ref=f184e1959]:
+            - generic [ref=f184e1961]: Statistics
+            - generic [ref=f184e1963]:
+              - generic [ref=f184e1964]:
+                - generic [ref=f184e1966]: €1.2M
+                - generic [ref=f184e1967]: Position value
+              - generic [ref=f184e1968]:
+                - generic [ref=f184e1970]: Not yet analyzed
+                - generic [ref=f184e1971]: Status
+          - generic [ref=f184e1972]:
+            - generic [ref=f184e1974]: About
+            - generic [ref=f184e1977]:
+              - generic [ref=f184e1978]:
+                - term [ref=f184e1979]: Position value
+                - definition [ref=f184e1980]: €1.2M
+              - generic [ref=f184e1981]:
+                - term [ref=f184e1982]: Status
+                - definition [ref=f184e1983]: Not yet analyzed
+          - generic [ref=f184e1984]:
+            - generic [ref=f184e1985]: Related
+            - generic [ref=f184e1987] [cursor=pointer]:
+              - button "Open South Bow Corp" [ref=f184e1988]
+              - generic [ref=f184e1991]:
+                - generic [ref=f184e1992]: South Bow Corp
+                - text: Equity — Pipeline & Infrastructure
+          - generic [ref=f184e1993]:
+            - generic [ref=f184e1994]: Investigations
+            - status [ref=f184e1995]:
+              - generic [ref=f184e1996]:
+                - heading "No investigations yet" [level=3] [ref=f184e1997]
+                - generic [ref=f184e1998]: No investigation this session has referenced this entity.

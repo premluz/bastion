@@ -10,19 +10,14 @@ import { ResizeHandle, useResizable } from '@astryxdesign/core/Resizable';
 import { useArtifactStore, type Artifact } from '../../engine/stores/artifactStore';
 import { useSessionStore, type Turn } from '../../engine/stores/sessionStore';
 import { useWatchlistStore } from '../../engine/stores/watchlistStore';
+import { sceneFamily } from '../../engine/sceneFamily';
 import { StatusTag } from '../nodes/StatusTag';
 import { Canvas } from './Canvas';
+import pane from './PanePadding.module.css';
+import styles from './ArtifactStack.module.css';
 
 function truncate(text: string, max: number): string {
   return text.length > max ? `${text.slice(0, max - 1)}…` : text;
-}
-
-// Session lineage, display only — a refine turn's scene shares its
-// parent's id with a `-refine` suffix (the only chain in the fixture
-// data today; node-vocabulary.md's routing law names this "scene
-// family"). Computed live from existing ids, nothing persisted.
-function sceneFamily(sceneId: string): string {
-  return sceneId.replace(/-refine$/, '');
 }
 
 interface StackRow {
@@ -113,17 +108,22 @@ export function ArtifactStack() {
           resizable={resizable.props}
           isReversed
           pillPlacement="start"
-          hasDivider
           label="Resize artifact stack"
         />
       )}
-      <Card variant="default" padding={0} width={isMaximized ? '100%' : resizable.size} height="100%">
+      <Card variant="default" padding={0} width={isMaximized ? '100%' : resizable.size} className={styles.artifactCard ?? ''}>
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <div style={{ borderBottom: '1px solid var(--edge)' }}>
-            <Toolbar
-              label="Artifact stack actions"
-              startContent={
-                view === 'detail' && activeArtifact ? (
+          {/* No border between the title bar and content below it, per
+              direct feedback — Toolbar renders unwrapped now, the old
+              borderBottom div is gone. Title moved into startContent,
+              beside the back arrow, so it reads left-aligned next to it
+              instead of trailing the maximize/close icons on the right
+              (where it previously sat, inside endContent). */}
+          <Toolbar
+            label="Artifact stack actions"
+            startContent={
+              view === 'detail' && activeArtifact ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
                   <IconButton
                     label="Back to list"
                     tooltip="Back to list"
@@ -131,46 +131,44 @@ export function ArtifactStack() {
                     variant="ghost"
                     onClick={() => setView('list')}
                   />
-                ) : (
                   <Text type="label" weight="semibold">
-                    Artifacts
+                    {activeArtifact.scene.title}
                   </Text>
-                )
-              }
-              endContent={
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
-                  {view === 'detail' && activeArtifact && (
-                    <Text type="label" weight="semibold">
-                      {activeArtifact.scene.title}
-                    </Text>
-                  )}
-                  <IconButton
-                    label={isMaximized ? 'Restore' : 'Maximize'}
-                    tooltip={isMaximized ? 'Restore' : 'Maximize'}
-                    icon={<Icon icon="arrowsUpDown" size="sm" style={{ transform: 'rotate(45deg)' }} />}
-                    variant={isMaximized ? 'primary' : 'ghost'}
-                    onClick={toggleMaximize}
-                  />
-                  {/* Close acts exactly like the top-bar Artifacts control
-                      (same action) — one on/off state, two entry points. */}
-                  <IconButton
-                    label="Close artifacts"
-                    tooltip="Close"
-                    icon={<Icon icon="close" size="sm" />}
-                    variant="ghost"
-                    onClick={toggleStack}
-                  />
                 </div>
-              }
-            />
-          </div>
+              ) : (
+                <Text type="label" weight="semibold">
+                  Artifacts
+                </Text>
+              )
+            }
+            endContent={
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
+                <IconButton
+                  label={isMaximized ? 'Restore' : 'Maximize'}
+                  tooltip={isMaximized ? 'Restore' : 'Maximize'}
+                  icon={<Icon icon="arrowsUpDown" size="sm" style={{ transform: 'rotate(45deg)' }} />}
+                  variant={isMaximized ? 'primary' : 'ghost'}
+                  onClick={toggleMaximize}
+                />
+                {/* Close acts exactly like the top-bar Artifacts control
+                    (same action) — one on/off state, two entry points. */}
+                <IconButton
+                  label="Close artifacts"
+                  tooltip="Close"
+                  icon={<Icon icon="close" size="sm" />}
+                  variant="ghost"
+                  onClick={toggleStack}
+                />
+              </div>
+            }
+          />
           <div style={{ flex: 1, overflowY: 'auto' }}>
             {view === 'detail' && activeArtifact ? (
-              <div style={{ padding: 'var(--space-16)' }} onClick={handleWatchClick}>
+              <div className={pane.padded} onClick={handleWatchClick}>
                 <Canvas />
               </div>
             ) : (
-              <div style={{ padding: 'var(--space-16)' }}>
+              <div className={pane.padded}>
                 <List hasDividers density="compact">
                   {rows.map(({ artifactId, artifact, turn, version }) => {
                     const isMonitor = artifact.module === 'monitor';

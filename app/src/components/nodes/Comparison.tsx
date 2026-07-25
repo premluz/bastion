@@ -43,7 +43,7 @@ export function Comparison({ title, data }: ComparisonProps) {
   return (
     <div style={{ display: 'grid', gap: 'var(--space-8)' }}>
       {title && <Text type="label">{title}</Text>}
-      <Table<Row> data={data.rows} columns={columns} density="compact" dividers="grid" textOverflow="wrap" />
+      <Table<Row> data={data.rows} columns={columns} density="compact" dividers="grid" textOverflow="wrap" hasHover />
     </div>
   );
 }

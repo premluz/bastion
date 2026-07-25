@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { ChatMessage, ChatMessageBubble, ChatMessageMetadata } from '@astryxdesign/core/Chat';
 import { Text } from '@astryxdesign/core/Text';
 import { useSessionStore } from '../../engine/stores/sessionStore';
@@ -18,8 +19,14 @@ import { ArtifactCard } from './ArtifactCard';
 // turn reads its trail live from trailStore; every other turn reads its
 // own frozen `turn.trail` (Phase 8B WO-1) — same ThinkingTrail component
 // either way, just fed a different data source.
+//
+// Investigation threading order: scoped to activeThreadId — only that
+// thread's own turns render, isolating each investigation's transcript
+// from every other one in session history rather than showing the
+// entire flat turns array.
 export function Transcript() {
   const turns = useSessionStore((state) => state.turns);
+  const activeThreadId = useSessionStore((state) => state.activeThreadId);
   const artifacts = useArtifactStore((state) => state.artifacts);
   const setOpenArtifact = useArtifactStore((state) => state.setOpenArtifact);
   const liveSteps = useTrailStore((state) => state.steps);
@@ -28,12 +35,14 @@ export function Transcript() {
   const liveElapsedMs = useTrailStore((state) => state.elapsedMs);
   const liveSkip = useTrailStore((state) => state.skip);
 
-  if (turns.length === 0) return null;
+  const threadTurns = useMemo(() => turns.filter((turn) => turn.threadId === activeThreadId), [turns, activeThreadId]);
+
+  if (threadTurns.length === 0) return null;
 
   return (
     <div style={{ display: 'grid', gap: 'var(--space-24)' }}>
-      {turns.map((turn, index) => {
-        const isLive = index === turns.length - 1 && turn.status === 'resolved' && !turn.artifactRef;
+      {threadTurns.map((turn, index) => {
+        const isLive = index === threadTurns.length - 1 && turn.status === 'resolved' && !turn.artifactRef;
         const steps = isLive ? liveSteps : turn.trail;
         const activeIndex = isLive ? liveActiveIndex : turn.trail.length - 1;
         const isComplete = isLive ? liveIsComplete : true;

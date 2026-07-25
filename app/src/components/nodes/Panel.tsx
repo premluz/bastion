@@ -15,6 +15,11 @@ import type { PanelProps } from '../../contracts/props/panel';
 const contentStyle: CSSProperties = {
   display: 'grid',
   gap: 'var(--space-16)',
+  // Grid's own min-width:auto default refuses to let this track shrink
+  // below an unwrapped child's intrinsic width, so a long text child (e.g.
+  // signal-feed's descriptions) forces the panel — and the dashboard-layout
+  // cell it sits in — wider than its allotted span instead of wrapping.
+  minWidth: 0,
   ['--container-padding-block-start' as string]: '0px',
   ['--container-padding-block-end' as string]: '0px',
 };

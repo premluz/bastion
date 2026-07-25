@@ -1,0 +1,11 @@
+/* Shared width cap for every chat-adjacent surface — the landing composer
+   (LandingState.tsx), the real chat composer (Frame.tsx's ChatBar dock),
+   and the transcript scroll column (Frame.tsx's ScrollAnchor). One class,
+   not three separately-authored max-width values, so the landing→chat
+   transition's composer genuinely lands at the same horizontal position
+   it already occupies once the real chat view mounts. */
+.viewport {
+  width: 100%;
+  max-width: 680px;
+  margin-inline: auto;
+}

@@ -1,0 +1,18 @@
+/* Content + artifact stack, side by side (architect order): a gap
+   provides the visual separation, deliberately no border/divider line
+   between them — the artifact stack's own ResizeHandle is a functional
+   drag affordance, not a decorative separator, and stays independent of
+   this. */
+.row {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: var(--space-16);
+}
+
+.contentColumn {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+}

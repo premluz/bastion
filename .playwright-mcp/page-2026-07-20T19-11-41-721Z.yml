@@ -1,0 +1,168 @@
+- generic [active] [ref=f143e1]:
+  - generic [ref=f143e4]:
+    - link "Skip to content" [ref=f143e5] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f143e8]:
+      - navigation "Side navigation" [ref=f143e10]:
+        - generic [ref=f143e15]: Merlin
+        - generic [ref=f143e16]:
+          - group "Places" [ref=f143e17]:
+            - generic [ref=f143e20]: Places
+            - generic [ref=f143e21]:
+              - button "New investigation" [ref=f143e23] [cursor=pointer]:
+                - img [ref=f143e24]
+                - generic [ref=f143e26]: New investigation
+              - button "Discover" [ref=f143e28] [cursor=pointer]:
+                - img [ref=f143e30]
+                - generic [ref=f143e33]: Discover
+              - button "Watchlist" [ref=f143e35] [cursor=pointer]:
+                - img [ref=f143e37]
+                - generic [ref=f143e40]: Watchlist
+              - button "Data Sources" [ref=f143e42] [cursor=pointer]:
+                - img [ref=f143e44]
+                - generic [ref=f143e48]: Data Sources
+              - button "Market Pulse" [ref=f143e50] [cursor=pointer]:
+                - img [ref=f143e52]
+                - generic [ref=f143e54]: Market Pulse
+              - button "Investigations" [ref=f143e56] [cursor=pointer]:
+                - img [ref=f143e58]
+                - generic [ref=f143e61]: Investigations
+              - button "Portfolio" [ref=f143e63] [cursor=pointer]:
+                - img [ref=f143e65]
+                - generic [ref=f143e67]: Portfolio
+              - button "Risk" [ref=f143e69] [cursor=pointer]:
+                - img [ref=f143e71]
+                - generic [ref=f143e73]: Risk
+          - group "Recent" [ref=f143e74]:
+            - generic [ref=f143e75]:
+              - generic [ref=f143e77]: Recent
+              - button "Filter recent" [ref=f143e80] [cursor=pointer]:
+                - img [ref=f143e84]
+                - status
+            - generic [ref=f143e86]:
+              - generic [ref=f143e87]: Nothing yet.
+              - button "View all" [ref=f143e90] [cursor=pointer]:
+                - generic [ref=f143e91]: View all
+        - generic [ref=f143e93]:
+          - button "Collapse sidebar" [ref=f143e95] [cursor=pointer]:
+            - img [ref=f143e99]
+            - status
+          - generic [ref=f143e101]:
+            - button "Analyst Analyst" [ref=f143e102] [cursor=pointer]:
+              - generic [ref=f143e103]:
+                - img "Analyst" [ref=f143e105]:
+                  - generic [ref=f143e107]: A
+                - generic [ref=f143e108]: Analyst
+                - img [ref=f143e111]
+              - status
+            - button "Notifications" [ref=f143e114] [cursor=pointer]:
+              - img [ref=f143e117]
+              - status
+      - main [ref=f143e121]:
+        - generic [ref=f143e129]:
+          - generic [ref=f143e131]: Portfolio
+          - generic [ref=f143e133]:
+            - generic [ref=f143e135]:
+              - generic [ref=f143e136]: Recommended
+              - blockquote [ref=f143e137]: Aggregate derivatives exposure sits at €21M against a €25M risk limit (84% utilized) — no breach, but the Kestrel-linked EUR/USD risk reversal concentrates nearly a third of that exposure with an unrated counterparty and warrants review.
+              - generic [ref=f143e138]:
+                - generic [ref=f143e139]:
+                  - generic [ref=f143e140]: Aggregate risk confidence
+                  - generic [ref=f143e141]: 0.71 · moderate
+                - progressbar "Aggregate risk confidence" [ref=f143e142]
+              - generic [ref=f143e144]: Kestrel Holdings is already flagged elsewhere on the venue for NordBond float accumulation — treat this counterparty's derivatives exposure as compounding risk, not an isolated flag.
+              - generic [ref=f143e145]:
+                - generic [ref=f143e147]: PortfolioAtlas
+                - generic [ref=f143e149]: RiskLens
+            - generic [ref=f143e150]:
+              - generic [ref=f143e152]:
+                - generic [ref=f143e154]: Book summary
+                - generic [ref=f143e156]:
+                  - generic [ref=f143e157]:
+                    - generic [ref=f143e159]: €21M
+                    - generic [ref=f143e160]: Aggregate exposure
+                    - generic [ref=f143e161]: 84% of €25M limit
+                  - generic [ref=f143e162]:
+                    - generic [ref=f143e164]: €170M
+                    - generic [ref=f143e165]: Total notional
+                  - generic [ref=f143e166]:
+                    - generic [ref=f143e168]: "4"
+                    - generic [ref=f143e169]: Open positions
+                  - generic [ref=f143e170]:
+                    - generic [ref=f143e172]: "2"
+                    - generic [ref=f143e173]: Flagged positions
+              - generic [ref=f143e175]:
+                - generic [ref=f143e177]: Risk limit
+                - generic [ref=f143e179]:
+                  - 'img "Risk limit utilization: 21€M of 25€M, 84%" [ref=f143e180]':
+                    - generic [ref=f143e184]: 84%
+                  - generic [ref=f143e185]:
+                    - generic [ref=f143e186]: Risk limit utilization
+                    - generic [ref=f143e187]: 21€M of 25€M
+              - generic [ref=f143e189]:
+                - generic [ref=f143e191]: Position status
+                - generic [ref=f143e194]:
+                  - generic [ref=f143e195]:
+                    - img "EUR/USD 3M Risk Reversal" [ref=f143e196]
+                    - generic [ref=f143e197]: EUR/USD 3M Risk Reversal
+                  - generic [ref=f143e198]:
+                    - img "5Y EUR Interest Rate Swap" [ref=f143e199]
+                    - generic [ref=f143e200]: 5Y EUR Interest Rate Swap
+                  - generic [ref=f143e201]:
+                    - img "GBP/EUR 6M FX Forward" [ref=f143e202]
+                    - generic [ref=f143e203]: GBP/EUR 6M FX Forward
+                  - generic [ref=f143e204]:
+                    - img "10Y USD Interest Rate Swap" [ref=f143e205]
+                    - generic [ref=f143e206]: 10Y USD Interest Rate Swap
+              - generic [ref=f143e208]:
+                - generic [ref=f143e210]: Exposure by counterparty
+                - generic [ref=f143e213]:
+                  - img "Allocation breakdown" [ref=f143e214]:
+                    - generic [ref=f143e215]:
+                      - 'generic "Fjellbank: 9M" [ref=f143e216]'
+                      - 'generic "Kestrel Holdings: 6M" [ref=f143e217]'
+                      - 'generic "Solent Markets Prime: 6M" [ref=f143e218]'
+                  - generic [ref=f143e219]:
+                    - generic [ref=f143e220]:
+                      - img [ref=f143e221]
+                      - generic [ref=f143e223]: Fjellbank · 9M
+                    - generic [ref=f143e224]:
+                      - img [ref=f143e225]
+                      - generic [ref=f143e227]: Kestrel Holdings · 6M
+                    - generic [ref=f143e228]:
+                      - img [ref=f143e229]
+                      - generic [ref=f143e231]: Solent Markets Prime · 6M
+              - generic [ref=f143e233]:
+                - generic [ref=f143e235]: Top contributors by exposure
+                - application [ref=f143e240]:
+                  - generic [ref=f143e267]:
+                    - generic [ref=f143e268]:
+                      - generic [ref=f143e270]: EUR/USD 3M RR
+                      - generic [ref=f143e272]: GBP/EUR 6M Fwd
+                    - generic [ref=f143e273]:
+                      - generic [ref=f143e275]: "0"
+                      - generic [ref=f143e277]: "3"
+                      - generic [ref=f143e279]: "6"
+                      - generic [ref=f143e281]: "9"
+                      - generic [ref=f143e283]: "12"
+              - generic [ref=f143e285]:
+                - generic [ref=f143e287]: Flagged positions
+                - generic [ref=f143e289]:
+                  - generic [ref=f143e290]:
+                    - generic [ref=f143e291]:
+                      - generic [ref=f143e292]: EUR/USD 3M Risk Reversal
+                      - generic [ref=f143e293]: Counterparty Kestrel Holdings unrated — largest single exposure at 29% of aggregate
+                    - time [ref=f143e296]: Jul 16, 2026
+                  - generic [ref=f143e297]:
+                    - generic [ref=f143e298]:
+                      - generic [ref=f143e299]: 10Y USD Interest Rate Swap
+                      - generic [ref=f143e300]: Long-dated tenor (10Y) carries elevated rate-sensitivity
+                    - time [ref=f143e303]: Jul 16, 2026
+              - generic [ref=f143e305]:
+                - generic [ref=f143e307]: Meridian Exchange
+                - generic [ref=f143e309]:
+                  - generic [ref=f143e310]: Halberg Materials AG
+                  - generic [ref=f143e311]:
+                    - generic [ref=f143e312]: €1.2M
+                    - generic [ref=f143e313]: Not yet analyzed
+  - generic [ref=f143e314]: 5Y EUR IRS

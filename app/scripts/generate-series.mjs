@@ -121,6 +121,61 @@ const YIELD_VOLATILITY_SERIES = [
 const START = "2026-04-09";
 const END = "2026-07-02";
 
+// Portfolio wiring order (2026-07-25): aggregate derivatives exposure
+// trend for the Portfolio dashboard's own risk-limit context. Endpoint
+// pinned to €21M — the real, already-authored "Aggregate exposure" figure
+// (PortfolioDashboardPage.tsx / risk-desk-dashboard.scene.json) — so the
+// chart agrees with the metric/ring-gauge quoting the same fact elsewhere
+// on the page. Start value (€15M) is an authored extrapolation, not
+// sourced from any existing fact: a plausible pre-buildup level consistent
+// with eur-5y-irs/usd-10y-irs (the two positions already on the book
+// before this window) totaling €14M, logged here rather than left
+// unstated. Same Brownian-bridge shape as the yield-volatility series,
+// scaled noise for a €M-magnitude value.
+const PORTFOLIO_EXPOSURE_SERIES = {
+  key: "portfolio-exposure-90d",
+  label: "Aggregate exposure",
+  start: 15,
+  end: 21,
+  noiseScale: 0.6,
+};
+
+// South Bow Corp price/volume (recovered 2026-07-25): the original
+// series was generated ad hoc during Phase 16 and never added to this
+// committed script — an accidental `git checkout` on the working-tree-
+// only datasets.json (this repo has exactly one initial commit; every
+// phase since has lived uncommitted) wiped it, and the exact original
+// values/seed are unrecoverable. Regenerated here for real, closing that
+// original gap rather than re-creating it: every value below is either a
+// REAL fact this codebase quotes elsewhere (end price $40.34 — entities
+// .json's own "Latest price"; the prior day's $40.26, giving the
+// documented "+0.08 delta"; the 2026-06-21 capacity-expansion-filing
+// spike, +4.5% day-over-day to $42.93 with volume 1.2M→3.35M and a
+// partial fade over the following week — all per STATE.md's Phase 16
+// revision entry) or an explicit, disclosed extrapolation (start price,
+// baseline volume, and the day-to-day noise shape — none of these were
+// ever quoted as facts elsewhere, so nothing is lost by re-choosing them).
+function applyPinnedOverrides(points, overridesByDate) {
+  return points.map((point) => (point.x in overridesByDate ? { x: point.x, y: overridesByDate[point.x] } : point));
+}
+
+const SOUTH_BOW_START_PRICE = 36.5; // extrapolated
+const SOUTH_BOW_END_PRICE = 40.34; // real: entities.json "Latest price"
+const SOUTH_BOW_PRIOR_DAY_PRICE = 40.26; // real: gives the documented +0.08 delta exactly
+// date -> [price, volume in millions of shares] — the capacity-expansion
+// -filing spike and its partial fade, pinned in full (narratively
+// significant, same precedent as NORDBOND_VOLUME_PINNED above).
+const SOUTH_BOW_SPIKE = {
+  "2026-06-18": [40.6, 0.9],
+  "2026-06-19": [40.7, 0.95],
+  "2026-06-20": [41.09, 1.2],
+  "2026-06-21": [42.93, 3.35],
+  "2026-06-22": [42.4, 2.1],
+  "2026-06-23": [42.0, 1.6],
+  "2026-06-24": [41.7, 1.3],
+  "2026-06-25": [41.5, 1.1],
+};
+
 function main() {
   const datasets = JSON.parse(readFileSync(DATASETS_PATH, "utf-8"));
 
@@ -145,8 +200,41 @@ function main() {
   if (!volumeTarget) throw new Error("Missing dataset key: nordbond-2029-volume-spikes");
   volumeTarget.series = [{ id: "volume", label: volumeTarget.series[0].label, points: NORDBOND_VOLUME_PINNED }];
 
+  const { key, label, start, end, noiseScale } = PORTFOLIO_EXPOSURE_SERIES;
+  datasets[key] = {
+    kind: "series",
+    series: [{ id: "exposure", label, points: generateDailySeries(key, START, END, start, end, noiseScale) }],
+  };
+
+  const priceOverrides = Object.fromEntries(Object.entries(SOUTH_BOW_SPIKE).map(([date, [price]]) => [date, price]));
+  const volumeOverrides = Object.fromEntries(Object.entries(SOUTH_BOW_SPIKE).map(([date, [, volume]]) => [date, volume]));
+  const pricePoints = applyPinnedOverrides(
+    generateDailySeries("south-bow-corp-price-volume-90d:price", START, END, SOUTH_BOW_START_PRICE, SOUTH_BOW_END_PRICE, 0.5),
+    priceOverrides,
+  );
+  // Endpoint delta is a quoted fact ("+0.08"), not left to the bridge's
+  // own noise draw — forced exact regardless of what the generator chose.
+  pricePoints[pricePoints.length - 2] = { x: pricePoints[pricePoints.length - 2].x, y: SOUTH_BOW_PRIOR_DAY_PRICE };
+  pricePoints[pricePoints.length - 1] = { x: pricePoints[pricePoints.length - 1].x, y: SOUTH_BOW_END_PRICE };
+  const volumePoints = applyPinnedOverrides(
+    generateDailySeries("south-bow-corp-price-volume-90d:volume", START, END, 0.8, 0.9, 0.15).map((p) => ({
+      x: p.x,
+      y: Math.max(0.3, Math.round(p.y * 100) / 100),
+    })),
+    volumeOverrides,
+  );
+  datasets["south-bow-corp-price-volume-90d"] = {
+    kind: "series",
+    series: [
+      { id: "price", label: "Price (USD)", points: pricePoints },
+      { id: "volume", label: "Volume (M shares)", points: volumePoints },
+    ],
+  };
+
   writeFileSync(DATASETS_PATH, `${JSON.stringify(datasets, null, 2)}\n`);
-  console.log(`Regenerated ${YIELD_VOLATILITY_SERIES.length} daily yield/volatility series + confirmed the pinned volume series.`);
+  console.log(
+    `Regenerated ${YIELD_VOLATILITY_SERIES.length} daily yield/volatility series + confirmed the pinned volume series + wrote ${key} + wrote south-bow-corp-price-volume-90d.`,
+  );
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

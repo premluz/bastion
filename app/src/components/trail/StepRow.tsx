@@ -3,6 +3,7 @@ import { Text } from '@astryxdesign/core/Text';
 import type { StepKind, ThinkingStep } from '../../contracts/thinking';
 import { SourceChip } from './SourceChip';
 import { ConfidenceBadge } from './ConfidenceBadge';
+import { useTextReveal } from './useTextReveal';
 import './trail.css';
 
 const KIND_ICONS: Record<StepKind, IconName> = {
@@ -36,6 +37,13 @@ interface StepRowProps {
 // silhouette. Duration shows only once a step settles, matching the
 // template's "duration on the trailing edge for completed calls."
 export function StepRow({ step, isActive }: StepRowProps) {
+  // Order-scoped to the active label only (node-vocabulary.md's
+  // ThinkingTrail law: the active step is the only animated thing on
+  // screen) — the settled branch below renders a different Text element
+  // entirely on isActive flipping false, so it never carries the reveal
+  // class and never needs a reset.
+  const revealRef = useTextReveal(step.durationMs, isActive);
+
   return (
     <div style={{ display: 'flex', gap: 'var(--space-8)', alignItems: 'flex-start' }}>
       <div
@@ -63,7 +71,7 @@ export function StepRow({ step, isActive }: StepRowProps) {
       <div style={{ display: 'grid', gap: 'var(--space-4)', flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', gap: 'var(--space-8)', justifyContent: 'space-between', alignItems: 'baseline' }}>
           {isActive ? (
-            <Text type="body" weight="medium" color="primary">
+            <Text ref={revealRef} type="body" weight="medium" color="primary" className="merlin-text-reveal">
               {step.label}
             </Text>
           ) : (

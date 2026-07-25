@@ -12,6 +12,7 @@ Guardrails and CLAUDE.md apply. Prime directive: visual problems are fixed in th
 - **Semantic** (theme files): meaning-carrying (`--surface-2`, `--accent-signal`, `--edge-highlight`). Default tier for new tokens.
 - **Component token**: last resort, only when no semantic token can express it.
 - New value goes to the **lowest tier that expresses it**; semantic tokens reference primitives, never raw values.
+- When authoring a semantic accent, verify contrast against the LIGHTEST surface a theme can produce, not just the theme you're actively looking at — a token correct in one theme's context can render illegibly in another's, even without any theme-specific value change. (Ratified 2026-07-18, Phase 12 WO-1.5: `--accent-signal` read as near-white against `default` theme's own native palette — not a bug, but only caught by checking computed fill values directly, not by eyeballing a single theme's screenshot.)
 
 ## 2. Change protocol
 - Every semantic/component token exists in EVERY registered theme file in the same change — no theme drifts.

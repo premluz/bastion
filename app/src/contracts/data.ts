@@ -32,9 +32,15 @@ export const TableDataSetSchema = z.object({
 });
 export type TableDataSet = z.infer<typeof TableDataSetSchema>;
 
+// entityId (Portfolio wiring order, 2026-07-25): a point may name a known,
+// investigable entity, same precedent as EntityLinkCellSchema above — a
+// chart category (e.g. a bar's x-label) can link out exactly like a table
+// cell does. Optional, so every existing series fixture stays valid
+// unchanged; only bar-series' bars currently read it.
 const SeriesPointSchema = z.object({
   x: z.string(),
   y: z.number(),
+  entityId: z.string().min(1).optional(),
 });
 
 const SeriesLineSchema = z.object({
@@ -108,6 +114,25 @@ const EntityAttributeSchema = z.object({
   value: z.union([z.string(), z.number()]),
 });
 
+// Derivative-shaped attribute set (Phase 12 WO-2): an optional, typed
+// sub-object on EntityDataSet — extends the existing entity shape, not a
+// new DataSet kind (per the reuse precedent every other Phase 12 addition
+// has followed). Fields cover what a derivative position needs that a
+// generic label/value attribute doesn't structurally guarantee (a
+// consumer can rely on `entity.derivative.counterparty` existing, rather
+// than grep-matching a label string). Shared fact types that ALSO apply
+// to non-derivative entities (e.g. RiskLens score) stay in the generic
+// `attributes` array — this sub-object is only for facts specific to a
+// derivative position's own identity.
+const EntityDerivativeSchema = z.object({
+  counterparty: z.string().min(1),
+  notional: z.string().min(1),
+  exposure: z.string().min(1),
+  tenor: z.string().min(1),
+  tradeDate: z.string().min(1),
+});
+export type EntityDerivative = z.infer<typeof EntityDerivativeSchema>;
+
 export const EntityDataSetSchema = z.object({
   kind: z.literal("entity"),
   entity: z.object({
@@ -115,6 +140,7 @@ export const EntityDataSetSchema = z.object({
     name: z.string().min(1),
     type: z.string().min(1),
     attributes: z.array(EntityAttributeSchema),
+    derivative: EntityDerivativeSchema.optional(),
     tags: z.array(z.string()).optional(),
   }),
 });

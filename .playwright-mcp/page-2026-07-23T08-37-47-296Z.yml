@@ -1,0 +1,90 @@
+- generic [ref=f186e6]:
+  - link "Skip to content" [ref=f186e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f186e10]:
+    - navigation "Side navigation" [ref=f186e12]:
+      - generic [ref=f186e17]: Merlin
+      - generic [ref=f186e18]:
+        - group "Places" [ref=f186e19]:
+          - generic [ref=f186e22]: Places
+          - generic [ref=f186e23]:
+            - button "New investigation" [ref=f186e25] [cursor=pointer]:
+              - img [ref=f186e26]
+              - generic [ref=f186e28]: New investigation
+            - button "Discover" [ref=f186e30] [cursor=pointer]:
+              - img [ref=f186e32]
+              - generic [ref=f186e35]: Discover
+            - button "Watchlist" [ref=f186e37] [cursor=pointer]:
+              - img [ref=f186e39]
+              - generic [ref=f186e42]: Watchlist
+            - button "Data Sources" [ref=f186e44] [cursor=pointer]:
+              - img [ref=f186e46]
+              - generic [ref=f186e50]: Data Sources
+            - button "Market Pulse" [ref=f186e52] [cursor=pointer]:
+              - img [ref=f186e54]
+              - generic [ref=f186e56]: Market Pulse
+            - button "Investigations" [ref=f186e58] [cursor=pointer]:
+              - img [ref=f186e60]
+              - generic [ref=f186e63]: Investigations
+            - button "Portfolio" [ref=f186e65] [cursor=pointer]:
+              - img [ref=f186e67]
+              - generic [ref=f186e69]: Portfolio
+            - button "Risk" [ref=f186e71] [cursor=pointer]:
+              - img [ref=f186e73]
+              - generic [ref=f186e75]: Risk
+        - group "Recent" [ref=f186e76]:
+          - generic [ref=f186e77]:
+            - generic [ref=f186e79]: Recent
+            - button "Filter recent" [ref=f186e82] [cursor=pointer]:
+              - img [ref=f186e86]
+              - status
+          - generic [ref=f186e88]:
+            - button "South Bow Corp — Capacity Expansion… Thinking…" [ref=f186e173] [cursor=pointer]:
+              - generic [ref=f186e174]: South Bow Corp — Capacity Expansion…
+              - img "Thinking…" [ref=f186e176]
+            - button "View all" [ref=f186e92] [cursor=pointer]:
+              - generic [ref=f186e93]: View all
+      - generic [ref=f186e95]:
+        - button "Collapse sidebar" [ref=f186e97] [cursor=pointer]:
+          - img [ref=f186e101]
+          - status
+        - generic [ref=f186e103]:
+          - button "Analyst Analyst" [ref=f186e104] [cursor=pointer]:
+            - generic [ref=f186e105]:
+              - img "Analyst" [ref=f186e107]:
+                - generic [ref=f186e109]: A
+              - generic [ref=f186e110]: Analyst
+              - img [ref=f186e113]
+            - status
+          - button "Notifications" [ref=f186e116] [cursor=pointer]:
+            - img [ref=f186e119]
+            - status
+    - main [ref=f186e123]:
+      - generic [ref=f186e128]:
+        - generic [ref=f186e177]:
+          - generic [ref=f186e178]: why did south bow corp move on the capacity expansion filing
+          - button "Artifacts" [disabled] [ref=f186e180]:
+            - img [ref=f186e183]
+            - status
+        - generic [ref=f186e130]:
+          - generic [ref=f186e191]:
+            - article "Message from user" [ref=f186e192]:
+              - generic [ref=f186e194]:
+                - generic [ref=f186e195]: why did south bow corp move on the capacity expansion filing
+                - generic [ref=f186e198]: Answered
+            - article "Message from assistant" [ref=f186e199]:
+              - generic [ref=f186e202]:
+                - generic [ref=f186e203]:
+                  - generic [ref=f186e204]: 3 sources
+                  - generic [ref=f186e205]: 0.0s
+                - button "Thinking trail — click to skip" [ref=f186e206] [cursor=pointer]:
+                  - generic [ref=f186e207]:
+                    - img [ref=f186e210]
+                    - generic [ref=f186e214]: Scoping the South Bow Corp price move — capacity expansion filing
+          - generic [ref=f186e218]:
+            - generic [ref=f186e220]:
+              - generic: Ask a question about the venue…
+              - textbox "Message input" [ref=f186e221]
+            - button "Send" [disabled] [ref=f186e224]:
+              - img [ref=f186e227]
+              - status

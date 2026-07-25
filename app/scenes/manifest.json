@@ -61,6 +61,45 @@
       "file": "audit-status-alert.scene.json",
       "module": "monitor",
       "intents": []
+    },
+    {
+      "id": "risk-desk-dashboard",
+      "file": "risk-desk-dashboard.scene.json",
+      "module": "portfolio",
+      "intents": [
+        "show me the risk desk dashboard",
+        "portfolio risk overview",
+        "how exposed are we on derivatives",
+        "fx and rates exposure",
+        "aggregate derivatives risk",
+        "what's flagged on the derivatives book",
+        "risk desk dashboard"
+      ]
+    },
+    {
+      "id": "eurusd-risk-reversal-detail",
+      "file": "eurusd-risk-reversal-detail.scene.json",
+      "module": "portfolio",
+      "intents": [
+        "drill into the eur/usd risk reversal",
+        "eur/usd risk reversal detail",
+        "show me the kestrel position",
+        "eur usd 3m risk reversal position",
+        "position detail for the risk reversal"
+      ]
+    },
+    {
+      "id": "south-bow-capacity-filing",
+      "file": "south-bow-capacity-filing.scene.json",
+      "module": "investigate",
+      "intents": [
+        "why did south bow corp move on the capacity expansion filing",
+        "south bow corp price move",
+        "why did south bow corp stock jump",
+        "south bow corp capacity expansion",
+        "explain south bow corp's rally",
+        "south bow corp volume spike"
+      ]
     }
   ]
 }

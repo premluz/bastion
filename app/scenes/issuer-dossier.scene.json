@@ -82,21 +82,34 @@
     "reveal": 0,
     "children": [
       {
+        "id": "issuer-dossier-summary",
+        "type": "scene-summary",
+        "reveal": 1,
+        "props": {
+          "recommendation": "Size the Aldergate Estates position, but gate settlement on audit confirmation.",
+          "investigationSummary": "Aldergate's fundamentals are sound and distributions have run unbroken for eight consecutive quarters.\n\nThe single open risk is the pending audit renewal — IssuerRegistry has not yet confirmed the outcome.",
+          "confidence": 0.58,
+          "confidenceLabel": "Forward-looking confidence",
+          "sourceRefs": ["IssuerRegistry", "CustodyGrid", "PortfolioAtlas"],
+          "caveat": "History confidence is high (0.86); this recommendation carries the lower forward-looking confidence pending IssuerRegistry's audit update."
+        }
+      },
+      {
         "id": "aldergate-header",
         "type": "entity-header",
-        "reveal": 1,
+        "reveal": 2,
         "bind": { "data": "aldergate-estates-entity" },
         "props": { "status": { "label": "Renewal pending (12 days)", "tone": "warn" } }
       },
       {
         "id": "yield-metric-panel",
         "type": "panel",
-        "reveal": 2,
+        "reveal": 3,
         "children": [
           {
             "id": "aldergate-yield-metric",
             "type": "metric",
-            "reveal": 3,
+            "reveal": 4,
             "props": {
               "label": "Yield",
               "value": "7.2%",
@@ -117,13 +130,13 @@
       {
         "id": "distribution-panel",
         "type": "panel",
-        "reveal": 4,
+        "reveal": 5,
         "props": { "title": "Distribution record" },
         "children": [
           {
             "id": "distribution-bar-series-node",
             "type": "bar-series",
-            "reveal": 5,
+            "reveal": 6,
             "props": { "valueSuffix": "M" },
             "bind": { "data": "aldergate-estates-distribution-series" }
           }
@@ -132,13 +145,13 @@
       {
         "id": "holder-concentration-panel",
         "type": "panel",
-        "reveal": 6,
+        "reveal": 7,
         "props": { "title": "Top holder concentration" },
         "children": [
           {
             "id": "holder-concentration-map-node",
             "type": "concentration-map",
-            "reveal": 7,
+            "reveal": 8,
             "props": {
               "labelColumn": "holder",
               "valueColumn": "share",
@@ -148,29 +161,6 @@
             "bind": { "data": "aldergate-holder-concentration" }
           }
         ]
-      },
-      {
-        "id": "issuer-dossier-findings",
-        "type": "text-block",
-        "reveal": 8,
-        "props": {
-          "text": "Aldergate's fundamentals are sound and distributions have run unbroken for eight consecutive quarters.\n\nThe single open risk is the pending audit renewal — IssuerRegistry has not yet confirmed the outcome."
-        }
-      },
-      {
-        "id": "issuer-dossier-forward-confidence",
-        "type": "confidence-meter",
-        "reveal": 9,
-        "props": { "label": "Forward-looking confidence", "value": 0.58 }
-      },
-      {
-        "id": "issuer-dossier-recommendation",
-        "type": "recommendation",
-        "reveal": 10,
-        "props": {
-          "text": "Size the Aldergate Estates position, but gate settlement on audit confirmation.",
-          "caveat": "History confidence is high (0.86); this recommendation carries the lower forward-looking confidence pending IssuerRegistry's audit update."
-        }
       }
     ]
   }

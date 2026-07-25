@@ -22,6 +22,14 @@ const NODE_STORIES = [
   'nodes-comparison--happy',
   'nodes-confidencemeter--happy',
   'nodes-concentrationmap--happy',
+  'nodes-scenesummary--happy',
+  'nodes-ringgauge--happy',
+  'nodes-dashboardlayout--two-columns',
+  'nodes-dashboardlayout--three-columns',
+  'nodes-dashboardlayout--four-columns',
+  'nodes-statusgrid--happy',
+  'nodes-ringchart--happy',
+  'nodes-newsfeed--happy',
 ] as const;
 
 const THEMES = ['default', 'ops-dark', 'glass'] as const;

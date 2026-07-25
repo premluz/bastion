@@ -1,13 +1,14 @@
-import { useMemo, useState } from 'react';
-import { VStack, HStack } from '@astryxdesign/core/Layout';
+import { useMemo, useRef, useState } from 'react';
+import { VStack } from '@astryxdesign/core/Layout';
 import { Text, Heading } from '@astryxdesign/core/Text';
-import { Icon } from '@astryxdesign/core/Icon';
 import { ChatComposer, ChatComposerInput } from '@astryxdesign/core/Chat';
 import { ClickableCard } from '@astryxdesign/core/ClickableCard';
 import { Grid } from '@astryxdesign/core/Grid';
 import marketPulseJson from '../../../universe/marketPulse.json';
 import { createKeywordResolver } from '../../engine/resolver/keywordResolver';
 import { submitQuery } from '../../engine/submitQuery';
+import styles from './LandingState.module.css';
+import viewport from './ChatViewport.module.css';
 
 interface MarketPulseCard {
   headline: string;
@@ -25,6 +26,14 @@ interface MarketPulseCard {
 // card.
 const SUGGESTIONS = Object.values(marketPulseJson as Record<string, MarketPulseCard>).filter((card) => card.featured);
 
+// Reads the real, live theme value rather than guessing a duration —
+// same discipline as useTextReveal.ts's own duration priming. ms only;
+// every motion token in this codebase is authored in ms (tokens.base.css).
+function readMs(varName: string): number {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  return parseFloat(raw) || 0;
+}
+
 // Landing state per Astryx's ai-chat-landing template
 // (.astryx-scratch/ai-chat-landing/page.tsx lines 303-322 for the
 // centered greeting + composer shell, lines 450-471 for the suggestion
@@ -33,73 +42,129 @@ const SUGGESTIONS = Object.values(marketPulseJson as Record<string, MarketPulseC
 // The template's category toggle (Writing/Coding/Research/Creative) is
 // dropped: Merlin has exactly one "category" — real investigation
 // intents — so the cards show directly, no filter step needed.
+//
+// ORDER — seamless landing→chat transition (in-repo, no phase): on
+// submit (typed or a card click), the heading and cards fade + collapse
+// (height, not just opacity — see LandingState.module.css's own comment
+// on why opacity alone left the composer stalling mid-slide), staggered
+// by card index, while the composer's own position settles to exactly
+// where the real chat composer dock sits — the CSS grid engine computes
+// that final position from real layout, no pixel measurement. The actual
+// submitQuery call (which swaps this component out for the real
+// transcript + ChatBar) is scheduled from the SAME real motion-token
+// values the CSS transitions themselves use (readMs, below) — one source
+// of truth, so the swap can't fire before or noticeably after the eye
+// sees the motion finish.
 export function LandingState() {
   const [value, setValue] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCollapsing, setIsCollapsing] = useState(false);
   const resolver = useMemo(() => createKeywordResolver(), []);
+  const upperRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = async (submittedValue: string) => {
+  const commit = (submittedValue: string) => {
+    void submitQuery(submittedValue, resolver).then(() => {
+      setValue('');
+      setIsSubmitting(false);
+    });
+  };
+
+  const beginTransition = (submittedValue: string) => {
     if (!submittedValue.trim() || isSubmitting) return;
     setIsSubmitting(true);
-    await submitQuery(submittedValue, resolver);
-    setValue('');
-    setIsSubmitting(false);
+
+    const exitMs = readMs('--motion-exit-duration');
+    const staggerMs = readMs('--motion-assembly-stagger');
+    const cardsTailMs = exitMs + staggerMs * Math.max(0, SUGGESTIONS.length - 1);
+    const totalMs = Math.max(cardsTailMs, exitMs);
+
+    // Imperative custom-property priming (useTextReveal.ts's own
+    // precedent), not a JSX style object — the value must land on the
+    // DOM node before the .collapsing class is added in the same tick.
+    const upper = upperRef.current;
+    upper?.style.setProperty('--collapse-duration', `${totalMs}ms`);
+    setIsCollapsing(true);
+
+    // The actual commit is sequenced off .upper's own real
+    // grid-template-rows transitionend, not the computed totalMs itself
+    // (a real, measured discrepancy — a plain setTimeout at totalMs fired
+    // ~25px before the CSS engine's own last painted frame, a small but
+    // genuine seam) — same "onAnimationEnd, not a guessed timeout"
+    // discipline assembly.css's own reveal effect already follows.
+    if (!upper) {
+      commit(submittedValue);
+      return;
+    }
+    const onDone = (event: TransitionEvent) => {
+      if (event.propertyName !== 'grid-template-rows' || event.target !== upper) return;
+      upper.removeEventListener('transitionend', onDone);
+      commit(submittedValue);
+    };
+    upper.addEventListener('transitionend', onDone);
   };
 
   return (
-    <VStack gap={8} hAlign="center" vAlign="center" height="100%" style={{ padding: 'var(--space-24)' }}>
-      <VStack gap={1} vAlign="center">
-        <HStack gap={2} vAlign="center">
-          <Icon icon="search" size="md" color="accent" />
-          <Text type="large">Merlin</Text>
-        </HStack>
-        <Heading level={1}>Where should we start?</Heading>
-      </VStack>
+    <div className={styles.root}>
+      <div ref={upperRef} className={isCollapsing ? `${styles.upper} ${styles.collapsing}` : styles.upper}>
+        <div />
+        <div className={styles.group}>
+          <div className={styles.collapseWrap}>
+            <div className={styles.fade}>
+              <Heading level={1}>Where should we start?</Heading>
+            </div>
+          </div>
 
-      <div style={{ width: '100%', maxWidth: 640 }}>
-        <ChatComposer
-          value={value}
-          onChange={setValue}
-          onSubmit={handleSubmit}
-          isDisabled={isSubmitting}
-          placeholder="Ask a question about the venue…"
-          input={<ChatComposerInput />}
-        />
+          <div className={viewport.viewport}>
+            <ChatComposer
+              value={value}
+              onChange={setValue}
+              onSubmit={beginTransition}
+              isDisabled={isSubmitting}
+              placeholder="Ask a question about the venue…"
+              input={<ChatComposerInput />}
+            />
+          </div>
+
+          <div className={styles.collapseWrap}>
+            {/* minWidth 200, not 220: at gap={3} (12px) and the shared
+                680px cap, 3 columns need 3*minWidth + 2*12 <= 680 — 220
+                works out to 684, 4px over, so the third card always
+                wrapped to its own row. Confirmed live via computed
+                grid-template-columns before picking a replacement value,
+                not guessed; 200 leaves real margin (624 total) rather
+                than sitting right at the threshold. */}
+            <Grid columns={{ minWidth: 200, max: 3 }} gap={3} width="100%" maxWidth={680}>
+              {SUGGESTIONS.map((suggestion, index) => (
+                <div key={suggestion.headline} className={styles.fade} style={{ transitionDelay: `calc(var(--motion-assembly-stagger) * ${index})` }}>
+                  <ClickableCard
+                    label={suggestion.headline}
+                    variant="muted"
+                    padding={3}
+                    isDisabled={isSubmitting}
+                    onClick={() => beginTransition(suggestion.intent)}
+                  >
+                    <VStack gap={0.5}>
+                      <Text type="label" weight="semibold">
+                        {suggestion.headline}
+                      </Text>
+                      {/* Surfaced register (node-vocabulary.md Shell section,
+                          Phase 8I): agent-authored, no evidence yet — the voice
+                          face, same as Market Pulse's own un-investigated cards.
+                          A card is a signal (headline + stake), never an action
+                          description — the correction that renamed heading/body
+                          to headline/stake. */}
+                      <Text type="supporting" color="secondary" style={{ fontFamily: 'var(--face-voice)' }}>
+                        {suggestion.stake}
+                      </Text>
+                    </VStack>
+                  </ClickableCard>
+                </div>
+              ))}
+            </Grid>
+          </div>
+        </div>
+        <div />
       </div>
-
-      {/* Phase 8C: "New investigation" resets the session with no confirm
-          dialog — nothing persists by design, so the reassurance belongs
-          here in the state you land on, not a modal at the moment of reset. */}
-      <Text type="supporting" color="disabled">
-        Nothing here is saved between investigations — start fresh anytime.
-      </Text>
-
-      <Grid columns={{ minWidth: 220, max: 3 }} gap={3} width="100%" maxWidth={720}>
-        {SUGGESTIONS.map((suggestion) => (
-          <ClickableCard
-            key={suggestion.headline}
-            label={suggestion.headline}
-            variant="muted"
-            padding={3}
-            onClick={() => handleSubmit(suggestion.intent)}
-          >
-            <VStack gap={0.5}>
-              <Text type="label" weight="semibold">
-                {suggestion.headline}
-              </Text>
-              {/* Surfaced register (node-vocabulary.md Shell section,
-                  Phase 8I): agent-authored, no evidence yet — the voice
-                  face, same as Market Pulse's own un-investigated cards.
-                  A card is a signal (headline + stake), never an action
-                  description — the correction that renamed heading/body
-                  to headline/stake. */}
-              <Text type="supporting" color="secondary" style={{ fontFamily: 'var(--face-voice)' }}>
-                {suggestion.stake}
-              </Text>
-            </VStack>
-          </ClickableCard>
-        ))}
-      </Grid>
-    </VStack>
+    </div>
   );
 }

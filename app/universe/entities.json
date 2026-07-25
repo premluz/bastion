@@ -17,6 +17,7 @@
       ],
       "tags": ["covered-bond", "benchmark", "norway"]
     },
+    "venue": "Solent Markets",
     "intent": "why did two nordbond settlements fail this week"
   },
   "aldergate-estates": {
@@ -40,6 +41,7 @@
       ],
       "tags": ["real-estate", "eu-regulated", "audit-lapsed"]
     },
+    "venue": "Solent Markets",
     "intent": "give me the full picture on aldergate estates"
   },
   "helios-yield-fund": {
@@ -57,7 +59,8 @@
         { "label": "Liquidity", "value": "Moderate" }
       ],
       "tags": ["credit-fund", "higher-volatility", "retail-concentrated"]
-    }
+    },
+    "venue": "Solent Markets"
   },
   "vantara-metals": {
     "kind": "entity",
@@ -75,7 +78,8 @@
         { "label": "RiskLens score", "value": "45/100" }
       ],
       "tags": ["commodities", "diversifier", "non-eu"]
-    }
+    },
+    "venue": "Solent Markets"
   },
   "kestrel-holdings": {
     "kind": "entity",
@@ -93,7 +97,8 @@
         { "label": "Adverse filings", "value": "None on record" }
       ],
       "tags": ["counterparty", "cyprus", "unrated"]
-    }
+    },
+    "venue": "Solent Markets"
   },
   "solent-custody": {
     "kind": "entity",
@@ -107,7 +112,81 @@
         { "label": "Failed settlements linked to", "value": "Kestrel-linked wallets (both)" }
       ],
       "tags": ["custodian", "infrastructure"]
-    }
+    },
+    "venue": "Solent Markets"
+  },
+  "eurusd-3m-risk-reversal": {
+    "kind": "entity",
+    "entity": {
+      "id": "eurusd-3m-risk-reversal",
+      "name": "EUR/USD 3M Risk Reversal",
+      "type": "FX Option",
+      "derivative": {
+        "counterparty": "Kestrel Holdings",
+        "notional": "€40M",
+        "exposure": "€6M",
+        "tenor": "3 months",
+        "tradeDate": "2026-06-02"
+      },
+      "attributes": [{ "label": "RiskLens score", "value": "58/100" }],
+      "tags": ["derivative", "fx-option", "kestrel-linked"]
+    },
+    "venue": "Solent Markets",
+    "intent": "drill into the eur/usd risk reversal"
+  },
+  "eur-5y-irs": {
+    "kind": "entity",
+    "entity": {
+      "id": "eur-5y-irs",
+      "name": "5Y EUR Interest Rate Swap",
+      "type": "Interest Rate Swap",
+      "attributes": [
+        { "label": "Counterparty", "value": "Fjellbank" },
+        { "label": "Notional", "value": "€70M" },
+        { "label": "Mark-to-market exposure", "value": "€9M" },
+        { "label": "Tenor", "value": "5 years" },
+        { "label": "Trade date", "value": "2026-03-18" },
+        { "label": "RiskLens score", "value": "22/100" }
+      ],
+      "tags": ["derivative", "rate-swap"]
+    },
+    "venue": "Solent Markets"
+  },
+  "gbpeur-6m-forward": {
+    "kind": "entity",
+    "entity": {
+      "id": "gbpeur-6m-forward",
+      "name": "GBP/EUR 6M FX Forward",
+      "type": "FX Forward",
+      "attributes": [
+        { "label": "Counterparty", "value": "Solent Markets Prime" },
+        { "label": "Notional", "value": "€15M" },
+        { "label": "Mark-to-market exposure", "value": "€1M" },
+        { "label": "Tenor", "value": "6 months" },
+        { "label": "Trade date", "value": "2026-06-20" },
+        { "label": "RiskLens score", "value": "15/100" }
+      ],
+      "tags": ["derivative", "fx-forward"]
+    },
+    "venue": "Solent Markets"
+  },
+  "usd-10y-irs": {
+    "kind": "entity",
+    "entity": {
+      "id": "usd-10y-irs",
+      "name": "10Y USD Interest Rate Swap",
+      "type": "Interest Rate Swap",
+      "attributes": [
+        { "label": "Counterparty", "value": "Solent Markets Prime" },
+        { "label": "Notional", "value": "€45M" },
+        { "label": "Mark-to-market exposure", "value": "€5M" },
+        { "label": "Tenor", "value": "10 years" },
+        { "label": "Trade date", "value": "2026-01-09" },
+        { "label": "RiskLens score", "value": "31/100" }
+      ],
+      "tags": ["derivative", "rate-swap", "long-duration"]
+    },
+    "venue": "Solent Markets"
   },
   "mira-voss": {
     "kind": "entity",
@@ -121,6 +200,40 @@
         { "label": "Context", "value": "Quoted in filings" }
       ],
       "tags": ["person", "fjellbank"]
-    }
+    },
+    "venue": "Solent Markets"
+  },
+  "halberg-materials": {
+    "kind": "entity",
+    "entity": {
+      "id": "halberg-materials",
+      "name": "Halberg Materials AG",
+      "type": "Equity — Listed Common Stock",
+      "attributes": [
+        { "label": "Position value", "value": "€1.2M" },
+        { "label": "Status", "value": "Not yet analyzed" }
+      ],
+      "tags": ["equity", "unreasoned"]
+    },
+    "venue": "Meridian Exchange"
+  },
+  "south-bow-corp": {
+    "kind": "entity",
+    "entity": {
+      "id": "south-bow-corp",
+      "name": "South Bow Corp",
+      "type": "Equity — Pipeline & Infrastructure",
+      "attributes": [
+        { "label": "Sector", "value": "Energy infrastructure — natural gas pipelines & export terminals" },
+        { "label": "Exchange", "value": "Meridian Exchange" },
+        { "label": "Latest price", "value": "$40.34" },
+        { "label": "Dividend yield", "value": "3.1%" },
+        { "label": "Market cap", "value": "$8.6B" },
+        { "label": "RiskLens score", "value": "27/100" }
+      ],
+      "tags": ["equity", "pipeline-infrastructure"]
+    },
+    "venue": "Meridian Exchange",
+    "intent": "why did south bow corp move on the capacity expansion filing"
   }
 }

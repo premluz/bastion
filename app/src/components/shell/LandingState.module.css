@@ -1,0 +1,85 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--space-24);
+}
+
+/* Reflow-driven collapse, not a per-element transform to a guessed pixel
+   offset: a 3-row grid (spacer / group / spacer) with symmetric 1fr
+   tracks centers .group exactly like the old vAlign="center" VStack did.
+   On collapse, the bottom spacer's track shrinks to 0fr AND (critically)
+   .group's own height shrinks too, via the nested collapse wraps below —
+   CSS Grid genuinely animates `fr` track-size changes, so the browser's
+   real layout engine, not JS pixel math, settles .group's trailing edge
+   (the composer) flush against this container's bottom edge: the exact
+   same "flex-shrink:0 last child of a height:100% column" position
+   Frame.tsx's real chat composer dock occupies, regardless of whether a
+   HomeTopBar sits above it there — no pixel offset needs to be reasoned
+   about, guessed, or measured at runtime. --collapse-duration is set
+   inline (LandingState.tsx) from the SAME real motion-token values used
+   to schedule the JS commit — one source of truth, no drift between what
+   the eye sees finishing and when the actual query fires. */
+.upper {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+  transition: grid-template-rows var(--collapse-duration, var(--motion-enter-duration)) var(--motion-enter-ease);
+}
+
+.collapsing {
+  grid-template-rows: 1fr auto 0fr;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-24);
+}
+
+/* First bug fixed live, not shipped as designed: fading heading/cards to
+   opacity:0 while leaving their box size untouched does NOT free the
+   space needed for the composer to reach the true bottom edge — the
+   still-occupied (just invisible) height keeps .group tall, so the
+   spacer collapse alone only moves the group partway, and the composer
+   visibly stalls mid-slide before the real chat view swaps in under it.
+   Fix: wrap each collapsing region in its own single-row grid
+   (1fr -> 0fr, overflow hidden) so its OCCUPIED height actually reaches
+   zero, not just its opacity — the standard JS-free "CSS accordion"
+   technique, applied twice (heading, cards) rather than once. */
+.collapseWrap {
+  display: grid;
+  grid-template-rows: 1fr;
+  overflow: hidden;
+  transition: grid-template-rows var(--collapse-duration, var(--motion-exit-duration)) var(--motion-exit-ease);
+}
+
+/* A grid item's default min-height is `auto` (its own content's
+   min-content size), which clamps the row above `0fr`'s target no
+   matter what the track size requests — found live: the heading's own
+   .fade child already sets min-height:0 and collapsed correctly, but
+   Astryx's <Grid> (the cards wrap's direct child) does not, and sat at
+   its full ~308px the whole time regardless of the 0fr track. This
+   override applies uniformly to whichever direct child is present. */
+.collapseWrap > * {
+  min-height: 0;
+}
+
+.collapsing .collapseWrap {
+  grid-template-rows: 0fr;
+}
+
+.fade {
+  min-height: 0;
+  transition:
+    opacity var(--motion-exit-duration) var(--motion-exit-ease),
+    transform var(--motion-exit-duration) var(--motion-exit-ease);
+}
+
+.collapsing .fade {
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+}

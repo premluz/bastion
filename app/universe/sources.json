@@ -31,7 +31,7 @@
   },
   "RiskLens": {
     "name": "RiskLens",
-    "description": "Internal risk models: volatility, concentration, counterparty scores.",
+    "description": "Internal risk models: volatility, concentration, counterparty scores, derivatives exposure.",
     "status": "Active",
     "lastSync": "31 minutes ago"
   },
@@ -40,5 +40,11 @@
     "description": "Positions, mandates, exposures, performance, historical decisions.",
     "status": "Active",
     "lastSync": "1 hour ago"
+  },
+  "MeridianFeed": {
+    "name": "MeridianFeed",
+    "description": "Real-time price, volume, and filing feed for Meridian Exchange — the second connected venue's own market data, distinct from Solent's MarketTape.",
+    "status": "Active",
+    "lastSync": "4 minutes ago"
   }
 }

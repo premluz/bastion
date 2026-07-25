@@ -1,0 +1,8 @@
+/* Shared content padding for the composer dock (Frame.tsx) and the
+   artifact pane's own content (ArtifactStack.tsx, both its list and
+   detail sub-views) — one source of truth so the two stay in sync rather
+   than drifting as two separately-authored values. Asymmetric per direct
+   feedback: more breathing room top/bottom than left/right. */
+.padded {
+  padding: var(--space-32) var(--space-16);
+}

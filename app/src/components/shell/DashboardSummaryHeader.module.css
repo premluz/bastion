@@ -1,0 +1,10 @@
+.sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.assumptions {
+  display: grid;
+  gap: var(--space-4);
+}

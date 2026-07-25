@@ -97,31 +97,44 @@
     "reveal": 0,
     "children": [
       {
+        "id": "asset-discovery-summary",
+        "type": "scene-summary",
+        "reveal": 1,
+        "props": {
+          "recommendation": "Aldergate Estates fits the conservative mandate best, pending its audit renewal. Vantara stands as the portfolio's diversifier.",
+          "investigationSummary": "Helios's yield is real, but its RiskLens score of 61 and retail concentration sit outside the conservative mandate cited from PortfolioAtlas.\n\nNordBond remains the reference point — 5.8%, just below the 6% threshold.",
+          "confidence": 0.74,
+          "confidenceLabel": "Recommendation confidence",
+          "sourceRefs": ["MarketTape", "RiskLens", "PortfolioAtlas"],
+          "caveat": "Aldergate's audit renewal is still pending — size the position accordingly."
+        }
+      },
+      {
         "id": "summary-metrics-panel",
         "type": "panel",
-        "reveal": 1,
+        "reveal": 2,
         "children": [
           {
             "id": "summary-metrics",
             "type": "metric-grid",
-            "reveal": 2,
+            "reveal": 3,
             "children": [
               {
                 "id": "candidates-found",
                 "type": "metric",
-                "reveal": 3,
+                "reveal": 4,
                 "props": { "label": "Candidates above 6%", "value": 3, "unit": "assets" }
               },
               {
                 "id": "reference-asset",
                 "type": "metric",
-                "reveal": 4,
+                "reveal": 5,
                 "props": { "label": "Reference — NordBond 2029", "value": "5.8%", "detail": "Below threshold" }
               },
               {
                 "id": "top-yield",
                 "type": "metric",
-                "reveal": 5,
+                "reveal": 6,
                 "props": { "label": "Highest yield", "value": "9.1%", "detail": "Helios Yield Fund" }
               }
             ]
@@ -131,13 +144,13 @@
       {
         "id": "ranked-assets-panel",
         "type": "panel",
-        "reveal": 6,
+        "reveal": 7,
         "props": { "title": "Candidates ranked by yield" },
         "children": [
           {
             "id": "ranked-assets-table-node",
             "type": "data-table",
-            "reveal": 7,
+            "reveal": 8,
             "bind": { "data": "ranked-assets-table" }
           }
         ]
@@ -145,13 +158,13 @@
       {
         "id": "candidate-comparison-panel",
         "type": "panel",
-        "reveal": 8,
+        "reveal": 9,
         "props": { "title": "Candidates compared" },
         "children": [
           {
             "id": "candidate-comparison-node",
             "type": "comparison",
-            "reveal": 9,
+            "reveal": 10,
             "bind": { "data": "candidate-comparison-table" }
           }
         ]
@@ -159,56 +172,38 @@
       {
         "id": "yield-trend-panel",
         "type": "panel",
-        "reveal": 10,
+        "reveal": 11,
         "props": { "title": "90-day yield vs. volatility" },
         "children": [
           {
             "id": "aldergate-estates-trend",
             "type": "time-series",
-            "reveal": 11,
+            "reveal": 12,
             "props": { "title": "Aldergate Estates" },
             "bind": { "data": "aldergate-estates-series" }
           },
           {
             "id": "vantara-metals-trend",
             "type": "time-series",
-            "reveal": 12,
+            "reveal": 13,
             "props": { "title": "Vantara Metals" },
             "bind": { "data": "vantara-metals-series" }
           },
           {
             "id": "helios-yield-fund-trend",
             "type": "time-series",
-            "reveal": 13,
+            "reveal": 14,
             "props": { "title": "Helios Yield Fund" },
             "bind": { "data": "helios-yield-fund-series" }
           },
           {
             "id": "nordbond-2029-trend",
             "type": "time-series",
-            "reveal": 14,
+            "reveal": 15,
             "props": { "title": "NordBond 2029 (reference)" },
             "bind": { "data": "nordbond-2029-series" }
           }
         ]
-      },
-      {
-        "id": "asset-discovery-findings",
-        "type": "text-block",
-        "reveal": 15,
-        "props": {
-          "text": "Helios's yield is real, but its RiskLens score of 61 and retail concentration sit outside the conservative mandate cited from PortfolioAtlas.\n\nNordBond remains the reference point — 5.8%, just below the 6% threshold."
-        }
-      },
-      {
-        "id": "asset-discovery-recommendation",
-        "type": "recommendation",
-        "reveal": 16,
-        "props": {
-          "text": "Aldergate Estates fits the conservative mandate best, pending its audit renewal. Vantara stands as the portfolio's diversifier.",
-          "confidence": 0.74,
-          "caveat": "Aldergate's audit renewal is still pending — size the position accordingly."
-        }
       }
     ]
   }

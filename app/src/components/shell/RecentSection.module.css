@@ -15,3 +15,17 @@
 .viewAllMuted :global(.astryx-side-nav-item) {
   color: var(--ink-secondary);
 }
+
+/* Filter trigger flush to the sidebar's own right edge, matching the
+   footer icons' own alignment (collapse toggle, notifications) — direct
+   feedback that it read as less aligned than they are. Root cause,
+   confirmed via computed styles, not guessed: SideNavSection's own
+   header carries an extra 8px padding-right beyond the base padding the
+   footer row also gets, landing the filter trigger at 16px from the
+   edge against the footer icons' 8px. No stable class or prop exposes
+   that header's own padding for override (only `xstyle`, Astryx's own
+   StyleX system, unused anywhere else in this codebase), so the extra
+   8px is cancelled locally on our own wrapper instead. */
+.filterTrigger {
+  margin-right: calc(-1 * var(--space-8));
+}

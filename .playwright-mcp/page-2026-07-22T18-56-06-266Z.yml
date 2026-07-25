@@ -1,0 +1,114 @@
+- generic [active] [ref=f174e3]:
+  - generic [ref=f174e6]:
+    - link "Skip to content" [ref=f174e7] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f174e10]:
+      - navigation "Side navigation" [ref=f174e12]:
+        - generic [ref=f174e17]: Merlin
+        - generic [ref=f174e18]:
+          - group "Places" [ref=f174e19]:
+            - generic [ref=f174e22]: Places
+            - generic [ref=f174e23]:
+              - button "New investigation" [ref=f174e25] [cursor=pointer]:
+                - img [ref=f174e26]
+                - generic [ref=f174e28]: New investigation
+              - button "Discover" [ref=f174e30] [cursor=pointer]:
+                - img [ref=f174e32]
+                - generic [ref=f174e35]: Discover
+              - button "Watchlist" [ref=f174e37] [cursor=pointer]:
+                - img [ref=f174e39]
+                - generic [ref=f174e42]: Watchlist
+              - button "Data Sources" [ref=f174e44] [cursor=pointer]:
+                - img [ref=f174e46]
+                - generic [ref=f174e50]: Data Sources
+              - button "Market Pulse" [ref=f174e52] [cursor=pointer]:
+                - img [ref=f174e54]
+                - generic [ref=f174e56]: Market Pulse
+              - button "Investigations" [ref=f174e58] [cursor=pointer]:
+                - img [ref=f174e60]
+                - generic [ref=f174e63]: Investigations
+              - button "Portfolio" [ref=f174e65] [cursor=pointer]:
+                - img [ref=f174e67]
+                - generic [ref=f174e69]: Portfolio
+              - button "Risk" [ref=f174e71] [cursor=pointer]:
+                - img [ref=f174e73]
+                - generic [ref=f174e75]: Risk
+          - group "Recent" [ref=f174e76]:
+            - generic [ref=f174e77]:
+              - generic [ref=f174e79]: Recent
+              - button "Filter recent" [ref=f174e82] [cursor=pointer]:
+                - img [ref=f174e86]
+                - status
+            - generic [ref=f174e88]:
+              - generic [ref=f174e89]: Nothing yet.
+              - button "View all" [ref=f174e92] [cursor=pointer]:
+                - generic [ref=f174e93]: View all
+        - generic [ref=f174e95]:
+          - button "Collapse sidebar" [ref=f174e97] [cursor=pointer]:
+            - img [ref=f174e101]
+            - status
+          - generic [ref=f174e103]:
+            - button "Analyst Analyst" [ref=f174e104] [cursor=pointer]:
+              - generic [ref=f174e105]:
+                - img "Analyst" [ref=f174e107]:
+                  - generic [ref=f174e109]: A
+                - generic [ref=f174e110]: Analyst
+                - img [ref=f174e113]
+              - status
+            - button "Notifications" [ref=f174e116] [cursor=pointer]:
+              - img [ref=f174e119]
+              - status
+      - main [ref=f174e123]:
+        - generic [ref=f174e131]:
+          - generic [ref=f174e132]:
+            - generic [ref=f174e133]: Ostrand Kreditbank 2030
+            - button "Watch Ostrand Kreditbank 2030" [ref=f174e135] [cursor=pointer]:
+              - img [ref=f174e139]
+              - status
+          - generic [ref=f174e143]:
+            - generic [ref=f174e144]: Tokenized Covered Bond
+            - generic [ref=f174e145]:
+              - generic [ref=f174e147]: Trend
+              - generic [ref=f174e149]:
+                - generic [ref=f174e150]:
+                  - generic [ref=f174e151]:
+                    - generic [ref=f174e153]: 4.9%
+                    - generic [ref=f174e154]: Latest yield
+                  - generic [ref=f174e155]:
+                    - generic [ref=f174e157]: "-0.12pp"
+                    - generic [ref=f174e158]: Recent move
+                - application [ref=f174e161]:
+                  - generic [ref=f174e178]:
+                    - generic [ref=f174e179]:
+                      - generic [ref=f174e181]: mock-day-0
+                      - generic [ref=f174e183]: mock-day-2
+                      - generic [ref=f174e185]: mock-day-4
+                      - generic [ref=f174e187]: mock-day-6
+                      - generic [ref=f174e189]: mock-day-8
+                      - generic [ref=f174e191]: mock-day-10
+                      - generic [ref=f174e193]: mock-day-13
+                    - generic [ref=f174e194]:
+                      - generic [ref=f174e196]: "0"
+                      - generic [ref=f174e198]: "2"
+                      - generic [ref=f174e200]: "4"
+                      - generic [ref=f174e202]: "6"
+                      - generic [ref=f174e204]: "8"
+            - generic [ref=f174e205]:
+              - generic [ref=f174e207]: Statistics
+              - generic [ref=f174e209]:
+                - generic [ref=f174e210]:
+                  - generic [ref=f174e212]: 4.9%
+                  - generic [ref=f174e213]: Yield
+                - generic [ref=f174e214]:
+                  - generic [ref=f174e216]: "-0.12pp"
+                  - generic [ref=f174e217]: Recent move
+            - generic [ref=f174e218]:
+              - generic [ref=f174e220]: About
+              - generic [ref=f174e222]: No further profile authored for this entry.
+            - generic [ref=f174e223]:
+              - generic [ref=f174e224]: Investigations
+              - status [ref=f174e225]:
+                - generic [ref=f174e226]:
+                  - heading "No investigations yet" [level=3] [ref=f174e227]
+                  - generic [ref=f174e228]: No investigation this session has referenced this entity.
+  - generic [ref=f174e229]: mock-day-0

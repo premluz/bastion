@@ -17,7 +17,7 @@ export async function submitQuery(query: string, resolver: IntentResolver): Prom
   const scene = await resolver.resolve(trimmed);
 
   if (!scene) {
-    useSessionStore.getState().addTurn({
+    const threadId = useSessionStore.getState().addTurn({
       id: crypto.randomUUID(),
       utterance: trimmed,
       status: "unresolved",
@@ -25,6 +25,11 @@ export async function submitQuery(query: string, resolver: IntentResolver): Prom
       trailElapsedMs: 0,
       timestamp: Date.now(),
     });
+    // No sceneId, so addTurn always mints a fresh thread here — an
+    // unresolved query can never share lineage with anything. Still made
+    // active: the user typed this and expects to see the honest "no
+    // match" response, same as any other query would surface its result.
+    useSessionStore.getState().setActiveThread(threadId);
     // An unresolved turn changes nothing about which artifact is open —
     // the old single-slot architecture nulled sceneStore.activeScene
     // here, which was correct when Canvas was the only source of truth.

@@ -1,0 +1,211 @@
+- generic [active] [ref=f188e1]:
+  - generic [ref=f188e6]:
+    - link "Skip to content" [ref=f188e7] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f188e10]:
+      - navigation "Side navigation" [ref=f188e12]:
+        - generic [ref=f188e17]: Merlin
+        - generic [ref=f188e18]:
+          - group "Places" [ref=f188e19]:
+            - generic [ref=f188e22]: Places
+            - generic [ref=f188e23]:
+              - button "New investigation" [ref=f188e25] [cursor=pointer]:
+                - img [ref=f188e26]
+                - generic [ref=f188e28]: New investigation
+              - button "Discover" [ref=f188e30] [cursor=pointer]:
+                - img [ref=f188e32]
+                - generic [ref=f188e35]: Discover
+              - button "Watchlist" [ref=f188e37] [cursor=pointer]:
+                - img [ref=f188e39]
+                - generic [ref=f188e42]: Watchlist
+              - button "Data Sources" [ref=f188e44] [cursor=pointer]:
+                - img [ref=f188e46]
+                - generic [ref=f188e50]: Data Sources
+              - button "Market Pulse" [ref=f188e52] [cursor=pointer]:
+                - img [ref=f188e54]
+                - generic [ref=f188e56]: Market Pulse
+              - button "Investigations" [ref=f188e58] [cursor=pointer]:
+                - img [ref=f188e60]
+                - generic [ref=f188e63]: Investigations
+              - button "Portfolio" [ref=f188e65] [cursor=pointer]:
+                - img [ref=f188e67]
+                - generic [ref=f188e69]: Portfolio
+              - button "Risk" [ref=f188e71] [cursor=pointer]:
+                - img [ref=f188e73]
+                - generic [ref=f188e75]: Risk
+          - group "Recent" [ref=f188e76]:
+            - generic [ref=f188e77]:
+              - generic [ref=f188e79]: Recent
+              - button "Filter recent" [ref=f188e82] [cursor=pointer]:
+                - img [ref=f188e86]
+                - status
+            - generic [ref=f188e88]:
+              - generic [ref=f188e89]: Nothing yet.
+              - button "View all" [ref=f188e92] [cursor=pointer]:
+                - generic [ref=f188e93]: View all
+        - generic [ref=f188e95]:
+          - button "Collapse sidebar" [ref=f188e97] [cursor=pointer]:
+            - img [ref=f188e101]
+            - status
+          - generic [ref=f188e103]:
+            - button "Analyst Analyst" [ref=f188e104] [cursor=pointer]:
+              - generic [ref=f188e105]:
+                - img "Analyst" [ref=f188e107]:
+                  - generic [ref=f188e109]: A
+                - generic [ref=f188e110]: Analyst
+                - img [ref=f188e113]
+              - status
+            - button "Notifications" [ref=f188e116] [cursor=pointer]:
+              - img [ref=f188e119]
+              - status
+      - main [ref=f188e123]:
+        - generic [ref=f188e131]:
+          - generic [ref=f188e132]:
+            - generic [ref=f188e133]: NordBond 2029
+            - generic [ref=f188e134]:
+              - button "Watch NordBond 2029" [ref=f188e135] [cursor=pointer]:
+                - img [ref=f188e139]
+                - status
+              - button "Investigate NordBond 2029" [ref=f188e142] [cursor=pointer]:
+                - img [ref=f188e146]
+                - status
+          - generic [ref=f188e151]:
+            - generic [ref=f188e152]: Tokenized Covered Bond
+            - generic [ref=f188e153]:
+              - generic [ref=f188e155]: Trend
+              - generic [ref=f188e157]:
+                - generic [ref=f188e158]:
+                  - generic [ref=f188e159]:
+                    - generic [ref=f188e161]: "5.80"
+                    - generic [ref=f188e162]: Latest yield
+                  - generic [ref=f188e163]:
+                    - generic [ref=f188e165]: "+0.04"
+                    - generic [ref=f188e166]: Recent move
+                - application [ref=f188e169]:
+                  - generic [ref=f188e193]:
+                    - generic [ref=f188e194]:
+                      - generic [ref=f188e196]: 2026-04-11
+                      - generic [ref=f188e198]: 2026-04-21
+                      - generic [ref=f188e200]: 2026-05-02
+                      - generic [ref=f188e202]: 2026-05-12
+                      - generic [ref=f188e204]: 2026-05-22
+                      - generic [ref=f188e206]: 2026-06-01
+                      - generic [ref=f188e208]: 2026-06-11
+                      - generic [ref=f188e210]: 2026-06-21
+                      - generic [ref=f188e212]: 2026-07-02
+                    - generic [ref=f188e213]:
+                      - generic [ref=f188e215]: "0"
+                      - generic [ref=f188e217]: "2"
+                      - generic [ref=f188e219]: "4"
+                      - generic [ref=f188e221]: "6"
+                      - generic [ref=f188e223]: "8"
+                    - generic [ref=f188e224]:
+                      - generic [ref=f188e226]: "0"
+                      - generic [ref=f188e228]: "0.4"
+                      - generic [ref=f188e230]: "0.8"
+                      - generic [ref=f188e232]: "1.2"
+                      - generic [ref=f188e234]: "1.6"
+            - generic [ref=f188e235]:
+              - generic [ref=f188e237]: Statistics
+              - generic [ref=f188e239]:
+                - generic [ref=f188e240]:
+                  - generic [ref=f188e242]: "5.80"
+                  - generic [ref=f188e243]: Yield (%)
+                - generic [ref=f188e244]:
+                  - generic [ref=f188e246]: "+0.04"
+                  - generic [ref=f188e247]: Recent move
+                - generic [ref=f188e248]:
+                  - generic [ref=f188e250]: Fjellbank
+                  - generic [ref=f188e251]: Issuer
+                - generic [ref=f188e252]:
+                  - generic [ref=f188e254]: AA-
+                  - generic [ref=f188e255]: Credit rating
+                - generic [ref=f188e256]:
+                  - generic [ref=f188e258]: €140M
+                  - generic [ref=f188e259]: Outstanding
+                - generic [ref=f188e260]:
+                  - generic [ref=f188e262]: Norway
+                  - generic [ref=f188e263]: Jurisdiction
+            - generic [ref=f188e264]:
+              - generic [ref=f188e266]: About
+              - generic [ref=f188e269]:
+                - generic [ref=f188e270]:
+                  - term [ref=f188e271]: Issuer
+                  - definition [ref=f188e272]: Fjellbank
+                - generic [ref=f188e273]:
+                  - term [ref=f188e274]: Yield
+                  - definition [ref=f188e275]: 5.8%
+                - generic [ref=f188e276]:
+                  - term [ref=f188e277]: Credit rating
+                  - definition [ref=f188e278]: AA-
+                - generic [ref=f188e279]:
+                  - term [ref=f188e280]: Outstanding
+                  - definition [ref=f188e281]: €140M
+                - generic [ref=f188e282]:
+                  - term [ref=f188e283]: Jurisdiction
+                  - definition [ref=f188e284]: Norway
+                - generic [ref=f188e285]:
+                  - term [ref=f188e286]: RiskLens score
+                  - definition [ref=f188e287]: 18/100
+                - generic [ref=f188e288]:
+                  - term [ref=f188e289]: Liquidity
+                  - definition [ref=f188e290]: Deep
+                - generic [ref=f188e291]:
+                  - term [ref=f188e292]: Desk role
+                  - definition [ref=f188e293]: Benchmark safe asset
+            - generic [ref=f188e294]:
+              - generic [ref=f188e296]: Coverage
+              - generic [ref=f188e298]:
+                - generic [ref=f188e299]:
+                  - generic [ref=f188e300]:
+                    - generic [ref=f188e301]: Two NordBond 2029 settlements fail this week, both traced to Kestrel-linked wallets
+                    - generic [ref=f188e302]: CustodyGrid logs settlement outpacing confirmation cycles on wallets 03 and 09.
+                  - generic [ref=f188e304]:
+                    - generic [ref=f188e306]: CustodyGrid
+                    - time [ref=f188e308]: Jul 8, 2026
+                - generic [ref=f188e309]:
+                  - generic [ref=f188e310]:
+                    - generic [ref=f188e311]: NordBond 2029 remains the venue's benchmark safe asset despite settlement flags
+                    - generic [ref=f188e312]: 5.8% yield, AA- rating unchanged; Fjellbank issuance fundamentals unaffected by the wallet-cluster review.
+                  - generic [ref=f188e314]:
+                    - generic [ref=f188e316]: MarketTape
+                    - time [ref=f188e318]: Jul 8, 2026
+                - generic [ref=f188e319]:
+                  - generic [ref=f188e320]:
+                    - generic [ref=f188e321]: Kestrel Holdings' float accumulation reaches 11% across 14 wallets
+                    - generic [ref=f188e322]: Six-week build-up precedes both failed settlements; counterparty remains unrated.
+                  - generic [ref=f188e324]:
+                    - generic [ref=f188e326]: LedgerWatch
+                    - time [ref=f188e328]: Jul 6, 2026
+                - generic [ref=f188e329]:
+                  - generic [ref=f188e330]:
+                    - generic [ref=f188e331]: Fjellbank's Mira Voss reaffirms issuance calendar, no comment on wallet activity
+                    - generic [ref=f188e332]: Head of Issuance quoted in filings; NordBond 2029 issuance schedule unchanged.
+                  - generic [ref=f188e334]:
+                    - generic [ref=f188e336]: IssuerRegistry
+                    - time [ref=f188e338]: Jun 15, 2026
+            - generic [ref=f188e339]:
+              - generic [ref=f188e340]: Related
+              - generic [ref=f188e341]:
+                - generic [ref=f188e342] [cursor=pointer]:
+                  - button "Open Aldergate Estates" [ref=f188e343]
+                  - generic [ref=f188e346]:
+                    - generic [ref=f188e347]: Aldergate Estates
+                    - text: Tokenized Real Estate Portfolio
+                - generic [ref=f188e348] [cursor=pointer]:
+                  - button "Open Helios Yield Fund" [ref=f188e349]
+                  - generic [ref=f188e352]:
+                    - generic [ref=f188e353]: Helios Yield Fund
+                    - text: Tokenized Diversified Credit Fund
+                - generic [ref=f188e354] [cursor=pointer]:
+                  - button "Open Vantara Metals" [ref=f188e355]
+                  - generic [ref=f188e358]:
+                    - generic [ref=f188e359]: Vantara Metals
+                    - text: Tokenized Copper-Royalty Note
+            - generic [ref=f188e360]:
+              - generic [ref=f188e361]: Investigations
+              - status [ref=f188e362]:
+                - generic [ref=f188e363]:
+                  - heading "No investigations yet" [level=3] [ref=f188e364]
+                  - generic [ref=f188e365]: No investigation this session has referenced this entity.
+  - generic [ref=f188e366]: "0.4"

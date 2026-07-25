@@ -37,4 +37,26 @@ export const config = {
     // record itself (that's the Investigations page, unbounded).
     count: 5,
   },
+  dashboardLayout: {
+    // Phase 12 WO-1.5, per Prem's instruction: dashboard-layout is
+    // decoupled from the scene contract entirely — column count and
+    // per-card spans are Merlin's own UI configuring itself, never
+    // scene-JSON-authored (contrast scene-grid's own `columns` prop,
+    // which IS scene-authored). `spans` is author-ordered: index N
+    // governs the Nth child dashboard-layout renders, wrapping it in
+    // Astryx's GridSpan; a child beyond the array's length falls back to
+    // 1. A live, user-adjustable column count was scoped as a stretch
+    // goal for this WO and explicitly not forced — see STATE.md for why
+    // it would need a registry component to read a store (rule 6
+    // violation) or new cross-layer plumbing that doesn't exist anywhere
+    // else; logged as a follow-up instead.
+    //
+    // columns=6 (not 3) as of 2026-07-18: LCM(3,2), chosen so the existing
+    // 3-way row (ring-gauge/status-grid/ring-chart, span 2 each) and the
+    // "Top contributors"/"Flagged positions" row (span 3 each, true 50/50)
+    // both divide evenly under one shared column count — architect feedback,
+    // the latter pair rendered 2:1 under columns=3.
+    columns: 6,
+    spans: ["full", "full", 2, 2, 2, 3, 3],
+  },
 } as const;

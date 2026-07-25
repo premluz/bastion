@@ -99,31 +99,42 @@
     "reveal": 0,
     "children": [
       {
+        "id": "asset-discovery-refine-summary",
+        "type": "scene-summary",
+        "reveal": 1,
+        "props": {
+          "recommendation": "Confirming Aldergate and Helios clear the refined mandate; Vantara excluded on jurisdiction.",
+          "confidence": 0.83,
+          "confidenceLabel": "Refined-mandate confidence",
+          "sourceRefs": ["CompliancePulse", "IssuerRegistry"]
+        }
+      },
+      {
         "id": "refine-filter-summary",
         "type": "filter-summary",
-        "reveal": 1,
+        "reveal": 2,
         "props": { "constraints": ["Yield > 6%", "Conservative mandate", "EU-regulated", "≥ €50M outstanding"] }
       },
       {
         "id": "summary-metrics-panel",
         "type": "panel",
-        "reveal": 2,
+        "reveal": 3,
         "children": [
           {
             "id": "summary-metrics",
             "type": "metric-grid",
-            "reveal": 3,
+            "reveal": 4,
             "children": [
               {
                 "id": "candidates-remaining",
                 "type": "metric",
-                "reveal": 4,
+                "reveal": 5,
                 "props": { "label": "Candidates remaining", "value": 2, "unit": "assets" }
               },
               {
                 "id": "candidate-excluded",
                 "type": "metric",
-                "reveal": 5,
+                "reveal": 6,
                 "props": { "label": "Excluded", "value": "Vantara Metals", "detail": "Jurisdiction" }
               }
             ]
@@ -133,13 +144,13 @@
       {
         "id": "refined-assets-panel",
         "type": "panel",
-        "reveal": 6,
+        "reveal": 7,
         "props": { "title": "Refined candidates" },
         "children": [
           {
             "id": "refined-assets-table-node",
             "type": "data-table",
-            "reveal": 7,
+            "reveal": 8,
             "bind": { "data": "refined-assets-table" }
           }
         ]
@@ -147,20 +158,20 @@
       {
         "id": "distributions-panel",
         "type": "panel",
-        "reveal": 8,
+        "reveal": 9,
         "props": { "title": "Distribution history" },
         "children": [
           {
             "id": "aldergate-estates-distribution-table",
             "type": "data-table",
-            "reveal": 9,
+            "reveal": 10,
             "props": { "title": "Aldergate Estates" },
             "bind": { "data": "aldergate-estates-distribution" }
           },
           {
             "id": "helios-yield-fund-distribution-table",
             "type": "data-table",
-            "reveal": 10,
+            "reveal": 11,
             "props": { "title": "Helios Yield Fund" },
             "bind": { "data": "helios-yield-fund-distribution" }
           }
@@ -169,13 +180,13 @@
       {
         "id": "eu-jurisdiction-map-panel",
         "type": "panel",
-        "reveal": 11,
+        "reveal": 12,
         "props": { "title": "Candidates by jurisdiction" },
         "children": [
           {
             "id": "eu-jurisdiction-map-node",
             "type": "geo-panel",
-            "reveal": 12,
+            "reveal": 13,
             "bind": { "data": "eu-jurisdiction-map" }
           }
         ]

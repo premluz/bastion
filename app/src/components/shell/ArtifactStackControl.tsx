@@ -2,16 +2,18 @@ import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Badge } from '@astryxdesign/core/Badge';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
+import { DocumentIcon } from './DocumentIcon';
 import styles from './ArtifactStackControl.module.css';
 
 // Home top-bar control (Phase 8H, revised) — always present (disabled
 // rather than hidden when there are no artifacts yet, so the control's
 // position is stable and its disabled state itself communicates "nothing
-// to open"). Icon is the same "document" glyph ArtifactCard already uses
-// for an artifact (viewColumns — Phase 8B WO-2's ai-chat-template
-// adoption, not a fresh choice here). The count renders as a small badge
-// overlapping the icon's own top-right corner, not beside it — the
-// conventional notification-count treatment, not a second UI element.
+// to open"). Icon is the same document glyph ArtifactCard uses for an
+// artifact (DocumentIcon — a real icon-set gap, see its own comment; the
+// prior `viewColumns` stand-in read as columns/grid, not a document,
+// reported live). The count renders as a small badge overlapping the
+// icon's own top-right corner, not beside it — the conventional
+// notification-count treatment, not a second UI element.
 export function ArtifactStackControl() {
   const count = useArtifactStore((state) => Object.keys(state.artifacts).length);
   const isStackOpen = useArtifactStore((state) => state.isStackOpen);
@@ -22,7 +24,7 @@ export function ArtifactStackControl() {
       <IconButton
         label="Artifacts"
         tooltip="Artifacts"
-        icon={<Icon icon="viewColumns" size="sm" />}
+        icon={<Icon icon={DocumentIcon} size="sm" />}
         variant={isStackOpen ? 'primary' : 'ghost'}
         isDisabled={count === 0}
         onClick={toggleStack}

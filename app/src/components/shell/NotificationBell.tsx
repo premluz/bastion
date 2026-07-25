@@ -4,21 +4,26 @@ import { Badge } from '@astryxdesign/core/Badge';
 import { useSessionStore } from '../../engine/stores/sessionStore';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
 import { usePageStore } from '../../engine/stores/pageStore';
+import { BellIcon } from './BellIcon';
 import styles from './NotificationBell.module.css';
 
-// Sidebar footer control (Phase 8H, restyled to live in footerIcons
-// alongside the profile trigger). Badge = alert-module turns whose
-// artifact has never been opened (artifactStore.viewedArtifactIds is set
-// the moment setOpenArtifact fires for that id — "unseen" genuinely means
-// "never looked at," not a separate read/unread flag).
+// Sidebar footer control (Phase 8H, restyled to live in footerIcons).
+// Badge = alert-module turns whose artifact has never been opened
+// (artifactStore.viewedArtifactIds is set the moment setOpenArtifact
+// fires for that id — "unseen" genuinely means "never looked at," not a
+// separate read/unread flag).
 //
-// Always renders now, disabled at zero rather than returning null —
-// the earlier "hidden at zero" version was reported live as invisible
-// chrome ("I can't see the notification icon"), the same honest-controls
-// class ArtifactStackControl already settled: permanent chrome stays
-// visible and truthfully disabled, only its badge is conditional. No
-// bell icon exists in Astryx's closed set (exhibit 8) — "warning" stays
-// the closest fit, unchanged from the prior version.
+// Always renders, never disabled — reported live twice now: first as
+// invisible chrome when it returned null at zero (fixed by always
+// rendering), then as reading disabled/inert even once visible, since a
+// zero count also gated `isDisabled`. A real destination exists
+// regardless of count (Monitor's own history is worth checking even with
+// nothing new), so this stays a genuine, hoverable, always-enabled
+// control — only its badge is conditional, same "permanent chrome, honest
+// state" class ArtifactStackControl already settled. Icon/copy: a real
+// BellIcon (see its own comment — exhibit 8, no bell in Astryx's closed
+// set) and "Notifications," not the "warning"-icon/"Alerts" stand-in,
+// which read as an actual warning rather than a notifications affordance.
 export function NotificationBell() {
   const turns = useSessionStore((state) => state.turns);
   const artifacts = useArtifactStore((state) => state.artifacts);
@@ -33,11 +38,10 @@ export function NotificationBell() {
   return (
     <div className={styles.wrapper}>
       <IconButton
-        label="Alerts"
-        tooltip="Alerts"
-        icon={<Icon icon="warning" size="sm" />}
+        label="Notifications"
+        tooltip="Notifications"
+        icon={<Icon icon={BellIcon} size="sm" />}
         variant="ghost"
-        isDisabled={unseenCount === 0}
         onClick={() => navigateToModule('monitor')}
       />
       {unseenCount > 0 && (

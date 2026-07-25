@@ -93,3 +93,71 @@
 .astryx-list-item:hover:not([aria-selected='true']):not([aria-disabled='true']) {
   background-color: var(--color-overlay-hover);
 }
+
+/* Same rule, same reasoning, extended to Item (direct feedback,
+   2026-07-20: "all should have hover even if no source to click," the
+   Discover page's discovery-strip rows) — astryx-item is Item's own
+   stable class, confirmed in Astryx's source the same way astryx-list-item
+   was above. Astryx's Item only applies :hover styling when given
+   onClick/href, same gap ListItem had; this closes it the identical way. */
+.astryx-item:hover:not([aria-disabled='true']) {
+  background-color: var(--color-overlay-hover);
+}
+
+/* Composer shadow removed, direct feedback ("the composer should not have
+   shadow") — confirmed live via computed styles before touching anything:
+   ChatComposer's own root carries a 3-layer box-shadow unconditionally
+   (themeProps('chat-composer', {...}), astryx-chat-composer the stable
+   class its own source applies, not guessed) on every instance (landing
+   composer, chat-mode ChatBar dock) and every density. Unconditional/
+   resolves-late here too, same reasoning as the two rules above — no
+   token needed for "none," this is a removal, not a themed value.
+   A second, real shadow found live on the SAME element tree: the
+   composer's own inner "body" wrapper (bodyRef in ChatComposer's source)
+   carries its own separate box-shadow via a direct stylex.props() call,
+   not themeProps — no stable class of its own (only atomic StyleX
+   classes), so it's unreachable by name and is instead targeted as the
+   root's own direct child div, confirmed live to be exactly this
+   element and harmless as a no-op on any sibling (drawer/status slots)
+   that carries no shadow of its own. */
+.astryx-chat-composer {
+  box-shadow: none;
+}
+
+.astryx-chat-composer > div {
+  box-shadow: none;
+}
+
+/* Composer surface separation, default theme only — direct feedback ("no
+   bg for composer, or same as bg underneath it") in light scheme, confirmed
+   live via computed styles: the composer's filled, rounded surface (this
+   same "> div" child targeted above) resolves to Astryx's own
+   --color-background-popover, theme-neutral's stock light-dark() pair,
+   painted directly against :where(html,body)'s --color-background-body
+   with no intervening surface. Light scheme has only a small lightness
+   gap between the two; dark scheme the two values are literally identical
+   (exact values logged in astryx-bridge.md, not repeated here — this file
+   is lint:tokens-scanned for raw color literals). Previously masked by the
+   composer's own box-shadow, removed above per earlier direct feedback —
+   the shadow was the only separation this pairing ever had. Scoped to
+   [data-theme='default'] only: ops-dark/glass don't have this gap, since
+   their own --surface-0..3 scale (this file's neighbors, not Astryx
+   pass-through) already gives every level real tonal distance.
+   Follow-up direct feedback: a border alone read as an outline, not a
+   surface — every --color-background-* level Astryx exposes for a
+   "raised" surface (surface/card/popover) collapses to the identical
+   white in this theme's light scheme, so no pass-through swap could ever
+   give the fill itself more separation. --color-background-gray is the
+   one Astryx neutral fill token that isn't pinned to that same white
+   (theme-neutral's own badge/tag-family neutral — exact light/dark
+   values logged in astryx-bridge.md, not repeated here — genuinely
+   distinct from both the popover white and the body gray in light
+   scheme, and a visible tint over body in dark).
+   Both consumed as-is, unbridged — Astryx's own variables, same
+   "direction A" reasoning as --color-overlay-hover above, not new
+   Meridian colors; --edge/--color-border alone was checked first and
+   rejected as too close to the popover white to read as a boundary. */
+[data-theme='default'] .astryx-chat-composer > div {
+  background-color: var(--color-background-gray);
+  border: 1px solid var(--color-border-emphasized);
+}

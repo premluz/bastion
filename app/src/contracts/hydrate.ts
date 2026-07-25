@@ -2,12 +2,16 @@ import { DataSetSchema, MissingDataSetSchema, type DataSet } from "./data";
 import type { HydratedScene, Scene } from "./scene";
 import entities from "../../universe/entities.json";
 import datasets from "../../universe/datasets.json";
+import news from "../../universe/news.json";
 
-// The shared world: entities + reusable datasets, flat-keyed (CLAUDE.md §6).
-// Not sources.json — source systems are cited in ThinkingStep.sources as
-// literal {name, ref} pairs, never $ref'd into scene.data.
+// The shared world: entities + reusable datasets + news coverage,
+// flat-keyed (CLAUDE.md §6). news.json is TableDataSet-shaped per entry
+// (Phase 16 revision) so the same authored content is a single source of
+// truth for both a scene's own $ref binding and EntityDetailPage's direct
+// read. Not sources.json — source systems are cited in ThinkingStep.sources
+// as literal {name, ref} pairs, never $ref'd into scene.data.
 export function loadUniverse(): Record<string, unknown> {
-  return { ...entities, ...datasets };
+  return { ...entities, ...datasets, ...news };
 }
 
 // Stand-in for the Phase 5 resolver's hydration step: swaps every

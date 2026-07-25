@@ -7,6 +7,13 @@ this at Phase 3/7 alongside the merlin-new-node skill; components built without 
 ## Principles (every node must satisfy these)
 1. Conclude, then substantiate: headline findings reveal first, evidence after —
    the trail has already shown the reasoning; the scene is the decision surface.
+   scene-summary is always reveal:1 — the root scene-grid keeps its own
+   separate reveal:0 as the container, so scene-summary is every fixture's
+   first CHILD — leading the scene's evidence panels in normal scroll flow.
+   It is the literal implementation of conclude-then-substantiate. (Scene
+   summary band order, phase-adjacent, ratified via STATE.md.) Numbering
+   note: every fixture's own reveal sequence still reads unique and gapless
+   from there.
 2. Facts are permanent. Reasoning is active. Recommendations are provisional.
    These three never share a visual register. Three-voice typography (Phase
    8E, ◆ ratified): facts render in the UI/data faces; the agent's
@@ -167,6 +174,22 @@ The Monitor module's native surface and the Phase 9 alert's landing zone. Reads
 top-down, newest first, no infinite scroll — a feed excerpt, not a firehose.
 Each row reads as a watch item: entity · what changed · importance · timestamp.
 
+**news-feed** (Phase 16) — "what's being said about this?" Narrative
+headline + one-line dek + source attribution + timestamp (binds to table:
+rows = articles). Node-addition test against signal-feed, cited before any
+code: signal-feed answers "what just happened, operationally" — a
+settlement failure, an audit lapse, logged as an event; news-feed answers
+"what's the story being told" — editorial texture about an entity, the
+SeekingAlpha register, not a change-detection feed. Distinct question,
+distinct register, not a duplicate. Headline carries the visual weight
+(bold, larger than signal-feed's own one-line event text); dek stays quiet
+underneath in supporting text; source renders as the same SourceChip token
+every other provenance citation already uses — one recognizable chip
+regardless of where it appears. Content is authored, tied to existing
+facts where the entity already has them (Aldergate's audit lapse becomes a
+headline, not a new fact), establishing character where it doesn't (a new
+entity's first few headlines). Entity Detail's own native surface.
+
 **comparison** — "which one, and on what grounds?" 2–3 entities side by side
 across shared dimensions (yield, risk, liquidity, jurisdiction). Column-per-entity,
 dimension rows; differences carry the emphasis, similarities stay quiet. This is
@@ -177,6 +200,141 @@ restrained horizontal gauge + numeral, with one-word qualifier (low/moderate/hig
 Never a gimmick dial — it's the trust architecture made visible, and it must look
 like an instrument, not a game HUD. Appears beside conclusions, never decorating
 raw data (data isn't confident; the agent is).
+
+## Phase-adjacent — scene summary band (Scene summary band order, architect-ratified via STATE.md)
+
+**scene-summary** — "what's the verdict, before I read a single panel?" Every
+scene's first-revealed node (principle 1): recommendation prose + confidence +
+optional assumptions + optional caveat + the sources behind it, leading the
+scene's evidence panels by reveal order. It is the literal implementation of
+conclude-then-substantiate, and it replaces the old pattern of a standalone
+terminal `recommendation` plus a separate `confidence-meter` — one verdict per
+scene, not two, now leading instead of trailing. Provisional register
+(principle 2): being positioned first does not make it factual or permanent —
+it is still a recommendation, and its prose still carries the voice face
+exactly as `recommendation`'s own text does; confidence, assumptions, caveat,
+and sources are UI/data facts ABOUT that recommendation and stay in the
+UI/data faces. Literal-prop node, not bound — same standing as
+`recommendation`/`confidence-meter`, and subject to the same generated-language
+exemption from the cross-cutting exact-match rule. Reuses `SourceChip` (trail
+vocabulary) and `ConfidenceMeter` (its own registry node) directly rather than
+reinventing either rendering — the sanctioned pattern for a node that needs
+another node's already-built instrument. `recommendation` and
+`confidence-meter` remain registered nodes; scene-summary does not replace
+their existence, only their use as a scene's own terminal pairing.
+
+Confidence-timestamping principle (Sticky fix order, architect-ratified via
+STATE.md): when a fixture's recommendation and its confidence-meter disagree,
+the meter reflects the most recent narrative truth — prefer it. This is a
+recency rule, not a tie-break: state WHY the meter wins in the extrapolation
+log (what changed since the recommendation's own number was written), not
+just which value was kept. See STATE.md's audit-status-alert entry for the
+worked example (a gate that failed after the recommendation's 0.64 was
+authored — the meter's later 0.42 is the truth as of now, and the log says so).
+
+## Phase 12 — Risk & Derivatives Module
+
+Explicit non-goal, restated here verbatim per the legislation: no
+order-book node, no buy/sell ticket, ever. The portfolio view recommends;
+it never executes (principle 4 applies to this persona exactly as it does
+to every other — an escalate/hedge recommendation is prose with evidence
+adjacent, same as any other scene's verdict, not a trading action).
+
+**ring-gauge** — node-addition test (merlin-new-node skill §0), cited before
+any code: What single question does it answer? "How much of a bounded
+limit or capacity is used, at a glance?" — a fullness/utilization fact
+(exposure against a risk limit, margin used against a ceiling), not a
+conclusion. Why can't an existing node answer it? `metric` shows a raw
+number with no sense of headroom against a ceiling; `confidence-meter` is
+reserved exclusively for agent confidence about a conclusion (principle 3:
+"confidence belongs to conclusions, never to facts") and using it for a
+data fact like exposure utilization would violate that law directly, not
+just stylistically; `bar-series`/`concentration-map` show a distribution
+across categories, not a single value's fullness against one ceiling.
+Why is prose insufficient? "84% of limit" as bare text doesn't carry the
+same instant headroom read a fuel-gauge shape gives — same family of
+reasoning as `concentration-map`'s own test ("dominance is spatial, not
+prose"), one level narrower: fullness-of-one-thing, not share-of-a-whole.
+A restrained ring/donut arc + centered numeral, token-hued fill against a
+quiet track. Literal-prop node (value, max, label, tone authored per
+scene, same standing as `metric`/`confidence-meter`/`status-tag`) — facts
+register, permanent, NEVER used for agent confidence (principle 3 is the
+hard boundary between this node and `confidence-meter`, not a style
+choice). Tone is authored, not computed from the ratio — same fixed
+system-wide ok/warn/alert semantics as `status-tag`, not
+`confidence-meter`'s qualifier logic: confidence's "high" reads as good
+(green), but a risk gauge's "high" utilization reads as bad, and reusing
+confidence's tone mapping here would silently invert that meaning. A
+ratio at or beyond 1.0 (limit met or breached) still renders — the arc
+clamps visually at a full ring, the numeral does not lie about the true
+value, and `tone: "alert"` is how a breach actually reads, not a crash or
+a clipped bar. Reuses `d3-shape`'s `arc()` generator (already an approved
+dependency, Phase 8E) for the path math — NOT "confidence-meter's arc
+math," a premise this node-addition test found to be factually wrong:
+`confidence-meter` wraps Astryx's `ProgressBar` and has no arc math of any
+kind to reuse (logged in STATE.md). What IS genuinely carried over from
+`confidence-meter` is the instrument register itself — "must look like an
+instrument, not a game HUD" — applied here via the same restrained,
+single-hue, no-chrome treatment, not shared code.
+
+**dashboard-layout** — answers nothing itself; it is a denser stage, same
+standing as `scene-grid` ("if you notice it, it failed"). Distinct from
+`scene-grid` in exactly one capability: per-child asymmetric column/row
+spanning (via Astryx's `GridSpan`) — `scene-grid` offers a single global
+column count and nothing else (confirmed by reading `SceneGrid.tsx`: it
+passes `children` straight into Astryx's `Grid` with no per-child
+wrapping at all). Column count and each child's span are BOTH sourced
+from `config.ts` (`dashboardLayout.columns`/`.spans`), never from scene
+JSON — Prem's explicit instruction: this is Merlin's own UI configuring
+itself, decoupled from the scene contract entirely, not a second way to
+author the same thing `scene-grid`'s `columns` prop already does.
+`spans` is author-ordered (index N governs the Nth child), not keyed by
+node id or type. Astryx-first check (Phase 12 WO-1.5): `astryx component
+--list` surfaces `Grid`+`GridSpan` under Layout, with a `GridSpan`
+description reading "enabling masonry-style and asymmetric layouts" and
+an existing template, `GridDashboardLayout` ("mixed-size widgets and a
+full-width summary row") — almost exactly this node's brief. Wrapped
+directly, nothing custom-built.
+
+**status-grid** — "what's the state of many things at once, scannable in
+one glance?" A compact matrix of small status indicators — many cells,
+not `metric-grid`'s 2-4 ("if one metric matters more, it's a `metric`,
+not a grid member" already caps that node out of this job). Reuses
+`status-tag`'s fixed ok/warn/alert/neutral semantics per cell — not its
+code (a dense matrix of `Badge` pills would fight `status-tag`'s own
+pill-shaped, single-item register) — via Astryx's `StatusDot` (found by
+the same `astryx component --list` search: "small colored dot... always
+pair with a visible text label," which is exactly the cell shape this
+node needs) laid out in Astryx's own responsive `Grid`. Astryx-first
+check: searched explicitly for "matrix"/"heatmap" — neither exists;
+`StatusDot`+`Grid` is the closest real pair, both wrapped, no custom SVG
+needed at all for this node. Bound node (many cells means row data, not
+something hand-authored per scene): binds to the existing table
+DataSet, `labelColumn` + `toneColumn` — the schema itself refines every
+row's tone cell to one of ok/warn/alert/neutral, so a bad value is a
+`FallbackNode` (invalid-props), never a silent wrong color. Facts
+register, permanent — same as `status-tag`, never confidence.
+
+**ring-chart** — "how does this total break down across a handful of
+categories, at a glance, in a compact card?" node-addition test against
+`concentration-map` specifically, since both answer share-of-a-whole
+questions: `concentration-map`'s own treemap needs real horizontal room
+to stay legible — Phase 8E's own diagnosed bug (STATE.md) found labels
+clipping and values disappearing at the real ~353px artifact-panel
+width, well before a dashboard's own colSpan:1 card (roughly a third of
+that) would be attempted. A donut+legend stays legible at that size for
+a SMALL number of segments (capped at 6, matching the `--viz` palette)
+because segment labels live in the legend, not in-place. Extends
+`ring-gauge`'s own `d3-shape` `arc()` usage to N segments via `d3-shape`'s
+`pie()` generator (still the same approved dependency, still zero new
+architecture) — allocation-style (a whole divided into parts, no single
+"fullness" reading), not gauge-style (one value against one limit) —
+this is the real line between the two ring nodes, not their shared
+math. Bound node, same `labelColumn`/`valueColumn` binding shape as
+`concentration-map` (deliberate reuse, not a new DataSet shape). Facts
+register, permanent, muted per-segment token hues (`--accent-signal` +
+`--viz-2`..`--viz-6`) — no red/green performance coloring, same
+principle-8 discipline `concentration-map` already holds.
 
 ## Shell (Phase 5 — frame components, NOT registry nodes; intent only, design at
 Phase 5; v2 model — Phase 8B WO-2/WO-3, architect-ratified via STATE.md;
@@ -214,6 +372,25 @@ this entire app: the artifact stack. No page ever mounts SceneRenderer or
 Canvas directly — a page that wants to show what an investigation found
 links to it (an Investigate action, a stack row), it never reproduces it
 inline.
+
+Entity Detail (Phase 16, denser revision same day) is a place reached by
+content click-through (Discover's grid cards, an "Other tracked entities"
+row, a Related card) rather than left-nav, but the routing law still
+governs it exactly the same way: it renders entity facts (Trend/
+Statistics/About/Coverage, authored the same way a static dashboard page
+is — no SceneRenderer, no scene), never a scene, and its own scoped
+Investigations panel is itself a set of links into the one artifact
+stack, never an inline reproduction of what those investigations found.
+"Browse first, investigate second": a Discover card's click always lands
+here now, regardless of whether the entity carries an investigation
+intent — Investigate is this page's own header action, shown only when a
+real intent exists. Register law, restated for this page specifically:
+News/Stats/Compare is the SeekingAlpha register, not the Kraken one — no
+trade/buy-sell surface anywhere on it, ever; a directional chart line or
+a plain metric is a fact, not an invitation to transact. Related/Compare
+cards are venue peers or sector peers (same tag or same venue), a lighter
+echo of an entity's identity than entity-header itself, not the node
+reused verbatim — click browses to that entity's own page, same law.
 
 Left nav (Sidebar) is now the app's primary navigation, not a
 turn-history list — it names PLACES: New investigation (resets the
@@ -263,8 +440,34 @@ flat (every turn, newest first). A row's status dot names what happened
 to that turn: answered, alert (Monitor-module), no match — never color
 alone. No-match turns collect in their own always-last "Unresolved"
 group in module view (they don't fit any module by definition) and sit
-inline in flat view. Entities lists every universe entity with a Watch
-action and, where an investigation intent exists, an Investigate action.
+inline in flat view. Entities (Phase 14: relabeled "Discover" in the nav
+— same page/route, upgraded content; distinct from the "Discover" scene
+module named two paragraphs up, a naming coincidence worth flagging, not
+a shared mechanism) opens with three real strips reusing signal-feed's
+own row craft — Notable movers (ranked by size of move, not direction —
+a drop is just as notable as a gain), Recently cited (a live citation
+counter over this session's turns, same honesty rule as Data Sources'
+own: zero until a real trail cites it, never seeded), Newly added to
+universe (session-fixed, styled identically to the other two but not a
+real recency signal — this universe carries no authored "added on" date)
+— then a filterable card grid (dashboard-layout, one sparkline + yield +
+a directional delta per card, plus deterministic mocked filler rounding
+every category to 12 cards for browsing density — fictional, no
+`intent`, never resolves to an investigation) for the entities that
+carry genuine price/yield history, and finally the original plain list
+— Watch action and, where an investigation intent exists, an Investigate
+action — for every other universe entity. Every strip/grid row hovers,
+even the ones with nothing to click — an honest "this is legible and
+scannable" affordance, never cursor-driven, so it doesn't imply an
+action that isn't there. Register law, verbatim, binding on this page:
+no Buy/Sell/Trade action anywhere, no wallet-connect affordance, no
+price-action framing as an invitation to transact — a delta is a fact
+(principle 2, "facts register"), never a call to action; that is what
+distinguishes this page from every dashboard screenshot in its genre.
+A plain directional indicator (an up/down arrow, colored via the
+existing ok/alert accent tokens) is not itself a violation of that
+law — it's still a fact, not a CTA — the line is a Buy/Sell button or a
+wallet prompt sitting beside the number, not the number's own color.
 Watchlist holds seeded entities (fictional statuses authored in the
 universe) plus anything watched this session — from an entity-header, an
 Entities row, or automatically once an alert turn lands — session-scoped,

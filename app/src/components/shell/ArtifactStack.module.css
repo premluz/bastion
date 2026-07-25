@@ -1,0 +1,30 @@
+/* Background match (direct feedback: "the background color should be the
+   same as the composer background"). Root cause, confirmed live via
+   computed styles across all three themes (not assumed from the default
+   theme alone, where the two values happen to coincide): Card's
+   `variant="default"` resolves to `--color-background-card` (our
+   `--surface-2`), while ChatComposer's own background resolves to
+   Astryx's `--color-background-popover` (our `--surface-3`) — two
+   genuinely different surface levels in ops-dark/glass, confirmed by
+   reading astryx-bridge.md's own mapping table. No Card variant exposes
+   the popover level, so this is a scoped override, logged in
+   astryx-bridge.md per the project's own discipline for touching
+   Astryx's theming surface. Specificity matches Astryx's own
+   `.astryx-card[data-variant="default"]` rule exactly (class + class +
+   attribute vs. class + attribute) so this reliably wins regardless of
+   import order, no `!important` needed. */
+.artifactCard:global(.astryx-card)[data-variant='default'] {
+  background-color: var(--surface-3);
+}
+
+/* Margin on three sides only (feedback: "same from the bottom as the
+   composer and the same from the right and top") — left is deliberately
+   untouched, already served by Frame.module.css's `.row` gap between
+   content and the stack. `height:100%` removed in favor of default flex
+   stretch (Card is a direct flex child of ArtifactStackMount's own
+   `display:flex` wrapper) — stretch sizing correctly subtracts an
+   item's own margin from its cross-size automatically, where an explicit
+   `height:100%` would not, and would overflow instead of getting inset. */
+.artifactCard {
+  margin: var(--space-32) var(--space-16) var(--space-32) 0;
+}

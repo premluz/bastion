@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { List, ListItem } from '@astryxdesign/core/List';
+import { List } from '@astryxdesign/core/List';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import { TextInput } from '@astryxdesign/core/TextInput';
 import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
-import { StatusDot, type StatusDotVariant } from '@astryxdesign/core/StatusDot';
-import { useSessionStore, type Turn } from '../../engine/stores/sessionStore';
+import { useSessionStore } from '../../engine/stores/sessionStore';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
 import { usePageStore } from '../../engine/stores/pageStore';
+import { buildThreads, type ThreadSummary } from '../../engine/threads';
+import { reopenThread } from '../../engine/openThread';
 import { PageShell } from './PageShell';
+import { ThreadRow } from './ThreadRow';
 
 const MODULE_ORDER = ['discover', 'research', 'investigate', 'monitor', 'portfolio'] as const;
 type Module = (typeof MODULE_ORDER)[number];
@@ -23,79 +25,72 @@ function isModule(value: string): value is Module {
   return (MODULE_ORDER as readonly string[]).includes(value);
 }
 
-function truncate(text: string, max: number): string {
-  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
-}
-
-function formatTimestamp(ms: number): string {
-  return new Date(ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
-
-function statusDot(turn: Turn, module: string | undefined): { variant: StatusDotVariant; label: string } {
-  if (turn.status === 'unresolved') return { variant: 'neutral', label: 'No match' };
-  // An interrupted turn only reaches this helper via the flat view, which
-  // iterates every turn unconditionally (module view only ever pushes
-  // artifactRef-bearing rows) — without this branch it fell through to
-  // "Answered" while sitting isDisabled, a real, visible contradiction.
-  if (turn.status === 'interrupted') return { variant: 'neutral', label: 'Interrupted' };
-  return module === 'monitor' ? { variant: 'error', label: 'Alert' } : { variant: 'success', label: 'Answered' };
-}
-
 // Page (Phase 8H) — absorbs Phase 8C's Sidebar module-grouped list and
 // Phase 8G's HistoryPane flat list verbatim, as two views of the same
-// turn data rather than two separate nav destinations. The notification
+// data rather than two separate nav destinations. The notification
 // bell's "focus Monitor" jumps here in module view, scrolled to the
 // Monitor section.
+//
+// Investigation threading order: both views now group by THREAD
+// (buildThreads), not by individual turn — a base query and its refine,
+// or an entity-link that rejoined an earlier investigation, collapse
+// into one row here too, same as Sidebar's Recent. Every row is clickable
+// now (a thread is always a real, viewable transcript, even one whose
+// only turn never resolved) — the old isDisabled-for-no-artifact state
+// is gone.
 export function InvestigationsPage() {
   const [viewMode, setViewMode] = useState<'module' | 'flat'>('module');
   const [query, setQuery] = useState('');
   const turns = useSessionStore((state) => state.turns);
+  const activeThreadId = useSessionStore((state) => state.activeThreadId);
   const artifacts = useArtifactStore((state) => state.artifacts);
-  const openArtifactId = useArtifactStore((state) => state.openArtifactId);
-  const setOpenArtifact = useArtifactStore((state) => state.setOpenArtifact);
   const setPage = usePageStore((state) => state.setPage);
   const focusModule = usePageStore((state) => state.focusModule);
   const clearFocusModule = usePageStore((state) => state.clearFocusModule);
   const monitorRef = useRef<HTMLDivElement>(null);
 
   // A row is a link to the investigation, not just its artifact — opening
-  // one must land back on Home (where the investigation's own turn and
-  // trail live), not just swap the still-open stack's content while
-  // leaving the user on this page. Same fix as Sidebar's Recent rows and
-  // Market Pulse's own cards; one small helper so the two views below
-  // don't each reimplement the pairing.
-  function openInvestigation(artifactRef: string) {
+  // one must land back on Home. reopenThread (shared with Sidebar) handles
+  // which thread/artifact becomes current.
+  function openInvestigation(thread: ThreadSummary) {
     setPage('home');
-    setOpenArtifact(artifactRef);
+    reopenThread(thread);
   }
 
+  const threads = useMemo(() => buildThreads(turns), [turns]);
   const filtered = useMemo(
-    () => turns.filter((turn) => turn.utterance.toLowerCase().includes(query.trim().toLowerCase())),
-    [turns, query],
+    () => threads.filter((thread) => thread.title.toLowerCase().includes(query.trim().toLowerCase())),
+    [threads, query],
   );
 
   const rowsByModule = useMemo(() => {
-    const grouped: Record<Module, { turn: Turn; artifactRef: string }[]> = {
+    const grouped: Record<Module, ThreadSummary[]> = {
       discover: [],
       research: [],
       investigate: [],
       monitor: [],
       portfolio: [],
     };
-    const unresolved: typeof filtered = [];
-    for (const turn of filtered) {
-      if (turn.status === 'unresolved') {
-        unresolved.push(turn);
+    // Matches the pre-threading grouping exactly: only a genuinely
+    // unresolved latest turn lands in "Unresolved" — a still-thinking
+    // thread (resolved, no artifact yet) or an interrupted one stays
+    // invisible here, same as before, reachable via Sidebar's Recent or
+    // the flat view instead. Broadening "Unresolved" to catch those too
+    // would mislabel a live, in-progress investigation as unresolved.
+    const unresolved: ThreadSummary[] = [];
+    for (const thread of filtered) {
+      if (thread.latestTurn.status === 'unresolved') {
+        unresolved.push(thread);
         continue;
       }
-      const artifactRef = turn.artifactRef;
+      const artifactRef = thread.latestTurn.artifactRef;
       const module = artifactRef ? artifacts[artifactRef]?.module : undefined;
-      if (artifactRef && module && isModule(module)) grouped[module].push({ turn, artifactRef });
+      if (artifactRef && module && isModule(module)) grouped[module].push(thread);
     }
     return { grouped, unresolved };
   }, [filtered, artifacts]);
 
-  const flatRows = useMemo(() => [...filtered].reverse(), [filtered]);
+  const flatRows = filtered;
 
   // "Focus Monitor" (notification bell) always means module view, scrolled
   // to the Monitor section — one effect switches the mode, a second scrolls
@@ -130,7 +125,7 @@ export function InvestigationsPage() {
         </div>
       </div>
 
-      {turns.length === 0 ? (
+      {threads.length === 0 ? (
         <EmptyState title="No investigations yet" description="Ask a question from Home to start one." />
       ) : viewMode === 'module' ? (
         <div style={{ display: 'grid', gap: 'var(--space-24)' }}>
@@ -140,32 +135,28 @@ export function InvestigationsPage() {
             return (
               <div key={module} ref={module === 'monitor' ? monitorRef : undefined}>
                 <List header={MODULE_LABEL[module]} hasDividers density="compact">
-                  {rows.map(({ turn, artifactRef }) => {
-                    const dot = statusDot(turn, module);
-                    return (
-                      <ListItem
-                        key={turn.id}
-                        label={truncate(turn.utterance, 60)}
-                        description={formatTimestamp(turn.timestamp)}
-                        isSelected={artifactRef === openArtifactId}
-                        onClick={() => openInvestigation(artifactRef)}
-                        endContent={<StatusDot variant={dot.variant} label={dot.label} />}
-                      />
-                    );
-                  })}
+                  {rows.map((thread) => (
+                    <ThreadRow
+                      key={thread.threadId}
+                      thread={thread}
+                      module={module}
+                      isSelected={activeThreadId === thread.threadId}
+                      onClick={() => openInvestigation(thread)}
+                    />
+                  ))}
                 </List>
               </div>
             );
           })}
           {rowsByModule.unresolved.length > 0 && (
             <List header="Unresolved" hasDividers density="compact">
-              {rowsByModule.unresolved.map((turn) => (
-                <ListItem
-                  key={turn.id}
-                  label={truncate(turn.utterance, 60)}
-                  description={formatTimestamp(turn.timestamp)}
-                  isDisabled
-                  endContent={<StatusDot variant="neutral" label="No match" />}
+              {rowsByModule.unresolved.map((thread) => (
+                <ThreadRow
+                  key={thread.threadId}
+                  thread={thread}
+                  module={undefined}
+                  isSelected={activeThreadId === thread.threadId}
+                  onClick={() => openInvestigation(thread)}
                 />
               ))}
             </List>
@@ -173,19 +164,15 @@ export function InvestigationsPage() {
         </div>
       ) : (
         <List hasDividers density="compact">
-          {flatRows.map((turn) => {
-            const module = turn.artifactRef ? artifacts[turn.artifactRef]?.module : undefined;
-            const dot = statusDot(turn, module);
-            const artifactRef = turn.artifactRef;
+          {flatRows.map((thread) => {
+            const module = thread.latestTurn.artifactRef ? artifacts[thread.latestTurn.artifactRef]?.module : undefined;
             return (
-              <ListItem
-                key={turn.id}
-                label={truncate(turn.utterance, 60)}
-                description={formatTimestamp(turn.timestamp)}
-                isSelected={!!artifactRef && artifactRef === openArtifactId}
-                isDisabled={!artifactRef}
-                endContent={<StatusDot variant={dot.variant} label={dot.label} />}
-                {...(artifactRef ? { onClick: () => openInvestigation(artifactRef) } : {})}
+              <ThreadRow
+                key={thread.threadId}
+                thread={thread}
+                module={module}
+                isSelected={activeThreadId === thread.threadId}
+                onClick={() => openInvestigation(thread)}
               />
             );
           })}

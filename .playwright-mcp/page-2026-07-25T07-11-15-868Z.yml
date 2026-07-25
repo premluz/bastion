@@ -1,0 +1,61 @@
+- generic [ref=f4e3]:
+  - navigation [ref=f4e4]:
+    - button "Logo" [ref=f4e5] [cursor=pointer]:
+      - img "Logo" [ref=f4e6]
+    - generic [ref=f4e7]:
+      - button [ref=f4e8] [cursor=pointer]:
+        - img
+      - button [ref=f4e9] [cursor=pointer]:
+        - img
+      - button [ref=f4e10] [cursor=pointer]:
+        - img
+      - button [ref=f4e11] [cursor=pointer]:
+        - img
+      - button [ref=f4e12] [cursor=pointer]:
+        - img
+      - button [ref=f4e13] [cursor=pointer]:
+        - img
+      - button [ref=f4e14] [cursor=pointer]:
+        - img
+    - button [ref=f4e15] [cursor=pointer]:
+      - img
+  - generic [ref=f4e21]:
+    - img "Genie" [ref=f4e22]
+    - heading "G" [level=1] [ref=f4e23]:
+      - generic [ref=f4e24]: G
+    - generic [ref=f4e25]:
+      - paragraph [ref=f4e26]:
+        - generic [ref=f4e27]: P
+      - button "Inspect insight" [ref=f4e28] [cursor=pointer]:
+        - img [ref=f4e29]
+    - generic [ref=f4e33]:
+      - button "📷 Snapshot brands Get a snapshot of my brands pulse score" [ref=f4e34] [cursor=pointer]:
+        - generic [ref=f4e35]:
+          - generic [ref=f4e36]: 📷
+          - heading "Snapshot brands" [level=3] [ref=f4e37]
+        - paragraph [ref=f4e38]: Get a snapshot of my brands pulse score
+      - button "⭐ Top brands Which are the top 5 brands by Brand Pulse score" [ref=f4e39] [cursor=pointer]:
+        - generic [ref=f4e40]:
+          - generic [ref=f4e41]: ⭐
+          - heading "Top brands" [level=3] [ref=f4e42]
+        - paragraph [ref=f4e43]: Which are the top 5 brands by Brand Pulse score
+      - button "🎯 Find breakthrough Find breakthrough brands in the category" [ref=f4e44] [cursor=pointer]:
+        - generic [ref=f4e45]:
+          - generic [ref=f4e46]: 🎯
+          - heading "Find breakthrough" [level=3] [ref=f4e47]
+        - paragraph [ref=f4e48]: Find breakthrough brands in the category
+      - button "🔥 Snapshot Buzz Get a snapshot of Buzz score for my brands" [ref=f4e49] [cursor=pointer]:
+        - generic [ref=f4e50]:
+          - generic [ref=f4e51]: 🔥
+          - heading "Snapshot Buzz" [level=3] [ref=f4e52]
+        - paragraph [ref=f4e53]: Get a snapshot of Buzz score for my brands
+    - generic [ref=f4e57] [cursor=pointer]:
+      - textbox "Ask about a brand, trend, or category..." [ref=f4e58]
+      - generic [ref=f4e59]:
+        - button [ref=f4e60]:
+          - img [ref=f4e61]
+        - generic [ref=f4e62]:
+          - button [ref=f4e63]:
+            - img [ref=f4e64]
+          - button [ref=f4e67]:
+            - img [ref=f4e68]

@@ -7,6 +7,7 @@ import type { HydratedScene } from '../../contracts/scene';
 import { createKeywordResolver } from '../../engine/resolver/keywordResolver';
 import { submitQuery } from '../../engine/submitQuery';
 import { getIntentForEntity } from '../../engine/entityIntent';
+import { resolveClickedEntityId } from '../../engine/entityLinkClick';
 
 // Query → resolve → scene swap with exit/enter assembly: the outgoing
 // scene fades out (merlin-exit) before the incoming one mounts fresh and
@@ -24,8 +25,7 @@ export function Canvas() {
   // bridges a click to submitQuery, and it belongs here: Canvas is app
   // shell, the one layer allowed to know about both.
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {
-    const target = (event.target as HTMLElement).closest('[data-entity-id]');
-    const entityId = target?.getAttribute('data-entity-id');
+    const entityId = resolveClickedEntityId(event);
     if (!entityId) return;
     const intent = getIntentForEntity(entityId);
     if (!intent) return;

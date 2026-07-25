@@ -3,7 +3,7 @@ import { StatusDot, type StatusDotVariant } from '@astryxdesign/core/StatusDot';
 import { DropdownMenu } from '@astryxdesign/core/DropdownMenu';
 import { Text } from '@astryxdesign/core/Text';
 import { Icon } from '@astryxdesign/core/Icon';
-import type { Turn } from '../../engine/stores/sessionStore';
+import type { ThreadSummary } from '../../engine/threads';
 import type { Page } from '../../engine/stores/pageStore';
 import styles from './RecentSection.module.css';
 
@@ -24,83 +24,64 @@ const FILTER_MENU_ITEMS = [{ label: 'Type' }, { label: 'Status' }, { label: 'Cla
 
 interface RecentSectionProps {
   isCollapsed: boolean;
-  recent: Turn[];
+  threads: ThreadSummary[];
   page: Page;
-  openArtifactId: string | null;
-  hasActiveThinkingTurn: boolean;
+  activeThreadId: string | null;
   setPage: (page: Page) => void;
-  setOpenArtifact: (id: string) => void;
+  onOpenThread: (thread: ThreadSummary) => void;
 }
 
-// Extracted from Sidebar.tsx to stay under the file budget once the
-// collapsed/expanded split was added. The old always-visible search
-// input is gone in BOTH states now — replaced by a single filter-icon
-// trigger (endContent, expanded; the section's own icon, collapsed).
-// Collapsed drops the inline list too, in favor of Astryx's own
-// SideNavItem collapse behavior: a children-bearing item becomes an
-// icon button that opens a popover containing those children in full
-// expanded form — not custom-built, confirmed by reading SideNavItem's
-// own source. "funnel" reads as filter/recent, distinct from
-// Investigations' own "clock" icon.
-export function RecentSection({
-  isCollapsed,
-  recent,
-  page,
-  openArtifactId,
-  hasActiveThinkingTurn,
-  setPage,
-  setOpenArtifact,
-}: RecentSectionProps) {
+// Extracted from Sidebar.tsx to stay under the file budget. Investigation
+// threading order: each row is now one THREAD (buildThreads groups the
+// flat turns array), not one turn — a base query and its refine, or an
+// entity-link that rejoined an earlier investigation, all collapse into
+// a single row. Selection is now a plain equality check against
+// activeThreadId, the single source of truth for "which investigation is
+// showing" — the old isThinking/openArtifactId OR-condition (and its
+// hasActiveThinkingTurn/isLandingOverride suppression hacks, needed to
+// stop it from reading two things selected at once) is gone: exactly one
+// thread can ever equal activeThreadId, so the sidebar's single-
+// selection invariant now holds by construction, not by patching each
+// new edge case as it was found live.
+//
+// The old always-visible search input is gone in BOTH states — replaced
+// by a single filter-icon trigger (endContent, expanded; the section's
+// own icon, collapsed). Collapsed drops the inline list too, in favor of
+// Astryx's own SideNavItem collapse behavior: a children-bearing item
+// becomes an icon button that opens a popover containing those children
+// in full expanded form — not custom-built, confirmed by reading
+// SideNavItem's own source. "funnel" reads as filter/recent, distinct
+// from Investigations' own "clock" icon.
+export function RecentSection({ isCollapsed, threads, page, activeThreadId, setPage, onOpenThread }: RecentSectionProps) {
   // Shared between the expanded inline list and the collapsed popover's
-  // contents — same row, same selection/click rules, two containers.
-  function renderRecentRow(turn: Turn) {
-    const artifactRef = turn.artifactRef;
-    const isThinking = turn.status === 'resolved' && !artifactRef;
+  // contents — same row, same rules, two containers.
+  function renderThreadRow(thread: ThreadSummary) {
+    const { latestTurn } = thread;
+    const artifactRef = latestTurn.artifactRef;
+    const isThinking = latestTurn.status === 'resolved' && !artifactRef;
     const status: { variant: StatusDotVariant; label: string } =
-      turn.status === 'unresolved'
+      latestTurn.status === 'unresolved'
         ? { variant: 'neutral', label: 'No match' }
-        : turn.status === 'interrupted'
+        : latestTurn.status === 'interrupted'
           ? { variant: 'neutral', label: 'Interrupted' }
           : artifactRef
             ? { variant: 'success', label: 'Answered' }
             : { variant: 'accent', label: 'Thinking…' };
-    // Thinking is the current investigation, not a dead row: selected the
-    // instant it's created, and a real, working control — clicking it
-    // goes to Home to watch the live trail. An answered row's click is a
-    // link to the investigation, not just its artifact — it must land
-    // back on Home too, or clicking it elsewhere silently updates the
-    // stack while leaving you stranded on the wrong page. Selection is
-    // gated to page === 'home' and suppressed while anything is thinking
-    // — the sidebar's own exactly-one-selected-item invariant. The
-    // status dot stays unconditional; it's information, not nav state.
+    // Every thread is a real, viewable transcript now (even one whose
+    // only turn is unresolved or interrupted) — clicking always lands on
+    // Home showing it, never disabled. The status dot stays unconditional;
+    // it's information, not navigation state.
     return (
       <SideNavItem
-        key={turn.id}
-        label={truncate(turn.utterance, 36)}
-        isSelected={
-          page === 'home' && (isThinking || (!hasActiveThinkingTurn && !!artifactRef && artifactRef === openArtifactId))
-        }
-        isDisabled={turn.status === 'unresolved' || turn.status === 'interrupted'}
+        key={thread.threadId}
+        label={truncate(thread.title, 36)}
+        isSelected={page === 'home' && activeThreadId === thread.threadId}
         endContent={<StatusDot variant={status.variant} label={status.label} isPulsing={isThinking} />}
-        {...(artifactRef
-          ? {
-              onClick: () => {
-                setPage('home');
-                setOpenArtifact(artifactRef);
-              },
-            }
-          : isThinking
-            ? { onClick: () => setPage('home') }
-            : {})}
+        onClick={() => onOpenThread(thread)}
       />
     );
   }
 
-  // Muted, not full ink — "View all" is a utility link out of the list,
-  // not a peer of the turns above it. SideNavItem accepts no className
-  // (confirmed in its own source), so the override reaches its stable
-  // astryx-side-nav-item class from this wrapper — see the module's own
-  // comment for why display:contents keeps layout untouched.
   const viewAllItem = (
     <div key="view-all" className={styles.viewAllMuted}>
       <SideNavItem label="View all" onClick={() => setPage('investigations')} isSelected={false} />
@@ -115,7 +96,7 @@ export function RecentSection({
   if (isCollapsed) {
     return (
       <SideNavItem label="Recent" icon={<Icon icon="funnel" size="sm" />}>
-        {recent.length === 0 ? emptyState : recent.map(renderRecentRow)}
+        {threads.length === 0 ? emptyState : threads.map(renderThreadRow)}
         {viewAllItem}
       </SideNavItem>
     );
@@ -125,14 +106,16 @@ export function RecentSection({
     <SideNavSection
       title="Recent"
       endContent={
-        <DropdownMenu
-          button={{ label: 'Filter recent', icon: <Icon icon="funnel" size="sm" />, variant: 'ghost', isIconOnly: true }}
-          hasChevron={false}
-          items={FILTER_MENU_ITEMS}
-        />
+        <div className={styles.filterTrigger}>
+          <DropdownMenu
+            button={{ label: 'Filter recent', icon: <Icon icon="funnel" size="sm" />, variant: 'ghost', isIconOnly: true }}
+            hasChevron={false}
+            items={FILTER_MENU_ITEMS}
+          />
+        </div>
       }
     >
-      {recent.length === 0 ? <div style={{ padding: '0 var(--space-16) var(--space-12)' }}>{emptyState}</div> : recent.map(renderRecentRow)}
+      {threads.length === 0 ? <div style={{ padding: '0 var(--space-16) var(--space-12)' }}>{emptyState}</div> : threads.map(renderThreadRow)}
       {viewAllItem}
     </SideNavSection>
   );

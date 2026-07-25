@@ -1,106 +1,36 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { AppShell } from '@astryxdesign/core/AppShell';
 import { Layout, LayoutHeader } from '@astryxdesign/core/Layout';
-import { Text } from '@astryxdesign/core/Text';
 import { ThemeSwitch, type Theme } from '../ThemeSwitch/ThemeSwitch';
 import { ChatBar } from './ChatBar';
 import { Transcript } from './Transcript';
 import { LandingState } from './LandingState';
-import { ArtifactStack } from './ArtifactStack';
-import { ArtifactStackControl } from './ArtifactStackControl';
+import { ScrollAnchor } from './ScrollAnchor';
+import { HomeTopBar } from './HomeTopBar';
+import { ArtifactStackMount } from './ArtifactStackMount';
 import { InvestigationsPage } from './InvestigationsPage';
 import { EntitiesPage } from './EntitiesPage';
 import { WatchlistPage } from './WatchlistPage';
 import { DataSourcesPage } from './DataSourcesPage';
 import { MarketPulsePage } from './MarketPulsePage';
+import { PortfolioDashboardPage } from './PortfolioDashboardPage';
+import { RiskDashboardPage } from './RiskDashboardPage';
+import { EntityDetailPage } from './EntityDetailPage';
 import { Sidebar } from './Sidebar';
-import { useSceneStore } from '../../engine/stores/sceneStore';
 import { useSessionStore } from '../../engine/stores/sessionStore';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
-import { useTrailStore } from '../../engine/stores/trailStore';
 import { usePageStore, type Page } from '../../engine/stores/pageStore';
 import { connectLiveChannel } from '../../engine/liveChannel';
+import viewport from './ChatViewport.module.css';
+import layout from './Frame.module.css';
+import pane from './PanePadding.module.css';
 
 // Landing surface is the question, never a workspace (node-vocabulary.md
 // Shell law) — LandingState (centered greeting + composer + suggestion
 // cards) shows before the first turn; once a turn exists, Home switches
-// to the transcript + bottom-docked composer layout below.
-//
-// Astryx's ChatLayout was tried first (rule 5) — it's the real primitive
-// for "composer fixed bottom, content auto-scrolls" — but its auto-scroll
-// assumes a message-array model and didn't anchor correctly against our
-// static, conditionally-empty children (verified via DOM inspection, not
-// guessed: content was reproducibly rendered above the visible viewport,
-// its own "scroll to bottom" affordance didn't correct it). ChatComposer
-// (the actual input widget) works exactly as documented and is kept.
-// The anchor-to-bottom behavior below is a plain, fully-understood flex +
-// scrollTop effect — small enough to own outright rather than fight an
-// opaque internal we can't verify further without Astryx's own source.
-//
-// Bug fixed: pinning short content to the bottom via `justify-content:
-// flex-end` on the scrolling container is a known flexbox+overflow trap —
-// once content overflows, the start of it becomes unreachable by
-// scrolling (scrollHeight is correct, but the browser clamps scrollTop
-// short of showing it). `margin-top: auto` on the content child achieves
-// the same "pin short content to the bottom" result without that trap.
-function ScrollAnchor({ children }: { children: ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const activeScene = useSceneStore((state) => state.activeScene);
-  const sessionEntryCount = useSessionStore((state) => state.turns.length);
-  const trailActiveIndex = useTrailStore((state) => state.activeIndex);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (el) el.scrollTop = el.scrollHeight;
-  }, [activeScene, sessionEntryCount, trailActiveIndex]);
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        flex: '1 1 auto',
-        minHeight: 0,
-        overflowY: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <div style={{ display: 'grid', gap: 'var(--space-24)', padding: 'var(--space-24)', marginTop: 'auto' }}>
-        {children}
-      </div>
-    </div>
-  );
-}
-
-// Home's own top bar (Phase 8H) — current artifact's title on the left
-// (the most recent turn's title before anything is open), the artifact
-// stack control on the right. Distinct from the persistent AppShell
-// header below, which only ever holds ThemeSwitch.
-function HomeTopBar() {
-  const openArtifactId = useArtifactStore((state) => state.openArtifactId);
-  const artifacts = useArtifactStore((state) => state.artifacts);
-  const turns = useSessionStore((state) => state.turns);
-  const activeTitle =
-    (openArtifactId && artifacts[openArtifactId]?.scene.title) ?? turns[turns.length - 1]?.utterance ?? 'New investigation';
-
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: 'var(--space-12) var(--space-16)',
-        borderBottom: '1px solid var(--edge)',
-        flexShrink: 0,
-      }}
-    >
-      <Text type="label" weight="semibold">
-        {activeTitle}
-      </Text>
-      <ArtifactStackControl />
-    </div>
-  );
-}
+// to the transcript + bottom-docked composer layout below. ScrollAnchor
+// and HomeTopBar extracted to their own files (this file was over the
+// 200-line budget) during the panel-layout restructure order below.
 
 function renderPage(page: Page): ReactNode {
   switch (page) {
@@ -114,6 +44,12 @@ function renderPage(page: Page): ReactNode {
       return <DataSourcesPage />;
     case 'market-pulse':
       return <MarketPulsePage />;
+    case 'portfolio-dashboard':
+      return <PortfolioDashboardPage />;
+    case 'risk-dashboard':
+      return <RiskDashboardPage />;
+    case 'entity-detail':
+      return <EntityDetailPage />;
     case 'home':
       return null;
   }
@@ -121,7 +57,7 @@ function renderPage(page: Page): ReactNode {
 
 export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
   const [theme, setTheme] = useState<Theme>(initialTheme);
-  const turnCount = useSessionStore((state) => state.turns.length);
+  const activeThreadId = useSessionStore((state) => state.activeThreadId);
   const artifactCount = useArtifactStore((state) => Object.keys(state.artifacts).length);
   const isStackOpen = useArtifactStore((state) => state.isStackOpen);
   const isMaximized = useArtifactStore((state) => state.isMaximized);
@@ -137,7 +73,14 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
   // hasStarted).
   useEffect(() => connectLiveChannel(), []);
 
-  const hasStarted = turnCount > 0;
+  // Investigation threading order: activeThreadId is the single signal
+  // for "show the transcript vs. the blank landing composer," replacing
+  // the earlier isLandingOverride flag — null means no thread is active
+  // ("New investigation" clears it), any other value means that thread's
+  // turns should render. Set by submitQuery.ts/presentScene.ts when a
+  // turn starts and by artifactStore.setOpenArtifact when an artifact is
+  // deliberately reopened — never left for this component to manage.
+  const hasStarted = activeThreadId !== null;
   const showStack = isStackOpen && artifactCount > 0;
   const isMaximizedStack = showStack && isMaximized;
 
@@ -151,55 +94,62 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
           duplicating branding between a TopNav-equivalent and a
           SideNavHeading. */}
       <AppShell height="fill" contentPadding={0} sideNav={<Sidebar />}>
-        <Layout
+        <Layout /*
           header={
             <LayoutHeader hasDivider>
               <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                 <ThemeSwitch theme={theme} onThemeChange={setTheme} />
               </div>
             </LayoutHeader>
-          }
+          } */
           content={
-            <div style={{ display: 'flex', height: '100%', minHeight: 0 }}>
-              {/* Maximize (Phase 8H): the stack takes the full content
-                  width and this column hides — display:none, not
-                  unmounted, so an in-progress composer draft survives a
-                  maximize/restore round trip. Best-practice "maximize a
-                  panel" pattern (VS Code, most IDE-style workbenches):
-                  one pane goes full-width, its sibling steps aside
-                  entirely rather than sharing a now-meaningless split. */}
-              <div
-                style={{
-                  display: isMaximizedStack ? 'none' : 'flex',
-                  flexDirection: 'column',
-                  flex: '1 1 auto',
-                  minWidth: 0,
-                  height: '100%',
-                }}
-              >
-                {page === 'home' ? (
-                  hasStarted ? (
-                    <>
-                      <HomeTopBar />
-                      <ScrollAnchor>
-                        <Transcript />
-                      </ScrollAnchor>
-                      <div style={{ flexShrink: 0, padding: 'var(--space-16)' }}>
-                        <ChatBar />
-                      </div>
-                    </>
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
+              {/* Top bar runs the full row width (architect order) — a
+                  sibling of the row below, not nested inside its narrower
+                  content column, so it spans over the artifact stack too.
+                  Hidden alongside content when maximized: the whole
+                  viewport becomes just the stack at that point, no room
+                  or reason for the investigation-title bar above it. */}
+              {page === 'home' && hasStarted && !isMaximizedStack && <HomeTopBar />}
+              <div className={layout.row}>
+                {/* Maximize (Phase 8H): the stack takes the full row
+                    width and this column hides — display:none, not
+                    unmounted, so an in-progress composer draft survives a
+                    maximize/restore round trip. Best-practice "maximize a
+                    panel" pattern (VS Code, most IDE-style workbenches):
+                    one pane goes full-width, its sibling steps aside
+                    entirely rather than sharing a now-meaningless split. */}
+                <div
+                  className={layout.contentColumn}
+                  style={{ display: isMaximizedStack ? 'none' : 'flex' }}
+                >
+                  {page === 'home' ? (
+                    hasStarted ? (
+                      <>
+                        <ScrollAnchor>
+                          <Transcript />
+                        </ScrollAnchor>
+                        <div className={pane.padded} style={{ flexShrink: 0 }}>
+                          <div className={viewport.viewport}>
+                            <ChatBar />
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <LandingState />
+                    )
                   ) : (
-                    <LandingState />
-                  )
-                ) : (
-                  renderPage(page)
-                )}
+                    renderPage(page)
+                  )}
+                </div>
+                {/* Right side: Artifacts is the ONLY pane, global across
+                    every page per the routing law ("pages never host
+                    scene renders") — investigating an entity from a page
+                    still lands its result here without leaving that
+                    page. Slides in/out (ArtifactStackMount), not a plain
+                    mount toggle — see its own file for why. */}
+                <ArtifactStackMount show={showStack} />
               </div>
-              {/* Right side: Artifacts is the ONLY pane, global across every
-                  page per the routing law ("pages never host scene
-                  renders") — investigating an entity from a page still
-                  lands its result here without leaving that page. */}
-              {showStack && <ArtifactStack />}
             </div>
           }
         />

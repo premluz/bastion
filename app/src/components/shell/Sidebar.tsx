@@ -1,18 +1,26 @@
 import { useMemo, useState, type SVGProps } from 'react';
-import { SideNav, SideNavHeading, SideNavItem, SideNavSection } from '@astryxdesign/core/SideNav';
-import { Divider } from '@astryxdesign/core/Divider';
+import { SideNav, SideNavHeading, SideNavItem, SideNavSection, SideNavCollapseButton } from '@astryxdesign/core/SideNav';
 import { Icon } from '@astryxdesign/core/Icon';
 import { useSessionStore } from '../../engine/stores/sessionStore';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
 import { usePageStore, type Page } from '../../engine/stores/pageStore';
+import { buildThreads, type ThreadSummary } from '../../engine/threads';
+import { reopenThread } from '../../engine/openThread';
 import { NotificationBell } from './NotificationBell';
 import { ProfileMenu } from './ProfileMenu';
 import { RecentSection } from './RecentSection';
 import { config } from '../../config';
 import styles from './Sidebar.module.css';
 
-const NAV_ITEMS: { page: Page; label: string; icon: 'clock' | 'search' | 'checkDouble' | 'externalLink' | 'info' }[] = [
-  { page: 'entities', label: 'Entities', icon: 'search' },
+const NAV_ITEMS: { page: Page; label: string; icon: 'clock' | 'search' | 'checkDouble' | 'externalLink' | 'info' | 'viewColumns' | 'warning' }[] = [
+  // Phase 14: relabeled from "Entities" — same page/route (id stays
+  // 'entities', only its nav label and PageShell title change), now
+  // fronted by the asset-discovery grid rather than a plain list. Kept
+  // as one nav entry rather than adding a second, separate "Discover"
+  // page: it's the same content upgraded in place, and a second entry
+  // pointing at overlapping content would be dead-nav-adjacent (no
+  // ordering instruction was given for a split that doesn't exist).
+  { page: 'entities', label: 'Discover', icon: 'search' },
   { page: 'watchlist', label: 'Watchlist', icon: 'checkDouble' },
   { page: 'data-sources', label: 'Data Sources', icon: 'externalLink' },
   // Market Pulse (Phase 8I) sits between Data Sources and Investigations
@@ -22,6 +30,15 @@ const NAV_ITEMS: { page: Page; label: string; icon: 'clock' | 'search' | 'checkD
   // `info` is the closest fit — ambient, surfaced-for-awareness content.
   { page: 'market-pulse', label: 'Market Pulse', icon: 'info' },
   { page: 'investigations', label: 'Investigations', icon: 'clock' },
+  // Portfolio/Risk (Phase 13): pinned, always-available static dashboard
+  // pages, appended after the existing index pages rather than
+  // interleaved — no ordering instruction was given, flagged for review.
+  // `viewColumns`/`warning` are both real entries in Astryx's closed icon
+  // set (no dashboard/briefcase or risk-shield icon exists) — reused
+  // rather than adding a fifth custom SVG to this file's own exhibit
+  // list (8-11).
+  { page: 'portfolio-dashboard', label: 'Portfolio', icon: 'viewColumns' },
+  { page: 'risk-dashboard', label: 'Risk', icon: 'warning' },
 ];
 
 // No "add/new/plus" icon exists in Astryx's closed set (exhibit 11 —
@@ -47,61 +64,74 @@ function PlusIcon(props: SVGProps<SVGSVGElement>) {
 // investigation is the first item in the same list as the five pages —
 // not a separate topContent slot, which read as a disconnected control
 // floating above a gap rather than a peer of Entities/Watchlist/etc.
-// RecentSection (its own file) follows, then footerIcons (profile,
-// notifications) pinned outside the scrollable area via Astryx's own
-// SideNav footer mechanism so neither can scroll out of view regardless
-// of how much Recent content exists above — the earlier hand-rolled
-// marginTop:auto block lived INSIDE the scrollable children, so it could
-// and did scroll away once Recent had enough rows; reported live, fixed
-// by using the primitive Astryx actually built for this. Module-grouped/
-// flat turn browsing itself lives entirely in InvestigationsPage — this
-// component never renders turn groups.
+// RecentSection (its own file) follows, then a two-section footer
+// (collapse toggle above, avatar+notifications below — see the SideNav
+// props below for why both live in `footer` now) pinned outside the
+// scrollable area via Astryx's own SideNav footer mechanism so none of it
+// can scroll out of view regardless of how much Recent content exists
+// above.
+//
+// Investigation threading order: Recent is now the thread switcher, one
+// row per investigation (buildThreads), not one row per turn. Selection
+// and "New investigation" are both keyed directly off
+// sessionStore.activeThreadId — see RecentSection's own comment for why
+// this retires the earlier suppression-flag approach entirely rather
+// than adding another special case to it.
 export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(!config.sidebar.expanded);
 
   const turns = useSessionStore((state) => state.turns);
-  const setOpenArtifact = useArtifactStore((state) => state.setOpenArtifact);
-  const openArtifactId = useArtifactStore((state) => state.openArtifactId);
+  const activeThreadId = useSessionStore((state) => state.activeThreadId);
+  const setActiveThread = useSessionStore((state) => state.setActiveThread);
+  const closeStack = useArtifactStore((state) => state.closeStack);
   const page = usePageStore((state) => state.page);
   const setPage = usePageStore((state) => state.setPage);
 
-  // A turn belongs in Recent the moment it exists — waiting for
-  // artifactRef meant a new investigation was invisible here for its
-  // entire trail-playing duration, which read as "nothing happened."
-  // Found live, reported directly: Recent must show the row as soon as
-  // the agent starts processing, not once it finishes. No search/filter
-  // narrows this list anymore (the old text input was removed — see
-  // RecentSection's filter menu, which is unrelated to this list).
-  const recent = useMemo(() => [...turns].reverse().slice(0, config.recent.count), [turns]);
+  const threads = useMemo(() => buildThreads(turns).slice(0, config.recent.count), [turns]);
 
-  // At most one turn is ever "resolved, no artifactRef" at a time
-  // (sessionStore.addTurn's own interrupted-turn invariant). While one
-  // exists, it's the ONLY thing "current": openArtifactId still points at
-  // the PREVIOUS turn's artifact until this one's own trail settles and
-  // autoOpen claims it — selecting by openArtifactId here would let a
-  // new investigation's thinking row and the old open row both read
-  // selected at once (reported live, the sidebar's single-selection
-  // invariant broken during exactly this handoff window).
-  const hasActiveThinkingTurn = useMemo(() => turns.some((turn) => turn.status === 'resolved' && !turn.artifactRef), [turns]);
-
-  // No longer clears turns/artifacts — reported live: it destroyed the
-  // whole investigation history, which read as data loss, not "starting
-  // fresh." There's no per-thread model in this app (every turn lives in
-  // one flat, always-visible list), so "new investigation" is just a
-  // shortcut back to Home to ask the next question; the existing
-  // transcript stays exactly where it was, same as any other navigation.
+  // Shows the blank composer landing, same as it did before turns/
+  // artifacts existed — but no longer discards them (reported live:
+  // clearing history read as real data loss). Clearing activeThreadId to
+  // null is what actually shows LandingState (Frame.tsx); the next typed
+  // query re-threads itself via addTurn's own lineage rule, which may
+  // rejoin an existing investigation rather than starting a blank one —
+  // deliberate, see sessionStore.ts's own comment. closeStack() matches:
+  // a "fresh start" landing shouldn't sit beside a lingering open panel.
   function newInvestigation() {
+    setActiveThread(null);
+    closeStack();
     setPage('home');
+  }
+
+  // A Recent row is a link to the investigation, not just its artifact —
+  // opening one must land back on Home; reopenThread (shared with
+  // InvestigationsPage) handles which thread/artifact becomes current.
+  function openThread(thread: ThreadSummary) {
+    setPage('home');
+    reopenThread(thread);
   }
 
   return (
     <SideNav
-      collapsible={{ isCollapsed, onCollapsedChange: setIsCollapsed }}
+      // hasButton:false suppresses Astryx's own auto-injected collapse
+      // button (which always renders paired with `footerIcons`, per its
+      // source) — direct feedback wants the collapse control in its OWN
+      // section, above the avatar+notification row, not paired with
+      // either. SideNavCollapseButton supports exactly this: "Place
+      // inside SideNav (reads context) or outside (pass handleRef)" —
+      // placed manually inside `footer` below, reading context, no
+      // handleRef needed since it's still inside this SideNav.
+      collapsible={{ isCollapsed, onCollapsedChange: setIsCollapsed, hasButton: false }}
       header={<SideNavHeading heading="Merlin" />}
-      footerIcons={
-        <div className={isCollapsed ? styles.footerRowCollapsed : styles.footerRow}>
-          <ProfileMenu isCollapsed={isCollapsed} onNewInvestigation={newInvestigation} />
-          <NotificationBell />
+      footer={
+        <div className={styles.footerStack}>
+          <div className={styles.collapseSection}>
+            <SideNavCollapseButton />
+          </div>
+          <div className={isCollapsed ? styles.footerRowCollapsed : styles.footerRow}>
+            <ProfileMenu isCollapsed={isCollapsed} onNewInvestigation={newInvestigation} />
+            <NotificationBell />
+          </div>
         </div>
       }
     >
@@ -110,7 +140,7 @@ export function Sidebar() {
           label="New investigation"
           icon={<Icon icon={PlusIcon} size="sm" />}
           onClick={newInvestigation}
-          isSelected={page === 'home' && turns.length === 0}
+          isSelected={page === 'home' && activeThreadId === null}
         />
         {NAV_ITEMS.map((item) => (
           <SideNavItem
@@ -122,17 +152,16 @@ export function Sidebar() {
           />
         ))}
       </SideNavSection>
-      <Divider />
 
       <RecentSection
         isCollapsed={isCollapsed}
-        recent={recent}
+        threads={threads}
         page={page}
-        openArtifactId={openArtifactId}
-        hasActiveThinkingTurn={hasActiveThinkingTurn}
+        activeThreadId={activeThreadId}
         setPage={setPage}
-        setOpenArtifact={setOpenArtifact}
+        onOpenThread={openThread}
       />
     </SideNav>
+    
   );
 }

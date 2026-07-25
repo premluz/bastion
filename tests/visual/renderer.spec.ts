@@ -9,6 +9,9 @@ const RENDERER_STORIES = [
   'renderer-fixtures--issuer-dossier',
   'renderer-fixtures--settlement-anomaly',
   'renderer-fixtures--audit-status-alert',
+  'renderer-fixtures--risk-desk-dashboard',
+  'renderer-fixtures--eurusd-risk-reversal-detail',
+  'renderer-fixtures--south-bow-capacity-filing',
   'renderer-fixtures--broken',
 ] as const;
 

@@ -16,16 +16,28 @@ import { config } from "../config";
 // autoOpen config apply identically to both entry points.
 export function presentScene(utterance: string, scene: HydratedScene): void {
   const turnId = crypto.randomUUID();
+  const isAlert = getModuleForScene(scene.id) === "monitor";
 
-  useSessionStore.getState().addTurn({
+  const threadId = useSessionStore.getState().addTurn({
     id: turnId,
     utterance,
     status: "resolved",
     sceneTitle: scene.title,
+    sceneId: scene.id,
     trail: [],
     trailElapsedMs: 0,
     timestamp: Date.now(),
   });
+  // Investigation threading order: every non-alert turn becomes the
+  // active thread immediately — before the trail even plays, so the
+  // transcript shows the live-thinking turn right away, same as it did
+  // pre-threading. Alerts skip this: a push landing while the user is
+  // elsewhere must not yank their transcript over to it, the same "don't
+  // steal focus" law openArtifactSilently already follows below. addTurn
+  // itself decides whether this joins an existing thread (matching scene
+  // family) or starts a new one — that rule lives in exactly one place,
+  // not re-derived here.
+  if (!isAlert) useSessionStore.getState().setActiveThread(threadId);
 
   playTrail(scene.thinking, () => {
     const artifactId = crypto.randomUUID();
@@ -42,7 +54,6 @@ export function presentScene(utterance: string, scene: HydratedScene): void {
     // different page shouldn't clear NotificationBell's badge before they
     // ever looked. Every other autoOpen (a typed query, an Investigate
     // action) is real, deliberate human intent and marks viewed normally.
-    const isAlert = getModuleForScene(scene.id) === "monitor";
     if (config.artifacts.autoOpen) {
       if (isAlert) {
         useArtifactStore.getState().openArtifactSilently(artifactId);

@@ -7,6 +7,9 @@ import assetDiscoveryRefine from '../../scenes/asset-discovery-refine.scene.json
 import issuerDossier from '../../scenes/issuer-dossier.scene.json';
 import settlementAnomaly from '../../scenes/settlement-anomaly.scene.json';
 import auditStatusAlert from '../../scenes/audit-status-alert.scene.json';
+import riskDeskDashboard from '../../scenes/risk-desk-dashboard.scene.json';
+import eurusdRiskReversalDetail from '../../scenes/eurusd-risk-reversal-detail.scene.json';
+import southBowCapacityFiling from '../../scenes/south-bow-capacity-filing.scene.json';
 
 const universe = loadUniverse();
 
@@ -59,4 +62,7 @@ export const AssetDiscoveryRefine: Story = { args: { raw: assetDiscoveryRefine }
 export const IssuerDossier: Story = { args: { raw: issuerDossier } };
 export const SettlementAnomaly: Story = { args: { raw: settlementAnomaly } };
 export const AuditStatusAlert: Story = { args: { raw: auditStatusAlert } };
+export const RiskDeskDashboard: Story = { args: { raw: riskDeskDashboard } };
+export const EurusdRiskReversalDetail: Story = { args: { raw: eurusdRiskReversalDetail } };
+export const SouthBowCapacityFiling: Story = { args: { raw: southBowCapacityFiling } };
 export const Broken: Story = { args: { raw: brokenScene } };

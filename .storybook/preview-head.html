@@ -1,0 +1,22 @@
+<!-- Merriweather (--font-voice / --face-voice, tokens.base.css) — direct
+     feedback: "our serif font should be Merriweather." The prior value
+     (Crimson Text/Pro) was never actually loaded as a web font anywhere
+     in this repo (no @font-face, no <link>, confirmed by search) — it
+     silently fell back through the stack to Georgia/serif on any system
+     without Crimson installed locally, which is most of them. Loading a
+     real web font via Google Fonts here (Storybook's own sanctioned
+     preview-head.html injection point, auto-detected with no main.ts
+     change needed) instead of just swapping the stack's first name,
+     since a name-only swap would have had the exact same
+     silently-falls-back problem the prior value already had. Weights:
+     400/700 + italic, covering TextBlock's body prose and
+     Recommendation's Blockquote (both consumers of --face-voice,
+     confirmed via grep) without over-fetching styles nothing uses.
+     Phase 10's real app/index.html (doesn't exist yet) will need this
+     same tag when it's built — noted, not yet actionable. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+  rel="stylesheet"
+/>

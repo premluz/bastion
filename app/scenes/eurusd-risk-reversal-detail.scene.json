@@ -1,0 +1,134 @@
+{
+  "id": "eurusd-risk-reversal-detail",
+  "title": "EUR/USD 3M Risk Reversal — Position Detail",
+  "intents": [
+    "drill into the eur/usd risk reversal",
+    "eur/usd risk reversal detail",
+    "show me the kestrel position",
+    "eur usd 3m risk reversal position",
+    "position detail for the risk reversal"
+  ],
+  "thinking": [
+    {
+      "id": "plan",
+      "kind": "plan",
+      "label": "Pulling up the EUR/USD 3M Risk Reversal position on its own",
+      "durationMs": 700
+    },
+    {
+      "id": "search",
+      "kind": "search",
+      "label": "Retrieving position terms and exposure history from PortfolioAtlas",
+      "sources": [{ "name": "PortfolioAtlas", "ref": "eurusd-3m-risk-reversal-history" }],
+      "durationMs": 1100
+    },
+    {
+      "id": "retrieve",
+      "kind": "retrieve",
+      "label": "Pulling delta-adjusted exposure and counterparty score from RiskLens",
+      "sources": [{ "name": "RiskLens", "ref": "eurusd-3m-risk-reversal-delta" }],
+      "durationMs": 1200
+    },
+    {
+      "id": "correlate",
+      "kind": "correlate",
+      "label": "Comparing mark-to-market against delta-adjusted exposure since trade date",
+      "durationMs": 1300
+    },
+    {
+      "id": "synthesize",
+      "kind": "synthesize",
+      "label": "Weighing exposure drift against Kestrel Holdings' existing unrated flag",
+      "confidence": 0.74,
+      "durationMs": 1400
+    },
+    {
+      "id": "verify",
+      "kind": "verify",
+      "label": "Confirming the hedge case holds even before expiry pressure builds",
+      "confidence": 0.68,
+      "durationMs": 1000
+    }
+  ],
+  "data": {
+    "eurusd-3m-risk-reversal-entity": { "$ref": "eurusd-3m-risk-reversal" },
+    "eurusd-exposure-series": {
+      "kind": "series",
+      "series": [
+        {
+          "id": "mtm",
+          "label": "Mark-to-market exposure",
+          "points": [
+            { "x": "2026-06-02", "y": 0.8 },
+            { "x": "2026-06-09", "y": 1.9 },
+            { "x": "2026-06-16", "y": 2.8 },
+            { "x": "2026-06-23", "y": 3.9 },
+            { "x": "2026-06-30", "y": 4.6 },
+            { "x": "2026-07-07", "y": 5.3 },
+            { "x": "2026-07-14", "y": 6.0 }
+          ]
+        },
+        {
+          "id": "delta",
+          "label": "Delta-adjusted exposure",
+          "points": [
+            { "x": "2026-06-02", "y": 1.0 },
+            { "x": "2026-06-09", "y": 2.3 },
+            { "x": "2026-06-16", "y": 3.4 },
+            { "x": "2026-06-23", "y": 4.8 },
+            { "x": "2026-06-30", "y": 5.7 },
+            { "x": "2026-07-07", "y": 6.6 },
+            { "x": "2026-07-14", "y": 7.2 }
+          ]
+        }
+      ]
+    }
+  },
+  "layout": {
+    "id": "root",
+    "type": "scene-grid",
+    "reveal": 0,
+    "children": [
+      {
+        "id": "risk-reversal-summary",
+        "type": "scene-summary",
+        "reveal": 1,
+        "props": {
+          "recommendation": "Escalate the EUR/USD 3M Risk Reversal for a hedge review — delta-adjusted exposure has drifted materially above raw mark-to-market, and the position's counterparty, Kestrel Holdings, remains unrated with an existing flag elsewhere on the venue.",
+          "confidence": 0.68,
+          "confidenceLabel": "Hedge-case confidence",
+          "sourceRefs": ["PortfolioAtlas", "RiskLens"],
+          "caveat": "Delta-adjusted exposure (€7.2M) now exceeds raw mark-to-market (€6M) by 20% — the gap that matters for a hedge decision, not the headline MTM figure alone."
+        }
+      },
+      {
+        "id": "risk-reversal-header",
+        "type": "entity-header",
+        "reveal": 2,
+        "bind": { "data": "eurusd-3m-risk-reversal-entity" },
+        "props": { "status": { "label": "Flagged — unrated counterparty", "tone": "alert" } }
+      },
+      {
+        "id": "exposure-history-panel",
+        "type": "panel",
+        "reveal": 3,
+        "props": { "title": "Exposure since trade date" },
+        "children": [
+          {
+            "id": "exposure-history-chart",
+            "type": "time-series",
+            "reveal": 4,
+            "props": {
+              "statStrip": [
+                { "label": "Current exposure", "value": "€6M" },
+                { "label": "Notional", "value": "€40M" },
+                { "label": "Tenor remaining", "value": "~46 days", "detail": "of 3 months" }
+              ]
+            },
+            "bind": { "data": "eurusd-exposure-series" }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,12 +1,37 @@
-/* Footer icons order: DOM order is [Profile, Notification] in both
-   states, only flex-direction differs — row keeps that as left-to-right
-   (profile leftmost), column-reverse flips it without touching markup
-   (notification ends up top, profile bottom). Two states, one DOM order,
-   no JS reordering. width:100% + space-between (expanded only) is what
-   actually pushes Notification flush to the sidebar's own right edge —
-   without a width the row only ever sized to its own content, so the
-   two controls just sat adjacent with a small gap, never reaching the
-   edge regardless of gap value. */
+/* Two independent sections within `footer` now (direct feedback, revising
+   the prior single-row split): the collapse toggle gets its own section,
+   above a second section holding the avatar and notifications together.
+   Gap alone reads as two separate containers now — the section's own
+   border-bottom (its earlier separator) was removed per direct feedback
+   to remove separators throughout the side nav. */
+.footerStack {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: var(--space-8);
+}
+
+/* Right-aligned to the sidebar's own edge, per direct feedback — matches
+   the collapse arrow's own conventional position (top-right of a
+   sidebar/panel in most IDE-style layouts) rather than sitting centered
+   above the row below it. */
+.collapseSection {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding-bottom: var(--space-8);
+}
+
+/* Avatar left, notifications right, close to each edge — width:100% +
+   space-between is what actually pushes them to the sidebar's own edges;
+   without a width the row only ever sizes to its own content and the two
+   controls just sit adjacent with a small gap, never reaching either
+   edge regardless of gap value (same reasoning as the original
+   footer-order fix this supersedes). DOM order is [Profile,
+   Notification] in both states, only flex-direction differs — row keeps
+   it left-to-right (profile leftmost), column-reverse flips it without
+   touching markup (notification ends up top, profile bottom), the same
+   collapsed-mode convention already established and unchanged here. */
 .footerRow {
   display: flex;
   align-items: center;

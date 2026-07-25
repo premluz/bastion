@@ -207,3 +207,122 @@ regression) and `[aria-disabled='true']` (already unreachable by `:hover`
 via Astryx's own `pointer-events: none` on disabled items; excluded here
 too so the rule states that guarantee rather than silently depending on
 it).
+
+## Artifact stack Card background (`--color-background-popover`)
+
+Direct feedback: "the background color should be the same as the composer
+background." Confirmed live via computed styles across all three themes,
+not assumed from the default theme alone (where the two values happen to
+coincide, masking the gap): `ArtifactStack.tsx`'s `Card variant="default"`
+resolves to `--color-background-card` (our `--surface-2`), while
+`ChatComposer`'s own background resolves to Astryx's
+`--color-background-popover` (our `--surface-3`) — two different surface
+levels, genuinely distinct colors in ops-dark/glass. No `Card` variant
+exposes the popover level (`variant` only maps to `--color-<name>-background`
+per its own docs, and "popover" isn't one of the named options).
+
+Fix, scoped to this one Card instance only (not a global theme rule, since
+other default-variant Cards elsewhere in the app are correctly using the
+card-level surface, not the popover level) — `ArtifactStack.module.css`:
+`.artifactCard:global(.astryx-card)[data-variant='default'] { background-
+color: var(--surface-3) }`. Specificity deliberately matches Astryx's own
+`.astryx-card[data-variant="default"]` rule exactly (class+class+attribute
+vs. class+attribute) so it reliably wins regardless of import order, no
+`!important` needed.
+
+## Composer shadow removal (`astryx-chat-composer`)
+
+Direct feedback: "the composer should not have shadow." Confirmed live via
+computed styles before touching anything — `ChatComposer`'s own root
+carries a real 3-layer `box-shadow` unconditionally (`themeProps('chat-
+composer', {density})` in its own source, not guessed), on every instance
+(the landing composer, the chat-mode `ChatBar` dock) regardless of state.
+
+Fix, `theme.default.css`, unconditional/resolves-late (same reasoning as
+the two rules above it — one rule covers every registered theme since
+this removes a shadow rather than setting a themed color value, so there's
+no per-theme value to bridge): `.astryx-chat-composer { box-shadow: none }`.
+
+## Composer surface separation (`--color-border-emphasized`)
+
+Direct feedback: "on light mode there's no bg for composer, or same as bg
+underneath it." Confirmed live via computed styles, `shell-frame--default`
+story, both `astryxScheme` values, before touching anything: the
+composer's filled surface (`.astryx-chat-composer > div`, the same element
+targeted by the shadow-removal rule above) resolves to Astryx
+theme-neutral's own `--color-background-popover: light-dark(#ffffff,
+#1b1b1b)`, painted directly against `:where(html,body)`'s
+`--color-background-body: light-dark(#f1f1f1, #1b1b1b)` with no
+intervening surface — a ~6% lightness gap in light scheme, and the exact
+same value in dark scheme (`#1b1b1b` = `#1b1b1b`, literally invisible).
+Previously masked by the composer's own box-shadow, removed above per
+earlier direct feedback — the shadow was the only separation this pairing
+ever had; removing it exposed this gap.
+
+This is a `default`-theme-only gap: `ops-dark`/`glass` don't reuse
+Astryx's stock popover/body pass-through — they define their own
+`--surface-0..3` oklch scale and reassign `--color-background-*` to point
+at it (`theme.ops-dark.css`/`theme.glass.css`), giving every level real
+tonal distance by construction (confirmed live: `ops-dark`'s composer
+resolves to `oklch(.26 .015 250)` against a `.16` body, `glass` the same
+scale at `.7` alpha — both already well-separated, no fix needed there).
+
+Fix, `theme.default.css`, scoped to `[data-theme='default']` only (not
+unconditional like the two rules above it, since this one addresses a gap
+specific to Astryx's own stock pass-through, not something true of every
+theme): `[data-theme='default'] .astryx-chat-composer > div { border: 1px
+solid var(--color-border-emphasized) }`. `--color-border-emphasized`
+(`light-dark(#d4d4d4, #525252)`) consumed as-is, unbridged, same
+"direction A" reasoning as `--color-overlay-hover` elsewhere in this file
+— Astryx's own variable, not a new Meridian color. `--edge`
+(`--color-border`, `light-dark(#ebebeb, ...)`) was checked first and
+rejected: too close to the popover white to read as a real boundary.
+Verified live: both `astryxScheme` values now show a visible composer
+edge in `default`; `ops-dark`/`glass` computed styles unchanged
+(`border-width: 0px`, confirmed via `getComputedStyle`).
+
+**Follow-up direct feedback, same day**: "should be also surface color not
+just outline" — a border alone read as an outline around an otherwise
+still-white/still-invisible fill, not a distinct surface. Re-checked
+Astryx's own background scale for anything else that could stand in for
+`--color-background-popover` with genuinely more separation: every
+"raised surface" level theme-neutral exposes — `--color-background-
+surface`, `--color-background-card`, `--color-background-popover` — is
+the identical `#ffffff` in light scheme (confirmed via the same theme.css
+grep as above), so no pass-through *level* swap could ever fix this; the
+gap is in Astryx's stock light-scheme palette itself, not in which level
+we picked. The one Astryx neutral fill that isn't pinned to that same
+white is `--color-background-gray` (theme-neutral's badge/tag-family
+neutral, `light-dark(#e5e5e5, #FFFFFF1A)` via `--color-neutral`) — a flat,
+genuinely distinct gray in light scheme, a visible translucent-white tint
+over the dark body in dark scheme. Semantically it's borrowed from
+Astryx's colored-badge-background family (red/orange/.../gray all live in
+that same block) rather than a general elevated-surface token, but it's
+still consumed as-is/unbridged, no new Meridian color, same precedent as
+every other rule in this section.
+
+Fix: added `background-color: var(--color-background-gray)` to the same
+`[data-theme='default'] .astryx-chat-composer > div` rule above, alongside
+(not replacing) the existing border — the two now read together as a
+tinted panel with a defined edge, rather than either alone. Verified live:
+both `astryxScheme` values of `default` show a visibly filled, bordered
+composer distinct from the page; `ops-dark`/`glass` unaffected (rule still
+scoped to `[data-theme='default']`, confirmed via `getComputedStyle`).
+
+## Item hover, all rows (`astryx-item`)
+
+Direct feedback (2026-07-20), Discover page: "all should have hover even
+if no source to click," referring to the discovery-strip rows built on
+Astryx's `Item` primitive. Same gap the list-item hover rule above
+already documents and already fixes for `List`/`ListItem`: `Item` only
+applies its own `:hover` treatment when given `onClick`/`href`, confirmed
+in Astryx's own source, not guessed — most Discover-strip rows (anything
+without a real investigation intent) carry neither.
+
+Fix, `theme.default.css`, unconditional/resolves-late, identical
+reasoning to the list-item rule immediately above it in that file — one
+rule covers every theme: `.astryx-item:hover:not([aria-disabled='true'])
+{ background-color: var(--color-overlay-hover) }`. Same variable, same
+"consumed as-is" direction-A reasoning, not a new token. No
+`[aria-selected]` exclusion needed here (unlike list-item) — `Item` has
+no selected-state concept in this codebase's usage.

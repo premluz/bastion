@@ -36,7 +36,12 @@ export function SignalFeed({ title, data }: SignalFeedProps) {
     : data.rows;
 
   return (
-    <div style={{ display: 'grid', gap: 'var(--space-4)' }}>
+    // minWidth:0 overrides CSS Grid's own min-width:auto default — without
+    // it, a long description refuses to wrap/truncate and instead forces
+    // this whole grid track (and the Panel/dashboard-layout cell it sits
+    // in) wider than its allotted space, expanding the pane rather than
+    // adapting to it (reported live, screenshotted).
+    <div style={{ display: 'grid', gap: 'var(--space-4)', minWidth: 0 }}>
       {title && <Text type="label">{title}</Text>}
       {rows.map((row, index) => {
         const headlineValue = headlineColumn ? row[headlineColumn.key] : undefined;
@@ -54,6 +59,7 @@ export function SignalFeed({ title, data }: SignalFeedProps) {
             density="compact"
             label={label}
             description={detailColumns.map((column) => String(row[column.key] ?? '—')).join(' · ')}
+            descriptionLines={2}
             endContent={
               dateColumn && row[dateColumn.key] != null ? (
                 <Timestamp value={String(row[dateColumn.key])} format="date" />

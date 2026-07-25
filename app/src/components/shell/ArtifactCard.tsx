@@ -3,6 +3,7 @@ import { HStack, VStack, StackItem } from '@astryxdesign/core/Layout';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
 import { StatusTag } from '../nodes/StatusTag';
+import { DocumentIcon } from './DocumentIcon';
 
 interface ArtifactCardProps {
   title: string;
@@ -21,7 +22,7 @@ export function ArtifactCard({ title, module, onOpen }: ArtifactCardProps) {
   return (
     <ClickableCard label={`Open ${title}`} onClick={onOpen} variant="muted" padding={3} maxWidth={360}>
       <HStack gap={3} vAlign="center" width="100%">
-        <Icon icon="viewColumns" size="md" color="secondary" />
+        <Icon icon={DocumentIcon} size="md" color="secondary" />
         <StackItem size="fill">
           <VStack gap={0}>
             <Text type="label" weight="semibold">

@@ -1,0 +1,79 @@
+- generic [ref=f58e6]:
+  - link "Skip to content" [ref=f58e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f58e10]:
+    - navigation "Side navigation" [ref=f58e12]:
+      - generic [ref=f58e17]: Merlin
+      - generic [ref=f58e18]:
+        - group "Places" [ref=f58e19]:
+          - generic [ref=f58e22]: Places
+          - generic [ref=f58e23]:
+            - button "New investigation" [ref=f58e25] [cursor=pointer]:
+              - img [ref=f58e26]
+              - generic [ref=f58e28]: New investigation
+            - button "Entities" [ref=f58e30] [cursor=pointer]:
+              - img [ref=f58e32]
+              - generic [ref=f58e35]: Entities
+            - button "Watchlist" [ref=f58e37] [cursor=pointer]:
+              - img [ref=f58e39]
+              - generic [ref=f58e42]: Watchlist
+            - button "Data Sources" [ref=f58e44] [cursor=pointer]:
+              - img [ref=f58e46]
+              - generic [ref=f58e50]: Data Sources
+            - button "Market Pulse" [ref=f58e52] [cursor=pointer]:
+              - img [ref=f58e54]
+              - generic [ref=f58e56]: Market Pulse
+            - button "Investigations" [ref=f58e58] [cursor=pointer]:
+              - img [ref=f58e60]
+              - generic [ref=f58e63]: Investigations
+        - group "Recent" [ref=f58e64]:
+          - generic [ref=f58e65]:
+            - generic [ref=f58e67]: Recent
+            - button "Filter recent" [ref=f58e70] [cursor=pointer]:
+              - img [ref=f58e74]
+              - status
+          - generic [ref=f58e76]:
+            - generic [ref=f58e77]: Nothing yet.
+            - button "View all" [ref=f58e80] [cursor=pointer]:
+              - generic [ref=f58e81]: View all
+      - generic [ref=f58e83]:
+        - button "Collapse sidebar" [ref=f58e85] [cursor=pointer]:
+          - img [ref=f58e89]
+          - status
+        - generic [ref=f58e91]:
+          - button "Analyst Analyst" [ref=f58e92] [cursor=pointer]:
+            - generic [ref=f58e93]:
+              - img "Analyst" [ref=f58e95]:
+                - generic [ref=f58e97]: A
+              - generic [ref=f58e98]: Analyst
+              - img [ref=f58e101]
+            - status
+          - button "Notifications" [ref=f58e104] [cursor=pointer]:
+            - img [ref=f58e107]
+            - status
+    - main [ref=f58e111]:
+      - generic [ref=f58e122]:
+        - heading "Where should we start?" [level=1] [ref=f58e125]
+        - generic [ref=f58e128]:
+          - generic [ref=f58e130]:
+            - generic: Ask a question about the venue…
+            - textbox "Message input" [active] [ref=f58e131]
+          - button "Send" [disabled] [ref=f58e134]:
+            - img [ref=f58e137]
+            - status
+        - generic [ref=f58e140]:
+          - generic [ref=f58e142] [cursor=pointer]:
+            - button "Three tokenized assets now clear the 6% yield floor, led by Helios Yield Fund at 9.1%." [ref=f58e143]
+            - generic [ref=f58e144]:
+              - generic [ref=f58e145]: Three tokenized assets now clear the 6% yield floor, led by Helios Yield Fund at 9.1%.
+              - generic [ref=f58e146]: The conservative screen's candidate pool has grown since the mandate was last run.
+          - generic [ref=f58e148] [cursor=pointer]:
+            - button "Aldergate Estates' audit renewal has lapsed — IssuerRegistry never received the filing." [ref=f58e149]
+            - generic [ref=f58e150]:
+              - generic [ref=f58e151]: Aldergate Estates' audit renewal has lapsed — IssuerRegistry never received the filing.
+              - generic [ref=f58e152]: It's the one open risk on an otherwise investment-grade profile.
+          - generic [ref=f58e154] [cursor=pointer]:
+            - button "Two NordBond 2029 settlements failed this week, both traced to Kestrel-linked wallets." [ref=f58e155]
+            - generic [ref=f58e156]:
+              - generic [ref=f58e157]: Two NordBond 2029 settlements failed this week, both traced to Kestrel-linked wallets.
+              - generic [ref=f58e158]: Kestrel has accumulated 11% of the float over six weeks.

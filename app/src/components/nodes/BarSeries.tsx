@@ -1,4 +1,5 @@
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { useState } from 'react';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, type BarShapeProps } from 'recharts';
 import { Text } from '@astryxdesign/core/Text';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import type { BarSeriesProps } from '../../contracts/props/bar-series';
@@ -7,6 +8,34 @@ import { TabularTick, TokenTooltip } from './chartCraft';
 // Signal hue for the primary series only, same rule as time-series —
 // additional series fall back to the viz palette, never a second accent.
 const SERIES_COLORS = ['var(--accent-signal)', 'var(--viz-2)', 'var(--viz-3)'];
+
+// Entity-linked bar (Portfolio wiring order, 2026-07-25) — same purity
+// rule as EntityLink.tsx: a plain `data-entity-id` on the rendered shape,
+// no onClick prop, no store access. A shell-level delegated listener
+// higher up the tree is what actually navigates (Canvas.tsx / DashboardPage
+// .tsx, both reuse entityLinkClick.ts's shared DOM lookup) — this stays a
+// registry node, renderer-layer only. Hover-only stroke, same "emphasis is
+// earned" rule EntityLink's own underline follows. `payload` isn't typed
+// generically by recharts (it's whatever `data` shape the chart was given)
+// so the `entityId` we stash on each row is read off it by hand.
+function LinkableBar(props: BarShapeProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  const entityId = (props.payload as { entityId?: string } | undefined)?.entityId;
+  return (
+    <rect
+      x={props.x}
+      y={props.y}
+      width={props.width}
+      height={props.height}
+      fill={props.fill}
+      stroke={isHovered && entityId ? 'var(--accent-signal)' : 'none'}
+      strokeWidth={isHovered && entityId ? 2 : 0}
+      {...(entityId ? { 'data-entity-id': entityId, style: { cursor: 'pointer' } } : {})}
+      onMouseEnter={() => entityId && setIsHovered(true)}
+      onMouseLeave={() => entityId && setIsHovered(false)}
+    />
+  );
+}
 
 // "How is it distributed over categories/periods?" — grouped bars, up to
 // 3 series. x is a category or period label (not necessarily a date).
@@ -21,7 +50,8 @@ export function BarSeries({ title, data }: BarSeriesProps) {
     for (const line of data.series) {
       row[line.id] = line.points[index]?.y ?? 0;
     }
-    return row;
+    const entityId = data.series[0]?.points[index]?.entityId;
+    return entityId ? { ...row, entityId } : row;
   });
 
   return (
@@ -36,7 +66,14 @@ export function BarSeries({ title, data }: BarSeriesProps) {
           {data.series.map((line, index) => (
             // isAnimationActive disabled — motion here is the renderer's
             // reveal stagger, never a per-component animation (rule 15).
-            <Bar key={line.id} dataKey={line.id} name={line.label} fill={SERIES_COLORS[index] ?? 'var(--viz-4)'} isAnimationActive={false} />
+            <Bar
+              key={line.id}
+              dataKey={line.id}
+              name={line.label}
+              fill={SERIES_COLORS[index] ?? 'var(--viz-4)'}
+              isAnimationActive={false}
+              shape={LinkableBar}
+            />
           ))}
         </BarChart>
       </ResponsiveContainer>

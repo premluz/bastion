@@ -20,6 +20,12 @@ import { ConfidenceMeterPropsSchema } from '../contracts/props/confidence-meter'
 import { ConcentrationMapPropsSchema } from '../contracts/props/concentration-map';
 import { BarSeriesPropsSchema } from '../contracts/props/bar-series';
 import { SparklinePropsSchema } from '../contracts/props/sparkline';
+import { SceneSummaryPropsSchema } from '../contracts/props/scene-summary';
+import { RingGaugePropsSchema } from '../contracts/props/ring-gauge';
+import { DashboardLayoutPropsSchema } from '../contracts/props/dashboard-layout';
+import { StatusGridPropsSchema } from '../contracts/props/status-grid';
+import { RingChartPropsSchema } from '../contracts/props/ring-chart';
+import { NewsFeedPropsSchema } from '../contracts/props/news-feed';
 
 interface RegistryEntry {
   component: ComponentType<never>;
@@ -102,5 +108,29 @@ export const registry: Record<string, RegistryEntry> = {
   sparkline: {
     component: lazy(() => import('../components/nodes/Sparkline').then((m) => ({ default: m.Sparkline }))),
     propSchema: SparklinePropsSchema,
+  },
+  'scene-summary': {
+    component: lazy(() => import('../components/nodes/SceneSummary').then((m) => ({ default: m.SceneSummary }))),
+    propSchema: SceneSummaryPropsSchema,
+  },
+  'ring-gauge': {
+    component: lazy(() => import('../components/nodes/RingGauge').then((m) => ({ default: m.RingGauge }))),
+    propSchema: RingGaugePropsSchema,
+  },
+  'dashboard-layout': {
+    component: lazy(() => import('../components/nodes/DashboardLayout').then((m) => ({ default: m.DashboardLayout }))),
+    propSchema: DashboardLayoutPropsSchema,
+  },
+  'status-grid': {
+    component: lazy(() => import('../components/nodes/StatusGrid').then((m) => ({ default: m.StatusGrid }))),
+    propSchema: StatusGridPropsSchema,
+  },
+  'ring-chart': {
+    component: lazy(() => import('../components/nodes/RingChart').then((m) => ({ default: m.RingChart }))),
+    propSchema: RingChartPropsSchema,
+  },
+  'news-feed': {
+    component: lazy(() => import('../components/nodes/NewsFeed').then((m) => ({ default: m.NewsFeed }))),
+    propSchema: NewsFeedPropsSchema,
   },
 };

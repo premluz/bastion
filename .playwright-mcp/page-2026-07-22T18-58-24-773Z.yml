@@ -1,0 +1,142 @@
+- generic [active] [ref=f177e3]:
+  - generic [ref=f177e6]:
+    - link "Skip to content" [ref=f177e7] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f177e10]:
+      - navigation "Side navigation" [ref=f177e12]:
+        - generic [ref=f177e17]: Merlin
+        - generic [ref=f177e18]:
+          - group "Places" [ref=f177e19]:
+            - generic [ref=f177e22]: Places
+            - generic [ref=f177e23]:
+              - button "New investigation" [ref=f177e25] [cursor=pointer]:
+                - img [ref=f177e26]
+                - generic [ref=f177e28]: New investigation
+              - button "Discover" [ref=f177e30] [cursor=pointer]:
+                - img [ref=f177e32]
+                - generic [ref=f177e35]: Discover
+              - button "Watchlist" [ref=f177e37] [cursor=pointer]:
+                - img [ref=f177e39]
+                - generic [ref=f177e42]: Watchlist
+              - button "Data Sources" [ref=f177e44] [cursor=pointer]:
+                - img [ref=f177e46]
+                - generic [ref=f177e50]: Data Sources
+              - button "Market Pulse" [ref=f177e52] [cursor=pointer]:
+                - img [ref=f177e54]
+                - generic [ref=f177e56]: Market Pulse
+              - button "Investigations" [ref=f177e58] [cursor=pointer]:
+                - img [ref=f177e60]
+                - generic [ref=f177e63]: Investigations
+              - button "Portfolio" [ref=f177e65] [cursor=pointer]:
+                - img [ref=f177e67]
+                - generic [ref=f177e69]: Portfolio
+              - button "Risk" [ref=f177e71] [cursor=pointer]:
+                - img [ref=f177e73]
+                - generic [ref=f177e75]: Risk
+          - group "Recent" [ref=f177e76]:
+            - generic [ref=f177e77]:
+              - generic [ref=f177e79]: Recent
+              - button "Filter recent" [ref=f177e82] [cursor=pointer]:
+                - img [ref=f177e86]
+                - status
+            - generic [ref=f177e88]:
+              - generic [ref=f177e89]: Nothing yet.
+              - button "View all" [ref=f177e92] [cursor=pointer]:
+                - generic [ref=f177e93]: View all
+        - generic [ref=f177e95]:
+          - button "Collapse sidebar" [ref=f177e97] [cursor=pointer]:
+            - img [ref=f177e101]
+            - status
+          - generic [ref=f177e103]:
+            - button "Analyst Analyst" [ref=f177e104] [cursor=pointer]:
+              - generic [ref=f177e105]:
+                - img "Analyst" [ref=f177e107]:
+                  - generic [ref=f177e109]: A
+                - generic [ref=f177e110]: Analyst
+                - img [ref=f177e113]
+              - status
+            - button "Notifications" [ref=f177e116] [cursor=pointer]:
+              - img [ref=f177e119]
+              - status
+      - main [ref=f177e123]:
+        - generic [ref=f177e131]:
+          - generic [ref=f177e132]:
+            - generic [ref=f177e133]: NordBond 2029
+            - generic [ref=f177e134]:
+              - button "Watch NordBond 2029" [ref=f177e135] [cursor=pointer]:
+                - img [ref=f177e139]
+                - status
+              - button "Investigate NordBond 2029" [ref=f177e142] [cursor=pointer]:
+                - img [ref=f177e146]
+                - status
+          - generic [ref=f177e151]:
+            - generic [ref=f177e152]: Tokenized Covered Bond
+            - generic [ref=f177e153]:
+              - generic [ref=f177e155]: Trend
+              - generic [ref=f177e157]:
+                - generic [ref=f177e158]:
+                  - generic [ref=f177e159]:
+                    - generic [ref=f177e161]: 5.8%
+                    - generic [ref=f177e162]: Latest yield
+                  - generic [ref=f177e163]:
+                    - generic [ref=f177e165]: +0.04pp
+                    - generic [ref=f177e166]: Recent move
+                - application [ref=f177e169]:
+                  - generic [ref=f177e186]:
+                    - generic [ref=f177e187]:
+                      - generic [ref=f177e189]: 2026-06-19
+                      - generic [ref=f177e191]: 2026-06-21
+                      - generic [ref=f177e193]: 2026-06-23
+                      - generic [ref=f177e195]: 2026-06-25
+                      - generic [ref=f177e197]: 2026-06-27
+                      - generic [ref=f177e199]: 2026-06-29
+                      - generic [ref=f177e201]: 2026-07-02
+                    - generic [ref=f177e202]:
+                      - generic [ref=f177e204]: "0"
+                      - generic [ref=f177e206]: "2"
+                      - generic [ref=f177e208]: "4"
+                      - generic [ref=f177e210]: "6"
+                      - generic [ref=f177e212]: "8"
+            - generic [ref=f177e213]:
+              - generic [ref=f177e215]: Statistics
+              - generic [ref=f177e217]:
+                - generic [ref=f177e218]:
+                  - generic [ref=f177e220]: 5.8%
+                  - generic [ref=f177e221]: Yield
+                - generic [ref=f177e222]:
+                  - generic [ref=f177e224]: +0.04pp
+                  - generic [ref=f177e225]: Recent move
+            - generic [ref=f177e226]:
+              - generic [ref=f177e228]: About
+              - generic [ref=f177e231]:
+                - generic [ref=f177e232]:
+                  - term [ref=f177e233]: Issuer
+                  - definition [ref=f177e234]: Fjellbank
+                - generic [ref=f177e235]:
+                  - term [ref=f177e236]: Yield
+                  - definition [ref=f177e237]: 5.8%
+                - generic [ref=f177e238]:
+                  - term [ref=f177e239]: Credit rating
+                  - definition [ref=f177e240]: AA-
+                - generic [ref=f177e241]:
+                  - term [ref=f177e242]: Outstanding
+                  - definition [ref=f177e243]: €140M
+                - generic [ref=f177e244]:
+                  - term [ref=f177e245]: Jurisdiction
+                  - definition [ref=f177e246]: Norway
+                - generic [ref=f177e247]:
+                  - term [ref=f177e248]: RiskLens score
+                  - definition [ref=f177e249]: 18/100
+                - generic [ref=f177e250]:
+                  - term [ref=f177e251]: Liquidity
+                  - definition [ref=f177e252]: Deep
+                - generic [ref=f177e253]:
+                  - term [ref=f177e254]: Desk role
+                  - definition [ref=f177e255]: Benchmark safe asset
+            - generic [ref=f177e256]:
+              - generic [ref=f177e257]: Investigations
+              - status [ref=f177e258]:
+                - generic [ref=f177e259]:
+                  - heading "No investigations yet" [level=3] [ref=f177e260]
+                  - generic [ref=f177e261]: No investigation this session has referenced this entity.
+  - generic [ref=f177e262]: 2026-06-19

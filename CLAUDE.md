@@ -280,6 +280,54 @@ Scaffold `shell-side-nav` to scratch, read fully, cite every adoption by file+li
 
 **Phase 11 — Workflow composer.** Block added now, executed after Phase 10. Workflows as data (`{steps: intents/scene refs}`), runner = sequential `presentScene` with pacing, builder surface = block palette + ordered lane, run lands as consecutive turns. No branching, no persistence beyond session. Detailed work order issued when reached.
 
+**Phase 12 — Risk & Derivatives Module.** CLOSED as of 2026-07-18 (see STATE.md) — gate condition lifted mid-phase by legislation update, both work orders complete and ratified. Originally gated: fires only after Phase 10's freeze/recording is complete AND Prem's Phase 8 sitting has closed — superseded, see STATE.md's legislation-update entry. Backlog trigger, for the record: a Bank of America/trading contract lead (2026-07-17) plus the long-standing unbuilt Portfolio module. New persona: FX/derivatives risk officer. Journey: Monitor portfolio → drill into a flagged position → escalate/hedge recommendation. Two work orders.
+
+*WO-1 — Portfolio dashboard scene.*
+1. Universe: 3-4 derivative positions (FX options/rate swaps) as new entities, notional/counterparty/exposure facts, at least one linked to Kestrel (reuse, don't invent a new villain). New source system only if `RiskLens` genuinely can't extend to cover it — extend before duplicating.
+2. New `ring-gauge` node — reuses confidence-meter's arc math, new registry entry, full vocabulary node-addition test citation (merlin-new-node skill §0) before any code.
+3. One dashboard-grid fixture: exposure metric-grid, ring-gauge row, top-contributors bar-series, flagged-positions signal-feed. Leads with scene-summary per existing law (aggregate risk verdict, not a single-scene recommendation).
+*Gate:* renders in 3 themes, all data traces to universe, no new architecture beyond ring-gauge, report, stop.
+
+*WO-2 — Entity view + chart craft.*
+1. Entity DataSet gains an optional derivative-shaped attribute set (documented, not a new DataSet kind — extend, per the reuse precedent). entity-header renders it same as any other entity.
+2. time-series: multi-series overlay (2-3 lines, distinct dash/color via `--viz` tokens) + optional stat-strip metric-grid header. Existing node, additive props only — no new node type.
+3. One entity + one investigation fixture using both.
+*Gate:* entity view + enhanced chart live, 3 themes, existing time-series usages unaffected (regression-checked), report, stop.
+
+Explicit non-goals, restated in the vocabulary entry when built: no order-book node, no buy/sell ticket, ever. Portfolio view recommends; it never executes.
+
+**Phase 13 — Static dashboard pages.** New page type, `DashboardPage`, distinct from investigation pages: renders `dashboard-layout` + registry nodes directly from an authored data object — no `SceneRenderer`, no trail, no `submitQuery` involvement. Reuses the SAME nodes (`metric-grid`, `ring-gauge`, `status-grid`, `ring-chart`, `bar-series`, `signal-feed`) and the same header pattern as `scene-summary` (recommendation + confidence + sources) for trust-architecture consistency — but as a static header component, not the `scene-summary` registry node (it's not in a scene). Two work orders.
+
+*WO-1 — Portfolio dashboard page.* New nav entry "Portfolio," pinned, always available (no artifact-stack lifecycle). Content = the existing `risk-desk-dashboard` fixture's data, re-rendered through `DashboardPage` instead of via investigation. Confirms the reuse works before building the second page.
+
+*WO-2 — Risk dashboard page.* Second nav entry "Risk," similarly static, distinct content focus (if book-level exposure lives in Portfolio, Risk can focus on limit/breach/escalation posture specifically — Prem to confirm the split makes sense once WO-1 is visible, don't over-design the distinction blind).
+
+*Gate:* both pages open instantly (no trail delay) from nav, render identically to their scene equivalents minus the assembly/trail animation, 3 themes, no `SceneRenderer`/`artifactStore`/`submitQuery` touched, report, stop.
+
+**Phase 14 — Asset discovery view (Entities page upgrade).** Not gated behind the sitting — small, additive, same reuse posture as Phase 12. One work order.
+
+1. Entities page gains three top strips (reusing `signal-feed`'s row craft): "Notable movers," "Recently cited" (real — count from turns/citations, like Sources' honest counter), "Newly added to universe" (session-fixed, not really "new" but styled the same).
+2. Grid view: `sparkline` (existing node, already built) + price/yield + 24h delta per entity card — a genuine multi-column card grid using Phase 12's `dashboard-layout` primitive, filterable by module/type (reuse Market Pulse's persona-tag pattern).
+3. Card click → EXISTING entity-link → `submitQuery` path. No new interaction pattern.
+4. EXPLICITLY EXCLUDED, restated in the vocabulary entry: no Buy/Sell/Trade CTA, no wallet connect, no price-action framing as an invitation to transact. Deltas are informational (principle 2: facts register), never a call to action — that's what distinguishes this from every screenshot in this genre.
+5. Nav: add "Discover" entry.
+
+*Gate:* grid renders from real universe data, filters work, card click resolves correctly, 3 themes, report, stop.
+
+**Phase 16 — Entity Detail page.** SUPERSEDED 2026-07-23 by the revised-scope order immediately below — same page, denser content. Original scope, for the record: chart/About/Statistics/scoped-Investigations, click-through from Asset Discovery's grid, no trade/buy-sell surface. Closed under the revision, not separately.
+
+**Phase 16 (REVISED SCOPE, 2026-07-23) — Entity Detail page, denser.** Supersedes the Phase 16 order above — same page, denser content.
+
+1. EntityDetailPage gains: Trend/Stats metric-grid (denser — 5-6 metrics not 2), price+yield dual-axis time-series (per last order), About block (existing attributes, fuller display, page has room, no cap).
+2. NEW: news-feed node/section — headline, one-line dek, source attribution (SourceChip), timestamp. Content: 4-5 authored fictional headlines per entity with real narrative texture (not filler — tie to existing facts: Aldergate's audit lapse, Kestrel's accumulation, etc. become "headlines" for entities that have them; new entities get headlines that establish their character, SeekingAlpha-style).
+3. NEW: related/compare entity strip — small card row, reuses entity-header-lite treatment, links to other entities (venue peers or sector peers).
+4. Investigations panel scoped to entity (as previously ordered).
+5. NEW UNIVERSE CONTENT: one equity entity (e.g. "South Bow Corp" or similar, pipeline/infra sector — real texture, not generic), tagged to the Phase 15-style second venue, with its own price series, News content, and ONE investigation scene reusing existing nodes (no new node types required to prove the concept). This is the single test case for asset-class generality — build ONE well before deciding whether to build more.
+
+Explicitly still no trade/buy-sell — News/Stats/Compare is the SeekingAlpha register, not the Kraken register, and that distinction is the whole point.
+
+*Gate:* entity page dense and complete for both a Solent bond AND the new equity entity, news feed populated with real texture (not lorem-ipsum), investigation panel scoped correctly, 3 themes, report, stop.
+
 ## 9. Session protocol
 
 Every session:

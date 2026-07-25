@@ -1,0 +1,201 @@
+- generic [active] [ref=f181e1]:
+  - generic [ref=f181e6]:
+    - link "Skip to content" [ref=f181e7] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f181e10]:
+      - navigation "Side navigation" [ref=f181e12]:
+        - generic [ref=f181e17]: Merlin
+        - generic [ref=f181e18]:
+          - group "Places" [ref=f181e19]:
+            - generic [ref=f181e22]: Places
+            - generic [ref=f181e23]:
+              - button "New investigation" [ref=f181e25] [cursor=pointer]:
+                - img [ref=f181e26]
+                - generic [ref=f181e28]: New investigation
+              - button "Discover" [ref=f181e30] [cursor=pointer]:
+                - img [ref=f181e32]
+                - generic [ref=f181e35]: Discover
+              - button "Watchlist" [ref=f181e37] [cursor=pointer]:
+                - img [ref=f181e39]
+                - generic [ref=f181e42]: Watchlist
+              - button "Data Sources" [ref=f181e44] [cursor=pointer]:
+                - img [ref=f181e46]
+                - generic [ref=f181e50]: Data Sources
+              - button "Market Pulse" [ref=f181e52] [cursor=pointer]:
+                - img [ref=f181e54]
+                - generic [ref=f181e56]: Market Pulse
+              - button "Investigations" [ref=f181e58] [cursor=pointer]:
+                - img [ref=f181e60]
+                - generic [ref=f181e63]: Investigations
+              - button "Portfolio" [ref=f181e65] [cursor=pointer]:
+                - img [ref=f181e67]
+                - generic [ref=f181e69]: Portfolio
+              - button "Risk" [ref=f181e71] [cursor=pointer]:
+                - img [ref=f181e73]
+                - generic [ref=f181e75]: Risk
+          - group "Recent" [ref=f181e76]:
+            - generic [ref=f181e77]:
+              - generic [ref=f181e79]: Recent
+              - button "Filter recent" [ref=f181e82] [cursor=pointer]:
+                - img [ref=f181e86]
+                - status
+            - generic [ref=f181e88]:
+              - generic [ref=f181e89]: Nothing yet.
+              - button "View all" [ref=f181e92] [cursor=pointer]:
+                - generic [ref=f181e93]: View all
+        - generic [ref=f181e95]:
+          - button "Collapse sidebar" [ref=f181e97] [cursor=pointer]:
+            - img [ref=f181e101]
+            - status
+          - generic [ref=f181e103]:
+            - button "Analyst Analyst" [ref=f181e104] [cursor=pointer]:
+              - generic [ref=f181e105]:
+                - img "Analyst" [ref=f181e107]:
+                  - generic [ref=f181e109]: A
+                - generic [ref=f181e110]: Analyst
+                - img [ref=f181e113]
+              - status
+            - button "Notifications" [ref=f181e116] [cursor=pointer]:
+              - img [ref=f181e119]
+              - status
+      - main [ref=f181e123]:
+        - generic [ref=f181e1945]:
+          - generic [ref=f181e1946]:
+            - generic [ref=f181e1947]: South Bow Corp
+            - generic [ref=f181e1948]:
+              - button "Watch South Bow Corp" [ref=f181e1999] [cursor=pointer]:
+                - img [ref=f181e1953]
+                - status
+              - button "Investigate South Bow Corp" [ref=f181e2000] [cursor=pointer]:
+                - img [ref=f181e2004]
+                - status
+          - generic [ref=f181e1957]:
+            - generic [ref=f181e1958]: Equity — Pipeline & Infrastructure
+            - generic [ref=f181e2008]:
+              - generic [ref=f181e2010]: Trend
+              - generic [ref=f181e2012]:
+                - generic [ref=f181e2013]:
+                  - generic [ref=f181e2014]:
+                    - generic [ref=f181e2016]: "40.34"
+                    - generic [ref=f181e2017]: Latest price
+                  - generic [ref=f181e2018]:
+                    - generic [ref=f181e2020]: "+0.08"
+                    - generic [ref=f181e2021]: Recent move
+                - application [ref=f181e2024]:
+                  - generic [ref=f181e2048]:
+                    - generic [ref=f181e2049]:
+                      - generic [ref=f181e2051]: 2026-04-05
+                      - generic [ref=f181e2053]: 2026-04-16
+                      - generic [ref=f181e2055]: 2026-04-27
+                      - generic [ref=f181e2057]: 2026-05-08
+                      - generic [ref=f181e2059]: 2026-05-19
+                      - generic [ref=f181e2061]: 2026-05-30
+                      - generic [ref=f181e2063]: 2026-06-10
+                      - generic [ref=f181e2065]: 2026-06-21
+                      - generic [ref=f181e2067]: 2026-07-02
+                    - generic [ref=f181e2068]:
+                      - generic [ref=f181e2070]: "0"
+                      - generic [ref=f181e2072]: "15"
+                      - generic [ref=f181e2074]: "30"
+                      - generic [ref=f181e2076]: "45"
+                      - generic [ref=f181e2078]: "60"
+                    - generic [ref=f181e2079]:
+                      - generic [ref=f181e2081]: "0"
+                      - generic [ref=f181e2083]: "850000"
+                      - generic [ref=f181e2085]: "1700000"
+                      - generic [ref=f181e2087]: "2550000"
+                      - generic [ref=f181e2089]: "3400000"
+            - generic [ref=f181e1959]:
+              - generic [ref=f181e1961]: Statistics
+              - generic [ref=f181e1963]:
+                - generic [ref=f181e2090]:
+                  - generic [ref=f181e2092]: "40.34"
+                  - generic [ref=f181e2093]: Price (USD)
+                - generic [ref=f181e2094]:
+                  - generic [ref=f181e2096]: "+0.08"
+                  - generic [ref=f181e2097]: Recent move
+                - generic [ref=f181e2098]:
+                  - generic [ref=f181e2100]: Energy infrastructure — natural gas pipelines & export terminals
+                  - generic [ref=f181e2101]: Sector
+                - generic [ref=f181e2102]:
+                  - generic [ref=f181e2104]: Meridian Exchange
+                  - generic [ref=f181e2105]: Exchange
+                - generic [ref=f181e2106]:
+                  - generic [ref=f181e2108]: $8.6B
+                  - generic [ref=f181e2109]: Market cap
+                - generic [ref=f181e2110]:
+                  - generic [ref=f181e2112]: 27/100
+                  - generic [ref=f181e2113]: RiskLens score
+            - generic [ref=f181e1972]:
+              - generic [ref=f181e1974]: About
+              - generic [ref=f181e1977]:
+                - generic [ref=f181e2114]:
+                  - term [ref=f181e2115]: Sector
+                  - definition [ref=f181e2116]: Energy infrastructure — natural gas pipelines & export terminals
+                - generic [ref=f181e2117]:
+                  - term [ref=f181e2118]: Exchange
+                  - definition [ref=f181e2119]: Meridian Exchange
+                - generic [ref=f181e2120]:
+                  - term [ref=f181e2121]: Latest price
+                  - definition [ref=f181e2122]: $40.34
+                - generic [ref=f181e2123]:
+                  - term [ref=f181e2124]: Dividend yield
+                  - definition [ref=f181e2125]: 3.1%
+                - generic [ref=f181e2126]:
+                  - term [ref=f181e2127]: Market cap
+                  - definition [ref=f181e2128]: $8.6B
+                - generic [ref=f181e2129]:
+                  - term [ref=f181e2130]: RiskLens score
+                  - definition [ref=f181e2131]: 27/100
+            - generic [ref=f181e2132]:
+              - generic [ref=f181e2134]: Coverage
+              - generic [ref=f181e2136]:
+                - generic [ref=f181e2137]:
+                  - generic [ref=f181e2138]:
+                    - generic [ref=f181e2139]: South Bow Corp's dividend unaffected by expansion capex plans
+                    - generic [ref=f181e2140]: 3.1% yield holds steady; PortfolioAtlas logs no change to the payout mandate.
+                  - generic [ref=f181e2142]:
+                    - generic [ref=f181e2144]: PortfolioAtlas
+                    - time [ref=f181e2146]: Jul 1, 2026
+                - generic [ref=f181e2147]:
+                  - generic [ref=f181e2148]:
+                    - generic [ref=f181e2149]: South Bow Corp gives back half its filing-day gain over the following week
+                    - generic [ref=f181e2150]: Shares ease from 42.93 to the low 40s as the initial reaction cools.
+                  - generic [ref=f181e2152]:
+                    - generic [ref=f181e2154]: MeridianFeed
+                    - time [ref=f181e2156]: Jun 27, 2026
+                - generic [ref=f181e2157]:
+                  - generic [ref=f181e2158]:
+                    - generic [ref=f181e2159]: RiskLens reads South Bow Corp's risk profile as low-moderate despite the expansion filing
+                    - generic [ref=f181e2160]: Score of 27/100 reflects stable infrastructure cash flows even amid the regulatory review ahead.
+                  - generic [ref=f181e2162]:
+                    - generic [ref=f181e2164]: RiskLens
+                    - time [ref=f181e2166]: Jun 24, 2026
+                - generic [ref=f181e2167]:
+                  - generic [ref=f181e2168]:
+                    - generic [ref=f181e2169]: South Bow Corp jumps on cross-border capacity expansion filing
+                    - generic [ref=f181e2170]: Shares gain nearly 5% intraday as the pipeline operator files for additional export-terminal throughput.
+                  - generic [ref=f181e2172]:
+                    - generic [ref=f181e2174]: MeridianFeed
+                    - time [ref=f181e2176]: Jun 21, 2026
+                - generic [ref=f181e2177]:
+                  - generic [ref=f181e2178]:
+                    - generic [ref=f181e2179]: Volume triples as South Bow Corp's expansion filing draws analyst attention
+                    - generic [ref=f181e2180]: Trading volume peaks above 3.3M shares the day of the filing before settling into a steadier range.
+                  - generic [ref=f181e2182]:
+                    - generic [ref=f181e2184]: MeridianFeed
+                    - time [ref=f181e2186]: Jun 21, 2026
+            - generic [ref=f181e1984]:
+              - generic [ref=f181e1985]: Related
+              - generic [ref=f181e2187] [cursor=pointer]:
+                - button "Open Halberg Materials AG" [ref=f181e2188]
+                - generic [ref=f181e2191]:
+                  - generic [ref=f181e2192]: Halberg Materials AG
+                  - text: Equity — Listed Common Stock
+            - generic [ref=f181e1993]:
+              - generic [ref=f181e1994]: Investigations
+              - status [ref=f181e1995]:
+                - generic [ref=f181e1996]:
+                  - heading "No investigations yet" [level=3] [ref=f181e1997]
+                  - generic [ref=f181e1998]: No investigation this session has referenced this entity.
+  - generic [ref=f181e2193]: "850000"

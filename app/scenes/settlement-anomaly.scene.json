@@ -74,37 +74,50 @@
     "reveal": 0,
     "children": [
       {
+        "id": "settlement-anomaly-summary",
+        "type": "scene-summary",
+        "reveal": 1,
+        "props": {
+          "recommendation": "Recommend a counterparty review of Kestrel Holdings and a settlement hold on its wallet cluster.",
+          "investigationSummary": "Failures trace to Kestrel-cluster wallets settling faster than custody confirmation cycles — a pattern consistent with position-building ahead of an expected yield event, not fraud.",
+          "confidence": 0.62,
+          "confidenceLabel": "Recommendation confidence",
+          "sourceRefs": ["CustodyGrid", "LedgerWatch", "CompliancePulse", "MarketTape"],
+          "caveat": "Wallet attribution is high-confidence (0.88); the position-building motive read is moderate."
+        }
+      },
+      {
         "id": "summary-metrics-panel",
         "type": "panel",
-        "reveal": 1,
+        "reveal": 2,
         "children": [
           {
             "id": "summary-metrics",
             "type": "metric-grid",
-            "reveal": 2,
+            "reveal": 3,
             "children": [
               {
                 "id": "failed-count-metric",
                 "type": "metric",
-                "reveal": 3,
+                "reveal": 4,
                 "props": { "label": "Failed settlements this week", "value": 2 }
               },
               {
                 "id": "float-accumulated-metric",
                 "type": "metric",
-                "reveal": 4,
+                "reveal": 5,
                 "props": { "label": "NordBond float accumulated by Kestrel", "value": "11%" }
               },
               {
                 "id": "sanctions-status-tag",
                 "type": "status-tag",
-                "reveal": 5,
+                "reveal": 6,
                 "props": { "label": "Clean", "tone": "ok" }
               },
               {
                 "id": "counterparty-status-tag",
                 "type": "status-tag",
-                "reveal": 6,
+                "reveal": 7,
                 "props": { "label": "Unrated", "tone": "warn" }
               }
             ]
@@ -114,13 +127,13 @@
       {
         "id": "failed-deliveries-panel",
         "type": "panel",
-        "reveal": 7,
+        "reveal": 8,
         "props": { "title": "Failed deliveries this month" },
         "children": [
           {
             "id": "failed-deliveries-table-node",
             "type": "signal-feed",
-            "reveal": 8,
+            "reveal": 9,
             "bind": { "data": "failed-deliveries-table" }
           }
         ]
@@ -128,13 +141,13 @@
       {
         "id": "volume-context-panel",
         "type": "panel",
-        "reveal": 9,
+        "reveal": 10,
         "props": { "title": "MarketTape volume, 10-day window" },
         "children": [
           {
             "id": "volume-spikes-node",
             "type": "time-series",
-            "reveal": 10,
+            "reveal": 11,
             "props": {
               "variant": "combo",
               "annotations": [
@@ -149,34 +162,16 @@
       {
         "id": "wallet-cluster-panel",
         "type": "panel",
-        "reveal": 11,
+        "reveal": 12,
         "props": { "title": "Kestrel wallet cluster — NordBond float accumulation" },
         "children": [
           {
             "id": "wallet-cluster-node",
             "type": "entity-graph",
-            "reveal": 12,
+            "reveal": 13,
             "bind": { "data": "wallet-cluster-graph" }
           }
         ]
-      },
-      {
-        "id": "settlement-anomaly-findings",
-        "type": "text-block",
-        "reveal": 13,
-        "props": {
-          "text": "Failures trace to Kestrel-cluster wallets settling faster than custody confirmation cycles — a pattern consistent with position-building ahead of an expected yield event, not fraud."
-        }
-      },
-      {
-        "id": "settlement-anomaly-recommendation",
-        "type": "recommendation",
-        "reveal": 14,
-        "props": {
-          "text": "Recommend a counterparty review of Kestrel Holdings and a settlement hold on its wallet cluster.",
-          "confidence": 0.62,
-          "caveat": "Wallet attribution is high-confidence (0.88); the position-building motive read is moderate."
-        }
       }
     ]
   }
