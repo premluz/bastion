@@ -17,6 +17,7 @@ export const SceneSummaryPropsSchema = z.object({
   confidenceLabel: z.string().min(1),
   sourceRefs: z.array(z.string().min(1)),
   assumptions: z.array(z.string().min(1)).optional(),
+  unknowns: z.array(z.string().min(1)).optional(),
   caveat: z.string().min(1).optional(),
 });
 export type SceneSummaryProps = z.infer<typeof SceneSummaryPropsSchema>;

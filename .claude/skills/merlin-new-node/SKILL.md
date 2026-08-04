@@ -42,6 +42,22 @@ Guardrails and CLAUDE.md apply. A node without all four artifacts does not exist
    values); defaults are not semantics.
    SVG text never auto-clips: any text inside a bounded SVG cell gets an
    explicit clipPath at birth, not after the first bleed.
+   Fit/overflow checks driven by ResizeObserver or getBoundingClientRect
+   must account for in-flight CSS transforms (slide/scale animations) —
+   measure transform-independent properties (offsetWidth sums) when
+   checking layout fit during an animated transition, not viewport-
+   relative measurements that include the animation itself. Confirmed
+   Phase 18 (2026-07-26): a pane-collapse fit-check read `scrollWidth`/
+   `getBoundingClientRect`, both of which include the CSS `transform` a
+   slide-in/out animation runs on — a pane resting mid-transition (or on
+   a stale fill-forwards frame) got measured at its PAINTED position, not
+   its true layout footprint, producing phantom overflow. Same order also
+   surfaced a MutationObserver corollary: a re-check triggered by a node
+   ADDITION is safe, but one triggered by a REMOVAL the mechanism itself
+   just caused is tautological (of course it "fits" once the thing that
+   didn't fit is gone) and creates a live collapse/restore oscillation —
+   confirmed via repeated CSS `animationcancel` events, the animation
+   never reaching `animationend`.
 3. **Register** → one lazy entry in `registry.ts`: `{ component, propSchema }`.
    Nothing else in that file.
 4. **Story** → three states per the vocabulary: happy, partial data, designed

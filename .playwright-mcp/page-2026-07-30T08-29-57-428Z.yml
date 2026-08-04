@@ -1,0 +1,363 @@
+- generic [ref=f7e7913]:
+  - link "Skip to content" [ref=f7e7914] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f7e7917]:
+    - navigation "Side navigation" [ref=f7e7919]:
+      - generic [ref=f7e7920]: Merlin
+      - generic [ref=f7e7925]:
+        - group "Places" [ref=f7e7926]:
+          - generic [ref=f7e7930]:
+            - button "New investigation" [ref=f7e7932] [cursor=pointer]
+            - button "Discover" [ref=f7e7937] [cursor=pointer]
+            - button "Watchlist" [ref=f7e7944] [cursor=pointer]
+            - button "Data Sources" [ref=f7e7951] [cursor=pointer]
+            - button "Market Pulse" [ref=f7e7959] [cursor=pointer]
+            - button "Investigations" [ref=f7e7965] [cursor=pointer]
+            - button "Portfolio" [ref=f7e7972] [cursor=pointer]
+            - button "Risk" [ref=f7e7978] [cursor=pointer]
+        - group "Recent" [ref=f7e7983]:
+          - generic [ref=f7e7984]:
+            - generic [ref=f7e7985]: Recent
+            - button "Filter recent" [ref=f7e7989] [cursor=pointer]:
+              - status
+          - generic [ref=f7e7995]:
+            - generic [ref=f7e7996]: Nothing yet.
+            - button "View all" [ref=f7e7999] [cursor=pointer]
+      - generic [ref=f7e8002]:
+        - button "Collapse sidebar" [ref=f7e8004] [cursor=pointer]:
+          - status
+        - generic [ref=f7e8010]:
+          - button "Analyst Analyst" [ref=f7e8011] [cursor=pointer]:
+            - generic [ref=f7e8012]:
+              - img "Analyst" [ref=f7e8014]:
+                - generic [ref=f7e8015]: A
+              - generic [ref=f7e8017]: Analyst
+            - status
+          - button "Notifications" [ref=f7e8023] [cursor=pointer]:
+            - status
+    - main [ref=f7e8030]:
+      - generic [ref=f7e8035]:
+        - generic [ref=f7e8036]:
+          - generic [ref=f7e8037]: Discover
+          - generic [ref=f7e8038]:
+            - button "Chat" [ref=f7e8039] [cursor=pointer]:
+              - status
+            - button "Artifacts" [disabled] [ref=f7e8045]:
+              - status
+        - generic [ref=f7e8056]:
+          - generic [ref=f7e8057]:
+            - generic [ref=f7e8058]:
+              - generic [ref=f7e8059]:
+                - generic [ref=f7e8060]: Notable movers
+                - generic [ref=f7e8061]: 24H
+              - generic [ref=f7e8062]:
+                - generic [ref=f7e8065]:
+                  - generic [ref=f7e8066]: Helios Yield Fund
+                  - generic [ref=f7e8067]: +0.17pp since prior reading
+                - generic [ref=f7e8069]:
+                  - img "Trend sparkline" [ref=f7e8070]
+                  - generic [ref=f7e8072]: 9.1%
+              - separator [ref=f7e8073]
+              - generic [ref=f7e8075] [cursor=pointer]:
+                - button "NordBond 2029 +0.04pp since prior reading" [ref=f7e8078]:
+                  - generic [ref=f7e8079]: NordBond 2029
+                  - generic [ref=f7e8080]: +0.04pp since prior reading
+                - generic [ref=f7e8082]:
+                  - img "Trend sparkline" [ref=f7e8083]
+                  - generic [ref=f7e8085]: 5.8%
+              - separator [ref=f7e8086]
+              - generic [ref=f7e8088]:
+                - generic [ref=f7e8091]:
+                  - generic [ref=f7e8092]: Vantara Metals
+                  - generic [ref=f7e8093]: "-0.02pp since prior reading"
+                - generic [ref=f7e8095]:
+                  - img "Trend sparkline" [ref=f7e8096]
+                  - generic [ref=f7e8098]: 6.4%
+            - generic [ref=f7e8099]:
+              - generic [ref=f7e8100]: Trending
+              - generic [ref=f7e8101] [cursor=pointer]:
+                - button "South Bow Corp Equity — Pipeline & Infrastructure" [ref=f7e8104]:
+                  - generic [ref=f7e8105]: South Bow Corp
+                  - generic [ref=f7e8106]: Equity — Pipeline & Infrastructure
+                - generic [ref=f7e8108]:
+                  - img "Trend sparkline" [ref=f7e8109]
+                  - generic [ref=f7e8111]: $40.34
+              - separator [ref=f7e8112]
+              - generic [ref=f7e8114] [cursor=pointer]:
+                - button "Aldergate Estates Tokenized Real Estate Portfolio" [ref=f7e8117]:
+                  - generic [ref=f7e8118]: Aldergate Estates
+                  - generic [ref=f7e8119]: Tokenized Real Estate Portfolio
+                - generic [ref=f7e8121]:
+                  - img "Trend sparkline" [ref=f7e8122]
+                  - generic [ref=f7e8124]: 7.2%
+              - separator [ref=f7e8125]
+              - generic [ref=f7e8127]:
+                - generic [ref=f7e8130]:
+                  - generic [ref=f7e8131]: Kestrel Holdings
+                  - generic [ref=f7e8132]: Counterparty (Cyprus-registered)
+                - generic [ref=f7e8134]:
+                  - img "Trend sparkline" [ref=f7e8135]
+                  - generic [ref=f7e8137]: 11%
+            - generic [ref=f7e8138]:
+              - generic [ref=f7e8139]: Newly Added
+              - generic [ref=f7e8140]:
+                - generic [ref=f7e8143]:
+                  - generic [ref=f7e8144]: Mira Voss
+                  - generic [ref=f7e8145]: Person — Head of Issuance, Fjellbank
+                - generic [ref=f7e8147]:
+                  - img "Trend sparkline" [ref=f7e8148]
+                  - generic [ref=f7e8150]: 3.3%
+              - separator [ref=f7e8151]
+              - generic [ref=f7e8153]:
+                - generic [ref=f7e8156]:
+                  - generic [ref=f7e8157]: Halberg Materials AG
+                  - generic [ref=f7e8158]: Equity — Listed Common Stock
+                - generic [ref=f7e8160]:
+                  - img "Trend sparkline" [ref=f7e8161]
+                  - generic [ref=f7e8163]: $24.65
+              - separator [ref=f7e8164]
+              - generic [ref=f7e8166] [cursor=pointer]:
+                - button "South Bow Corp Equity — Pipeline & Infrastructure" [ref=f7e8169]:
+                  - generic [ref=f7e8170]: South Bow Corp
+                  - generic [ref=f7e8171]: Equity — Pipeline & Infrastructure
+                - generic [ref=f7e8173]:
+                  - img "Trend sparkline" [ref=f7e8174]
+                  - generic [ref=f7e8176]: $40.34
+          - generic [ref=f7e8177]:
+            - generic [ref=f7e8178]: Discover Assets
+            - generic [ref=f7e8179]:
+              - group "Filter assets by category" [ref=f7e8180]:
+                - button "All" [ref=f7e8181] [cursor=pointer]:
+                  - status
+                - button "Covered Bond" [ref=f7e8186] [cursor=pointer]:
+                  - status
+                - button "Real Estate" [ref=f7e8191] [cursor=pointer]:
+                  - status
+                - button "Credit Fund" [ref=f7e8196] [cursor=pointer]:
+                  - status
+                - button "Commodities" [ref=f7e8201] [cursor=pointer]:
+                  - status
+                - button "Crypto" [active] [pressed] [ref=f7e8206] [cursor=pointer]:
+                  - status
+              - group "Switch view" [ref=f7e8211]:
+                - button "Table view" [pressed] [ref=f7e8212] [cursor=pointer]:
+                  - status
+                - button "Grid view" [ref=f7e8218] [cursor=pointer]:
+                  - status
+            - group "Table" [ref=f7e8227]:
+              - table [ref=f7e8228]:
+                - rowgroup [ref=f7e8229]:
+                  - row [ref=f7e9813]:
+                    - columnheader "Asset" [ref=f7e8231]
+                    - columnheader "Price" [ref=f7e9814]
+                    - columnheader "24h Δ" [ref=f7e8233]
+                    - columnheader "Volume" [ref=f7e9815]
+                    - columnheader [ref=f7e8235]
+                - rowgroup [ref=f7e8236]:
+                  - row [ref=f7e9816]:
+                    - cell [ref=f7e9817]:
+                      - button "Solstice Index Token Tokenized Crypto Index" [ref=f7e9818] [cursor=pointer]:
+                        - generic [ref=f7e8241]:
+                          - generic [ref=f7e8242]: Solstice Index Token
+                          - text: Tokenized Crypto Index
+                    - cell "$1,248.50" [ref=f7e9819]
+                    - cell "-0.06pp" [ref=f7e9820]
+                    - cell "145.2M" [ref=f7e9821]
+                    - cell [ref=f7e9822]:
+                      - button "Watch Solstice Index Token" [ref=f7e9823] [cursor=pointer]:
+                        - status
+                  - row [ref=f7e9824]:
+                    - cell [ref=f7e9825]:
+                      - button "Vector Chain Fund Tokenized Crypto Index" [ref=f7e9826] [cursor=pointer]:
+                        - generic [ref=f7e8265]:
+                          - generic [ref=f7e8266]: Vector Chain Fund
+                          - text: Tokenized Crypto Index
+                    - cell "$0.82" [ref=f7e9827]
+                    - cell "+0.06pp" [ref=f7e9828]
+                    - cell "42.8M" [ref=f7e9829]
+                    - cell [ref=f7e9830]:
+                      - button "Watch Vector Chain Fund" [ref=f7e9831] [cursor=pointer]:
+                        - status
+                  - row [ref=f7e9832]:
+                    - cell [ref=f7e9833]:
+                      - button "Nimbus Protocol Note Tokenized Crypto Index" [ref=f7e9834] [cursor=pointer]:
+                        - generic [ref=f7e8289]:
+                          - generic [ref=f7e8290]: Nimbus Protocol Note
+                          - text: Tokenized Crypto Index
+                    - cell "$15.20" [ref=f7e9835]
+                    - cell "+0.15pp" [ref=f7e9836]
+                    - cell "285.6M" [ref=f7e9837]
+                    - cell [ref=f7e9838]:
+                      - button "Watch Nimbus Protocol Note" [ref=f7e9839] [cursor=pointer]:
+                        - status
+                  - row [ref=f7e9840]:
+                    - cell [ref=f7e9841]:
+                      - button "Halcyon Ledger Index Tokenized Crypto Index" [ref=f7e9842] [cursor=pointer]:
+                        - generic [ref=f7e8313]:
+                          - generic [ref=f7e8314]: Halcyon Ledger Index
+                          - text: Tokenized Crypto Index
+                    - cell "$42.15" [ref=f7e9843]
+                    - cell "+0.13pp" [ref=f7e9844]
+                    - cell "152.3M" [ref=f7e9845]
+                    - cell [ref=f7e9846]:
+                      - button "Watch Halcyon Ledger Index" [ref=f7e9847] [cursor=pointer]:
+                        - status
+                  - row [ref=f7e9848]:
+                    - cell [ref=f7e9849]:
+                      - button "Quanta Chain Fund Tokenized Crypto Index" [ref=f7e9850] [cursor=pointer]:
+                        - generic [ref=f7e8337]:
+                          - generic [ref=f7e8338]: Quanta Chain Fund
+                          - text: Tokenized Crypto Index
+                    - cell "$0.57" [ref=f7e9851]
+                    - cell "+0.04pp" [ref=f7e9852]
+                    - cell "28.9M" [ref=f7e9853]
+                    - cell [ref=f7e9854]:
+                      - button "Watch Quanta Chain Fund" [ref=f7e9855] [cursor=pointer]:
+                        - status
+                  - row [ref=f7e9856]:
+                    - cell [ref=f7e9857]:
+                      - button "Embernet Token Basket Tokenized Crypto Index" [ref=f7e9858] [cursor=pointer]:
+                        - generic [ref=f7e8361]:
+                          - generic [ref=f7e8362]: Embernet Token Basket
+                          - text: Tokenized Crypto Index
+                    - cell "$3.24" [ref=f7e9859]
+                    - cell "-0.07pp" [ref=f7e9860]
+                    - cell "18.4M" [ref=f7e9861]
+                    - cell [ref=f7e9862]:
+                      - button "Watch Embernet Token Basket" [ref=f7e9863] [cursor=pointer]:
+                        - status
+                  - row [ref=f7e9864]:
+                    - cell [ref=f7e9865]:
+                      - button "Driftwood Protocol Index Tokenized Crypto Index" [ref=f7e9866] [cursor=pointer]:
+                        - generic [ref=f7e8385]:
+                          - generic [ref=f7e8386]: Driftwood Protocol Index
+                          - text: Tokenized Crypto Index
+                    - cell "$125.80" [ref=f7e9867]
+                    - cell "-0.12pp" [ref=f7e9868]
+                    - cell "95.2M" [ref=f7e9869]
+                    - cell [ref=f7e9870]:
+                      - button "Watch Driftwood Protocol Index" [ref=f7e9871] [cursor=pointer]:
+                        - status
+                  - row [ref=f7e9872]:
+                    - cell [ref=f7e9873]:
+                      - button "Lumen Chain Note Tokenized Crypto Index" [ref=f7e9874] [cursor=pointer]:
+                        - generic [ref=f7e8409]:
+                          - generic [ref=f7e8410]: Lumen Chain Note
+                          - text: Tokenized Crypto Index
+                    - cell "$0.12" [ref=f7e9875]
+                    - cell "-0.08pp" [ref=f7e9876]
+                    - cell "62.8M" [ref=f7e9877]
+                    - cell [ref=f7e9878]:
+                      - button "Watch Lumen Chain Note" [ref=f7e9879] [cursor=pointer]:
+                        - status
+                  - row [ref=f7e9880]:
+                    - cell [ref=f7e9881]:
+                      - button "Cinder Ledger Fund Tokenized Crypto Index" [ref=f7e9882] [cursor=pointer]:
+                        - generic [ref=f7e8433]:
+                          - generic [ref=f7e8434]: Cinder Ledger Fund
+                          - text: Tokenized Crypto Index
+                    - cell "$2,185.00" [ref=f7e9883]
+                    - cell "+0.03pp" [ref=f7e9884]
+                    - cell "248.5M" [ref=f7e9885]
+                    - cell [ref=f7e9886]:
+                      - button "Watch Cinder Ledger Fund" [ref=f7e9887] [cursor=pointer]:
+                        - status
+                  - row [ref=f7e9888]:
+                    - cell [ref=f7e9889]:
+                      - button "Wavelength Protocol Token Tokenized Crypto Index" [ref=f7e9890] [cursor=pointer]:
+                        - generic [ref=f7e8457]:
+                          - generic [ref=f7e8458]: Wavelength Protocol Token
+                          - text: Tokenized Crypto Index
+                    - cell "$78.50" [ref=f7e9891]
+                    - cell "+0.10pp" [ref=f7e9892]
+                    - cell "118.2M" [ref=f7e9893]
+                    - cell [ref=f7e9894]:
+                      - button "Watch Wavelength Protocol Token" [ref=f7e9895] [cursor=pointer]:
+                        - status
+                  - row [ref=f7e9896]:
+                    - cell [ref=f7e9897]:
+                      - button "Tesseract Chain Index Tokenized Crypto Index" [ref=f7e9898] [cursor=pointer]:
+                        - generic [ref=f7e8481]:
+                          - generic [ref=f7e8482]: Tesseract Chain Index
+                          - text: Tokenized Crypto Index
+                    - cell "$365.20" [ref=f7e9899]
+                    - cell "+0.10pp" [ref=f7e9900]
+                    - cell "165.8M" [ref=f7e9901]
+                    - cell [ref=f7e9902]:
+                      - button "Watch Tesseract Chain Index" [ref=f7e9903] [cursor=pointer]:
+                        - status
+                  - row [ref=f7e9904]:
+                    - cell [ref=f7e9905]:
+                      - button "Obsidian Ledger Fund Tokenized Crypto Index" [ref=f7e9906] [cursor=pointer]:
+                        - generic [ref=f7e8505]:
+                          - generic [ref=f7e8506]: Obsidian Ledger Fund
+                          - text: Tokenized Crypto Index
+                    - cell "$12.45" [ref=f7e9907]
+                    - cell "-0.01pp" [ref=f7e9908]
+                    - cell "45.6M" [ref=f7e9909]
+                    - cell [ref=f7e9910]:
+                      - button "Watch Obsidian Ledger Fund" [ref=f7e9911] [cursor=pointer]:
+                        - status
+          - generic [ref=f7e9677]:
+            - generic [ref=f7e9678]: Other tracked entities
+            - list [ref=f7e9679]:
+              - listitem [ref=f7e9680] [cursor=pointer]:
+                - button "Kestrel Holdings Counterparty (Cyprus-registered)" [ref=f7e9681]:
+                  - generic [ref=f7e9682]: Kestrel Holdings
+                  - generic [ref=f7e9683]: Counterparty (Cyprus-registered)
+                - button "Watch Kestrel Holdings" [ref=f7e9686]:
+                  - status
+              - listitem [ref=f7e9693] [cursor=pointer]:
+                - button "Solent Custody Venue Custodian" [ref=f7e9694]:
+                  - generic [ref=f7e9695]: Solent Custody
+                  - generic [ref=f7e9696]: Venue Custodian
+                - button "Watch Solent Custody" [ref=f7e9699]:
+                  - status
+              - listitem [ref=f7e9706] [cursor=pointer]:
+                - button "EUR/USD 3M Risk Reversal FX Option" [ref=f7e9707]:
+                  - generic [ref=f7e9708]: EUR/USD 3M Risk Reversal
+                  - generic [ref=f7e9709]: FX Option
+                - generic [ref=f7e9711]:
+                  - button "Watch EUR/USD 3M Risk Reversal" [ref=f7e9712]:
+                    - status
+                  - button "Investigate EUR/USD 3M Risk Reversal" [ref=f7e9719]:
+                    - status
+              - listitem [ref=f7e9727] [cursor=pointer]:
+                - button "5Y EUR Interest Rate Swap Interest Rate Swap" [ref=f7e9728]:
+                  - generic [ref=f7e9729]: 5Y EUR Interest Rate Swap
+                  - generic [ref=f7e9730]: Interest Rate Swap
+                - button "Watch 5Y EUR Interest Rate Swap" [ref=f7e9733]:
+                  - status
+              - listitem [ref=f7e9740] [cursor=pointer]:
+                - button "GBP/EUR 6M FX Forward FX Forward" [ref=f7e9741]:
+                  - generic [ref=f7e9742]: GBP/EUR 6M FX Forward
+                  - generic [ref=f7e9743]: FX Forward
+                - button "Watch GBP/EUR 6M FX Forward" [ref=f7e9746]:
+                  - status
+              - listitem [ref=f7e9753] [cursor=pointer]:
+                - button "10Y USD Interest Rate Swap Interest Rate Swap" [ref=f7e9754]:
+                  - generic [ref=f7e9755]: 10Y USD Interest Rate Swap
+                  - generic [ref=f7e9756]: Interest Rate Swap
+                - button "Watch 10Y USD Interest Rate Swap" [ref=f7e9759]:
+                  - status
+              - listitem [ref=f7e9766] [cursor=pointer]:
+                - button "Mira Voss Person — Head of Issuance, Fjellbank" [ref=f7e9767]:
+                  - generic [ref=f7e9768]: Mira Voss
+                  - generic [ref=f7e9769]: Person — Head of Issuance, Fjellbank
+                - button "Watch Mira Voss" [ref=f7e9772]:
+                  - status
+              - listitem [ref=f7e9779] [cursor=pointer]:
+                - button "Halberg Materials AG Equity — Listed Common Stock" [ref=f7e9780]:
+                  - generic [ref=f7e9781]: Halberg Materials AG
+                  - generic [ref=f7e9782]: Equity — Listed Common Stock
+                - button "Watch Halberg Materials AG" [ref=f7e9785]:
+                  - status
+              - listitem [ref=f7e9792] [cursor=pointer]:
+                - button "South Bow Corp Equity — Pipeline & Infrastructure" [ref=f7e9793]:
+                  - generic [ref=f7e9794]: South Bow Corp
+                  - generic [ref=f7e9795]: Equity — Pipeline & Infrastructure
+                - generic [ref=f7e9797]:
+                  - button "Watch South Bow Corp" [ref=f7e9798]:
+                    - status
+                  - button "Investigate South Bow Corp" [ref=f7e9805]:
+                    - status

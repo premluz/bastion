@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
-import { ChatMessage, ChatMessageBubble, ChatMessageMetadata } from '@astryxdesign/core/Chat';
+import { ChatMessage, ChatMessageBubble } from '@astryxdesign/core/Chat';
 import { Text } from '@astryxdesign/core/Text';
 import { useSessionStore } from '../../engine/stores/sessionStore';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
 import { useTrailStore } from '../../engine/stores/trailStore';
-import { StatusTag } from '../nodes/StatusTag';
 import { ThinkingTrail } from '../trail/ThinkingTrail';
 import { ArtifactCard } from './ArtifactCard';
 
@@ -54,24 +53,7 @@ export function Transcript() {
         return (
           <div key={turn.id} style={{ display: 'grid', gap: 'var(--space-12)' }}>
             <ChatMessage sender="user">
-              <ChatMessageBubble
-                metadata={
-                  <ChatMessageMetadata
-                    footer={
-                      <StatusTag
-                        label={
-                          turn.status === 'resolved'
-                            ? 'Answered'
-                            : turn.status === 'interrupted'
-                              ? 'Interrupted'
-                              : 'No scene matched'
-                        }
-                        tone="neutral"
-                      />
-                    }
-                  />
-                }
-              >
+              <ChatMessageBubble>
                 {turn.utterance}
               </ChatMessageBubble>
             </ChatMessage>

@@ -1,0 +1,90 @@
+- generic [ref=f65e6]:
+  - link "Skip to content" [ref=f65e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f65e10]:
+    - navigation "Side navigation" [ref=f65e12]:
+      - generic [ref=f65e17]: Merlin
+      - generic [ref=f65e18]:
+        - group "Places" [ref=f65e19]:
+          - generic [ref=f65e22]: Places
+          - generic [ref=f65e23]:
+            - button "New investigation" [ref=f65e25] [cursor=pointer]:
+              - img [ref=f65e26]
+              - generic [ref=f65e28]: New investigation
+            - button "Discover" [ref=f65e30] [cursor=pointer]:
+              - img [ref=f65e32]
+              - generic [ref=f65e35]: Discover
+            - button "Watchlist" [ref=f65e37] [cursor=pointer]:
+              - img [ref=f65e39]
+              - generic [ref=f65e42]: Watchlist
+            - button "Data Sources" [ref=f65e44] [cursor=pointer]:
+              - img [ref=f65e46]
+              - generic [ref=f65e50]: Data Sources
+            - button "Market Pulse" [ref=f65e52] [cursor=pointer]:
+              - img [ref=f65e54]
+              - generic [ref=f65e56]: Market Pulse
+            - button "Investigations" [ref=f65e58] [cursor=pointer]:
+              - img [ref=f65e60]
+              - generic [ref=f65e63]: Investigations
+            - button "Portfolio" [ref=f65e65] [cursor=pointer]:
+              - img [ref=f65e67]
+              - generic [ref=f65e69]: Portfolio
+            - button "Risk" [ref=f65e71] [cursor=pointer]:
+              - img [ref=f65e73]
+              - generic [ref=f65e75]: Risk
+        - group "Recent" [ref=f65e76]:
+          - generic [ref=f65e77]:
+            - generic [ref=f65e79]: Recent
+            - button "Filter recent" [ref=f65e82] [cursor=pointer]:
+              - img [ref=f65e86]
+              - status
+          - generic [ref=f65e88]:
+            - button "NordBond 2029 — Settlement Failure … Thinking…" [ref=f65e173] [cursor=pointer]:
+              - generic [ref=f65e174]: NordBond 2029 — Settlement Failure …
+              - img "Thinking…" [ref=f65e176]
+            - button "View all" [ref=f65e92] [cursor=pointer]:
+              - generic [ref=f65e93]: View all
+      - generic [ref=f65e95]:
+        - button "Collapse sidebar" [ref=f65e97] [cursor=pointer]:
+          - img [ref=f65e101]
+          - status
+        - generic [ref=f65e103]:
+          - button "Analyst Analyst" [ref=f65e104] [cursor=pointer]:
+            - generic [ref=f65e105]:
+              - img "Analyst" [ref=f65e107]:
+                - generic [ref=f65e109]: A
+              - generic [ref=f65e110]: Analyst
+              - img [ref=f65e113]
+            - status
+          - button "Notifications" [ref=f65e116] [cursor=pointer]:
+            - img [ref=f65e119]
+            - status
+    - main [ref=f65e123]:
+      - generic [ref=f65e128]:
+        - generic [ref=f65e177]:
+          - generic [ref=f65e178]: why did two nordbond settlements fail this week
+          - button "Artifacts" [disabled] [ref=f65e180]:
+            - img [ref=f65e183]
+            - status
+        - generic [ref=f65e130]:
+          - generic [ref=f65e191]:
+            - article "Message from user" [ref=f65e192]:
+              - generic [ref=f65e194]:
+                - generic [ref=f65e195]: why did two nordbond settlements fail this week
+                - generic [ref=f65e198]: Answered
+            - article "Message from assistant" [ref=f65e199]:
+              - generic [ref=f65e202]:
+                - generic [ref=f65e203]:
+                  - generic [ref=f65e204]: 4 sources
+                  - generic [ref=f65e205]: 0.0s
+                - button "Thinking trail — click to skip" [ref=f65e206] [cursor=pointer]:
+                  - generic [ref=f65e207]:
+                    - img [ref=f65e210]
+                    - generic [ref=f65e214]: Scoping the investigation — two failed NordBond settlements this week
+          - generic [ref=f65e218]:
+            - generic [ref=f65e220]:
+              - generic: Ask a question about the venue…
+              - textbox "Message input" [ref=f65e221]
+            - button "Send" [disabled] [ref=f65e224]:
+              - img [ref=f65e227]
+              - status

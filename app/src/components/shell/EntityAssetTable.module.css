@@ -1,0 +1,84 @@
+/* Table rows entrance animation: each row fades in and slides up with
+   staggered delay based on its position. Uses nth-child selector to apply
+   sequential animation-delay to each row. Table stagger (--motion-table-stagger)
+   is smaller than assembly stagger for tighter row timing. */
+
+/* Astryx's useTableStickyColumns plugin gives the pinned Asset column an
+   opaque base background (defaults to --color-background-card, an
+   overridable CSS var it exposes for exactly this) so scrolled content
+   doesn't bleed through underneath it. This table has no Card/Panel
+   wrapper of its own, but AppShell's default variant ("elevated",
+   Frame.tsx never overrides it) renders an inset surface backdrop behind
+   the whole content area — --color-background-surface / --surface-1 —
+   not the raw body wash (--surface-0, confirmed wrong on first pass: it
+   left a visible seam because the page doesn't actually sit on the body
+   color at all). --surface-1 matches what's really behind this table, so
+   the pinned column blends in until an actual horizontal scroll makes the
+   shadow (already scroll-gated by the plugin itself, opacity 0 by
+   default) the only visible sign it's pinned. */
+.animatedTable {
+  --table-sticky-background: var(--surface-1);
+}
+
+.animatedTable tbody tr {
+  animation-name: merlin-table-row-enter;
+  animation-duration: var(--motion-enter-duration);
+  animation-timing-function: var(--motion-enter-ease);
+  animation-fill-mode: backwards;
+}
+
+/* Stagger each row by nth-child multiplied by motion-table-stagger */
+.animatedTable tbody tr:nth-child(1) {
+  animation-delay: calc(0 * var(--motion-table-stagger));
+}
+
+.animatedTable tbody tr:nth-child(2) {
+  animation-delay: calc(1 * var(--motion-table-stagger));
+}
+
+.animatedTable tbody tr:nth-child(3) {
+  animation-delay: calc(2 * var(--motion-table-stagger));
+}
+
+.animatedTable tbody tr:nth-child(4) {
+  animation-delay: calc(3 * var(--motion-table-stagger));
+}
+
+.animatedTable tbody tr:nth-child(5) {
+  animation-delay: calc(4 * var(--motion-table-stagger));
+}
+
+.animatedTable tbody tr:nth-child(6) {
+  animation-delay: calc(5 * var(--motion-table-stagger));
+}
+
+.animatedTable tbody tr:nth-child(7) {
+  animation-delay: calc(6 * var(--motion-table-stagger));
+}
+
+.animatedTable tbody tr:nth-child(8) {
+  animation-delay: calc(7 * var(--motion-table-stagger));
+}
+
+.animatedTable tbody tr:nth-child(9) {
+  animation-delay: calc(8 * var(--motion-table-stagger));
+}
+
+.animatedTable tbody tr:nth-child(10) {
+  animation-delay: calc(9 * var(--motion-table-stagger));
+}
+
+.animatedTable tbody tr:nth-child(n+11) {
+  animation-delay: calc(10 * var(--motion-table-stagger));
+}
+
+@keyframes merlin-table-row-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

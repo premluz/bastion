@@ -6,16 +6,44 @@
       "name": "NordBond 2029",
       "type": "Tokenized Covered Bond",
       "attributes": [
-        { "label": "Issuer", "value": "Fjellbank" },
-        { "label": "Yield", "value": "5.8%" },
-        { "label": "Credit rating", "value": "AA-" },
-        { "label": "Outstanding", "value": "€140M" },
-        { "label": "Jurisdiction", "value": "Norway" },
-        { "label": "RiskLens score", "value": "18/100" },
-        { "label": "Liquidity", "value": "Deep" },
-        { "label": "Desk role", "value": "Benchmark safe asset" }
+        {
+          "label": "Issuer",
+          "value": "Fjellbank"
+        },
+        {
+          "label": "Yield",
+          "value": "5.8%"
+        },
+        {
+          "label": "Credit rating",
+          "value": "AA-"
+        },
+        {
+          "label": "Outstanding",
+          "value": "\u20ac140M"
+        },
+        {
+          "label": "Jurisdiction",
+          "value": "Norway"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "18/100"
+        },
+        {
+          "label": "Liquidity",
+          "value": "Deep"
+        },
+        {
+          "label": "Desk role",
+          "value": "Benchmark safe asset"
+        }
       ],
-      "tags": ["covered-bond", "benchmark", "norway"]
+      "tags": [
+        "covered-bond",
+        "benchmark",
+        "norway"
+      ]
     },
     "venue": "Solent Markets",
     "intent": "why did two nordbond settlements fail this week"
@@ -27,19 +55,56 @@
       "name": "Aldergate Estates",
       "type": "Tokenized Real Estate Portfolio",
       "attributes": [
-        { "label": "Underlying", "value": "Berlin commercial real estate portfolio" },
-        { "label": "Yield", "value": "7.2%" },
-        { "label": "Outstanding", "value": "€62M" },
-        { "label": "Audit status", "value": "Renewal lapsed — IssuerRegistry filing not received" },
-        { "label": "Auditor", "value": "Nordkap Assurance" },
-        { "label": "Distribution frequency", "value": "Quarterly" },
-        { "label": "Distribution record", "value": "8 consecutive quarters paid" },
-        { "label": "Jurisdiction", "value": "Germany" },
-        { "label": "RiskLens score", "value": "34/100" },
-        { "label": "Liquidity", "value": "Moderate" },
-        { "label": "Custodian", "value": "Solent Custody" }
+        {
+          "label": "Underlying",
+          "value": "Berlin commercial real estate portfolio"
+        },
+        {
+          "label": "Yield",
+          "value": "7.2%"
+        },
+        {
+          "label": "Outstanding",
+          "value": "\u20ac62M"
+        },
+        {
+          "label": "Audit status",
+          "value": "Renewal lapsed \u2014 IssuerRegistry filing not received"
+        },
+        {
+          "label": "Auditor",
+          "value": "Nordkap Assurance"
+        },
+        {
+          "label": "Distribution frequency",
+          "value": "Quarterly"
+        },
+        {
+          "label": "Distribution record",
+          "value": "8 consecutive quarters paid"
+        },
+        {
+          "label": "Jurisdiction",
+          "value": "Germany"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "34/100"
+        },
+        {
+          "label": "Liquidity",
+          "value": "Moderate"
+        },
+        {
+          "label": "Custodian",
+          "value": "Solent Custody"
+        }
       ],
-      "tags": ["real-estate", "eu-regulated", "audit-lapsed"]
+      "tags": [
+        "real-estate",
+        "eu-regulated",
+        "audit-lapsed"
+      ]
     },
     "venue": "Solent Markets",
     "intent": "give me the full picture on aldergate estates"
@@ -51,14 +116,36 @@
       "name": "Helios Yield Fund",
       "type": "Tokenized Diversified Credit Fund",
       "attributes": [
-        { "label": "Yield", "value": "9.1%" },
-        { "label": "RiskLens score", "value": "61/100" },
-        { "label": "Retail concentration", "value": "Largest retail-held asset on the venue" },
-        { "label": "Outstanding", "value": "€98M" },
-        { "label": "Jurisdiction", "value": "Luxembourg" },
-        { "label": "Liquidity", "value": "Moderate" }
+        {
+          "label": "Yield",
+          "value": "9.1%"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "61/100"
+        },
+        {
+          "label": "Retail concentration",
+          "value": "Largest retail-held asset on the venue"
+        },
+        {
+          "label": "Outstanding",
+          "value": "\u20ac98M"
+        },
+        {
+          "label": "Jurisdiction",
+          "value": "Luxembourg"
+        },
+        {
+          "label": "Liquidity",
+          "value": "Moderate"
+        }
       ],
-      "tags": ["credit-fund", "higher-volatility", "retail-concentrated"]
+      "tags": [
+        "credit-fund",
+        "higher-volatility",
+        "retail-concentrated"
+      ]
     },
     "venue": "Solent Markets"
   },
@@ -69,15 +156,40 @@
       "name": "Vantara Metals",
       "type": "Tokenized Copper-Royalty Note",
       "attributes": [
-        { "label": "Yield", "value": "6.4%" },
-        { "label": "Liquidity", "value": "Thin" },
-        { "label": "Correlation", "value": "Commodities, not credit" },
-        { "label": "Role", "value": "Portfolio diversifier" },
-        { "label": "Outstanding", "value": "€54M" },
-        { "label": "Jurisdiction", "value": "Switzerland" },
-        { "label": "RiskLens score", "value": "45/100" }
+        {
+          "label": "Price",
+          "value": "$4.52/lb"
+        },
+        {
+          "label": "Liquidity",
+          "value": "Thin"
+        },
+        {
+          "label": "Correlation",
+          "value": "Commodities, not credit"
+        },
+        {
+          "label": "Role",
+          "value": "Portfolio diversifier"
+        },
+        {
+          "label": "Outstanding",
+          "value": "\u20ac54M"
+        },
+        {
+          "label": "Jurisdiction",
+          "value": "Switzerland"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "45/100"
+        }
       ],
-      "tags": ["commodities", "diversifier", "non-eu"]
+      "tags": [
+        "commodities",
+        "diversifier",
+        "non-eu"
+      ]
     },
     "venue": "Solent Markets"
   },
@@ -88,15 +200,40 @@
       "name": "Kestrel Holdings",
       "type": "Counterparty (Cyprus-registered)",
       "attributes": [
-        { "label": "Registration", "value": "Cyprus" },
-        { "label": "NordBond float accumulated", "value": "11%" },
-        { "label": "Wallet clusters", "value": 14 },
-        { "label": "Accumulation window", "value": "6 weeks" },
-        { "label": "Sanctions screen (CompliancePulse)", "value": "Clean" },
-        { "label": "Counterparty rating (RiskLens)", "value": "Unrated" },
-        { "label": "Adverse filings", "value": "None on record" }
+        {
+          "label": "Registration",
+          "value": "Cyprus"
+        },
+        {
+          "label": "NordBond float accumulated",
+          "value": "11%"
+        },
+        {
+          "label": "Wallet clusters",
+          "value": 14
+        },
+        {
+          "label": "Accumulation window",
+          "value": "6 weeks"
+        },
+        {
+          "label": "Sanctions screen (CompliancePulse)",
+          "value": "Clean"
+        },
+        {
+          "label": "Counterparty rating (RiskLens)",
+          "value": "Unrated"
+        },
+        {
+          "label": "Adverse filings",
+          "value": "None on record"
+        }
       ],
-      "tags": ["counterparty", "cyprus", "unrated"]
+      "tags": [
+        "counterparty",
+        "cyprus",
+        "unrated"
+      ]
     },
     "venue": "Solent Markets"
   },
@@ -107,11 +244,23 @@
       "name": "Solent Custody",
       "type": "Venue Custodian",
       "attributes": [
-        { "label": "Role", "value": "Custodian for Solent Markets" },
-        { "label": "Failed settlements this month", "value": 2 },
-        { "label": "Failed settlements linked to", "value": "Kestrel-linked wallets (both)" }
+        {
+          "label": "Role",
+          "value": "Custodian for Solent Markets"
+        },
+        {
+          "label": "Failed settlements this month",
+          "value": 2
+        },
+        {
+          "label": "Failed settlements linked to",
+          "value": "Kestrel-linked wallets (both)"
+        }
       ],
-      "tags": ["custodian", "infrastructure"]
+      "tags": [
+        "custodian",
+        "infrastructure"
+      ]
     },
     "venue": "Solent Markets"
   },
@@ -123,13 +272,22 @@
       "type": "FX Option",
       "derivative": {
         "counterparty": "Kestrel Holdings",
-        "notional": "€40M",
-        "exposure": "€6M",
+        "notional": "\u20ac40M",
+        "exposure": "\u20ac6M",
         "tenor": "3 months",
         "tradeDate": "2026-06-02"
       },
-      "attributes": [{ "label": "RiskLens score", "value": "58/100" }],
-      "tags": ["derivative", "fx-option", "kestrel-linked"]
+      "attributes": [
+        {
+          "label": "RiskLens score",
+          "value": "58/100"
+        }
+      ],
+      "tags": [
+        "derivative",
+        "fx-option",
+        "kestrel-linked"
+      ]
     },
     "venue": "Solent Markets",
     "intent": "drill into the eur/usd risk reversal"
@@ -141,14 +299,35 @@
       "name": "5Y EUR Interest Rate Swap",
       "type": "Interest Rate Swap",
       "attributes": [
-        { "label": "Counterparty", "value": "Fjellbank" },
-        { "label": "Notional", "value": "€70M" },
-        { "label": "Mark-to-market exposure", "value": "€9M" },
-        { "label": "Tenor", "value": "5 years" },
-        { "label": "Trade date", "value": "2026-03-18" },
-        { "label": "RiskLens score", "value": "22/100" }
+        {
+          "label": "Counterparty",
+          "value": "Fjellbank"
+        },
+        {
+          "label": "Notional",
+          "value": "\u20ac70M"
+        },
+        {
+          "label": "Mark-to-market exposure",
+          "value": "\u20ac9M"
+        },
+        {
+          "label": "Tenor",
+          "value": "5 years"
+        },
+        {
+          "label": "Trade date",
+          "value": "2026-03-18"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "22/100"
+        }
       ],
-      "tags": ["derivative", "rate-swap"]
+      "tags": [
+        "derivative",
+        "rate-swap"
+      ]
     },
     "venue": "Solent Markets"
   },
@@ -159,14 +338,35 @@
       "name": "GBP/EUR 6M FX Forward",
       "type": "FX Forward",
       "attributes": [
-        { "label": "Counterparty", "value": "Solent Markets Prime" },
-        { "label": "Notional", "value": "€15M" },
-        { "label": "Mark-to-market exposure", "value": "€1M" },
-        { "label": "Tenor", "value": "6 months" },
-        { "label": "Trade date", "value": "2026-06-20" },
-        { "label": "RiskLens score", "value": "15/100" }
+        {
+          "label": "Counterparty",
+          "value": "Solent Markets Prime"
+        },
+        {
+          "label": "Notional",
+          "value": "\u20ac15M"
+        },
+        {
+          "label": "Mark-to-market exposure",
+          "value": "\u20ac1M"
+        },
+        {
+          "label": "Tenor",
+          "value": "6 months"
+        },
+        {
+          "label": "Trade date",
+          "value": "2026-06-20"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "15/100"
+        }
       ],
-      "tags": ["derivative", "fx-forward"]
+      "tags": [
+        "derivative",
+        "fx-forward"
+      ]
     },
     "venue": "Solent Markets"
   },
@@ -177,14 +377,36 @@
       "name": "10Y USD Interest Rate Swap",
       "type": "Interest Rate Swap",
       "attributes": [
-        { "label": "Counterparty", "value": "Solent Markets Prime" },
-        { "label": "Notional", "value": "€45M" },
-        { "label": "Mark-to-market exposure", "value": "€5M" },
-        { "label": "Tenor", "value": "10 years" },
-        { "label": "Trade date", "value": "2026-01-09" },
-        { "label": "RiskLens score", "value": "31/100" }
+        {
+          "label": "Counterparty",
+          "value": "Solent Markets Prime"
+        },
+        {
+          "label": "Notional",
+          "value": "\u20ac45M"
+        },
+        {
+          "label": "Mark-to-market exposure",
+          "value": "\u20ac5M"
+        },
+        {
+          "label": "Tenor",
+          "value": "10 years"
+        },
+        {
+          "label": "Trade date",
+          "value": "2026-01-09"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "31/100"
+        }
       ],
-      "tags": ["derivative", "rate-swap", "long-duration"]
+      "tags": [
+        "derivative",
+        "rate-swap",
+        "long-duration"
+      ]
     },
     "venue": "Solent Markets"
   },
@@ -193,13 +415,25 @@
     "entity": {
       "id": "mira-voss",
       "name": "Mira Voss",
-      "type": "Person — Head of Issuance, Fjellbank",
+      "type": "Person \u2014 Head of Issuance, Fjellbank",
       "attributes": [
-        { "label": "Role", "value": "Head of Issuance at Fjellbank" },
-        { "label": "Associated issuer", "value": "NordBond 2029" },
-        { "label": "Context", "value": "Quoted in filings" }
+        {
+          "label": "Role",
+          "value": "Head of Issuance at Fjellbank"
+        },
+        {
+          "label": "Associated issuer",
+          "value": "NordBond 2029"
+        },
+        {
+          "label": "Context",
+          "value": "Quoted in filings"
+        }
       ],
-      "tags": ["person", "fjellbank"]
+      "tags": [
+        "person",
+        "fjellbank"
+      ]
     },
     "venue": "Solent Markets"
   },
@@ -208,12 +442,21 @@
     "entity": {
       "id": "halberg-materials",
       "name": "Halberg Materials AG",
-      "type": "Equity — Listed Common Stock",
+      "type": "Equity \u2014 Listed Common Stock",
       "attributes": [
-        { "label": "Position value", "value": "€1.2M" },
-        { "label": "Status", "value": "Not yet analyzed" }
+        {
+          "label": "Position value",
+          "value": "\u20ac1.2M"
+        },
+        {
+          "label": "Status",
+          "value": "Not yet analyzed"
+        }
       ],
-      "tags": ["equity", "unreasoned"]
+      "tags": [
+        "equity",
+        "unreasoned"
+      ]
     },
     "venue": "Meridian Exchange"
   },
@@ -222,18 +465,352 @@
     "entity": {
       "id": "south-bow-corp",
       "name": "South Bow Corp",
-      "type": "Equity — Pipeline & Infrastructure",
+      "type": "Equity \u2014 Pipeline & Infrastructure",
       "attributes": [
-        { "label": "Sector", "value": "Energy infrastructure — natural gas pipelines & export terminals" },
-        { "label": "Exchange", "value": "Meridian Exchange" },
-        { "label": "Latest price", "value": "$40.34" },
-        { "label": "Dividend yield", "value": "3.1%" },
-        { "label": "Market cap", "value": "$8.6B" },
-        { "label": "RiskLens score", "value": "27/100" }
+        {
+          "label": "Sector",
+          "value": "Energy infrastructure \u2014 natural gas pipelines & export terminals"
+        },
+        {
+          "label": "Exchange",
+          "value": "Meridian Exchange"
+        },
+        {
+          "label": "Latest price",
+          "value": "$40.34"
+        },
+        {
+          "label": "Dividend yield",
+          "value": "3.1%"
+        },
+        {
+          "label": "Market cap",
+          "value": "$8.6B"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "27/100"
+        }
       ],
-      "tags": ["equity", "pipeline-infrastructure"]
+      "tags": [
+        "equity",
+        "pipeline-infrastructure"
+      ]
     },
     "venue": "Meridian Exchange",
     "intent": "why did south bow corp move on the capacity expansion filing"
+  },
+  "solent-stablecoin": {
+    "kind": "entity",
+    "entity": {
+      "id": "solent-stablecoin",
+      "name": "Solent Stablecoin",
+      "type": "Stablecoin",
+      "attributes": [
+        {
+          "label": "Price",
+          "value": "$1.0024"
+        },
+        {
+          "label": "Liquidity",
+          "value": "Deep"
+        },
+        {
+          "label": "Backing",
+          "value": "USD 1:1 reserve"
+        },
+        {
+          "label": "Market Cap",
+          "value": "$2.3B"
+        },
+        {
+          "label": "Audited",
+          "value": "Yes, monthly"
+        },
+        {
+          "label": "Circulating Supply",
+          "value": "2.3B tokens"
+        }
+      ],
+      "tags": [
+        "crypto",
+        "stablecoin",
+        "solent-native"
+      ]
+    },
+    "venue": "Solent Markets"
+  },
+  "zenith-protocol": {
+    "kind": "entity",
+    "entity": {
+      "id": "zenith-protocol",
+      "name": "Zenith Protocol",
+      "type": "DeFi Governance Token",
+      "attributes": [
+        {
+          "label": "Price",
+          "value": "$3.47"
+        },
+        {
+          "label": "Liquidity",
+          "value": "Moderate"
+        },
+        {
+          "label": "Market Cap",
+          "value": "$185M"
+        },
+        {
+          "label": "Launch Date",
+          "value": "2026-01-15"
+        },
+        {
+          "label": "Circulating Supply",
+          "value": "53.2M tokens"
+        },
+        {
+          "label": "Use Case",
+          "value": "Staking & governance"
+        }
+      ],
+      "tags": [
+        "crypto",
+        "defi",
+        "governance-token"
+      ]
+    }
+  },
+  "meridian-logistics": {
+    "kind": "entity",
+    "entity": {
+      "id": "meridian-logistics",
+      "name": "Meridian Logistics",
+      "type": "Equity \u2014 Transportation & Logistics",
+      "attributes": [
+        {
+          "label": "Price",
+          "value": "$28.45"
+        },
+        {
+          "label": "Sector",
+          "value": "Transportation & Logistics"
+        },
+        {
+          "label": "Exchange",
+          "value": "Meridian Exchange"
+        },
+        {
+          "label": "Market cap",
+          "value": "$3.2B"
+        },
+        {
+          "label": "Dividend yield",
+          "value": "2.8%"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "31/100"
+        }
+      ],
+      "tags": [
+        "equity",
+        "logistics-transport"
+      ]
+    },
+    "venue": "Meridian Exchange"
+  },
+  "kynthia-renewables": {
+    "kind": "entity",
+    "entity": {
+      "id": "kynthia-renewables",
+      "name": "Kynthia Renewables",
+      "type": "Equity \u2014 Clean Energy",
+      "attributes": [
+        {
+          "label": "Price",
+          "value": "$52.18"
+        },
+        {
+          "label": "Sector",
+          "value": "Renewable Energy"
+        },
+        {
+          "label": "Exchange",
+          "value": "Meridian Exchange"
+        },
+        {
+          "label": "Market cap",
+          "value": "$5.8B"
+        },
+        {
+          "label": "Dividend yield",
+          "value": "1.9%"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "38/100"
+        }
+      ],
+      "tags": [
+        "equity",
+        "renewables"
+      ]
+    },
+    "venue": "Meridian Exchange"
+  },
+  "valiant-pharma": {
+    "kind": "entity",
+    "entity": {
+      "id": "valiant-pharma",
+      "name": "Valiant Pharma",
+      "type": "Equity \u2014 Pharmaceuticals",
+      "attributes": [
+        {
+          "label": "Price",
+          "value": "$67.82"
+        },
+        {
+          "label": "Sector",
+          "value": "Pharmaceuticals"
+        },
+        {
+          "label": "Exchange",
+          "value": "Meridian Exchange"
+        },
+        {
+          "label": "Market cap",
+          "value": "$12.4B"
+        },
+        {
+          "label": "Dividend yield",
+          "value": "1.2%"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "42/100"
+        }
+      ],
+      "tags": [
+        "equity",
+        "pharma"
+      ]
+    },
+    "venue": "Meridian Exchange"
+  },
+  "nexus-tech": {
+    "kind": "entity",
+    "entity": {
+      "id": "nexus-tech",
+      "name": "Nexus Tech",
+      "type": "Equity \u2014 Software & Services",
+      "attributes": [
+        {
+          "label": "Price",
+          "value": "$156.24"
+        },
+        {
+          "label": "Sector",
+          "value": "Software & IT Services"
+        },
+        {
+          "label": "Exchange",
+          "value": "Meridian Exchange"
+        },
+        {
+          "label": "Market cap",
+          "value": "$18.9B"
+        },
+        {
+          "label": "Dividend yield",
+          "value": "0.8%"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "35/100"
+        }
+      ],
+      "tags": [
+        "equity",
+        "software"
+      ]
+    },
+    "venue": "Meridian Exchange"
+  },
+  "beacon-retail": {
+    "kind": "entity",
+    "entity": {
+      "id": "beacon-retail",
+      "name": "Beacon Retail",
+      "type": "Equity \u2014 Retail & Consumer",
+      "attributes": [
+        {
+          "label": "Price",
+          "value": "$19.56"
+        },
+        {
+          "label": "Sector",
+          "value": "Retail & Consumer Goods"
+        },
+        {
+          "label": "Exchange",
+          "value": "Meridian Exchange"
+        },
+        {
+          "label": "Market cap",
+          "value": "$2.1B"
+        },
+        {
+          "label": "Dividend yield",
+          "value": "3.5%"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "48/100"
+        }
+      ],
+      "tags": [
+        "equity",
+        "retail"
+      ]
+    },
+    "venue": "Meridian Exchange"
+  },
+  "forge-mining": {
+    "kind": "entity",
+    "entity": {
+      "id": "forge-mining",
+      "name": "Forge Mining",
+      "type": "Equity \u2014 Metals & Mining",
+      "attributes": [
+        {
+          "label": "Price",
+          "value": "$34.71"
+        },
+        {
+          "label": "Sector",
+          "value": "Metals & Mining"
+        },
+        {
+          "label": "Exchange",
+          "value": "Meridian Exchange"
+        },
+        {
+          "label": "Market cap",
+          "value": "$4.5B"
+        },
+        {
+          "label": "Dividend yield",
+          "value": "4.2%"
+        },
+        {
+          "label": "RiskLens score",
+          "value": "52/100"
+        }
+      ],
+      "tags": [
+        "equity",
+        "mining"
+      ]
+    },
+    "venue": "Meridian Exchange"
   }
 }

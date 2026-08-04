@@ -5,6 +5,7 @@ import { SourceChip } from './SourceChip';
 import { ConfidenceBadge } from './ConfidenceBadge';
 import { useTextReveal } from './useTextReveal';
 import './trail.css';
+import styles from './StepRow.module.css';
 
 const KIND_ICONS: Record<StepKind, IconName> = {
   plan: 'wrench',
@@ -44,32 +45,21 @@ export function StepRow({ step, isActive }: StepRowProps) {
   // class and never needs a reset.
   const revealRef = useTextReveal(step.durationMs, isActive);
 
+  const indicatorClasses = isActive ? `${styles.activeIndicator}` : '';
+
   return (
-    <div style={{ display: 'flex', gap: 'var(--space-8)', alignItems: 'flex-start' }}>
+    <div className={styles.root}>
       <div
+        className={indicatorClasses}
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
           width: 'var(--space-24)',
           height: 'var(--space-24)',
-          borderRadius: 'var(--radius-full)',
-          background: 'var(--surface-2)',
-          flexShrink: 0,
-          ...(isActive
-            ? {
-                animationName: 'merlin-step-pulse',
-                animationDuration: 'var(--duration-480)',
-                animationTimingFunction: 'var(--ease-standard)',
-                animationIterationCount: 'infinite',
-              }
-            : {}),
         }}
       >
         <Icon icon={KIND_ICONS[step.kind]} color={isActive ? 'accent' : 'secondary'} size="sm" />
       </div>
-      <div style={{ display: 'grid', gap: 'var(--space-4)', flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', gap: 'var(--space-8)', justifyContent: 'space-between', alignItems: 'baseline' }}>
+      <div className={styles.contentBlock}>
+        <div className={styles.headerRow}>
           {isActive ? (
             <Text ref={revealRef} type="body" weight="medium" color="primary" className="merlin-text-reveal">
               {step.label}
@@ -87,7 +77,7 @@ export function StepRow({ step, isActive }: StepRowProps) {
         </div>
         {step.detail && <Text type="supporting">{step.detail}</Text>}
         {step.sources && step.sources.length > 0 && (
-          <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
+          <div className={styles.sourceChips}>
             {step.sources.map((source) => (
               <SourceChip key={source.name} name={source.name} />
             ))}

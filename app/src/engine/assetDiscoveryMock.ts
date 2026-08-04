@@ -22,75 +22,82 @@ export const CATEGORY_LABELS: Record<string, string> = {
 interface MockSeed {
   name: string;
   type: string;
-  yield: number;
+  yield?: number;
+  price?: number;
+  marketCap?: number;
+  volume?: number;
+  circulatingSupply?: number;
+  creditRating?: string;
+  distributionFrequency?: string;
+  outstanding?: string;
 }
 
 const MOCK_SEEDS: Record<string, MockSeed[]> = {
   "covered-bond": [
-    { name: "Ostrand Kreditbank 2030", type: "Tokenized Covered Bond", yield: 4.9 },
-    { name: "Solberg Sparbank 2032", type: "Tokenized Covered Bond", yield: 5.1 },
-    { name: "Kesteren Hypotheek Note", type: "Tokenized Covered Bond", yield: 4.6 },
-    { name: "Alderney Finance 2029", type: "Tokenized Covered Bond", yield: 5.3 },
-    { name: "Tallvik Bank Covered Bond", type: "Tokenized Covered Bond", yield: 4.8 },
-    { name: "Rosmoor Credit Union 2031", type: "Tokenized Covered Bond", yield: 5.0 },
-    { name: "Brannigan Savings Bond", type: "Tokenized Covered Bond", yield: 5.4 },
-    { name: "Halvard Bank 2033", type: "Tokenized Covered Bond", yield: 4.7 },
-    { name: "Cresthaven Bank Note", type: "Tokenized Covered Bond", yield: 5.2 },
-    { name: "Winterholt Finance 2030", type: "Tokenized Covered Bond", yield: 4.5 },
-    { name: "Larkspur Bank Covered Bond", type: "Tokenized Covered Bond", yield: 5.6 },
+    { name: "Ostrand Kreditbank 2030", type: "Tokenized Covered Bond", yield: 4.9, creditRating: "AA", outstanding: "€120M" },
+    { name: "Solberg Sparbank 2032", type: "Tokenized Covered Bond", yield: 5.1, creditRating: "A+", outstanding: "€95M" },
+    { name: "Kesteren Hypotheek Note", type: "Tokenized Covered Bond", yield: 4.6, creditRating: "AA-", outstanding: "€140M" },
+    { name: "Alderney Finance 2029", type: "Tokenized Covered Bond", yield: 5.3, creditRating: "A", outstanding: "€75M" },
+    { name: "Tallvik Bank Covered Bond", type: "Tokenized Covered Bond", yield: 4.8, creditRating: "AA+", outstanding: "€165M" },
+    { name: "Rosmoor Credit Union 2031", type: "Tokenized Covered Bond", yield: 5.0, creditRating: "A", outstanding: "€88M" },
+    { name: "Brannigan Savings Bond", type: "Tokenized Covered Bond", yield: 5.4, creditRating: "A-", outstanding: "€62M" },
+    { name: "Halvard Bank 2033", type: "Tokenized Covered Bond", yield: 4.7, creditRating: "AA", outstanding: "€125M" },
+    { name: "Cresthaven Bank Note", type: "Tokenized Covered Bond", yield: 5.2, creditRating: "A+", outstanding: "€92M" },
+    { name: "Winterholt Finance 2030", type: "Tokenized Covered Bond", yield: 4.5, creditRating: "AA-", outstanding: "€150M" },
+    { name: "Larkspur Bank Covered Bond", type: "Tokenized Covered Bond", yield: 5.6, creditRating: "A", outstanding: "€70M" },
   ],
   "real-estate": [
-    { name: "Munich Logistics Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.8 },
-    { name: "Lyon Retail Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.3 },
-    { name: "Rotterdam Office Portfolio", type: "Tokenized Real Estate Portfolio", yield: 7.0 },
-    { name: "Warsaw Residential Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.5 },
-    { name: "Milan Mixed-Use Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.9 },
-    { name: "Vienna Office Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.1 },
-    { name: "Copenhagen Logistics Note", type: "Tokenized Real Estate Portfolio", yield: 6.6 },
-    { name: "Lisbon Residential Portfolio", type: "Tokenized Real Estate Portfolio", yield: 7.3 },
-    { name: "Brussels Retail Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.4 },
-    { name: "Prague Mixed-Use Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.7 },
-    { name: "Zurich Office Portfolio", type: "Tokenized Real Estate Portfolio", yield: 5.9 },
+    { name: "Munich Logistics Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.8, distributionFrequency: "Quarterly", outstanding: "€108M" },
+    { name: "Lyon Retail Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.3, distributionFrequency: "Quarterly", outstanding: "€85M" },
+    { name: "Rotterdam Office Portfolio", type: "Tokenized Real Estate Portfolio", yield: 7.0, distributionFrequency: "Semi-annual", outstanding: "€125M" },
+    { name: "Warsaw Residential Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.5, distributionFrequency: "Quarterly", outstanding: "€92M" },
+    { name: "Milan Mixed-Use Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.9, distributionFrequency: "Annual", outstanding: "€78M" },
+    { name: "Vienna Office Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.1, distributionFrequency: "Quarterly", outstanding: "€110M" },
+    { name: "Copenhagen Logistics Note", type: "Tokenized Real Estate Portfolio", yield: 6.6, distributionFrequency: "Semi-annual", outstanding: "€98M" },
+    { name: "Lisbon Residential Portfolio", type: "Tokenized Real Estate Portfolio", yield: 7.3, distributionFrequency: "Quarterly", outstanding: "€65M" },
+    { name: "Brussels Retail Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.4, distributionFrequency: "Quarterly", outstanding: "€88M" },
+    { name: "Prague Mixed-Use Portfolio", type: "Tokenized Real Estate Portfolio", yield: 6.7, distributionFrequency: "Annual", outstanding: "€72M" },
+    { name: "Zurich Office Portfolio", type: "Tokenized Real Estate Portfolio", yield: 5.9, distributionFrequency: "Semi-annual", outstanding: "€135M" },
   ],
   "credit-fund": [
-    { name: "Meridian Credit Fund", type: "Tokenized Diversified Credit Fund", yield: 8.2 },
-    { name: "Northbridge Yield Partners", type: "Tokenized Diversified Credit Fund", yield: 7.8 },
-    { name: "Ashcombe Credit Fund", type: "Tokenized Diversified Credit Fund", yield: 8.6 },
-    { name: "Ravenswood Yield Fund", type: "Tokenized Diversified Credit Fund", yield: 9.4 },
-    { name: "Old Harbor Credit Partners", type: "Tokenized Diversified Credit Fund", yield: 7.5 },
-    { name: "Silverline Yield Fund", type: "Tokenized Diversified Credit Fund", yield: 8.9 },
-    { name: "Amberfield Credit Fund", type: "Tokenized Diversified Credit Fund", yield: 8.1 },
-    { name: "Thornbury Yield Partners", type: "Tokenized Diversified Credit Fund", yield: 7.9 },
-    { name: "Westgate Credit Fund", type: "Tokenized Diversified Credit Fund", yield: 8.4 },
-    { name: "Ironwood Yield Fund", type: "Tokenized Diversified Credit Fund", yield: 9.0 },
-    { name: "Cobalt Credit Partners", type: "Tokenized Diversified Credit Fund", yield: 7.6 },
+    { name: "Meridian Credit Fund", type: "Tokenized Diversified Credit Fund", yield: 8.2, creditRating: "BB+", outstanding: "€145M" },
+    { name: "Northbridge Yield Partners", type: "Tokenized Diversified Credit Fund", yield: 7.8, creditRating: "BB", outstanding: "€120M" },
+    { name: "Ashcombe Credit Fund", type: "Tokenized Diversified Credit Fund", yield: 8.6, creditRating: "B+", outstanding: "€95M" },
+    { name: "Ravenswood Yield Fund", type: "Tokenized Diversified Credit Fund", yield: 9.4, creditRating: "B", outstanding: "€68M" },
+    { name: "Old Harbor Credit Partners", type: "Tokenized Diversified Credit Fund", yield: 7.5, creditRating: "BB+", outstanding: "€110M" },
+    { name: "Silverline Yield Fund", type: "Tokenized Diversified Credit Fund", yield: 8.9, creditRating: "BB", outstanding: "€82M" },
+    { name: "Amberfield Credit Fund", type: "Tokenized Diversified Credit Fund", yield: 8.1, creditRating: "BB-", outstanding: "€125M" },
+    { name: "Thornbury Yield Partners", type: "Tokenized Diversified Credit Fund", yield: 7.9, creditRating: "BB+", outstanding: "€105M" },
+    { name: "Westgate Credit Fund", type: "Tokenized Diversified Credit Fund", yield: 8.4, creditRating: "BB", outstanding: "€92M" },
+    { name: "Ironwood Yield Fund", type: "Tokenized Diversified Credit Fund", yield: 9.0, creditRating: "B+", outstanding: "€75M" },
+    { name: "Cobalt Credit Partners", type: "Tokenized Diversified Credit Fund", yield: 7.6, creditRating: "BB-", outstanding: "€115M" },
   ],
   commodities: [
-    { name: "Gold Royalty Note", type: "Tokenized Commodity Royalty Note", yield: 5.5 },
-    { name: "Silver Streaming Note", type: "Tokenized Commodity Royalty Note", yield: 5.8 },
-    { name: "Lithium Supply Note", type: "Tokenized Commodity Royalty Note", yield: 7.1 },
-    { name: "Cobalt Royalty Certificate", type: "Tokenized Commodity Royalty Note", yield: 6.9 },
-    { name: "Nickel Forward Note", type: "Tokenized Commodity Royalty Note", yield: 6.2 },
-    { name: "Platinum Allocation Note", type: "Tokenized Commodity Royalty Note", yield: 5.3 },
-    { name: "Rare Earth Royalty Note", type: "Tokenized Commodity Royalty Note", yield: 7.4 },
-    { name: "Uranium Supply Note", type: "Tokenized Commodity Royalty Note", yield: 6.7 },
-    { name: "Palladium Note", type: "Tokenized Commodity Royalty Note", yield: 5.6 },
-    { name: "Timber Royalty Note", type: "Tokenized Commodity Royalty Note", yield: 5.1 },
-    { name: "Agricultural Commodities Basket", type: "Tokenized Commodity Royalty Note", yield: 6.0 },
+    { name: "Gold Royalty Note", type: "Tokenized Commodity Royalty Note", price: 2045.50, volume: 2180000, outstanding: "€88M" },
+    { name: "Silver Streaming Note", type: "Tokenized Commodity Royalty Note", price: 28.35, volume: 18200000, outstanding: "€62M" },
+    { name: "Lithium Supply Note", type: "Tokenized Commodity Royalty Note", price: 145.20, volume: 420000, outstanding: "€75M" },
+    { name: "Cobalt Royalty Certificate", type: "Tokenized Commodity Royalty Note", price: 22.80, volume: 8900000, outstanding: "€58M" },
+    { name: "Nickel Forward Note", type: "Tokenized Commodity Royalty Note", price: 8.45, volume: 95000000, outstanding: "€92M" },
+    { name: "Platinum Allocation Note", type: "Tokenized Commodity Royalty Note", price: 1085.00, volume: 380000, outstanding: "€70M" },
+    { name: "Rare Earth Royalty Note", type: "Tokenized Commodity Royalty Note", price: 68.50, volume: 650000, outstanding: "€48M" },
+    { name: "Uranium Supply Note", type: "Tokenized Commodity Royalty Note", price: 78.25, volume: 2100000, outstanding: "€65M" },
+    { name: "Palladium Note", type: "Tokenized Commodity Royalty Note", price: 975.00, volume: 520000, outstanding: "€55M" },
+    { name: "Timber Royalty Note", type: "Tokenized Commodity Royalty Note", price: 385.00, volume: 1200000, outstanding: "€42M" },
+    { name: "Agricultural Commodities Basket", type: "Tokenized Commodity Royalty Note", price: 412.80, volume: 3200000, outstanding: "€78M" },
   ],
   crypto: [
-    { name: "Solstice Index Token", type: "Tokenized Crypto Index", yield: 3.2 },
-    { name: "Vector Chain Fund", type: "Tokenized Crypto Index", yield: 4.1 },
-    { name: "Nimbus Protocol Note", type: "Tokenized Crypto Index", yield: 2.8 },
-    { name: "Halcyon Ledger Index", type: "Tokenized Crypto Index", yield: 3.6 },
-    { name: "Quanta Chain Fund", type: "Tokenized Crypto Index", yield: 4.4 },
-    { name: "Embernet Token Basket", type: "Tokenized Crypto Index", yield: 3.0 },
-    { name: "Driftwood Protocol Index", type: "Tokenized Crypto Index", yield: 3.8 },
-    { name: "Lumen Chain Note", type: "Tokenized Crypto Index", yield: 2.5 },
-    { name: "Cinder Ledger Fund", type: "Tokenized Crypto Index", yield: 4.7 },
-    { name: "Wavelength Protocol Token", type: "Tokenized Crypto Index", yield: 3.4 },
-    { name: "Tesseract Chain Index", type: "Tokenized Crypto Index", yield: 3.9 },
-    { name: "Obsidian Ledger Fund", type: "Tokenized Crypto Index", yield: 4.2 },
+    { name: "Solstice Index Token", type: "Tokenized Crypto Index", price: 1248.50, marketCap: 2450000000, volume: 145200000, circulatingSupply: 1962000 },
+    { name: "Vector Chain Fund", type: "Tokenized Crypto Index", price: 0.8245, marketCap: 985000000, volume: 42800000, circulatingSupply: 1194000000 },
+    { name: "Nimbus Protocol Note", type: "Tokenized Crypto Index", price: 15.20, marketCap: 1280000000, volume: 285600000, circulatingSupply: 84200000 },
+    { name: "Halcyon Ledger Index", type: "Tokenized Crypto Index", price: 42.15, marketCap: 1850000000, volume: 152300000, circulatingSupply: 43900000 },
+    { name: "Quanta Chain Fund", type: "Tokenized Crypto Index", price: 0.5680, marketCap: 745000000, volume: 28900000, circulatingSupply: 1311000000 },
+    { name: "Embernet Token Basket", type: "Tokenized Crypto Index", price: 3.24, marketCap: 562000000, volume: 18400000, circulatingSupply: 173500000 },
+    { name: "Driftwood Protocol Index", type: "Tokenized Crypto Index", price: 125.80, marketCap: 1650000000, volume: 95200000, circulatingSupply: 13100000 },
+    { name: "Lumen Chain Note", type: "Tokenized Crypto Index", price: 0.1245, marketCap: 425000000, volume: 62800000, circulatingSupply: 3415000000 },
+    { name: "Cinder Ledger Fund", type: "Tokenized Crypto Index", price: 2185.00, marketCap: 3200000000, volume: 248500000, circulatingSupply: 1465000 },
+    { name: "Wavelength Protocol Token", type: "Tokenized Crypto Index", price: 78.50, marketCap: 1480000000, volume: 118200000, circulatingSupply: 18850000 },
+    { name: "Tesseract Chain Index", type: "Tokenized Crypto Index", price: 365.20, marketCap: 2100000000, volume: 165800000, circulatingSupply: 5750000 },
+    { name: "Obsidian Ledger Fund", type: "Tokenized Crypto Index", price: 12.45, marketCap: 895000000, volume: 45600000, circulatingSupply: 71880000 },
   ],
 };
 
@@ -116,11 +123,11 @@ function formatMockDate(dayOffset: number): string {
 // no-real-data rows (Mira Voss, Halberg Materials AG, Kestrel Holdings —
 // explicit architect ruling, 2026-07-25) rather than a second
 // implementation of the same seeded-sine technique.
-export function mockSparkline(baseYield: number, seedIndex: number): { x: string; y: number }[] {
+export function mockSparkline(baseValue: number, seedIndex: number): { x: string; y: number }[] {
   const points: { x: string; y: number }[] = [];
   for (let day = 0; day < SPARKLINE_LENGTH; day++) {
     const wiggle = Math.sin((day + seedIndex) * 0.9) * 0.15 + Math.sin((day + seedIndex) * 0.31) * 0.08;
-    points.push({ x: formatMockDate(day), y: Math.round((baseYield + wiggle) * 100) / 100 });
+    points.push({ x: formatMockDate(day), y: Math.round((baseValue + wiggle) * 100) / 100 });
   }
   return points;
 }
@@ -147,18 +154,53 @@ export function getMockFilledAssets(realAssets: MarketAsset[], perCategory: numb
     for (let index = 0; index < Math.min(needed, seeds.length); index++) {
       const seed = seeds[index];
       if (!seed) continue;
-      const points = mockSparkline(seed.yield, index + category.length);
+      // Sparkline trend reflects the primary quoted metric: yield for yield-bearing
+      // assets, price for crypto/commodities. baseValue drives the sparkline
+      // generation; deltaRecent is derived from the same series.
+      const baseValue = seed.price ?? seed.yield ?? 0;
+      const points = mockSparkline(baseValue, index + category.length);
       const last = points[points.length - 1];
       const prev = points[points.length - 2];
-      combined.push({
+      const asset: any = {
         id: `mock-${category}-${index}`,
         name: seed.name,
         type: seed.type,
         category,
-        yield: last?.y ?? seed.yield,
         deltaRecent: last && prev ? Math.round((last.y - prev.y) * 100) / 100 : 0,
         sparklinePoints: points,
-      });
+      };
+      // Yield-based categories: yield value + sparkline from yield series
+      if (seed.yield !== undefined) {
+        asset.yield = last?.y ?? seed.yield;
+      }
+      // Crypto/commodities: price value + sparkline from price series
+      if (seed.price !== undefined) {
+        asset.price = seed.price;
+        asset.volume = seed.volume;
+        asset.circulatingSupply = seed.circulatingSupply;
+        // Calculate percentage deltas from sparkline for crypto/commodities (CMC convention)
+        if (points.length >= 2) {
+          const firstPrice = points[0]?.y ?? seed.price;
+          const lastPrice = points[points.length - 1]?.y ?? seed.price;
+          const prevPrice = points[points.length - 2]?.y ?? firstPrice;
+          asset.delta24hPercent = firstPrice > 0 ? Math.round(((lastPrice - prevPrice) / prevPrice) * 10000) / 100 : 0;
+          asset.delta7dPercent = firstPrice > 0 ? Math.round(((lastPrice - firstPrice) / firstPrice) * 10000) / 100 : 0;
+        }
+      }
+      if (seed.marketCap !== undefined) {
+        asset.marketCap = seed.marketCap;
+      }
+      // Bond/RE attributes
+      if (seed.creditRating !== undefined) {
+        asset.creditRating = seed.creditRating;
+      }
+      if (seed.distributionFrequency !== undefined) {
+        asset.distributionFrequency = seed.distributionFrequency;
+      }
+      if (seed.outstanding !== undefined) {
+        asset.outstanding = seed.outstanding;
+      }
+      combined.push(asset);
     }
   }
   return combined;

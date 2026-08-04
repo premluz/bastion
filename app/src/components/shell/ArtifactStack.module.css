@@ -1,30 +1,51 @@
-/* Background match (direct feedback: "the background color should be the
-   same as the composer background"). Root cause, confirmed live via
-   computed styles across all three themes (not assumed from the default
-   theme alone, where the two values happen to coincide): Card's
-   `variant="default"` resolves to `--color-background-card` (our
-   `--surface-2`), while ChatComposer's own background resolves to
-   Astryx's `--color-background-popover` (our `--surface-3`) — two
-   genuinely different surface levels in ops-dark/glass, confirmed by
-   reading astryx-bridge.md's own mapping table. No Card variant exposes
-   the popover level, so this is a scoped override, logged in
-   astryx-bridge.md per the project's own discipline for touching
-   Astryx's theming surface. Specificity matches Astryx's own
-   `.astryx-card[data-variant="default"]` rule exactly (class + class +
-   attribute vs. class + attribute) so this reliably wins regardless of
-   import order, no `!important` needed. */
+/* Artifacts pane Card: raised one surface level above its ambient
+   background instead of an outline (direct feedback, 2026-08-02 —
+   supersedes the Phase 2 "outline only, not a raised surface" ruling
+   this rule originally implemented; same reversal, same reasoning,
+   applied to EntityDetailPage.module.css's .detailCard). Content area
+   sits on --surface-0 (Frame.tsx's #astryx-app-shell-main override,
+   theme.default.css et al.), so one step up is --surface-1; no border
+   needed once there's real background contrast. Scoped to this one Card
+   instance via .artifactCard class selector; other default-variant Cards
+   elsewhere use the correct card-level surface. Specificity matches
+   Astryx's own `.astryx-card[data-variant="default"]` rule exactly so
+   this reliably wins regardless of import order. Border explicitly
+   zeroed: Astryx's own `default` variant ships a real, non-transparent
+   border ("standard card background with visible border," its own
+   doc) — dropping only this rule's background override let that border
+   reassert, directly contradicting "instead of outline" (fill only). */
 .artifactCard:global(.astryx-card)[data-variant='default'] {
-  background-color: var(--surface-3);
+  background-color: var(--surface-1);
+  border: none;
+  /* Overrides PaneTitleBar.module.css's own defaults (direct feedback,
+     2026-08-04: "artifacts pane header should also have gradient like
+     page panes... should be a comp") — same two overrides
+     PageShell.module.css's .pane already applies, for the same reasons:
+     --pane-title-bg matches this pane's actual background (--surface-1)
+     so the fade-to-transparent gradient blends into it, not the app-wide
+     --surface-0 default; --pane-title-padding-inline matches
+     PanePadding.module.css's own --space-16 horizontal padding (the
+     Canvas/List content below the title, via the `.padded` class) so the
+     title lines up flush-left with it. */
+  --pane-title-bg: var(--surface-1);
+  --pane-title-padding-inline: var(--space-16);
 }
 
-/* Margin on three sides only (feedback: "same from the bottom as the
-   composer and the same from the right and top") — left is deliberately
-   untouched, already served by Frame.module.css's `.row` gap between
-   content and the stack. `height:100%` removed in favor of default flex
-   stretch (Card is a direct flex child of ArtifactStackMount's own
-   `display:flex` wrapper) — stretch sizing correctly subtracts an
-   item's own margin from its cross-size automatically, where an explicit
-   `height:100%` would not, and would overflow instead of getting inset. */
+/* Bottom margin restored (direct feedback, 2026-08-04: "artifacts pane
+   should have also margin bottom") — top/left/right stay 0, per the
+   prior turn's "should not be there padding/margin" ruling (still true
+   for those three sides: Frame.module.css's `.row` gap alone provides
+   that spacing, same as every other row member). Bottom alone is the
+   one dimension `.row`'s own gap can't provide (gap only separates
+   siblings from each other, not any of them from the row's own bottom
+   edge) — --space-32 matches PageShell.module.css's own bottom gap and
+   PanePadding.module.css's `.padded` (the composer dock's own bottom
+   padding), so this pane, content panes, and the composer all end at
+   the same distance from the viewport's bottom edge. `height:100%`
+   still comes from default flex stretch (Card is a direct flex child of
+   ArtifactStackMount's own `display:flex` wrapper) — stretch sizing
+   correctly subtracts an item's own margin from its cross-size
+   automatically, where an explicit `height:100%` would not. */
 .artifactCard {
-  margin: var(--space-32) var(--space-16) var(--space-32) 0;
+  margin: 0 0 var(--space-32) 0;
 }

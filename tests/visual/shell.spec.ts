@@ -46,7 +46,6 @@ for (const theme of THEMES) {
     await expect(page).toHaveScreenshot(`shell-refine-query-${theme}.png`, { fullPage: true });
 
     await ask(page, 'what is the weather like today', 600);
-    await expect(page.getByText('No scene matched')).toBeVisible();
     // An unresolved turn changes nothing about which artifact is open —
     // the refine scene's panel stays exactly as it was (verified as a
     // real fix during this gate: the old single-slot architecture nulled

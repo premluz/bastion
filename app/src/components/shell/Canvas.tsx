@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type MouseEvent } from 'react';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import { SceneRenderer } from '../../renderer/SceneRenderer';
-import '../../renderer/assembly.css';
+import '../../renderer/sceneExit.css';
 import { useSceneStore } from '../../engine/stores/sceneStore';
 import type { HydratedScene } from '../../contracts/scene';
 import { createKeywordResolver } from '../../engine/resolver/keywordResolver';

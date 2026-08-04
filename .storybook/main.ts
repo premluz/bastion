@@ -7,6 +7,9 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {},
   },
+  // Per-entity logo images (AssetLogo.tsx) — drop files in app/public/logos/,
+  // named to match the entity id (e.g. nordbond-2029.svg).
+  staticDirs: ['../app/public'],
 };
 
 export default config;

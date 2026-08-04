@@ -1,0 +1,85 @@
+- generic [ref=f75e4]:
+  - link "Skip to content" [ref=f75e5] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f75e8]:
+    - navigation "Side navigation" [ref=f75e10]:
+      - generic [ref=f75e15]: Merlin
+      - generic [ref=f75e16]:
+        - group "Places" [ref=f75e17]:
+          - generic [ref=f75e20]: Places
+          - generic [ref=f75e21]:
+            - button "New investigation" [ref=f75e23] [cursor=pointer]:
+              - img [ref=f75e24]
+              - generic [ref=f75e26]: New investigation
+            - button "Discover" [ref=f75e28] [cursor=pointer]:
+              - img [ref=f75e30]
+              - generic [ref=f75e33]: Discover
+            - button "Watchlist" [ref=f75e35] [cursor=pointer]:
+              - img [ref=f75e37]
+              - generic [ref=f75e40]: Watchlist
+            - button "Data Sources" [ref=f75e42] [cursor=pointer]:
+              - img [ref=f75e44]
+              - generic [ref=f75e48]: Data Sources
+            - button "Market Pulse" [ref=f75e50] [cursor=pointer]:
+              - img [ref=f75e52]
+              - generic [ref=f75e54]: Market Pulse
+            - button "Investigations" [ref=f75e56] [cursor=pointer]:
+              - img [ref=f75e58]
+              - generic [ref=f75e61]: Investigations
+            - button "Portfolio" [ref=f75e63] [cursor=pointer]:
+              - img [ref=f75e65]
+              - generic [ref=f75e67]: Portfolio
+            - button "Risk" [ref=f75e69] [cursor=pointer]:
+              - img [ref=f75e71]
+              - generic [ref=f75e73]: Risk
+        - group "Recent" [ref=f75e74]:
+          - generic [ref=f75e75]:
+            - generic [ref=f75e77]: Recent
+            - button "Filter recent" [ref=f75e80] [cursor=pointer]:
+              - img [ref=f75e84]
+              - status
+          - generic [ref=f75e86]:
+            - generic [ref=f75e87]: Nothing yet.
+            - button "View all" [ref=f75e90] [cursor=pointer]:
+              - generic [ref=f75e91]: View all
+      - generic [ref=f75e93]:
+        - button "Collapse sidebar" [ref=f75e95] [cursor=pointer]:
+          - img [ref=f75e99]
+          - status
+        - generic [ref=f75e101]:
+          - button "Analyst Analyst" [ref=f75e102] [cursor=pointer]:
+            - generic [ref=f75e103]:
+              - img "Analyst" [ref=f75e105]:
+                - generic [ref=f75e107]: A
+              - generic [ref=f75e108]: Analyst
+              - img [ref=f75e111]
+            - status
+          - button "Notifications" [ref=f75e114] [cursor=pointer]:
+            - img [ref=f75e117]
+            - status
+    - main [ref=f75e121]:
+      - generic [ref=f75e132]:
+        - heading "Where should we start?" [level=1] [ref=f75e135]
+        - generic [ref=f75e138]:
+          - generic [ref=f75e140]:
+            - generic: Ask a question about the venue…
+            - textbox "Message input" [ref=f75e141]
+          - button "Send" [disabled] [ref=f75e144]:
+            - img [ref=f75e147]
+            - status
+        - generic [ref=f75e150]:
+          - generic [ref=f75e152] [cursor=pointer]:
+            - button "Three tokenized assets now clear the 6% yield floor, led by Helios Yield Fund at 9.1%." [ref=f75e153]
+            - generic [ref=f75e154]:
+              - generic [ref=f75e155]: Three tokenized assets now clear the 6% yield floor, led by Helios Yield Fund at 9.1%.
+              - generic [ref=f75e156]: The conservative screen's candidate pool has grown since the mandate was last run.
+          - generic [ref=f75e158] [cursor=pointer]:
+            - button "Aldergate Estates' audit renewal has lapsed — IssuerRegistry never received the filing." [ref=f75e159]
+            - generic [ref=f75e160]:
+              - generic [ref=f75e161]: Aldergate Estates' audit renewal has lapsed — IssuerRegistry never received the filing.
+              - generic [ref=f75e162]: It's the one open risk on an otherwise investment-grade profile.
+          - generic [ref=f75e164] [cursor=pointer]:
+            - button "Two NordBond 2029 settlements failed this week, both traced to Kestrel-linked wallets." [ref=f75e165]
+            - generic [ref=f75e166]:
+              - generic [ref=f75e167]: Two NordBond 2029 settlements failed this week, both traced to Kestrel-linked wallets.
+              - generic [ref=f75e168]: Kestrel has accumulated 11% of the float over six weeks.

@@ -1,0 +1,34 @@
+/* The interface-assembling effect: driven by node order (reveal) and
+   motion tokens only (CLAUDE.md rule 15) — no animation library, no
+   per-component mount animation. SceneRenderer applies this to every
+   node via inline style, delay computed from reveal * assembly-stagger. */
+@keyframes merlin-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* merlin-exit (Canvas's scene-swap fade-out) moved to sceneExit.css
+   (2026-07-27, root-cause fix) — Canvas.tsx references it by raw string
+   name for a dynamic JS on/off toggle, which breaks under this file's own
+   CSS Modules scoping (confirmed live: it registered as
+   `_merlin-exit_13mms_1`, not `merlin-exit`, so Canvas's reference matched
+   nothing and the scene-swap animation never fired). merlin-reveal below
+   stays here because SceneRenderer only ever reaches it through the
+   scoped `.nodeWrapper` class, never a raw string — same-module class and
+   keyframe get rewritten together consistently, so that path was never
+   broken. See sceneExit.css for the full account. */
+
+.nodeWrapper {
+  --reveal-index: 0;
+  animation-name: merlin-reveal;
+  animation-duration: var(--motion-enter-duration);
+  animation-timing-function: var(--motion-enter-ease);
+  animation-delay: calc(var(--motion-assembly-stagger) * var(--reveal-index));
+  animation-fill-mode: backwards;
+}

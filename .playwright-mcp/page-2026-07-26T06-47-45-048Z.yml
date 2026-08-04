@@ -1,0 +1,90 @@
+- generic [ref=f1e6]:
+  - link "Skip to content" [ref=f1e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f1e10]:
+    - navigation "Side navigation" [ref=f1e12]:
+      - generic [ref=f1e17]: Merlin
+      - generic [ref=f1e18]:
+        - group "Places" [ref=f1e19]:
+          - generic [ref=f1e22]: Places
+          - generic [ref=f1e23]:
+            - button "New investigation" [ref=f1e25] [cursor=pointer]:
+              - img [ref=f1e26]
+              - generic [ref=f1e28]: New investigation
+            - button "Discover" [ref=f1e30] [cursor=pointer]:
+              - img [ref=f1e32]
+              - generic [ref=f1e35]: Discover
+            - button "Watchlist" [ref=f1e37] [cursor=pointer]:
+              - img [ref=f1e39]
+              - generic [ref=f1e42]: Watchlist
+            - button "Data Sources" [ref=f1e44] [cursor=pointer]:
+              - img [ref=f1e46]
+              - generic [ref=f1e50]: Data Sources
+            - button "Market Pulse" [ref=f1e52] [cursor=pointer]:
+              - img [ref=f1e54]
+              - generic [ref=f1e56]: Market Pulse
+            - button "Investigations" [ref=f1e58] [cursor=pointer]:
+              - img [ref=f1e60]
+              - generic [ref=f1e63]: Investigations
+            - button "Portfolio" [ref=f1e65] [cursor=pointer]:
+              - img [ref=f1e67]
+              - generic [ref=f1e69]: Portfolio
+            - button "Risk" [ref=f1e71] [cursor=pointer]:
+              - img [ref=f1e73]
+              - generic [ref=f1e75]: Risk
+        - group "Recent" [ref=f1e76]:
+          - generic [ref=f1e77]:
+            - generic [ref=f1e79]: Recent
+            - button "Filter recent" [ref=f1e82] [cursor=pointer]:
+              - img [ref=f1e86]
+              - status
+          - generic [ref=f1e88]:
+            - button "Tokenized Assets Above 6% Yield — C… Thinking…" [ref=f1e90] [cursor=pointer]:
+              - generic [ref=f1e91]: Tokenized Assets Above 6% Yield — C…
+              - img "Thinking…" [ref=f1e93]
+            - button "View all" [ref=f1e96] [cursor=pointer]:
+              - generic [ref=f1e97]: View all
+      - generic [ref=f1e99]:
+        - button "Collapse sidebar" [ref=f1e101] [cursor=pointer]:
+          - img [ref=f1e105]
+          - status
+        - generic [ref=f1e107]:
+          - button "Analyst Analyst" [ref=f1e108] [cursor=pointer]:
+            - generic [ref=f1e109]:
+              - img "Analyst" [ref=f1e111]:
+                - generic [ref=f1e113]: A
+              - generic [ref=f1e114]: Analyst
+              - img [ref=f1e117]
+            - status
+          - button "Notifications" [ref=f1e120] [cursor=pointer]:
+            - img [ref=f1e123]
+            - status
+    - main [ref=f1e127]:
+      - generic [ref=f1e132]:
+        - generic [ref=f1e133]:
+          - generic [ref=f1e134]: show me tokenized assets yielding above 6%
+          - button "Artifacts" [disabled] [ref=f1e136]:
+            - img [ref=f1e139]
+            - status
+        - generic [ref=f1e144]:
+          - generic [ref=f1e149]:
+            - article "Message from user" [ref=f1e150]:
+              - generic [ref=f1e152]:
+                - generic [ref=f1e153]: show me tokenized assets yielding above 6%
+                - generic [ref=f1e156]: Answered
+            - article "Message from assistant" [ref=f1e157]:
+              - generic [ref=f1e160]:
+                - generic [ref=f1e161]:
+                  - generic [ref=f1e162]: 3 sources
+                  - generic [ref=f1e163]: 0.0s
+                - button "Thinking trail — click to skip" [ref=f1e164] [cursor=pointer]:
+                  - generic [ref=f1e165]:
+                    - img [ref=f1e168]
+                    - generic [ref=f1e172]: Parsing mandate constraints — yield floor, conservative risk tolerance
+          - generic [ref=f1e176]:
+            - generic [ref=f1e178]:
+              - generic: Ask a question about the venue…
+              - textbox "Message input" [ref=f1e179]
+            - button "Send" [disabled] [ref=f1e182]:
+              - img [ref=f1e185]
+              - status

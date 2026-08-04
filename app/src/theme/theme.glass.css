@@ -20,6 +20,10 @@
   --accent-warn: oklch(.78 .16 75);
   --accent-ok: oklch(.76 .15 165);
 
+  /* Delta indicators — price-table up/down with higher saturation for small-text readability */
+  --delta-up: oklch(.78 .26 165);
+  --delta-down: oklch(.72 .29 25);
+
   /* Data-viz series palette — identical to ops-dark (same "themes differ in
      surface physics and light, not in color identity" logic as accents/ink),
      provisional starting values pending Prem's ◆ tuning */
@@ -43,6 +47,7 @@
   --motion-exit-duration: var(--duration-200);
   --motion-exit-ease: var(--ease-decel);
   --motion-assembly-stagger: 90ms;
+  --motion-table-stagger: 45ms;
 
   /* Type faces (Phase 8E typography audit) — identical across all three
      registered themes; typeface isn't a ◆ per-theme register. Not bridged
@@ -73,4 +78,57 @@
   --color-success: var(--accent-ok);
   --color-border: var(--edge);
   --color-shadow: oklch(0 0 0 / .4);
+}
+
+/* Panel treatment per node-vocabulary.md principle 2: facts and reasoning
+   both render with zero elevation (outline only, no background). Visual
+   distinction is typography (voice face) + kicker label, NOT border differences. */
+
+.astryx-card.panelFlat {
+  background-color: transparent;
+  border: 1px solid var(--edge);
+  box-shadow: none;
+}
+
+.astryx-card.panelProvisional {
+  background-color: transparent;
+  border: 1px solid var(--edge);
+  box-shadow: none;
+}
+
+/* Content area matches the sidenav's own background (direct feedback,
+   2026-08-02: "content bg same as nav bg") — same rule and reasoning as
+   theme.default.css's equivalent entry. --surface-0 is transparent in
+   this theme (the canvas shows through both nav and content equally,
+   consistent with this theme's own design), so this rule keeps that
+   parity rather than introducing a mismatch. */
+#astryx-app-shell-main {
+  background-color: var(--surface-0);
+}
+
+/* Composer surface separation (direct feedback, 2026-08-02: "composer
+   should be 1 step more in surface layer than the bg it's on, on all
+   themes"). Same rule and reasoning as theme.ops-dark.css's own entry —
+   AppShell's elevated content sits on --surface-1, one step up is
+   --surface-2; Astryx's own ChatComposer otherwise resolves this element
+   to --color-background-popover / --surface-3, two steps up. This
+   theme's own translucent --surface-0..3 scale gives every level real
+   tonal/alpha distance, so the plain semantic token works directly, same
+   as ops-dark (default theme needs its own off-scale token instead —
+   see theme.default.css's composer rule for why). */
+.astryx-chat-composer > div {
+  background-color: var(--surface-2);
+}
+
+/* Surface consistency (direct feedback, 2026-08-02): the user's own chat
+   bubble and source badges/tokens (Astryx's `.astryx-chat-message-bubble`
+   and `.astryx-token`) were rendering Astryx's own unbridged overlay
+   (white at ~10% alpha, a flat overlay tint that doesn't move with
+   this theme's own surface ramp) while the composer beside them correctly
+   used --surface-2 — three different-looking "elevated" fills on the
+   same page. Matched to the composer's own value here, same reasoning as
+   theme.ops-dark.css's equivalent rule. */
+.astryx-chat-message-bubble.filled,
+.astryx-token.default {
+  background-color: var(--surface-2);
 }

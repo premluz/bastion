@@ -21,8 +21,17 @@ export interface MarketAsset {
   type: string;
   category: string;
   intent?: string;
-  yield: number;
-  deltaRecent: number;
+  yield?: number;
+  price?: number;
+  marketCap?: number;
+  volume?: number;
+  circulatingSupply?: number;
+  creditRating?: string;
+  distributionFrequency?: string;
+  outstanding?: string;
+  deltaRecent: number; // For bonds/RE: pp-based yield delta. For crypto/stocks: 24h price % or DEPRECATED
+  delta24hPercent?: number; // 24h price % for crypto/stocks
+  delta7dPercent?: number; // 7d price % for crypto/stocks
   sparklinePoints: SeriesPoint[];
 }
 
@@ -35,7 +44,7 @@ export interface MarketAsset {
 // assets. Hand-verified: each series' last point equals the matching
 // entity's own "Yield" attribute exactly (5.8/7.2/6.4/9.1%), so yield below
 // is read from the series, not duplicated/re-authored from `attributes`.
-const MARKET_ENTITY_IDS = ["nordbond-2029", "aldergate-estates", "helios-yield-fund", "vantara-metals"] as const;
+const MARKET_ENTITY_IDS = ["nordbond-2029", "aldergate-estates", "helios-yield-fund", "vantara-metals", "south-bow-corp", "solent-stablecoin", "zenith-protocol", "meridian-logistics", "kynthia-renewables", "valiant-pharma", "nexus-tech", "beacon-retail", "forge-mining"] as const;
 
 // Last 14 points (~2 weeks of the series' daily cadence) — enough for a
 // sparkline glyph to read as a real trend without dragging in the full

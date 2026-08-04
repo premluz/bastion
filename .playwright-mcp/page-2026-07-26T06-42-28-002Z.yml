@@ -1,0 +1,90 @@
+- generic [ref=e6]:
+  - link "Skip to content" [ref=e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=e10]:
+    - navigation "Side navigation" [ref=e12]:
+      - generic [ref=e17]: Merlin
+      - generic [ref=e18]:
+        - group "Places" [ref=e19]:
+          - generic [ref=e22]: Places
+          - generic [ref=e23]:
+            - button "New investigation" [ref=e25] [cursor=pointer]:
+              - img [ref=e26]
+              - generic [ref=e28]: New investigation
+            - button "Discover" [ref=e30] [cursor=pointer]:
+              - img [ref=e32]
+              - generic [ref=e35]: Discover
+            - button "Watchlist" [ref=e37] [cursor=pointer]:
+              - img [ref=e39]
+              - generic [ref=e42]: Watchlist
+            - button "Data Sources" [ref=e44] [cursor=pointer]:
+              - img [ref=e46]
+              - generic [ref=e50]: Data Sources
+            - button "Market Pulse" [ref=e52] [cursor=pointer]:
+              - img [ref=e54]
+              - generic [ref=e56]: Market Pulse
+            - button "Investigations" [ref=e58] [cursor=pointer]:
+              - img [ref=e60]
+              - generic [ref=e63]: Investigations
+            - button "Portfolio" [ref=e65] [cursor=pointer]:
+              - img [ref=e67]
+              - generic [ref=e69]: Portfolio
+            - button "Risk" [ref=e71] [cursor=pointer]:
+              - img [ref=e73]
+              - generic [ref=e75]: Risk
+        - group "Recent" [ref=e76]:
+          - generic [ref=e77]:
+            - generic [ref=e79]: Recent
+            - button "Filter recent" [ref=e82] [cursor=pointer]:
+              - img [ref=e86]
+              - status
+          - generic [ref=e88]:
+            - button "Tokenized Assets Above 6% Yield — C… Thinking…" [ref=e173] [cursor=pointer]:
+              - generic [ref=e174]: Tokenized Assets Above 6% Yield — C…
+              - img "Thinking…" [ref=e176]
+            - button "View all" [ref=e92] [cursor=pointer]:
+              - generic [ref=e93]: View all
+      - generic [ref=e95]:
+        - button "Collapse sidebar" [ref=e97] [cursor=pointer]:
+          - img [ref=e101]
+          - status
+        - generic [ref=e103]:
+          - button "Analyst Analyst" [ref=e104] [cursor=pointer]:
+            - generic [ref=e105]:
+              - img "Analyst" [ref=e107]:
+                - generic [ref=e109]: A
+              - generic [ref=e110]: Analyst
+              - img [ref=e113]
+            - status
+          - button "Notifications" [ref=e116] [cursor=pointer]:
+            - img [ref=e119]
+            - status
+    - main [ref=e123]:
+      - generic [ref=e128]:
+        - generic [ref=e177]:
+          - generic [ref=e178]: show me tokenized assets yielding above 6%
+          - button "Artifacts" [disabled] [ref=e180]:
+            - img [ref=e183]
+            - status
+        - generic [ref=e130]:
+          - generic [ref=e191]:
+            - article "Message from user" [ref=e192]:
+              - generic [ref=e194]:
+                - generic [ref=e195]: show me tokenized assets yielding above 6%
+                - generic [ref=e198]: Answered
+            - article "Message from assistant" [ref=e199]:
+              - generic [ref=e202]:
+                - generic [ref=e203]:
+                  - generic [ref=e204]: 3 sources
+                  - generic [ref=e205]: 0.0s
+                - button "Thinking trail — click to skip" [ref=e206] [cursor=pointer]:
+                  - generic [ref=e207]:
+                    - img [ref=e210]
+                    - generic [ref=e214]: Parsing mandate constraints — yield floor, conservative risk tolerance
+          - generic [ref=e218]:
+            - generic [ref=e220]:
+              - generic: Ask a question about the venue…
+              - textbox "Message input" [ref=e221]
+            - button "Send" [disabled] [ref=e224]:
+              - img [ref=e227]
+              - status

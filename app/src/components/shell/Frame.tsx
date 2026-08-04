@@ -1,13 +1,14 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { AppShell } from '@astryxdesign/core/AppShell';
-import { Layout, LayoutHeader } from '@astryxdesign/core/Layout';
-import { ThemeSwitch, type Theme } from '../ThemeSwitch/ThemeSwitch';
-import { ChatBar } from './ChatBar';
-import { Transcript } from './Transcript';
+import { Layout } from '@astryxdesign/core/Layout';
+import { type Theme } from '../ThemeSwitch/ThemeSwitch';
 import { LandingState } from './LandingState';
-import { ScrollAnchor } from './ScrollAnchor';
-import { HomeTopBar } from './HomeTopBar';
+import { WorkbenchTitleBar } from './WorkbenchTitleBar';
+import { TranscriptAndComposer } from './TranscriptAndComposer';
+import { TranscriptPaneMount } from './TranscriptPaneMount';
 import { ArtifactStackMount } from './ArtifactStackMount';
+import { CollapsedPaneChip } from './CollapsedPaneChip';
+import { DesktopOnlyNotice } from './DesktopOnlyNotice';
 import { InvestigationsPage } from './InvestigationsPage';
 import { EntitiesPage } from './EntitiesPage';
 import { WatchlistPage } from './WatchlistPage';
@@ -19,11 +20,15 @@ import { EntityDetailPage } from './EntityDetailPage';
 import { Sidebar } from './Sidebar';
 import { useSessionStore } from '../../engine/stores/sessionStore';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
-import { usePageStore, type Page } from '../../engine/stores/pageStore';
+import { usePageStore, connectPageHistory, type Page } from '../../engine/stores/pageStore';
 import { connectLiveChannel } from '../../engine/liveChannel';
-import viewport from './ChatViewport.module.css';
+import { useViewportWidth } from './useViewportWidth';
+import { usePaneVisibility } from './usePaneVisibility';
 import layout from './Frame.module.css';
-import pane from './PanePadding.module.css';
+
+// Phase 18, tier 3's fence: below this, the whole app shell gives way to
+// DesktopOnlyNotice — nothing multi-pane mounts underneath.
+const DESKTOP_MIN_WIDTH = 768;
 
 // Landing surface is the question, never a workspace (node-vocabulary.md
 // Shell law) — LandingState (centered greeting + composer + suggestion
@@ -56,12 +61,13 @@ function renderPage(page: Page): ReactNode {
 }
 
 export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
-  const [theme, setTheme] = useState<Theme>(initialTheme);
+  const [theme] = useState<Theme>(initialTheme);
   const activeThreadId = useSessionStore((state) => state.activeThreadId);
   const artifactCount = useArtifactStore((state) => Object.keys(state.artifacts).length);
   const isStackOpen = useArtifactStore((state) => state.isStackOpen);
   const isMaximized = useArtifactStore((state) => state.isMaximized);
   const page = usePageStore((state) => state.page);
+  const viewportWidth = useViewportWidth();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -73,6 +79,13 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
   // hasStarted).
   useEffect(() => connectLiveChannel(), []);
 
+  // Browser back/forward: pageStore already writes location.hash on every
+  // navigation (a history entry per page change); this is the one missing
+  // piece — reacting to popstate to sync page state back from the URL.
+  // See connectPageHistory's own comment for why it doesn't also restore
+  // selectedEntityId.
+  useEffect(() => connectPageHistory(), []);
+
   // Investigation threading order: activeThreadId is the single signal
   // for "show the transcript vs. the blank landing composer," replacing
   // the earlier isLandingOverride flag — null means no thread is active
@@ -83,6 +96,30 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
   const hasStarted = activeThreadId !== null;
   const showStack = isStackOpen && artifactCount > 0;
   const isMaximizedStack = showStack && isMaximized;
+
+  // Phase 18: "natural" = what each pane wants, ignoring the collapse
+  // trigger — computed here since both depend on this component's own
+  // page/hasStarted/isMaximizedStack locals. Everything downstream
+  // (activity-touching, the fit-collapse observer, the final show/collapse
+  // booleans) lives in usePaneVisibility, extracted to keep this file under
+  // budget.
+  const isChatForcedOpen = useArtifactStore((state) => state.isChatForcedOpen);
+  const isChatManuallyClosed = useArtifactStore((state) => state.isChatManuallyClosed);
+  const naturalShowTranscript = page !== 'home' && (hasStarted || isChatForcedOpen) && !isChatManuallyClosed && !isMaximizedStack;
+  const naturalShowStack = showStack;
+  const { rowRef, showTranscript, showArtifact, collapsedPane } = usePaneVisibility({
+    naturalShowTranscript,
+    naturalShowStack,
+  });
+
+  // Tier 3 (Phase 18): below this width, nothing multi-pane mounts at
+  // all — checked after every hook above has already run (Rules of
+  // Hooks), not before. viewportWidth starts >0 in any real browser
+  // (useViewportWidth's own initial state reads window.innerWidth
+  // synchronously), so there's no first-paint flash to guard against.
+  if (viewportWidth > 0 && viewportWidth < DESKTOP_MIN_WIDTH) {
+    return <DesktopOnlyNotice />;
+  }
 
   return (
     <div style={{ height: '100dvh' }}>
@@ -104,14 +141,17 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
           } */
           content={
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
-              {/* Top bar runs the full row width (architect order) — a
+              {/* Top bar runs the full row width (architect order,
+                  generalized 2026-07-29 past Home to every page) — a
                   sibling of the row below, not nested inside its narrower
                   content column, so it spans over the artifact stack too.
                   Hidden alongside content when maximized: the whole
                   viewport becomes just the stack at that point, no room
-                  or reason for the investigation-title bar above it. */}
-              {page === 'home' && hasStarted && !isMaximizedStack && <HomeTopBar />}
-              <div className={layout.row}>
+                  or reason for a title bar above it. Home still waits for
+                  hasStarted (LandingState has no title bar, unchanged);
+                  every other page shows its bar unconditionally. */}
+              {!isMaximizedStack && (page !== 'home' || hasStarted) && <WorkbenchTitleBar page={page} />}
+              <div className={layout.row} ref={rowRef}>
                 {/* Maximize (Phase 8H): the stack takes the full row
                     width and this column hides — display:none, not
                     unmounted, so an in-progress composer draft survives a
@@ -124,20 +164,7 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
                   style={{ display: isMaximizedStack ? 'none' : 'flex' }}
                 >
                   {page === 'home' ? (
-                    hasStarted ? (
-                      <>
-                        <ScrollAnchor>
-                          <Transcript />
-                        </ScrollAnchor>
-                        <div className={pane.padded} style={{ flexShrink: 0 }}>
-                          <div className={viewport.viewport}>
-                            <ChatBar />
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <LandingState />
-                    )
+                    hasStarted ? <TranscriptAndComposer /> : <LandingState />
                   ) : (
                     renderPage(page)
                   )}
@@ -148,7 +175,16 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
                     still lands its result here without leaving that
                     page. Slides in/out (ArtifactStackMount), not a plain
                     mount toggle — see its own file for why. */}
-                <ArtifactStackMount show={showStack} />
+                <ArtifactStackMount show={showArtifact} />
+                {collapsedPane === 'artifact' && <CollapsedPaneChip pane="artifact" />}
+                {/* Chat pane on the right (2026-07-30): moved from leftmost
+                    position to trailing edge, rendering last in the row.
+                    Hidden on Home (which already shows the transcript as its
+                    own content column below) and while maximized. Phase 18:
+                    `showTranscript` already folds in the collapse trigger —
+                    collapsed reuses this mount's own slide-out. */}
+                <TranscriptPaneMount show={showTranscript} />
+                {collapsedPane === 'transcript' && <CollapsedPaneChip pane="transcript" />}
               </div>
             </div>
           }

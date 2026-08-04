@@ -33,6 +33,8 @@ A theme file uses one direction or the other, never both for the same variable.
 | `--accent-alert` | `--color-error` | `#E3193B` / `#F5394F` |
 | `--accent-warn` | `--color-warning` | `#E9AF08` / `#F2C00B` |
 | `--accent-ok` | `--color-success` | `#0D8626` / `#0D8626` |
+| `--delta-up` | `--color-icon-green` | `#0D8626` / `#26A756` |
+| `--delta-down` | `--color-icon-red` | `#D31130` / `#E3193B` |
 | `--edge` | `--color-border` | `#05365919` / `#F2F4F619` |
 | `--viz-1` | `--color-icon-blue` | `#0064E0` / `#2694FE` |
 | `--viz-2` | `--color-icon-teal` | `#009688` / `#26A69A` |
@@ -208,27 +210,40 @@ via Astryx's own `pointer-events: none` on disabled items; excluded here
 too so the rule states that guarantee rather than silently depending on
 it).
 
-## Artifact stack Card background (`--color-background-popover`)
+## Artifact stack Card background (`--surface-0` + outline)
 
-Direct feedback: "the background color should be the same as the composer
-background." Confirmed live via computed styles across all three themes,
-not assumed from the default theme alone (where the two values happen to
-coincide, masking the gap): `ArtifactStack.tsx`'s `Card variant="default"`
-resolves to `--color-background-card` (our `--surface-2`), while
-`ChatComposer`'s own background resolves to Astryx's
-`--color-background-popover` (our `--surface-3`) — two different surface
-levels, genuinely distinct colors in ops-dark/glass. No `Card` variant
-exposes the popover level (`variant` only maps to `--color-<name>-background`
-per its own docs, and "popover" isn't one of the named options).
+Phase 1 direct feedback: "the background color should be the same as the
+composer background." Implemented using `--surface-3` (popover level).
+
+Phase 2 revision (2026-07-29): "artifacts pane should match the workbench
+background with outline only, not a raised surface." The popover level
+creates visual separation from the workbench in dark schemes (dark-default's
+`#111112` body vs `#28292C` popover; ops-dark's `.16` L vs `.26` L; glass's
+`transparent` vs `.70` alpha). Intent is visual containment (outline only),
+not surface elevation.
 
 Fix, scoped to this one Card instance only (not a global theme rule, since
 other default-variant Cards elsewhere in the app are correctly using the
-card-level surface, not the popover level) — `ArtifactStack.module.css`:
+card-level surface, not the workbench level) — `ArtifactStack.module.css`:
 `.artifactCard:global(.astryx-card)[data-variant='default'] { background-
-color: var(--surface-3) }`. Specificity deliberately matches Astryx's own
-`.astryx-card[data-variant="default"]` rule exactly (class+class+attribute
-vs. class+attribute) so it reliably wins regardless of import order, no
-`!important` needed.
+color: var(--surface-0); border: 1px solid var(--edge); }`. Specificity
+deliberately matches Astryx's own `.astryx-card[data-variant="default"]` rule
+exactly (class+class+attribute vs. class+attribute) so it reliably wins
+regardless of import order, no `!important` needed.
+
+**Phase 3 reversal (2026-08-02, direct feedback: "instead of outline make
+it next surface level from bg, same for artifact pane")**: the Phase 2
+"outline only, not a raised surface" ruling above is superseded — the
+pane is now a raised surface again, one step above its ambient
+background. What "ambient background" means changed too, in the same
+order: content area was moved to match the sidenav (`--surface-0`, see
+this file's own "Content area" theme-file entries), so one step up is now
+`--surface-1`, not the workbench-level `--surface-0` Phase 2 specified.
+Fix: `.artifactCard:global(.astryx-card)[data-variant='default'] {
+background-color: var(--surface-1) }` — border dropped (no longer needed
+once there's real background contrast, same as Astryx's own default-variant
+Card relying on fill alone). `EntityDetailPage.module.css`'s `.detailCard`
+got the identical reversal in the same order, for the same reason.
 
 ## Composer shadow removal (`astryx-chat-composer`)
 
@@ -259,13 +274,21 @@ Previously masked by the composer's own box-shadow, removed above per
 earlier direct feedback — the shadow was the only separation this pairing
 ever had; removing it exposed this gap.
 
-This is a `default`-theme-only gap: `ops-dark`/`glass` don't reuse
+This is a `default`-theme-only gap in the narrow sense checked here
+(composer fill vs. body/`--surface-0`): `ops-dark`/`glass` don't reuse
 Astryx's stock popover/body pass-through — they define their own
 `--surface-0..3` oklch scale and reassign `--color-background-*` to point
 at it (`theme.ops-dark.css`/`theme.glass.css`), giving every level real
 tonal distance by construction (confirmed live: `ops-dark`'s composer
 resolves to `oklch(.26 .015 250)` against a `.16` body, `glass` the same
-scale at `.7` alpha — both already well-separated, no fix needed there).
+scale at `.7` alpha — both well-separated from the body).
+
+**This was answering the wrong comparison, though** — the composer's
+actual immediate background is `--surface-1` (AppShell's elevated content
+backdrop), not `--surface-0`/body. Checked against the right baseline,
+`ops-dark`/`glass` were two steps up (`--surface-3`/popover), not one —
+see the "Correction" under the surface-separation entry further down for
+the fix.
 
 Fix, `theme.default.css`, scoped to `[data-theme='default']` only (not
 unconditional like the two rules above it, since this one addresses a gap
@@ -278,8 +301,29 @@ solid var(--color-border-emphasized) }`. `--color-border-emphasized`
 (`--color-border`, `light-dark(#ebebeb, ...)`) was checked first and
 rejected: too close to the popover white to read as a real boundary.
 Verified live: both `astryxScheme` values now show a visible composer
-edge in `default`; `ops-dark`/`glass` computed styles unchanged
-(`border-width: 0px`, confirmed via `getComputedStyle`).
+edge in `default`; `ops-dark`/`glass` computed styles unchanged at the
+time (`border-width: 0px`, confirmed via `getComputedStyle`) — superseded
+below, this claim no longer holds.
+
+**Correction (2026-08-02, direct feedback: "composer should be 1 step
+more in surface layer than the bg it's on, on all themes")**: the "no fix
+needed" claim above was wrong on its own terms. `ops-dark`/`glass` were
+never actually AT surface+1 — Astryx's unstyled `ChatComposer` resolves
+this element to `--color-background-popover` (`--surface-3` in both
+themes, this file's own mapping table above), while the composer's
+ambient background (AppShell's default `elevated` variant, Frame.tsx
+never overrides it) is `--surface-1`. That's surface+2, not surface+1 —
+it read as "already separated" because surface+2 is *more* separated than
+needed, not because it was the right amount. Fix, `theme.ops-dark.css`
+and `theme.glass.css`, unconditional within each theme (both have real
+tonal/alpha distance between adjacent surface tiers by construction, so
+the plain semantic token works without an off-scale substitute):
+`.astryx-chat-composer > div { background-color: var(--surface-2) }`.
+`default` unchanged — its own `--color-background-gray` fix above stands,
+since Astryx's stock light palette still collapses every raised-surface
+level to identical white (unrelated to this correction, a stock-theme
+limitation this file already documents), so the off-scale token remains
+the only way to get real separation there.
 
 **Follow-up direct feedback, same day**: "should be also surface color not
 just outline" — a border alone read as an outline around an otherwise
@@ -326,3 +370,25 @@ rule covers every theme: `.astryx-item:hover:not([aria-disabled='true'])
 "consumed as-is" direction-A reasoning, not a new token. No
 `[aria-selected]` exclusion needed here (unlike list-item) — `Item` has
 no selected-state concept in this codebase's usage.
+
+## Price delta indicators (`--delta-up`, `--delta-down`)
+
+Direct feedback (2026-07-30), Discover Assets: "can't see clear red or
+green down/up for 24h % and 7d %" in the asset table across themes. The
+issue: Astryx's generic `--color-success`/`--color-error` (mapped to
+`--accent-ok`/`--accent-alert`) have moderate saturation, insufficient
+for small icon + text in data tables. Small deltas need higher perceptual
+weight.
+
+Solution: two new semantic tokens, `--delta-up` (positive, green) and
+`--delta-down` (negative, red), with elevated chroma for visibility in
+compact tables:
+
+- `theme.default.css` (direction A): maps to Astryx's own
+  `--color-icon-green` and `--color-icon-red` (higher saturation than
+  the generic success/error pair, by Astryx's own design).
+- `theme.ops-dark.css` and `theme.glass.css` (direction B): use oklch
+  values with chroma +.11 vs. the generic accent pair (`--delta-up:
+  oklch(.78 .26 165)` vs. `--accent-ok: oklch(.76 .15 165)`; `--delta-down:
+  oklch(.72 .29 25)` vs. `--accent-alert: oklch(.68 .19 25)`), proven via
+  live Discover page in all three themes (2026-07-30).

@@ -1,0 +1,16 @@
+.triggerHeader {
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
+}
+
+.stepsContainer {
+  display: grid;
+  gap: var(--space-12);
+}
+
+.traiContainer {
+  display: grid;
+  gap: var(--space-12);
+  cursor: pointer;
+}

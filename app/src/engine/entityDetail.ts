@@ -140,6 +140,7 @@ export function resolveEntityDetail(id: string): EntityDetail | undefined {
   // something rather than a dead click.
   const mockAsset = getMockFilledAssets(getMarketAssets(), MOCK_CARDS_PER_CATEGORY).find((candidate) => candidate.id === id);
   if (mockAsset) {
+    const mockPrimaryLatest = mockAsset.yield ?? mockAsset.price;
     return {
       id,
       name: mockAsset.name,
@@ -148,7 +149,7 @@ export function resolveEntityDetail(id: string): EntityDetail | undefined {
       isUniverseEntity: false,
       category: mockAsset.category,
       primary: { id: "value", label: "Trend", points: mockAsset.sparklinePoints },
-      primaryLatest: mockAsset.yield,
+      ...(mockPrimaryLatest !== undefined ? { primaryLatest: mockPrimaryLatest } : {}),
       deltaRecent: mockAsset.deltaRecent,
     };
   }

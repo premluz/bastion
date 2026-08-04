@@ -24,3 +24,29 @@
     opacity: 0;
   }
 }
+
+/* Leading-edge variants (deprecated, 2026-07-30) — chat pane moved to
+   rightmost position per Frame.tsx's new render order, now using the
+   trailing-edge animations above. Keeping these keyframes for reference
+   and in case the pane order reverts. */
+@keyframes merlin-panel-slide-in-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes merlin-panel-slide-out-left {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}

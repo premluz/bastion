@@ -1,0 +1,150 @@
+- generic [ref=f24e3]:
+  - generic [ref=f24e6]:
+    - link "Skip to content" [ref=f24e7] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f24e10]:
+      - navigation "Side navigation" [ref=f24e12]:
+        - generic [ref=f24e17]: Merlin
+        - generic [ref=f24e18]:
+          - group "Places" [ref=f24e19]:
+            - generic [ref=f24e22]: Places
+            - generic [ref=f24e23]:
+              - button "New investigation" [ref=f24e25] [cursor=pointer]:
+                - img [ref=f24e26]
+                - generic [ref=f24e28]: New investigation
+              - button "Discover" [ref=f24e30] [cursor=pointer]:
+                - img [ref=f24e32]
+                - generic [ref=f24e35]: Discover
+              - button "Watchlist" [active] [ref=f24e37] [cursor=pointer]:
+                - img [ref=f24e39]
+                - generic [ref=f24e42]: Watchlist
+              - button "Data Sources" [ref=f24e44] [cursor=pointer]:
+                - img [ref=f24e46]
+                - generic [ref=f24e50]: Data Sources
+              - button "Market Pulse" [ref=f24e52] [cursor=pointer]:
+                - img [ref=f24e54]
+                - generic [ref=f24e56]: Market Pulse
+              - button "Investigations" [ref=f24e58] [cursor=pointer]:
+                - img [ref=f24e60]
+                - generic [ref=f24e63]: Investigations
+              - button "Portfolio" [ref=f24e65] [cursor=pointer]:
+                - img [ref=f24e67]
+                - generic [ref=f24e69]: Portfolio
+              - button "Risk" [ref=f24e71] [cursor=pointer]:
+                - img [ref=f24e73]
+                - generic [ref=f24e75]: Risk
+          - group "Recent" [ref=f24e76]:
+            - generic [ref=f24e77]:
+              - generic [ref=f24e79]: Recent
+              - button "Filter recent" [ref=f24e82] [cursor=pointer]:
+                - img [ref=f24e86]
+                - status
+            - generic [ref=f24e88]:
+              - button "Tokenized Assets Above 6% Yield — C… Answered" [ref=f24e229] [cursor=pointer]:
+                - generic [ref=f24e174]: Tokenized Assets Above 6% Yield — C…
+                - img "Answered" [ref=f24e230]
+              - button "View all" [ref=f24e92] [cursor=pointer]:
+                - generic [ref=f24e93]: View all
+        - generic [ref=f24e95]:
+          - button "Collapse sidebar" [ref=f24e97] [cursor=pointer]:
+            - img [ref=f24e101]
+            - status
+          - generic [ref=f24e103]:
+            - button "Analyst Analyst" [ref=f24e104] [cursor=pointer]:
+              - generic [ref=f24e105]:
+                - img "Analyst" [ref=f24e107]:
+                  - generic [ref=f24e109]: A
+                - generic [ref=f24e110]: Analyst
+                - img [ref=f24e113]
+              - status
+            - button "Notifications" [ref=f24e116] [cursor=pointer]:
+              - img [ref=f24e119]
+              - status
+      - main [ref=f24e123]:
+        - generic [ref=f24e129]:
+          - generic [ref=f24e231]:
+            - generic [ref=f24e236]:
+              - article "Message from user" [ref=f24e237]:
+                - generic [ref=f24e239]:
+                  - generic [ref=f24e240]: show me tokenized assets yielding above 6%
+                  - generic [ref=f24e243]: Answered
+              - article "Message from assistant" [ref=f24e244]:
+                - generic [ref=f24e247]:
+                  - generic [ref=f24e248]:
+                    - generic [ref=f24e249]: 3 sources
+                    - generic [ref=f24e250]: 7.3s
+                  - generic [ref=f24e251]:
+                    - button "6 reasoning steps · 7.3s" [expanded] [ref=f24e252] [cursor=pointer]:
+                      - generic [ref=f24e254]:
+                        - img [ref=f24e256]
+                        - generic [ref=f24e258]: 6 reasoning steps · 7.3s
+                      - img [ref=f24e260]
+                    - generic [ref=f24e263]:
+                      - generic [ref=f24e264]:
+                        - img [ref=f24e267]
+                        - generic [ref=f24e270]:
+                          - generic [ref=f24e271]: Parsing mandate constraints — yield floor, conservative risk tolerance
+                          - generic [ref=f24e272]: 0.9s
+                      - generic [ref=f24e273]:
+                        - img [ref=f24e276]
+                        - generic [ref=f24e279]:
+                          - generic [ref=f24e280]:
+                            - generic [ref=f24e281]: Scanning listed assets above the 6% yield threshold
+                            - generic [ref=f24e282]: 1.1s
+                          - generic [ref=f24e285]: MarketTape
+                      - generic [ref=f24e286]:
+                        - img [ref=f24e289]
+                        - generic [ref=f24e292]:
+                          - generic [ref=f24e293]:
+                            - generic [ref=f24e294]: Pulling risk, liquidity, and jurisdiction data for candidates
+                            - generic [ref=f24e295]: 1.4s
+                          - generic [ref=f24e296]:
+                            - generic [ref=f24e298]: RiskLens
+                            - generic [ref=f24e300]: PortfolioAtlas
+                      - generic [ref=f24e301]:
+                        - img [ref=f24e304]
+                        - generic [ref=f24e307]:
+                          - generic [ref=f24e308]: Cross-referencing candidates against the conservative mandate in PortfolioAtlas
+                          - generic [ref=f24e309]: 1.3s
+                      - generic [ref=f24e310]:
+                        - img [ref=f24e313]
+                        - generic [ref=f24e316]:
+                          - generic [ref=f24e317]:
+                            - generic [ref=f24e318]: Weighing yield against risk concentration and audit status
+                            - generic [ref=f24e319]: 1.6s
+                          - generic [ref=f24e320]: 0.74 · moderate
+                      - generic [ref=f24e321]:
+                        - img [ref=f24e324]
+                        - generic [ref=f24e326]:
+                          - generic [ref=f24e327]:
+                            - generic [ref=f24e328]: Confirming NordBond as a reference point below threshold and flagging Aldergate's pending audit
+                            - generic [ref=f24e329]: 1.0s
+                          - generic [ref=f24e330]: 0.81 · high
+                  - generic [ref=f24e331] [cursor=pointer]:
+                    - button "Open Tokenized Assets Above 6% Yield — Conservative Screen" [ref=f24e332]
+                    - generic [ref=f24e333]:
+                      - img [ref=f24e334]
+                      - generic [ref=f24e339]:
+                        - generic [ref=f24e340]: Tokenized Assets Above 6% Yield — Conservative Screen
+                        - generic [ref=f24e341]: discover
+                      - generic [ref=f24e342]: Ready
+                      - img [ref=f24e344]
+            - generic [ref=f24e349]:
+              - generic [ref=f24e351]:
+                - generic: Ask a question about the venue…
+                - textbox "Message input" [ref=f24e352]
+              - button "Send" [disabled] [ref=f24e355]:
+                - img [ref=f24e358]
+                - status
+          - generic [ref=f24e2181]:
+            - generic [ref=f24e2183]: Watchlist
+            - list [ref=f24e2185]:
+              - listitem [ref=f24e2186]:
+                - generic [ref=f24e2187]:
+                  - generic [ref=f24e2188]: Helios Yield Fund
+                  - generic [ref=f24e2189]: Highest-yield asset on the venue — tracked for concentration risk · Seeded
+              - listitem [ref=f24e2190]:
+                - generic [ref=f24e2191]:
+                  - generic [ref=f24e2192]: Kestrel Holdings
+                  - generic [ref=f24e2193]: Accumulation pattern flagged — NordBond exposure under active review · Seeded
+  - generic [ref=f24e2180]: 2026-04-13

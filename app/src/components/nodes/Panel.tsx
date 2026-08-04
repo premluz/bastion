@@ -26,7 +26,7 @@ const contentStyle: CSSProperties = {
 
 export function Panel({ title, source, children }: PanelProps & { children?: ReactNode }) {
   return (
-    <Card variant="default" padding={4}>
+    <Card variant="default" padding={4} className="panelFlat">
       {(title ?? source) && (
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-12)' }}>
           {title && <Text type="label">{title}</Text>}

@@ -20,6 +20,17 @@ this at Phase 3/7 alongside the merlin-new-node skill; components built without 
    interpretive prose (findings, recommendations) renders in the voice
    face. The voice face is allowed ONLY in text-block and recommendation
    prose — never numerals, never labels, never data.
+   
+   Visual mechanism (Phase-adjacent, 2026-07-29, revised 2026-07-29):
+   permanent-fact displays (Panel node, scene-summary's confidence
+   metadata) render with zero elevation — outline only (`--surface-0` +
+   `--edge` border), no shadow or raised surface. Provisional/reasoning
+   displays (scene-summary's Summary + Recommendation panes) render
+   completely transparent — no background, no border — allowing their
+   content to read independently from any frame, distinct from the
+   structured, outlined panels that present facts. The visual difference
+   is the mechanism that enforces principle 2's "never share a visual
+   register" rule at the CSS layer.
 3. Confidence belongs to conclusions, never to facts — data isn't confident;
    the agent is.
 4. Every recommendation is prose with its evidence adjacent — recommendations
@@ -66,13 +77,23 @@ title, optional source attribution, content slot. Hairline edge, no chrome. All
 evidence lives inside panels; panels never nest visual weight.
 
 **metric** — "what's the headline number?" One value, one label, optional delta
-with direction. Big numeral, quiet label. A metric elevates the single most important fact for
-the current question — its prominence is earned by the agent's reasoning, not by
-the data model.
+with direction. Big numeral, quiet label — that's relative visual WEIGHT, not DOM
+order: label leads (top), numeral follows (below), direct order 2026-07-27,
+global (every metric/metric-grid usage app-wide). An optional `size` ("default" |
+"compact", shell-direct-import only, not in the registered Zod contract) scales
+the numeral down for denser grids — EntityDetailPage's About section is the first
+user of "compact". A metric elevates the single most important fact for the
+current question — its prominence is earned by the agent's reasoning, not by the
+data model.
 
 **metric-grid** — "what are the vital signs?" 2–4 metrics as one gestalt read.
 Equal visual weight per cell; if one metric matters more, it's a `metric`, not a
-grid member.
+grid member. Broadened 2026-07-27 for EntityDetailPage's About section specifically
+(shell-direct-import, `minWidth`/`maxColumns` props not in the registered Zod
+contract): up to 6 columns for a denser many-facts list, auto-fit reflowing to
+~3 on a narrower column — a genuinely different job (a fuller fact list, not a
+"vital signs" read) from the original 2–4-metric framing, which stays the rule
+for every scene-JSON usage.
 
 **data-table** — "show me the evidence, row by row." The workhorse. Dense rows,
 column types respected (numerals right-aligned, tabular), status values may carry
@@ -196,9 +217,13 @@ dimension rows; differences carry the emphasis, similarities stay quiet. This is
 Scene 1's decision-support core.
 
 **confidence-meter** — "how sure is the agent?" A 0–1 value rendered as a
-restrained horizontal gauge + numeral, with one-word qualifier (low/moderate/high).
-Never a gimmick dial — it's the trust architecture made visible, and it must look
-like an instrument, not a game HUD. Appears beside conclusions, never decorating
+circular ring gauge (SUPERSEDES the original "restrained horizontal gauge...
+never a gimmick dial" law — direct architect order, 2026-07-27, see STATE.md)
++ centered percentage + numeral, with one-word qualifier (low/moderate/high).
+It's still the trust architecture made visible, and it must still look like
+an instrument, not a game HUD — the ring is drawn with the same restrained,
+tokens-only, d3-shape arc() math RingGauge's own instrument already uses
+(Phase 12), not a decorative dial. Appears beside conclusions, never decorating
 raw data (data isn't confident; the agent is).
 
 ## Phase-adjacent — scene summary band (Scene summary band order, architect-ratified via STATE.md)
@@ -222,6 +247,32 @@ reinventing either rendering — the sanctioned pattern for a node that needs
 another node's already-built instrument. `recommendation` and
 `confidence-meter` remain registered nodes; scene-summary does not replace
 their existence, only their use as a scene's own terminal pairing.
+
+Two-column confidence pane (direct order, 2026-07-29, second pass —
+supersedes both the same-day `MetadataList` version and the first
+`Metric`-under-the-ring version below). The confidence pane is now a
+`Panel` (registered node, reused directly — same precedent as
+`ConfidenceMeter`/`SourceChip`) titled with the scene's own
+`confidenceLabel` ("Recommendation confidence," "Hedge-case confidence,"
+etc., authored per scene) — the label lives on the card, not repeated
+under the ring. Left column: the ring (`hideCaption`) plus ONLY its
+one-word qualifier ("Moderate") set at `Metric`'s compact value size
+(large/semibold) with no label above it — a description of the ring, not
+a metric in its own right, since the ring's own numeral already carries
+the number. Right column: Sources/Unknowns/Assumptions, each its own
+`Metric` — the same label-top/value-below component Trend/Statistics/
+About already use, reused here rather than Astryx's `MetadataList` (used
+only briefly) or the ring's own former duplicate text caption
+(`ConfidenceMeter`'s `hideCaption` flag — composition-only, not
+scene-authorable). The scene's `caveat` note is NOT part of either
+column — it reads as ordinary body text across the Panel's full width,
+below the two-column row (a qualifier on the whole verdict, not scoped to
+confidence specifically once it left the ring's own column). Unknowns is
+a count like its siblings (`SceneSummaryPropsSchema` gained an
+`unknowns: string[]` field mirroring `assumptions`) — NOT the caveat text;
+no fixture authors it yet, so it renders 0 everywhere until a scene
+actually enumerates open unknowns, same honest-empty-state standing as
+Assumptions already had.
 
 Confidence-timestamping principle (Sticky fix order, architect-ratified via
 STATE.md): when a fixture's recommendation and its confidence-meter disagree,
@@ -344,6 +395,45 @@ never workspace-first. This is the one law that predates and survives the v2
 model unchanged: LandingState opens on a centered question + composer + a
 handful of real-intent suggestions, nothing resembling a dashboard.
 
+### Asset Category Coherence (Phase 18, codified 2026-07-30)
+Six asset categories prove the architecture generalizes across radically different
+registers (yield-first vs. price-ticker) without engine changes. This generality
+is load-bearing; coherence across categories is the proof. Four standing rules:
+
+1. **Category isolation:** Movers (Notable Movers) and Trending are crypto+stocks
+   ONLY — momentum-framed surfaces exclude fixed-income/real-estate/credit-funds
+   by rule. Newly Added is mixed-category WITH a category tag on every card,
+   disambiguating which register each entity belongs to. No other surface mixes
+   registers without an explicit category tag on every card.
+
+2. **Field consistency:** Yield-first categories (covered-bonds, real-estate,
+   credit-funds) never show %, always pp (percentage points — the movement in
+   basis points). Price-ticker categories (crypto, stocks, commodities) never
+   show pp, always % (percentage of price, the standard CMC/finance convention).
+   A yield cell and a price-delta cell are visually and numerically distinct
+   exactly because they measure different things, and this difference is
+   non-negotiable across all six categories.
+
+3. **Data source alignment:** Sparkline always tracks the category's PRIMARY metric
+   — yield series for fixed-income, price series for price-driven assets. Never
+   volume (even when volume is a separate column), never a mismatched series that
+   would make the 7d% value and the sparkline shape contradict each other.
+
+4. **Column logic:** Crypto/stocks/commodities render CMC-style columns (Asset |
+   Price | 24h % | 7d % + Sparkline | Market Cap | Volume | Circulating Supply
+   or equivalent). Covered-bonds/real-estate/credit-funds render yield-first
+   columns (Asset | Yield | Rating/Distribution | Outstanding | Trend). Zero
+   bleed between the two column sets — a crypto row never sneaks into yield
+   columns, a bond row never shows a price-style delta.
+
+**Process rule (before shipping any single-category change):** Verify it doesn't
+create asymmetry across the other five categories. Check the sibling categories
+in the same register (yield-first or price-ticker) render identically in
+structure; check the opposite register remains genuinely differentiated (not a
+muted copy, a real alternative). This prevents the drift pattern this entire
+session caught: color inversion in one theme, column misplacement on one
+category, field inconsistency when a new surface debuts.
+
 Session-scoped, not single-turn: every turn asked this session stays alive.
 Transcript renders the full history, oldest first — user utterance right,
 agent activity left. A turn's agent-side content still describes the
@@ -373,6 +463,25 @@ Canvas directly — a page that wants to show what an investigation found
 links to it (an Investigate action, a stack row), it never reproduces it
 inline.
 
+Unified workbench title bar (direct order, 2026-07-29). One title bar —
+`PaneTitleBar`, a genuinely shared component, not three independently
+hand-tuned bars kept matched by convention (`HomeTopBar`/`PageShell`
+previously carried the identical flex/padding block in two files, their
+own comments admitting as much) — runs the full row width above every
+page, mirroring the placement Home's own top bar already used ("runs the
+full row width... a sibling of the row below, not nested inside its
+narrower content column"), now generalized past Home to every place.
+Right side is contextual, composed via `WorkbenchTitleBar`: Home (the one
+"investigation" place — its own transcript/trail lives there) keeps
+Artifacts only; every other page gets a Chat toggle next to it —
+`ChatPaneControl`, the same reveal/close pattern `ArtifactStackControl`
+already established, now available everywhere per the routing law's own
+"Artifacts is the ONLY pane, global across every page" standing rule,
+extended to the transcript pane too. Opening chat on a page that hasn't
+started an investigation yet (no `hasStarted`) is a genuinely new
+capability, not previously possible — it's what lets Entity Detail's Chat
+toggle (see below) work from a cold state.
+
 Entity Detail (Phase 16, denser revision same day) is a place reached by
 content click-through (Discover's grid cards, an "Other tracked entities"
 row, a Related card) rather than left-nav, but the routing law still
@@ -383,8 +492,12 @@ Investigations panel is itself a set of links into the one artifact
 stack, never an inline reproduction of what those investigations found.
 "Browse first, investigate second": a Discover card's click always lands
 here now, regardless of whether the entity carries an investigation
-intent — Investigate is this page's own header action, shown only when a
-real intent exists. Register law, restated for this page specifically:
+intent. Its title bar's Chat toggle (2026-07-29, see the unified
+workbench title bar law above) replaces what used to be a one-click
+canned-intent Investigate action here — opening chat invites a real,
+typed question instead of firing the entity's authored `intent` string
+sight-unseen; a returning analyst can still type exactly that phrase if
+they want the same investigation. Register law, restated for this page specifically:
 News/Stats/Compare is the SeekingAlpha register, not the Kraken one — no
 trade/buy-sell surface anywhere on it, ever; a directional chart line or
 a plain metric is a fact, not an invitation to transact. Related/Compare
@@ -500,6 +613,28 @@ what happened, past tense, specific; its `stake` says why it matters,
 never what to do about it. An optional `persona` tag (`analyst` |
 `risk-officer`) is authored per card, data-ready only — nothing filters
 on it yet.
+
+Pane placement law (direct order, 2026-07-29). Not a fixed side (chat-left
+vs chat-right is not a rule Merlin follows — industry precedent is genuinely
+split, e.g. Claude/ChatGPT anchor chat left, this product anchors it
+differently and both are legitimate). The actual rule is directional, not
+positional:
+
+- ANCHOR (transcript/chat): stays where it is. It is the constant the
+  user's attention already lives in; it never moves to make room for
+  anything else.
+- OUTPUT (artifact): opens immediately ADJACENT to the anchor — closest,
+  because it is what the anchor just produced. Today this is to the
+  anchor's right; the direction itself is not the law, adjacency is.
+- CONTEXT (entity pages, index pages, any supporting view): opens
+  BEYOND the output, further from the anchor — and is the first to
+  recede/collapse (per the pane-collapse mechanism) when space runs out,
+  because it is supporting material, not the active thread.
+
+Any new pane type is placed by asking which of the three roles it plays
+— anchor, output, or context — never by picking a side from habit. A
+fourth simultaneous need is a signal to collapse the outermost context
+pane first, never to compress the anchor or the output.
 
 ## Trail vocabulary (Phase 6 — engine components, NOT registry nodes)
 The reasoning surface is streamed by the trail player; scenes cannot lay it out.

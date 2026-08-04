@@ -1,0 +1,90 @@
+- generic [ref=f10e6]:
+  - link "Skip to content" [ref=f10e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f10e10]:
+    - navigation "Side navigation" [ref=f10e12]:
+      - generic [ref=f10e17]: Merlin
+      - generic [ref=f10e18]:
+        - group "Places" [ref=f10e19]:
+          - generic [ref=f10e22]: Places
+          - generic [ref=f10e23]:
+            - button "New investigation" [ref=f10e25] [cursor=pointer]:
+              - img [ref=f10e26]
+              - generic [ref=f10e28]: New investigation
+            - button "Discover" [ref=f10e30] [cursor=pointer]:
+              - img [ref=f10e32]
+              - generic [ref=f10e35]: Discover
+            - button "Watchlist" [ref=f10e37] [cursor=pointer]:
+              - img [ref=f10e39]
+              - generic [ref=f10e42]: Watchlist
+            - button "Data Sources" [ref=f10e44] [cursor=pointer]:
+              - img [ref=f10e46]
+              - generic [ref=f10e50]: Data Sources
+            - button "Market Pulse" [ref=f10e52] [cursor=pointer]:
+              - img [ref=f10e54]
+              - generic [ref=f10e56]: Market Pulse
+            - button "Investigations" [ref=f10e58] [cursor=pointer]:
+              - img [ref=f10e60]
+              - generic [ref=f10e63]: Investigations
+            - button "Portfolio" [ref=f10e65] [cursor=pointer]:
+              - img [ref=f10e67]
+              - generic [ref=f10e69]: Portfolio
+            - button "Risk" [ref=f10e71] [cursor=pointer]:
+              - img [ref=f10e73]
+              - generic [ref=f10e75]: Risk
+        - group "Recent" [ref=f10e76]:
+          - generic [ref=f10e77]:
+            - generic [ref=f10e79]: Recent
+            - button "Filter recent" [ref=f10e82] [cursor=pointer]:
+              - img [ref=f10e86]
+              - status
+          - generic [ref=f10e88]:
+            - button "Tokenized Assets Above 6% Yield — C… Thinking…" [ref=f10e173] [cursor=pointer]:
+              - generic [ref=f10e174]: Tokenized Assets Above 6% Yield — C…
+              - img "Thinking…" [ref=f10e176]
+            - button "View all" [ref=f10e92] [cursor=pointer]:
+              - generic [ref=f10e93]: View all
+      - generic [ref=f10e95]:
+        - button "Collapse sidebar" [ref=f10e97] [cursor=pointer]:
+          - img [ref=f10e101]
+          - status
+        - generic [ref=f10e103]:
+          - button "Analyst Analyst" [ref=f10e104] [cursor=pointer]:
+            - generic [ref=f10e105]:
+              - img "Analyst" [ref=f10e107]:
+                - generic [ref=f10e109]: A
+              - generic [ref=f10e110]: Analyst
+              - img [ref=f10e113]
+            - status
+          - button "Notifications" [ref=f10e116] [cursor=pointer]:
+            - img [ref=f10e119]
+            - status
+    - main [ref=f10e123]:
+      - generic [ref=f10e128]:
+        - generic [ref=f10e177]:
+          - generic [ref=f10e178]: show me tokenized assets yielding above 6%
+          - button "Artifacts" [disabled] [ref=f10e180]:
+            - img [ref=f10e183]
+            - status
+        - generic [ref=f10e130]:
+          - generic [ref=f10e191]:
+            - article "Message from user" [ref=f10e192]:
+              - generic [ref=f10e194]:
+                - generic [ref=f10e195]: show me tokenized assets yielding above 6%
+                - generic [ref=f10e198]: Answered
+            - article "Message from assistant" [ref=f10e199]:
+              - generic [ref=f10e202]:
+                - generic [ref=f10e203]:
+                  - generic [ref=f10e204]: 3 sources
+                  - generic [ref=f10e205]: 0.0s
+                - button "Thinking trail — click to skip" [ref=f10e206] [cursor=pointer]:
+                  - generic [ref=f10e207]:
+                    - img [ref=f10e210]
+                    - generic [ref=f10e214]: Parsing mandate constraints — yield floor, conservative risk tolerance
+          - generic [ref=f10e218]:
+            - generic [ref=f10e220]:
+              - generic: Ask a question about the venue…
+              - textbox "Message input" [ref=f10e221]
+            - button "Send" [disabled] [ref=f10e224]:
+              - img [ref=f10e227]
+              - status

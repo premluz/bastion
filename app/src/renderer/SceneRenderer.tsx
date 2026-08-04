@@ -3,7 +3,7 @@ import type { HydratedScene, SceneNode } from '../contracts/scene';
 import { registry } from '../registry/registry';
 import { resolveBindings } from './bindings';
 import { FallbackNode } from './FallbackNode';
-import './assembly.css';
+import styles from './assembly.module.css';
 
 interface SceneRendererProps {
   scene: HydratedScene;
@@ -55,13 +55,8 @@ function wrap(node: SceneNode, element: ReactNode): ReactNode {
   return (
     <div
       key={node.id}
-      style={{
-        animationName: 'merlin-reveal',
-        animationDuration: 'var(--motion-enter-duration)',
-        animationTimingFunction: 'var(--motion-enter-ease)',
-        animationDelay: `calc(var(--motion-assembly-stagger) * ${node.reveal ?? 0})`,
-        animationFillMode: 'backwards',
-      }}
+      className={styles.nodeWrapper}
+      style={{ '--reveal-index': node.reveal ?? 0 } as React.CSSProperties}
     >
       {element}
     </div>

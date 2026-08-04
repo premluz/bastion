@@ -15,7 +15,7 @@ interface DashboardHeaderData {
 }
 
 interface DashboardPageProps {
-  title: string;
+  title: ReactNode;
   header: DashboardHeaderData;
   children: ReactNode;
   columns?: number;

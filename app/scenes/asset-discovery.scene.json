@@ -87,7 +87,7 @@
       ]
     },
     "aldergate-estates-series": { "$ref": "aldergate-estates-yield-volatility-90d" },
-    "vantara-metals-series": { "$ref": "vantara-metals-yield-volatility-90d" },
+    "vantara-metals-series": { "$ref": "vantara-metals-price-90d" },
     "helios-yield-fund-series": { "$ref": "helios-yield-fund-yield-volatility-90d" },
     "nordbond-2029-series": { "$ref": "nordbond-2029-yield-volatility-90d" }
   },

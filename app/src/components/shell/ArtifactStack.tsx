@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState, type MouseEvent } from 'react';
 import { Card } from '@astryxdesign/core/Card';
-import { Toolbar } from '@astryxdesign/core/Toolbar';
-import { Text } from '@astryxdesign/core/Text';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
 import { List, ListItem } from '@astryxdesign/core/List';
@@ -11,8 +9,11 @@ import { useArtifactStore, type Artifact } from '../../engine/stores/artifactSto
 import { useSessionStore, type Turn } from '../../engine/stores/sessionStore';
 import { useWatchlistStore } from '../../engine/stores/watchlistStore';
 import { sceneFamily } from '../../engine/sceneFamily';
+import { getSceneMinWidth } from '../../engine/sceneMinWidth';
+import { ARTIFACT_PANE_FLOOR } from './paneFloors';
 import { StatusTag } from '../nodes/StatusTag';
 import { Canvas } from './Canvas';
+import { PaneTitleBar } from './PaneTitleBar';
 import pane from './PanePadding.module.css';
 import styles from './ArtifactStack.module.css';
 
@@ -77,9 +78,15 @@ export function ArtifactStack() {
   const rows = useMemo(() => buildStackRows(artifacts, turns), [artifacts, turns]);
   const activeArtifact = openArtifactId ? artifacts[openArtifactId] : undefined;
 
+  // Phase 18: per-node-type min-width made real — a scene containing
+  // comparison/concentration-map (registry.ts's own minWidth) raises the
+  // floor above the generic ARTIFACT_PANE_FLOOR, rather than trusting
+  // in-node reflow alone for content already on record as cramped-narrow.
+  const sceneFloor = getSceneMinWidth(activeArtifact?.scene, ARTIFACT_PANE_FLOOR);
+
   const resizable = useResizable({
     defaultSize: stackWidth,
-    minSizePx: 360,
+    minSizePx: sceneFloor,
     maxSizePx: 720,
     autoSaveId: 'merlin-artifact-stack',
   });
@@ -113,17 +120,28 @@ export function ArtifactStack() {
       )}
       <Card variant="default" padding={0} width={isMaximized ? '100%' : resizable.size} className={styles.artifactCard ?? ''}>
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-          {/* No border between the title bar and content below it, per
-              direct feedback — Toolbar renders unwrapped now, the old
-              borderBottom div is gone. Title moved into startContent,
-              beside the back arrow, so it reads left-aligned next to it
-              instead of trailing the maximize/close icons on the right
-              (where it previously sat, inside endContent). */}
-          <Toolbar
-            label="Artifact stack actions"
-            startContent={
-              view === 'detail' && activeArtifact ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
+          {/* Phase 18: overflowX contains a too-wide-for-the-pane child
+              (e.g. a data-table with more columns than this pane's floor
+              accounts for — data-table has no registered minWidth, since
+              its column count varies per scene) to its OWN scrollbar.
+              Confirmed live: without this, such content bled past the
+              pane's box (overflow default: visible) and inflated the
+              ROW's scrollWidth, polluting usePaneFitCollapse's fit-check
+              with overflow that was never the row-level mechanism's to
+              police — the pane's own contents are the pane's own problem.
+              PaneTitleBar lives inside this scroll container now (direct
+              feedback, 2026-08-04 — same move PageShell.tsx made for
+              content panes), sticky to its top with a fade gradient over
+              scrolled rows/list items, replacing the old plain (non-
+              scrolling, non-gradient) Toolbar this file used to hand-roll.
+              startContent carries the back button; PaneTitleBar's own
+              .startGroup/.title CSS is what truncates a long scene title
+              instead of wrapping it. */}
+          <div style={{ flex: 1, overflowY: 'auto', overflowX: 'auto' }}>
+            <PaneTitleBar
+              title={view === 'detail' && activeArtifact ? activeArtifact.scene.title : 'Artifacts'}
+              startContent={
+                view === 'detail' && activeArtifact ? (
                   <IconButton
                     label="Back to list"
                     tooltip="Back to list"
@@ -131,38 +149,29 @@ export function ArtifactStack() {
                     variant="ghost"
                     onClick={() => setView('list')}
                   />
-                  <Text type="label" weight="semibold">
-                    {activeArtifact.scene.title}
-                  </Text>
-                </div>
-              ) : (
-                <Text type="label" weight="semibold">
-                  Artifacts
-                </Text>
-              )
-            }
-            endContent={
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
-                <IconButton
-                  label={isMaximized ? 'Restore' : 'Maximize'}
-                  tooltip={isMaximized ? 'Restore' : 'Maximize'}
-                  icon={<Icon icon="arrowsUpDown" size="sm" style={{ transform: 'rotate(45deg)' }} />}
-                  variant={isMaximized ? 'primary' : 'ghost'}
-                  onClick={toggleMaximize}
-                />
-                {/* Close acts exactly like the top-bar Artifacts control
-                    (same action) — one on/off state, two entry points. */}
-                <IconButton
-                  label="Close artifacts"
-                  tooltip="Close"
-                  icon={<Icon icon="close" size="sm" />}
-                  variant="ghost"
-                  onClick={toggleStack}
-                />
-              </div>
-            }
-          />
-          <div style={{ flex: 1, overflowY: 'auto' }}>
+                ) : undefined
+              }
+              endContent={
+                <>
+                  <IconButton
+                    label={isMaximized ? 'Restore' : 'Maximize'}
+                    tooltip={isMaximized ? 'Restore' : 'Maximize'}
+                    icon={<Icon icon="arrowsUpDown" size="sm" style={{ transform: 'rotate(45deg)' }} />}
+                    variant={isMaximized ? 'primary' : 'ghost'}
+                    onClick={toggleMaximize}
+                  />
+                  {/* Close acts exactly like the top-bar Artifacts control
+                      (same action) — one on/off state, two entry points. */}
+                  <IconButton
+                    label="Close artifacts"
+                    tooltip="Close"
+                    icon={<Icon icon="close" size="sm" />}
+                    variant="ghost"
+                    onClick={toggleStack}
+                  />
+                </>
+              }
+            />
             {view === 'detail' && activeArtifact ? (
               <div className={pane.padded} onClick={handleWatchClick}>
                 <Canvas />

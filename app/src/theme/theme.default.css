@@ -20,6 +20,10 @@
   --accent-warn: var(--color-warning);
   --accent-ok: var(--color-success);
 
+  /* Delta indicators — price-table up/down (stronger saturation for small-text readability) */
+  --delta-up: var(--color-icon-green);
+  --delta-down: var(--color-background-error-inverted);
+
   /* Data-viz series palette — provisional starting values, pending Prem's ◆ tuning */
   --viz-1: var(--color-icon-blue);
   --viz-2: var(--color-icon-teal);
@@ -45,6 +49,7 @@
   --motion-exit-duration: var(--duration-120);
   --motion-exit-ease: var(--ease-standard);
   --motion-assembly-stagger: 60ms;
+  --motion-table-stagger: 30ms;
 
   /* Type faces (Phase 8E typography audit) — identical across all three
      registered themes, since typeface choice isn't a ◆ per-theme register
@@ -74,7 +79,20 @@
   background: var(--surface-0);
   color: var(--ink-primary);
   font-family: var(--face-ui);
-  min-height: 100%;
+  /* height + overflow:hidden, not min-height:100% (direct feedback,
+     2026-08-03: "there is no general body scroll bar... wherever mouse
+     over, that pane scrolls"). min-height:100% only ever guaranteed the
+     background painted the full viewport on short pages — it never
+     capped growth, so any descendant taller than the viewport (even one
+     whose own purpose-built scroll container, like PageShell's
+     .paneScroll or Astryx's own .astryx-layout-content, was already
+     correctly capped and internally scrollable) still pushed html/body
+     themselves taller, and the browser's native document-level scroll
+     caught that overflow — a second, redundant scrollbar racing the
+     correct internal one. Hard-capping here forces every overflow to
+     resolve at the internal container that's supposed to own it. */
+  height: 100%;
+  overflow: hidden;
 }
 
 /* Astryx's ListItem only applies its own :hover treatment when the row is
@@ -159,5 +177,56 @@
    rejected as too close to the popover white to read as a boundary. */
 [data-theme='default'] .astryx-chat-composer > div {
   background-color: var(--color-background-gray);
-  border: 1px solid var(--color-border-emphasized);
+}
+
+/* Surface consistency (direct feedback, 2026-08-02): the user's own chat
+   bubble and source badges/tokens (Astryx's `.astryx-chat-message-bubble`
+   and `.astryx-token`) were rendering Astryx's own unbridged overlay
+   (white at ~10% alpha in dark scheme, a flat overlay tint, not a
+   themed value) while the composer beside them correctly used a real
+   Merlin surface step — three different-looking "elevated" fills on the
+   same page. Matched to whatever the composer itself uses in THIS theme
+   (--color-background-gray here, since default's literal --surface-2
+   collapses to the same white as --surface-1 — see the composer rule's
+   own comment above), not a single hardcoded token name across themes;
+   ops-dark/glass mirror this same intent with --surface-2, their own
+   composer value (theme.ops-dark.css / theme.glass.css). */
+[data-theme='default'] .astryx-chat-message-bubble.filled,
+[data-theme='default'] .astryx-token.default {
+  background-color: var(--color-background-gray);
+}
+
+/* Panel treatment per node-vocabulary.md principle 2: facts (permanent
+   register) and reasoning (provisional register) both render with zero
+   elevation (outline only, no background). Visual distinction is typography
+   (voice face for reasoning) + kicker label, NOT border differences. */
+
+.astryx-card.panelFlat {
+  background-color: transparent;
+  border: 1px solid var(--edge);
+  box-shadow: none;
+}
+
+.astryx-card.panelProvisional {
+  background-color: transparent;
+  border: 1px solid var(--edge);
+  box-shadow: none;
+}
+
+/* Content area matches the sidenav's own background (direct feedback,
+   2026-08-02: "content bg same as nav bg"). AppShell's default 'elevated'
+   variant (Frame.tsx never overrides it) gives the sidenav
+   --color-background-body/--surface-0 but the main content area
+   --color-background-surface/--surface-1 — confirmed via AppShell's own
+   source (navAreaWash vs contentBgSurface, gated on variant/hasTopNav;
+   Frame.tsx passes no topNav, so content always resolves to
+   contentBgSurface here, never the transparent+backdrop combo). No
+   topNav also means AppShell's "elevated corner" treatment
+   (shouldElevateWithCorner) never activates in this app, so there's no
+   rounded-corner backdrop to preserve — a flat override is safe.
+   #astryx-app-shell-main is AppShell's own stable id (MAIN_CONTENT_ID in
+   its source), high enough specificity to beat the atomic StyleX class
+   unconditionally. */
+#astryx-app-shell-main {
+  background-color: var(--surface-0);
 }

@@ -22,9 +22,20 @@ export function RelatedEntitiesStrip({ entities, onOpen }: { entities: RelatedEn
   return (
     <div style={{ display: 'grid', gap: 'var(--space-12)' }}>
       <Text type="label">Related</Text>
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${entities.length}, minmax(160px, 1fr))`, gap: 'var(--space-12)' }}>
+      {/* auto-fit, not a fixed repeat(entities.length, ...) — the fixed
+          version couldn't reflow at all (found live, Demo Flow #1 order):
+          3 columns × 160px minimum forced a ~500px floor regardless of
+          available width, overflowing once the artifact/transcript panes
+          narrow this page's own content column. */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 'var(--space-12)' }}>
+        {/* panelFlat (Panel.tsx's own class, theme files) — transparent
+            background + edge-only border, no elevation at rest. Reused
+            here rather than duplicated (direct feedback, 2026-08-02):
+            ClickableCard's built-in hover overlay still applies
+            regardless of className, so this reads as a plain outlined
+            surface until hover. */}
         {entities.map((related) => (
-          <ClickableCard key={related.id} label={`Open ${related.name}`} variant="default" padding={3} onClick={() => onOpen(related.id)}>
+          <ClickableCard key={related.id} label={`Open ${related.name}`} variant="default" className="panelFlat" padding={3} onClick={() => onOpen(related.id)}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
               <AssetLogo id={related.id} />
               <div>

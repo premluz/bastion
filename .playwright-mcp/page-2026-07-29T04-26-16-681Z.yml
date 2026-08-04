@@ -1,0 +1,223 @@
+- generic [active] [ref=f55e3]:
+  - generic [ref=f55e6]:
+    - link "Skip to content" [ref=f55e7] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f55e10]:
+      - navigation "Side navigation" [ref=f55e12]:
+        - generic [ref=f55e17]: Merlin
+        - generic [ref=f55e18]:
+          - group "Places" [ref=f55e19]:
+            - generic [ref=f55e22]: Places
+            - generic [ref=f55e23]:
+              - button "New investigation" [ref=f55e25] [cursor=pointer]:
+                - img [ref=f55e26]
+                - generic [ref=f55e28]: New investigation
+              - button "Discover" [ref=f55e30] [cursor=pointer]:
+                - img [ref=f55e32]
+                - generic [ref=f55e35]: Discover
+              - button "Watchlist" [ref=f55e37] [cursor=pointer]:
+                - img [ref=f55e39]
+                - generic [ref=f55e42]: Watchlist
+              - button "Data Sources" [ref=f55e44] [cursor=pointer]:
+                - img [ref=f55e46]
+                - generic [ref=f55e50]: Data Sources
+              - button "Market Pulse" [ref=f55e52] [cursor=pointer]:
+                - img [ref=f55e54]
+                - generic [ref=f55e56]: Market Pulse
+              - button "Investigations" [ref=f55e58] [cursor=pointer]:
+                - img [ref=f55e60]
+                - generic [ref=f55e63]: Investigations
+              - button "Portfolio" [ref=f55e65] [cursor=pointer]:
+                - img [ref=f55e67]
+                - generic [ref=f55e69]: Portfolio
+              - button "Risk" [ref=f55e71] [cursor=pointer]:
+                - img [ref=f55e73]
+                - generic [ref=f55e75]: Risk
+          - group "Recent" [ref=f55e76]:
+            - generic [ref=f55e77]:
+              - generic [ref=f55e79]: Recent
+              - button "Filter recent" [ref=f55e82] [cursor=pointer]:
+                - img [ref=f55e86]
+                - status
+            - generic [ref=f55e88]:
+              - generic [ref=f55e89]: Nothing yet.
+              - button "View all" [ref=f55e92] [cursor=pointer]:
+                - generic [ref=f55e93]: View all
+        - generic [ref=f55e95]:
+          - button "Collapse sidebar" [ref=f55e97] [cursor=pointer]:
+            - img [ref=f55e101]
+            - status
+          - generic [ref=f55e103]:
+            - button "Analyst Analyst" [ref=f55e104] [cursor=pointer]:
+              - generic [ref=f55e105]:
+                - img "Analyst" [ref=f55e107]:
+                  - generic [ref=f55e109]: A
+                - generic [ref=f55e110]: Analyst
+                - img [ref=f55e113]
+              - status
+            - button "Notifications" [ref=f55e116] [cursor=pointer]:
+              - img [ref=f55e119]
+              - status
+      - main [ref=f55e123]:
+        - generic [ref=f55e1992]:
+          - generic [ref=f55e1993]:
+            - generic [ref=f55e1994]: Aldergate Estates
+            - generic [ref=f55e1995]:
+              - button "Watch Aldergate Estates" [ref=f55e1996] [cursor=pointer]:
+                - img [ref=f55e2000]
+                - status
+              - button "Investigate Aldergate Estates" [ref=f55e2003] [cursor=pointer]:
+                - img [ref=f55e2007]
+                - status
+          - generic [ref=f55e2012]:
+            - generic [ref=f55e2013]: Tokenized Real Estate Portfolio
+            - generic [ref=f55e2014]:
+              - generic [ref=f55e2016]: Trend
+              - generic [ref=f55e2018]:
+                - generic [ref=f55e2019]:
+                  - generic [ref=f55e2020]:
+                    - generic [ref=f55e2021]: Latest yield
+                    - generic [ref=f55e2023]: "7.20"
+                  - generic [ref=f55e2024]:
+                    - generic [ref=f55e2025]: Recent move
+                    - generic [ref=f55e2027]: "0.00"
+                - application [ref=f55e2030]:
+                  - generic [ref=f55e2054]:
+                    - generic [ref=f55e2055]:
+                      - generic [ref=f55e2057]: 2026-04-13
+                      - generic [ref=f55e2059]: 2026-04-21
+                      - generic [ref=f55e2061]: 2026-04-29
+                      - generic [ref=f55e2063]: 2026-05-07
+                      - generic [ref=f55e2065]: 2026-05-15
+                      - generic [ref=f55e2067]: 2026-05-23
+                      - generic [ref=f55e2069]: 2026-05-31
+                      - generic [ref=f55e2071]: 2026-06-08
+                      - generic [ref=f55e2073]: 2026-06-16
+                      - generic [ref=f55e2075]: 2026-06-24
+                      - generic [ref=f55e2077]: 2026-07-02
+                    - generic [ref=f55e2078]:
+                      - generic [ref=f55e2080]: "0"
+                      - generic [ref=f55e2082]: "2"
+                      - generic [ref=f55e2084]: "4"
+                      - generic [ref=f55e2086]: "6"
+                      - generic [ref=f55e2088]: "8"
+                    - generic [ref=f55e2089]:
+                      - generic [ref=f55e2091]: "0"
+                      - generic [ref=f55e2093]: "0.8"
+                      - generic [ref=f55e2095]: "1.6"
+                      - generic [ref=f55e2097]: "2.4"
+                      - generic [ref=f55e2099]: "3.2"
+            - generic [ref=f55e2100]:
+              - generic [ref=f55e2102]:
+                - generic [ref=f55e2104]: Statistics
+                - generic [ref=f55e2106]:
+                  - generic [ref=f55e2107]:
+                    - generic [ref=f55e2108]: Yield (%)
+                    - generic [ref=f55e2110]: "7.20"
+                  - generic [ref=f55e2111]:
+                    - generic [ref=f55e2112]: Recent move
+                    - generic [ref=f55e2114]: "0.00"
+                  - generic [ref=f55e2115]:
+                    - generic [ref=f55e2116]: Outstanding
+                    - generic [ref=f55e2118]: €62M
+                  - generic [ref=f55e2119]:
+                    - generic [ref=f55e2120]: Auditor
+                    - generic [ref=f55e2122]: Nordkap Assurance
+                  - generic [ref=f55e2123]:
+                    - generic [ref=f55e2124]: Distribution frequency
+                    - generic [ref=f55e2126]: Quarterly
+                  - generic [ref=f55e2127]:
+                    - generic [ref=f55e2128]: Jurisdiction
+                    - generic [ref=f55e2130]: Germany
+              - generic [ref=f55e2132]:
+                - generic [ref=f55e2134]: About
+                - generic [ref=f55e2136]:
+                  - generic [ref=f55e2137]:
+                    - generic [ref=f55e2138]: Underlying
+                    - generic [ref=f55e2140]: Berlin commercial real estate portfolio
+                  - generic [ref=f55e2141]:
+                    - generic [ref=f55e2142]: Yield
+                    - generic [ref=f55e2144]: 7.2%
+                  - generic [ref=f55e2145]:
+                    - generic [ref=f55e2146]: Outstanding
+                    - generic [ref=f55e2148]: €62M
+                  - generic [ref=f55e2149]:
+                    - generic [ref=f55e2150]: Audit status
+                    - generic [ref=f55e2152]: Renewal lapsed — IssuerRegistry filing not received
+                  - generic [ref=f55e2153]:
+                    - generic [ref=f55e2154]: Auditor
+                    - generic [ref=f55e2156]: Nordkap Assurance
+                  - generic [ref=f55e2157]:
+                    - generic [ref=f55e2158]: Distribution frequency
+                    - generic [ref=f55e2160]: Quarterly
+                  - generic [ref=f55e2161]:
+                    - generic [ref=f55e2162]: Distribution record
+                    - generic [ref=f55e2164]: 8 consecutive quarters paid
+                  - generic [ref=f55e2165]:
+                    - generic [ref=f55e2166]: Jurisdiction
+                    - generic [ref=f55e2168]: Germany
+                  - generic [ref=f55e2169]:
+                    - generic [ref=f55e2170]: RiskLens score
+                    - generic [ref=f55e2172]: 34/100
+                  - generic [ref=f55e2173]:
+                    - generic [ref=f55e2174]: Liquidity
+                    - generic [ref=f55e2176]: Moderate
+                  - generic [ref=f55e2177]:
+                    - generic [ref=f55e2178]: Custodian
+                    - generic [ref=f55e2180]: Solent Custody
+            - generic [ref=f55e2181]:
+              - generic [ref=f55e2183]: Coverage
+              - generic [ref=f55e2185]:
+                - generic [ref=f55e2186]:
+                  - generic [ref=f55e2187]:
+                    - generic [ref=f55e2188]: Aldergate Estates' audit renewal still pending as Q3 distribution nears
+                    - generic [ref=f55e2189]: Eight consecutive quarters paid, but IssuerRegistry has yet to log the renewal filing.
+                  - generic [ref=f55e2191]:
+                    - generic [ref=f55e2193]: IssuerRegistry
+                    - time [ref=f55e2195]: Jul 14, 2026
+                - generic [ref=f55e2196]:
+                  - generic [ref=f55e2197]:
+                    - generic [ref=f55e2198]: Berlin commercial portfolio holds steady at 7.2% amid broader EU real estate softening
+                    - generic [ref=f55e2199]: Aldergate outpaces the regional benchmark for the third straight quarter.
+                  - generic [ref=f55e2201]:
+                    - generic [ref=f55e2203]: MarketTape
+                    - time [ref=f55e2205]: Jul 2, 2026
+                - generic [ref=f55e2206]:
+                  - generic [ref=f55e2207]:
+                    - generic [ref=f55e2208]: Nordkap Assurance reconfirmed as Aldergate's sole auditor for FY2026
+                    - generic [ref=f55e2209]: No auditor change filed despite the open renewal question.
+                  - generic [ref=f55e2211]:
+                    - generic [ref=f55e2213]: IssuerRegistry
+                    - time [ref=f55e2215]: Jun 20, 2026
+                - generic [ref=f55e2216]:
+                  - generic [ref=f55e2217]:
+                    - generic [ref=f55e2218]: Solent Custody confirms no disruption to Aldergate settlement despite audit uncertainty
+                    - generic [ref=f55e2219]: Custody and distribution mechanics remain unaffected while the filing question stays open.
+                  - generic [ref=f55e2221]:
+                    - generic [ref=f55e2223]: CustodyGrid
+                    - time [ref=f55e2225]: Jun 11, 2026
+            - generic [ref=f55e2226]:
+              - generic [ref=f55e2227]: Related
+              - generic [ref=f55e2228]:
+                - generic [ref=f55e2229] [cursor=pointer]:
+                  - button "Open NordBond 2029" [ref=f55e2230]
+                  - generic [ref=f55e2233]:
+                    - generic [ref=f55e2234]: NordBond 2029
+                    - text: Tokenized Covered Bond
+                - generic [ref=f55e2235] [cursor=pointer]:
+                  - button "Open Helios Yield Fund" [ref=f55e2236]
+                  - generic [ref=f55e2239]:
+                    - generic [ref=f55e2240]: Helios Yield Fund
+                    - text: Tokenized Diversified Credit Fund
+                - generic [ref=f55e2241] [cursor=pointer]:
+                  - button "Open Vantara Metals" [ref=f55e2242]
+                  - generic [ref=f55e2245]:
+                    - generic [ref=f55e2246]: Vantara Metals
+                    - text: Tokenized Copper-Royalty Note
+            - generic [ref=f55e2247]:
+              - generic [ref=f55e2248]: Investigations
+              - status [ref=f55e2249]:
+                - generic [ref=f55e2250]:
+                  - heading "No investigations yet this session" [level=3] [ref=f55e2251]
+                  - generic [ref=f55e2252]: No investigation this session has referenced this entity.
+  - generic [ref=f55e2253]: "0.8"

@@ -136,9 +136,15 @@ export function LandingState() {
             <Grid columns={{ minWidth: 200, max: 3 }} gap={3} width="100%" maxWidth={680}>
               {SUGGESTIONS.map((suggestion, index) => (
                 <div key={suggestion.headline} className={styles.fade} style={{ transitionDelay: `calc(var(--motion-assembly-stagger) * ${index})` }}>
+                  {/* panelFlat (Panel.tsx's own class, theme files) —
+                      transparent background + edge-only border, no
+                      elevation at rest, consistent with RelatedEntitiesStrip.tsx
+                      and MarketPulsePage.tsx's same reuse (direct
+                      feedback, 2026-08-02). */}
                   <ClickableCard
                     label={suggestion.headline}
-                    variant="muted"
+                    variant="default"
+                    className="panelFlat"
                     padding={3}
                     isDisabled={isSubmitting}
                     onClick={() => beginTransition(suggestion.intent)}

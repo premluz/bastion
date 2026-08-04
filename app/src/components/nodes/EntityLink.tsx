@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import styles from './EntityLink.module.css';
 
 // Shared presentational primitive (Phase 8F) — NOT a registry node, same
 // precedent as chartCraft.tsx: reused directly by data-table/signal-feed
@@ -10,14 +10,8 @@ import { useState } from 'react';
 // register (principle 2): no color change, no permanent decoration —
 // underline appears on hover only, emphasis is earned (principle 8).
 export function EntityLink({ entityId, label }: { entityId: string; label: string }) {
-  const [isHovered, setIsHovered] = useState(false);
   return (
-    <span
-      data-entity-id={entityId}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{ cursor: 'pointer', textDecoration: isHovered ? 'underline' : 'none' }}
-    >
+    <span data-entity-id={entityId} className={styles.link}>
       {label}
     </span>
   );

@@ -1,0 +1,1334 @@
+- generic [ref=f13e6]:
+  - link "Skip to content" [ref=f13e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f13e10]:
+    - navigation "Side navigation" [ref=f13e12]:
+      - generic [ref=f13e17]: Merlin
+      - generic [ref=f13e18]:
+        - group "Places" [ref=f13e19]:
+          - generic [ref=f13e22]: Places
+          - generic [ref=f13e23]:
+            - button "New investigation" [ref=f13e25] [cursor=pointer]:
+              - img [ref=f13e26]
+              - generic [ref=f13e28]: New investigation
+            - button "Discover" [ref=f13e30] [cursor=pointer]:
+              - img [ref=f13e32]
+              - generic [ref=f13e35]: Discover
+            - button "Watchlist" [ref=f13e37] [cursor=pointer]:
+              - img [ref=f13e39]
+              - generic [ref=f13e42]: Watchlist
+            - button "Data Sources" [ref=f13e44] [cursor=pointer]:
+              - img [ref=f13e46]
+              - generic [ref=f13e50]: Data Sources
+            - button "Market Pulse" [ref=f13e52] [cursor=pointer]:
+              - img [ref=f13e54]
+              - generic [ref=f13e56]: Market Pulse
+            - button "Investigations" [ref=f13e58] [cursor=pointer]:
+              - img [ref=f13e60]
+              - generic [ref=f13e63]: Investigations
+            - button "Portfolio" [ref=f13e65] [cursor=pointer]:
+              - img [ref=f13e67]
+              - generic [ref=f13e69]: Portfolio
+            - button "Risk" [ref=f13e71] [cursor=pointer]:
+              - img [ref=f13e73]
+              - generic [ref=f13e75]: Risk
+        - group "Recent" [ref=f13e76]:
+          - generic [ref=f13e77]:
+            - generic [ref=f13e79]: Recent
+            - button "Filter recent" [ref=f13e82] [cursor=pointer]:
+              - img [ref=f13e86]
+              - status
+          - generic [ref=f13e88]:
+            - generic [ref=f13e89]: Nothing yet.
+            - button "View all" [ref=f13e92] [cursor=pointer]:
+              - generic [ref=f13e93]: View all
+      - generic [ref=f13e95]:
+        - button "Collapse sidebar" [ref=f13e97] [cursor=pointer]:
+          - img [ref=f13e101]
+          - status
+        - generic [ref=f13e103]:
+          - button "Analyst Analyst" [ref=f13e104] [cursor=pointer]:
+            - generic [ref=f13e105]:
+              - img "Analyst" [ref=f13e107]:
+                - generic [ref=f13e109]: A
+              - generic [ref=f13e110]: Analyst
+              - img [ref=f13e113]
+            - status
+          - button "Notifications" [ref=f13e116] [cursor=pointer]:
+            - img [ref=f13e119]
+            - status
+    - main [ref=f13e123]:
+      - generic [ref=f13e172]:
+        - generic [ref=f13e174]: Discover
+        - generic [ref=f13e176]:
+          - generic [ref=f13e177]:
+            - generic [ref=f13e178]:
+              - generic [ref=f13e179]:
+                - generic [ref=f13e180]: Notable movers
+                - generic [ref=f13e181]: 24H
+              - generic [ref=f13e182]:
+                - generic [ref=f13e185]:
+                  - generic [ref=f13e186]: Helios Yield Fund
+                  - generic [ref=f13e187]: +0.17pp since prior reading
+                - generic [ref=f13e189]:
+                  - img "Trend sparkline" [ref=f13e190]
+                  - generic [ref=f13e192]: 9.1%
+              - separator [ref=f13e193]
+              - generic [ref=f13e195] [cursor=pointer]:
+                - button "NordBond 2029 +0.04pp since prior reading" [ref=f13e198]:
+                  - generic [ref=f13e199]: NordBond 2029
+                  - generic [ref=f13e200]: +0.04pp since prior reading
+                - generic [ref=f13e202]:
+                  - img "Trend sparkline" [ref=f13e203]
+                  - generic [ref=f13e205]: 5.8%
+              - separator [ref=f13e206]
+              - generic [ref=f13e208]:
+                - generic [ref=f13e211]:
+                  - generic [ref=f13e212]: Vantara Metals
+                  - generic [ref=f13e213]: "-0.02pp since prior reading"
+                - generic [ref=f13e215]:
+                  - img "Trend sparkline" [ref=f13e216]
+                  - generic [ref=f13e218]: 6.4%
+            - generic [ref=f13e219]:
+              - generic [ref=f13e220]: Trending
+              - generic [ref=f13e221] [cursor=pointer]:
+                - button "South Bow Corp Equity — Pipeline & Infrastructure" [ref=f13e224]:
+                  - generic [ref=f13e225]: South Bow Corp
+                  - generic [ref=f13e226]: Equity — Pipeline & Infrastructure
+                - generic [ref=f13e228]:
+                  - img "Trend sparkline" [ref=f13e229]
+                  - generic [ref=f13e231]: $40.34
+              - separator [ref=f13e232]
+              - generic [ref=f13e234] [cursor=pointer]:
+                - button "Aldergate Estates Tokenized Real Estate Portfolio" [ref=f13e237]:
+                  - generic [ref=f13e238]: Aldergate Estates
+                  - generic [ref=f13e239]: Tokenized Real Estate Portfolio
+                - generic [ref=f13e241]:
+                  - img "Trend sparkline" [ref=f13e242]
+                  - generic [ref=f13e244]: 7.2%
+              - separator [ref=f13e245]
+              - generic [ref=f13e247]:
+                - generic [ref=f13e250]:
+                  - generic [ref=f13e251]: Kestrel Holdings
+                  - generic [ref=f13e252]: Counterparty (Cyprus-registered)
+                - generic [ref=f13e254]:
+                  - img "Trend sparkline" [ref=f13e255]
+                  - generic [ref=f13e257]: 11%
+            - generic [ref=f13e258]:
+              - generic [ref=f13e259]: Newly Added
+              - generic [ref=f13e260]:
+                - generic [ref=f13e263]:
+                  - generic [ref=f13e264]: Mira Voss
+                  - generic [ref=f13e265]: Person — Head of Issuance, Fjellbank
+                - generic [ref=f13e267]:
+                  - img "Trend sparkline" [ref=f13e268]
+                  - generic [ref=f13e270]: 3.3%
+              - separator [ref=f13e271]
+              - generic [ref=f13e273]:
+                - generic [ref=f13e276]:
+                  - generic [ref=f13e277]: Halberg Materials AG
+                  - generic [ref=f13e278]: Equity — Listed Common Stock
+                - generic [ref=f13e280]:
+                  - img "Trend sparkline" [ref=f13e281]
+                  - generic [ref=f13e283]: $24.65
+              - separator [ref=f13e284]
+              - generic [ref=f13e286] [cursor=pointer]:
+                - button "South Bow Corp Equity — Pipeline & Infrastructure" [ref=f13e289]:
+                  - generic [ref=f13e290]: South Bow Corp
+                  - generic [ref=f13e291]: Equity — Pipeline & Infrastructure
+                - generic [ref=f13e293]:
+                  - img "Trend sparkline" [ref=f13e294]
+                  - generic [ref=f13e296]: $40.34
+          - generic [ref=f13e297]:
+            - generic [ref=f13e298]: Discover Assets
+            - generic [ref=f13e299]:
+              - group "Filter assets by category" [ref=f13e300]:
+                - button "All" [pressed] [ref=f13e301] [cursor=pointer]:
+                  - generic [ref=f13e305]: All
+                  - status
+                - button "Covered Bond" [ref=f13e306] [cursor=pointer]:
+                  - generic [ref=f13e310]: Covered Bond
+                  - status
+                - button "Real Estate" [ref=f13e311] [cursor=pointer]:
+                  - generic [ref=f13e315]: Real Estate
+                  - status
+                - button "Credit Fund" [ref=f13e316] [cursor=pointer]:
+                  - generic [ref=f13e320]: Credit Fund
+                  - status
+                - button "Commodities" [ref=f13e321] [cursor=pointer]:
+                  - generic [ref=f13e325]: Commodities
+                  - status
+                - button "Crypto" [ref=f13e326] [cursor=pointer]:
+                  - generic [ref=f13e330]: Crypto
+                  - status
+              - group "Switch view" [ref=f13e331]:
+                - button "Table" [active] [pressed] [ref=f13e332] [cursor=pointer]:
+                  - generic [ref=f13e336]: Table
+                  - status
+                - button "Grid" [ref=f13e337] [cursor=pointer]:
+                  - generic [ref=f13e341]: Grid
+                  - status
+            - group "Table" [ref=f13e3549]:
+              - table [ref=f13e3550]:
+                - rowgroup [ref=f13e3551]:
+                  - row "Asset Yield 24h Δ Trend" [ref=f13e3552]:
+                    - columnheader "Asset" [ref=f13e3553]
+                    - columnheader "Yield" [ref=f13e3554]
+                    - columnheader "24h Δ" [ref=f13e3555]
+                    - columnheader "Trend" [ref=f13e3556]
+                    - columnheader [ref=f13e3557]
+                - rowgroup [ref=f13e3558]:
+                  - row "NordBond 2029 Tokenized Covered Bond 5.8% +0.04pp Trend sparkline Watch NordBond 2029" [ref=f13e3559]:
+                    - cell "NordBond 2029 Tokenized Covered Bond" [ref=f13e3560]:
+                      - button "NordBond 2029 Tokenized Covered Bond" [ref=f13e3561] [cursor=pointer]:
+                        - generic [ref=f13e3563]:
+                          - generic [ref=f13e3564]: NordBond 2029
+                          - text: Tokenized Covered Bond
+                    - cell "5.8%" [ref=f13e3565]:
+                      - generic [ref=f13e3566]: 5.8%
+                    - cell "+0.04pp" [ref=f13e3567]:
+                      - generic [ref=f13e3568]:
+                        - img [ref=f13e3570]
+                        - generic [ref=f13e3572]: +0.04pp
+                    - cell "Trend sparkline" [ref=f13e3573]:
+                      - img "Trend sparkline" [ref=f13e3574]
+                    - cell "Watch NordBond 2029" [ref=f13e3576]:
+                      - button "Watch NordBond 2029" [ref=f13e3577] [cursor=pointer]:
+                        - img [ref=f13e3581]
+                        - status
+                  - row "Ostrand Kreditbank 2030 Tokenized Covered Bond 4.9% -0.12pp Trend sparkline Watch Ostrand Kreditbank 2030" [ref=f13e3584]:
+                    - cell "Ostrand Kreditbank 2030 Tokenized Covered Bond" [ref=f13e3585]:
+                      - button "Ostrand Kreditbank 2030 Tokenized Covered Bond" [ref=f13e3586] [cursor=pointer]:
+                        - generic [ref=f13e3588]:
+                          - generic [ref=f13e3589]: Ostrand Kreditbank 2030
+                          - text: Tokenized Covered Bond
+                    - cell "4.9%" [ref=f13e3590]:
+                      - generic [ref=f13e3591]: 4.9%
+                    - cell "-0.12pp" [ref=f13e3592]:
+                      - generic [ref=f13e3593]:
+                        - img [ref=f13e3595]
+                        - generic [ref=f13e3597]: "-0.12pp"
+                    - cell "Trend sparkline" [ref=f13e3598]:
+                      - img "Trend sparkline" [ref=f13e3599]
+                    - cell "Watch Ostrand Kreditbank 2030" [ref=f13e3601]:
+                      - button "Watch Ostrand Kreditbank 2030" [ref=f13e3602] [cursor=pointer]:
+                        - img [ref=f13e3606]
+                        - status
+                  - row "Solberg Sparbank 2032 Tokenized Covered Bond 5.0% -0.08pp Trend sparkline Watch Solberg Sparbank 2032" [ref=f13e3609]:
+                    - cell "Solberg Sparbank 2032 Tokenized Covered Bond" [ref=f13e3610]:
+                      - button "Solberg Sparbank 2032 Tokenized Covered Bond" [ref=f13e3611] [cursor=pointer]:
+                        - generic [ref=f13e3613]:
+                          - generic [ref=f13e3614]: Solberg Sparbank 2032
+                          - text: Tokenized Covered Bond
+                    - cell "5.0%" [ref=f13e3615]:
+                      - generic [ref=f13e3616]: 5.0%
+                    - cell "-0.08pp" [ref=f13e3617]:
+                      - generic [ref=f13e3618]:
+                        - img [ref=f13e3620]
+                        - generic [ref=f13e3622]: "-0.08pp"
+                    - cell "Trend sparkline" [ref=f13e3623]:
+                      - img "Trend sparkline" [ref=f13e3624]
+                    - cell "Watch Solberg Sparbank 2032" [ref=f13e3626]:
+                      - button "Watch Solberg Sparbank 2032" [ref=f13e3627] [cursor=pointer]:
+                        - img [ref=f13e3631]
+                        - status
+                  - row "Kesteren Hypotheek Note Tokenized Covered Bond 4.6% +0.03pp Trend sparkline Watch Kesteren Hypotheek Note" [ref=f13e3634]:
+                    - cell "Kesteren Hypotheek Note Tokenized Covered Bond" [ref=f13e3635]:
+                      - button "Kesteren Hypotheek Note Tokenized Covered Bond" [ref=f13e3636] [cursor=pointer]:
+                        - generic [ref=f13e3638]:
+                          - generic [ref=f13e3639]: Kesteren Hypotheek Note
+                          - text: Tokenized Covered Bond
+                    - cell "4.6%" [ref=f13e3640]:
+                      - generic [ref=f13e3641]: 4.6%
+                    - cell "+0.03pp" [ref=f13e3642]:
+                      - generic [ref=f13e3643]:
+                        - img [ref=f13e3645]
+                        - generic [ref=f13e3647]: +0.03pp
+                    - cell "Trend sparkline" [ref=f13e3648]:
+                      - img "Trend sparkline" [ref=f13e3649]
+                    - cell "Watch Kesteren Hypotheek Note" [ref=f13e3651]:
+                      - button "Watch Kesteren Hypotheek Note" [ref=f13e3652] [cursor=pointer]:
+                        - img [ref=f13e3656]
+                        - status
+                  - row "Alderney Finance 2029 Tokenized Covered Bond 5.4% +0.10pp Trend sparkline Watch Alderney Finance 2029" [ref=f13e3659]:
+                    - cell "Alderney Finance 2029 Tokenized Covered Bond" [ref=f13e3660]:
+                      - button "Alderney Finance 2029 Tokenized Covered Bond" [ref=f13e3661] [cursor=pointer]:
+                        - generic [ref=f13e3663]:
+                          - generic [ref=f13e3664]: Alderney Finance 2029
+                          - text: Tokenized Covered Bond
+                    - cell "5.4%" [ref=f13e3665]:
+                      - generic [ref=f13e3666]: 5.4%
+                    - cell "+0.10pp" [ref=f13e3667]:
+                      - generic [ref=f13e3668]:
+                        - img [ref=f13e3670]
+                        - generic [ref=f13e3672]: +0.10pp
+                    - cell "Trend sparkline" [ref=f13e3673]:
+                      - img "Trend sparkline" [ref=f13e3674]
+                    - cell "Watch Alderney Finance 2029" [ref=f13e3676]:
+                      - button "Watch Alderney Finance 2029" [ref=f13e3677] [cursor=pointer]:
+                        - img [ref=f13e3681]
+                        - status
+                  - row "Tallvik Bank Covered Bond Tokenized Covered Bond 5.0% +0.10pp Trend sparkline Watch Tallvik Bank Covered Bond" [ref=f13e3684]:
+                    - cell "Tallvik Bank Covered Bond Tokenized Covered Bond" [ref=f13e3685]:
+                      - button "Tallvik Bank Covered Bond Tokenized Covered Bond" [ref=f13e3686] [cursor=pointer]:
+                        - generic [ref=f13e3688]:
+                          - generic [ref=f13e3689]: Tallvik Bank Covered Bond
+                          - text: Tokenized Covered Bond
+                    - cell "5.0%" [ref=f13e3690]:
+                      - generic [ref=f13e3691]: 5.0%
+                    - cell "+0.10pp" [ref=f13e3692]:
+                      - generic [ref=f13e3693]:
+                        - img [ref=f13e3695]
+                        - generic [ref=f13e3697]: +0.10pp
+                    - cell "Trend sparkline" [ref=f13e3698]:
+                      - img "Trend sparkline" [ref=f13e3699]
+                    - cell "Watch Tallvik Bank Covered Bond" [ref=f13e3701]:
+                      - button "Watch Tallvik Bank Covered Bond" [ref=f13e3702] [cursor=pointer]:
+                        - img [ref=f13e3706]
+                        - status
+                  - row "Rosmoor Credit Union 2031 Tokenized Covered Bond 5.2% -0.01pp Trend sparkline Watch Rosmoor Credit Union 2031" [ref=f13e3709]:
+                    - cell "Rosmoor Credit Union 2031 Tokenized Covered Bond" [ref=f13e3710]:
+                      - button "Rosmoor Credit Union 2031 Tokenized Covered Bond" [ref=f13e3711] [cursor=pointer]:
+                        - generic [ref=f13e3713]:
+                          - generic [ref=f13e3714]: Rosmoor Credit Union 2031
+                          - text: Tokenized Covered Bond
+                    - cell "5.2%" [ref=f13e3715]:
+                      - generic [ref=f13e3716]: 5.2%
+                    - cell "-0.01pp" [ref=f13e3717]:
+                      - generic [ref=f13e3718]:
+                        - img [ref=f13e3720]
+                        - generic [ref=f13e3722]: "-0.01pp"
+                    - cell "Trend sparkline" [ref=f13e3723]:
+                      - img "Trend sparkline" [ref=f13e3724]
+                    - cell "Watch Rosmoor Credit Union 2031" [ref=f13e3726]:
+                      - button "Watch Rosmoor Credit Union 2031" [ref=f13e3727] [cursor=pointer]:
+                        - img [ref=f13e3731]
+                        - status
+                  - row "Brannigan Savings Bond Tokenized Covered Bond 5.4% -0.11pp Trend sparkline Watch Brannigan Savings Bond" [ref=f13e3734]:
+                    - cell "Brannigan Savings Bond Tokenized Covered Bond" [ref=f13e3735]:
+                      - button "Brannigan Savings Bond Tokenized Covered Bond" [ref=f13e3736] [cursor=pointer]:
+                        - generic [ref=f13e3738]:
+                          - generic [ref=f13e3739]: Brannigan Savings Bond
+                          - text: Tokenized Covered Bond
+                    - cell "5.4%" [ref=f13e3740]:
+                      - generic [ref=f13e3741]: 5.4%
+                    - cell "-0.11pp" [ref=f13e3742]:
+                      - generic [ref=f13e3743]:
+                        - img [ref=f13e3745]
+                        - generic [ref=f13e3747]: "-0.11pp"
+                    - cell "Trend sparkline" [ref=f13e3748]:
+                      - img "Trend sparkline" [ref=f13e3749]
+                    - cell "Watch Brannigan Savings Bond" [ref=f13e3751]:
+                      - button "Watch Brannigan Savings Bond" [ref=f13e3752] [cursor=pointer]:
+                        - img [ref=f13e3756]
+                        - status
+                  - row "Halvard Bank 2033 Tokenized Covered Bond 4.6% -0.15pp Trend sparkline Watch Halvard Bank 2033" [ref=f13e3759]:
+                    - cell "Halvard Bank 2033 Tokenized Covered Bond" [ref=f13e3760]:
+                      - button "Halvard Bank 2033 Tokenized Covered Bond" [ref=f13e3761] [cursor=pointer]:
+                        - generic [ref=f13e3763]:
+                          - generic [ref=f13e3764]: Halvard Bank 2033
+                          - text: Tokenized Covered Bond
+                    - cell "4.6%" [ref=f13e3765]:
+                      - generic [ref=f13e3766]: 4.6%
+                    - cell "-0.15pp" [ref=f13e3767]:
+                      - generic [ref=f13e3768]:
+                        - img [ref=f13e3770]
+                        - generic [ref=f13e3772]: "-0.15pp"
+                    - cell "Trend sparkline" [ref=f13e3773]:
+                      - img "Trend sparkline" [ref=f13e3774]
+                    - cell "Watch Halvard Bank 2033" [ref=f13e3776]:
+                      - button "Watch Halvard Bank 2033" [ref=f13e3777] [cursor=pointer]:
+                        - img [ref=f13e3781]
+                        - status
+                  - row "Cresthaven Bank Note Tokenized Covered Bond 5.0% -0.10pp Trend sparkline Watch Cresthaven Bank Note" [ref=f13e3784]:
+                    - cell "Cresthaven Bank Note Tokenized Covered Bond" [ref=f13e3785]:
+                      - button "Cresthaven Bank Note Tokenized Covered Bond" [ref=f13e3786] [cursor=pointer]:
+                        - generic [ref=f13e3788]:
+                          - generic [ref=f13e3789]: Cresthaven Bank Note
+                          - text: Tokenized Covered Bond
+                    - cell "5.0%" [ref=f13e3790]:
+                      - generic [ref=f13e3791]: 5.0%
+                    - cell "-0.10pp" [ref=f13e3792]:
+                      - generic [ref=f13e3793]:
+                        - img [ref=f13e3795]
+                        - generic [ref=f13e3797]: "-0.10pp"
+                    - cell "Trend sparkline" [ref=f13e3798]:
+                      - img "Trend sparkline" [ref=f13e3799]
+                    - cell "Watch Cresthaven Bank Note" [ref=f13e3801]:
+                      - button "Watch Cresthaven Bank Note" [ref=f13e3802] [cursor=pointer]:
+                        - img [ref=f13e3806]
+                        - status
+                  - row "Winterholt Finance 2030 Tokenized Covered Bond 4.3% +0.03pp Trend sparkline Watch Winterholt Finance 2030" [ref=f13e3809]:
+                    - cell "Winterholt Finance 2030 Tokenized Covered Bond" [ref=f13e3810]:
+                      - button "Winterholt Finance 2030 Tokenized Covered Bond" [ref=f13e3811] [cursor=pointer]:
+                        - generic [ref=f13e3813]:
+                          - generic [ref=f13e3814]: Winterholt Finance 2030
+                          - text: Tokenized Covered Bond
+                    - cell "4.3%" [ref=f13e3815]:
+                      - generic [ref=f13e3816]: 4.3%
+                    - cell "+0.03pp" [ref=f13e3817]:
+                      - generic [ref=f13e3818]:
+                        - img [ref=f13e3820]
+                        - generic [ref=f13e3822]: +0.03pp
+                    - cell "Trend sparkline" [ref=f13e3823]:
+                      - img "Trend sparkline" [ref=f13e3824]
+                    - cell "Watch Winterholt Finance 2030" [ref=f13e3826]:
+                      - button "Watch Winterholt Finance 2030" [ref=f13e3827] [cursor=pointer]:
+                        - img [ref=f13e3831]
+                        - status
+                  - row "Larkspur Bank Covered Bond Tokenized Covered Bond 5.5% +0.11pp Trend sparkline Watch Larkspur Bank Covered Bond" [ref=f13e3834]:
+                    - cell "Larkspur Bank Covered Bond Tokenized Covered Bond" [ref=f13e3835]:
+                      - button "Larkspur Bank Covered Bond Tokenized Covered Bond" [ref=f13e3836] [cursor=pointer]:
+                        - generic [ref=f13e3838]:
+                          - generic [ref=f13e3839]: Larkspur Bank Covered Bond
+                          - text: Tokenized Covered Bond
+                    - cell "5.5%" [ref=f13e3840]:
+                      - generic [ref=f13e3841]: 5.5%
+                    - cell "+0.11pp" [ref=f13e3842]:
+                      - generic [ref=f13e3843]:
+                        - img [ref=f13e3845]
+                        - generic [ref=f13e3847]: +0.11pp
+                    - cell "Trend sparkline" [ref=f13e3848]:
+                      - img "Trend sparkline" [ref=f13e3849]
+                    - cell "Watch Larkspur Bank Covered Bond" [ref=f13e3851]:
+                      - button "Watch Larkspur Bank Covered Bond" [ref=f13e3852] [cursor=pointer]:
+                        - img [ref=f13e3856]
+                        - status
+                  - row "Aldergate Estates Tokenized Real Estate Portfolio 7.2% 0.00pp Trend sparkline Watch Aldergate Estates" [ref=f13e3859]:
+                    - cell "Aldergate Estates Tokenized Real Estate Portfolio" [ref=f13e3860]:
+                      - button "Aldergate Estates Tokenized Real Estate Portfolio" [ref=f13e3861] [cursor=pointer]:
+                        - generic [ref=f13e3863]:
+                          - generic [ref=f13e3864]: Aldergate Estates
+                          - text: Tokenized Real Estate Portfolio
+                    - cell "7.2%" [ref=f13e3865]:
+                      - generic [ref=f13e3866]: 7.2%
+                    - cell "0.00pp" [ref=f13e3867]:
+                      - generic [ref=f13e3868]:
+                        - img [ref=f13e3870]
+                        - generic [ref=f13e3872]: 0.00pp
+                    - cell "Trend sparkline" [ref=f13e3873]:
+                      - img "Trend sparkline" [ref=f13e3874]
+                    - cell "Watch Aldergate Estates" [ref=f13e3876]:
+                      - button "Watch Aldergate Estates" [ref=f13e3877] [cursor=pointer]:
+                        - img [ref=f13e3881]
+                        - status
+                  - row "Munich Logistics Portfolio Tokenized Real Estate Portfolio 6.9% -0.07pp Trend sparkline Watch Munich Logistics Portfolio" [ref=f13e3884]:
+                    - cell "Munich Logistics Portfolio Tokenized Real Estate Portfolio" [ref=f13e3885]:
+                      - button "Munich Logistics Portfolio Tokenized Real Estate Portfolio" [ref=f13e3886] [cursor=pointer]:
+                        - generic [ref=f13e3888]:
+                          - generic [ref=f13e3889]: Munich Logistics Portfolio
+                          - text: Tokenized Real Estate Portfolio
+                    - cell "6.9%" [ref=f13e3890]:
+                      - generic [ref=f13e3891]: 6.9%
+                    - cell "-0.07pp" [ref=f13e3892]:
+                      - generic [ref=f13e3893]:
+                        - img [ref=f13e3895]
+                        - generic [ref=f13e3897]: "-0.07pp"
+                    - cell "Trend sparkline" [ref=f13e3898]:
+                      - img "Trend sparkline" [ref=f13e3899]
+                    - cell "Watch Munich Logistics Portfolio" [ref=f13e3901]:
+                      - button "Watch Munich Logistics Portfolio" [ref=f13e3902] [cursor=pointer]:
+                        - img [ref=f13e3906]
+                        - status
+                  - row "Lyon Retail Portfolio Tokenized Real Estate Portfolio 6.3% -0.12pp Trend sparkline Watch Lyon Retail Portfolio" [ref=f13e3909]:
+                    - cell "Lyon Retail Portfolio Tokenized Real Estate Portfolio" [ref=f13e3910]:
+                      - button "Lyon Retail Portfolio Tokenized Real Estate Portfolio" [ref=f13e3911] [cursor=pointer]:
+                        - generic [ref=f13e3913]:
+                          - generic [ref=f13e3914]: Lyon Retail Portfolio
+                          - text: Tokenized Real Estate Portfolio
+                    - cell "6.3%" [ref=f13e3915]:
+                      - generic [ref=f13e3916]: 6.3%
+                    - cell "-0.12pp" [ref=f13e3917]:
+                      - generic [ref=f13e3918]:
+                        - img [ref=f13e3920]
+                        - generic [ref=f13e3922]: "-0.12pp"
+                    - cell "Trend sparkline" [ref=f13e3923]:
+                      - img "Trend sparkline" [ref=f13e3924]
+                    - cell "Watch Lyon Retail Portfolio" [ref=f13e3926]:
+                      - button "Watch Lyon Retail Portfolio" [ref=f13e3927] [cursor=pointer]:
+                        - img [ref=f13e3931]
+                        - status
+                  - row "Rotterdam Office Portfolio Tokenized Real Estate Portfolio 6.9% -0.08pp Trend sparkline Watch Rotterdam Office Portfolio" [ref=f13e3934]:
+                    - cell "Rotterdam Office Portfolio Tokenized Real Estate Portfolio" [ref=f13e3935]:
+                      - button "Rotterdam Office Portfolio Tokenized Real Estate Portfolio" [ref=f13e3936] [cursor=pointer]:
+                        - generic [ref=f13e3938]:
+                          - generic [ref=f13e3939]: Rotterdam Office Portfolio
+                          - text: Tokenized Real Estate Portfolio
+                    - cell "6.9%" [ref=f13e3940]:
+                      - generic [ref=f13e3941]: 6.9%
+                    - cell "-0.08pp" [ref=f13e3942]:
+                      - generic [ref=f13e3943]:
+                        - img [ref=f13e3945]
+                        - generic [ref=f13e3947]: "-0.08pp"
+                    - cell "Trend sparkline" [ref=f13e3948]:
+                      - img "Trend sparkline" [ref=f13e3949]
+                    - cell "Watch Rotterdam Office Portfolio" [ref=f13e3951]:
+                      - button "Watch Rotterdam Office Portfolio" [ref=f13e3952] [cursor=pointer]:
+                        - img [ref=f13e3956]
+                        - status
+                  - row "Warsaw Residential Portfolio Tokenized Real Estate Portfolio 6.5% +0.03pp Trend sparkline Watch Warsaw Residential Portfolio" [ref=f13e3959]:
+                    - cell "Warsaw Residential Portfolio Tokenized Real Estate Portfolio" [ref=f13e3960]:
+                      - button "Warsaw Residential Portfolio Tokenized Real Estate Portfolio" [ref=f13e3961] [cursor=pointer]:
+                        - generic [ref=f13e3963]:
+                          - generic [ref=f13e3964]: Warsaw Residential Portfolio
+                          - text: Tokenized Real Estate Portfolio
+                    - cell "6.5%" [ref=f13e3965]:
+                      - generic [ref=f13e3966]: 6.5%
+                    - cell "+0.03pp" [ref=f13e3967]:
+                      - generic [ref=f13e3968]:
+                        - img [ref=f13e3970]
+                        - generic [ref=f13e3972]: +0.03pp
+                    - cell "Trend sparkline" [ref=f13e3973]:
+                      - img "Trend sparkline" [ref=f13e3974]
+                    - cell "Watch Warsaw Residential Portfolio" [ref=f13e3976]:
+                      - button "Watch Warsaw Residential Portfolio" [ref=f13e3977] [cursor=pointer]:
+                        - img [ref=f13e3981]
+                        - status
+                  - row "Milan Mixed-Use Portfolio Tokenized Real Estate Portfolio 7.0% +0.10pp Trend sparkline Watch Milan Mixed-Use Portfolio" [ref=f13e3984]:
+                    - cell "Milan Mixed-Use Portfolio Tokenized Real Estate Portfolio" [ref=f13e3985]:
+                      - button "Milan Mixed-Use Portfolio Tokenized Real Estate Portfolio" [ref=f13e3986] [cursor=pointer]:
+                        - generic [ref=f13e3988]:
+                          - generic [ref=f13e3989]: Milan Mixed-Use Portfolio
+                          - text: Tokenized Real Estate Portfolio
+                    - cell "7.0%" [ref=f13e3990]:
+                      - generic [ref=f13e3991]: 7.0%
+                    - cell "+0.10pp" [ref=f13e3992]:
+                      - generic [ref=f13e3993]:
+                        - img [ref=f13e3995]
+                        - generic [ref=f13e3997]: +0.10pp
+                    - cell "Trend sparkline" [ref=f13e3998]:
+                      - img "Trend sparkline" [ref=f13e3999]
+                    - cell "Watch Milan Mixed-Use Portfolio" [ref=f13e4001]:
+                      - button "Watch Milan Mixed-Use Portfolio" [ref=f13e4002] [cursor=pointer]:
+                        - img [ref=f13e4006]
+                        - status
+                  - row "Vienna Office Portfolio Tokenized Real Estate Portfolio 6.3% +0.10pp Trend sparkline Watch Vienna Office Portfolio" [ref=f13e4009]:
+                    - cell "Vienna Office Portfolio Tokenized Real Estate Portfolio" [ref=f13e4010]:
+                      - button "Vienna Office Portfolio Tokenized Real Estate Portfolio" [ref=f13e4011] [cursor=pointer]:
+                        - generic [ref=f13e4013]:
+                          - generic [ref=f13e4014]: Vienna Office Portfolio
+                          - text: Tokenized Real Estate Portfolio
+                    - cell "6.3%" [ref=f13e4015]:
+                      - generic [ref=f13e4016]: 6.3%
+                    - cell "+0.10pp" [ref=f13e4017]:
+                      - generic [ref=f13e4018]:
+                        - img [ref=f13e4020]
+                        - generic [ref=f13e4022]: +0.10pp
+                    - cell "Trend sparkline" [ref=f13e4023]:
+                      - img "Trend sparkline" [ref=f13e4024]
+                    - cell "Watch Vienna Office Portfolio" [ref=f13e4026]:
+                      - button "Watch Vienna Office Portfolio" [ref=f13e4027] [cursor=pointer]:
+                        - img [ref=f13e4031]
+                        - status
+                  - row "Copenhagen Logistics Note Tokenized Real Estate Portfolio 6.8% -0.01pp Trend sparkline Watch Copenhagen Logistics Note" [ref=f13e4034]:
+                    - cell "Copenhagen Logistics Note Tokenized Real Estate Portfolio" [ref=f13e4035]:
+                      - button "Copenhagen Logistics Note Tokenized Real Estate Portfolio" [ref=f13e4036] [cursor=pointer]:
+                        - generic [ref=f13e4038]:
+                          - generic [ref=f13e4039]: Copenhagen Logistics Note
+                          - text: Tokenized Real Estate Portfolio
+                    - cell "6.8%" [ref=f13e4040]:
+                      - generic [ref=f13e4041]: 6.8%
+                    - cell "-0.01pp" [ref=f13e4042]:
+                      - generic [ref=f13e4043]:
+                        - img [ref=f13e4045]
+                        - generic [ref=f13e4047]: "-0.01pp"
+                    - cell "Trend sparkline" [ref=f13e4048]:
+                      - img "Trend sparkline" [ref=f13e4049]
+                    - cell "Watch Copenhagen Logistics Note" [ref=f13e4051]:
+                      - button "Watch Copenhagen Logistics Note" [ref=f13e4052] [cursor=pointer]:
+                        - img [ref=f13e4056]
+                        - status
+                  - row "Lisbon Residential Portfolio Tokenized Real Estate Portfolio 7.3% -0.11pp Trend sparkline Watch Lisbon Residential Portfolio" [ref=f13e4059]:
+                    - cell "Lisbon Residential Portfolio Tokenized Real Estate Portfolio" [ref=f13e4060]:
+                      - button "Lisbon Residential Portfolio Tokenized Real Estate Portfolio" [ref=f13e4061] [cursor=pointer]:
+                        - generic [ref=f13e4063]:
+                          - generic [ref=f13e4064]: Lisbon Residential Portfolio
+                          - text: Tokenized Real Estate Portfolio
+                    - cell "7.3%" [ref=f13e4065]:
+                      - generic [ref=f13e4066]: 7.3%
+                    - cell "-0.11pp" [ref=f13e4067]:
+                      - generic [ref=f13e4068]:
+                        - img [ref=f13e4070]
+                        - generic [ref=f13e4072]: "-0.11pp"
+                    - cell "Trend sparkline" [ref=f13e4073]:
+                      - img "Trend sparkline" [ref=f13e4074]
+                    - cell "Watch Lisbon Residential Portfolio" [ref=f13e4076]:
+                      - button "Watch Lisbon Residential Portfolio" [ref=f13e4077] [cursor=pointer]:
+                        - img [ref=f13e4081]
+                        - status
+                  - row "Brussels Retail Portfolio Tokenized Real Estate Portfolio 6.3% -0.15pp Trend sparkline Watch Brussels Retail Portfolio" [ref=f13e4084]:
+                    - cell "Brussels Retail Portfolio Tokenized Real Estate Portfolio" [ref=f13e4085]:
+                      - button "Brussels Retail Portfolio Tokenized Real Estate Portfolio" [ref=f13e4086] [cursor=pointer]:
+                        - generic [ref=f13e4088]:
+                          - generic [ref=f13e4089]: Brussels Retail Portfolio
+                          - text: Tokenized Real Estate Portfolio
+                    - cell "6.3%" [ref=f13e4090]:
+                      - generic [ref=f13e4091]: 6.3%
+                    - cell "-0.15pp" [ref=f13e4092]:
+                      - generic [ref=f13e4093]:
+                        - img [ref=f13e4095]
+                        - generic [ref=f13e4097]: "-0.15pp"
+                    - cell "Trend sparkline" [ref=f13e4098]:
+                      - img "Trend sparkline" [ref=f13e4099]
+                    - cell "Watch Brussels Retail Portfolio" [ref=f13e4101]:
+                      - button "Watch Brussels Retail Portfolio" [ref=f13e4102] [cursor=pointer]:
+                        - img [ref=f13e4106]
+                        - status
+                  - row "Prague Mixed-Use Portfolio Tokenized Real Estate Portfolio 6.5% -0.10pp Trend sparkline Watch Prague Mixed-Use Portfolio" [ref=f13e4109]:
+                    - cell "Prague Mixed-Use Portfolio Tokenized Real Estate Portfolio" [ref=f13e4110]:
+                      - button "Prague Mixed-Use Portfolio Tokenized Real Estate Portfolio" [ref=f13e4111] [cursor=pointer]:
+                        - generic [ref=f13e4113]:
+                          - generic [ref=f13e4114]: Prague Mixed-Use Portfolio
+                          - text: Tokenized Real Estate Portfolio
+                    - cell "6.5%" [ref=f13e4115]:
+                      - generic [ref=f13e4116]: 6.5%
+                    - cell "-0.10pp" [ref=f13e4117]:
+                      - generic [ref=f13e4118]:
+                        - img [ref=f13e4120]
+                        - generic [ref=f13e4122]: "-0.10pp"
+                    - cell "Trend sparkline" [ref=f13e4123]:
+                      - img "Trend sparkline" [ref=f13e4124]
+                    - cell "Watch Prague Mixed-Use Portfolio" [ref=f13e4126]:
+                      - button "Watch Prague Mixed-Use Portfolio" [ref=f13e4127] [cursor=pointer]:
+                        - img [ref=f13e4131]
+                        - status
+                  - row "Zurich Office Portfolio Tokenized Real Estate Portfolio 5.7% +0.03pp Trend sparkline Watch Zurich Office Portfolio" [ref=f13e4134]:
+                    - cell "Zurich Office Portfolio Tokenized Real Estate Portfolio" [ref=f13e4135]:
+                      - button "Zurich Office Portfolio Tokenized Real Estate Portfolio" [ref=f13e4136] [cursor=pointer]:
+                        - generic [ref=f13e4138]:
+                          - generic [ref=f13e4139]: Zurich Office Portfolio
+                          - text: Tokenized Real Estate Portfolio
+                    - cell "5.7%" [ref=f13e4140]:
+                      - generic [ref=f13e4141]: 5.7%
+                    - cell "+0.03pp" [ref=f13e4142]:
+                      - generic [ref=f13e4143]:
+                        - img [ref=f13e4145]
+                        - generic [ref=f13e4147]: +0.03pp
+                    - cell "Trend sparkline" [ref=f13e4148]:
+                      - img "Trend sparkline" [ref=f13e4149]
+                    - cell "Watch Zurich Office Portfolio" [ref=f13e4151]:
+                      - button "Watch Zurich Office Portfolio" [ref=f13e4152] [cursor=pointer]:
+                        - img [ref=f13e4156]
+                        - status
+                  - row "Helios Yield Fund Tokenized Diversified Credit Fund 9.1% +0.17pp Trend sparkline Watch Helios Yield Fund" [ref=f13e4159]:
+                    - cell "Helios Yield Fund Tokenized Diversified Credit Fund" [ref=f13e4160]:
+                      - button "Helios Yield Fund Tokenized Diversified Credit Fund" [ref=f13e4161] [cursor=pointer]:
+                        - generic [ref=f13e4163]:
+                          - generic [ref=f13e4164]: Helios Yield Fund
+                          - text: Tokenized Diversified Credit Fund
+                    - cell "9.1%" [ref=f13e4165]:
+                      - generic [ref=f13e4166]: 9.1%
+                    - cell "+0.17pp" [ref=f13e4167]:
+                      - generic [ref=f13e4168]:
+                        - img [ref=f13e4170]
+                        - generic [ref=f13e4172]: +0.17pp
+                    - cell "Trend sparkline" [ref=f13e4173]:
+                      - img "Trend sparkline" [ref=f13e4174]
+                    - cell "Watch Helios Yield Fund" [ref=f13e4176]:
+                      - button "Watch Helios Yield Fund" [ref=f13e4177] [cursor=pointer]:
+                        - img [ref=f13e4181]
+                        - status
+                  - row "Meridian Credit Fund Tokenized Diversified Credit Fund 8.3% -0.07pp Trend sparkline Watch Meridian Credit Fund" [ref=f13e4184]:
+                    - cell "Meridian Credit Fund Tokenized Diversified Credit Fund" [ref=f13e4185]:
+                      - button "Meridian Credit Fund Tokenized Diversified Credit Fund" [ref=f13e4186] [cursor=pointer]:
+                        - generic [ref=f13e4188]:
+                          - generic [ref=f13e4189]: Meridian Credit Fund
+                          - text: Tokenized Diversified Credit Fund
+                    - cell "8.3%" [ref=f13e4190]:
+                      - generic [ref=f13e4191]: 8.3%
+                    - cell "-0.07pp" [ref=f13e4192]:
+                      - generic [ref=f13e4193]:
+                        - img [ref=f13e4195]
+                        - generic [ref=f13e4197]: "-0.07pp"
+                    - cell "Trend sparkline" [ref=f13e4198]:
+                      - img "Trend sparkline" [ref=f13e4199]
+                    - cell "Watch Meridian Credit Fund" [ref=f13e4201]:
+                      - button "Watch Meridian Credit Fund" [ref=f13e4202] [cursor=pointer]:
+                        - img [ref=f13e4206]
+                        - status
+                  - row "Northbridge Yield Partners Tokenized Diversified Credit Fund 7.8% -0.12pp Trend sparkline Watch Northbridge Yield Partners" [ref=f13e4209]:
+                    - cell "Northbridge Yield Partners Tokenized Diversified Credit Fund" [ref=f13e4210]:
+                      - button "Northbridge Yield Partners Tokenized Diversified Credit Fund" [ref=f13e4211] [cursor=pointer]:
+                        - generic [ref=f13e4213]:
+                          - generic [ref=f13e4214]: Northbridge Yield Partners
+                          - text: Tokenized Diversified Credit Fund
+                    - cell "7.8%" [ref=f13e4215]:
+                      - generic [ref=f13e4216]: 7.8%
+                    - cell "-0.12pp" [ref=f13e4217]:
+                      - generic [ref=f13e4218]:
+                        - img [ref=f13e4220]
+                        - generic [ref=f13e4222]: "-0.12pp"
+                    - cell "Trend sparkline" [ref=f13e4223]:
+                      - img "Trend sparkline" [ref=f13e4224]
+                    - cell "Watch Northbridge Yield Partners" [ref=f13e4226]:
+                      - button "Watch Northbridge Yield Partners" [ref=f13e4227] [cursor=pointer]:
+                        - img [ref=f13e4231]
+                        - status
+                  - row "Ashcombe Credit Fund Tokenized Diversified Credit Fund 8.5% -0.08pp Trend sparkline Watch Ashcombe Credit Fund" [ref=f13e4234]:
+                    - cell "Ashcombe Credit Fund Tokenized Diversified Credit Fund" [ref=f13e4235]:
+                      - button "Ashcombe Credit Fund Tokenized Diversified Credit Fund" [ref=f13e4236] [cursor=pointer]:
+                        - generic [ref=f13e4238]:
+                          - generic [ref=f13e4239]: Ashcombe Credit Fund
+                          - text: Tokenized Diversified Credit Fund
+                    - cell "8.5%" [ref=f13e4240]:
+                      - generic [ref=f13e4241]: 8.5%
+                    - cell "-0.08pp" [ref=f13e4242]:
+                      - generic [ref=f13e4243]:
+                        - img [ref=f13e4245]
+                        - generic [ref=f13e4247]: "-0.08pp"
+                    - cell "Trend sparkline" [ref=f13e4248]:
+                      - img "Trend sparkline" [ref=f13e4249]
+                    - cell "Watch Ashcombe Credit Fund" [ref=f13e4251]:
+                      - button "Watch Ashcombe Credit Fund" [ref=f13e4252] [cursor=pointer]:
+                        - img [ref=f13e4256]
+                        - status
+                  - row "Ravenswood Yield Fund Tokenized Diversified Credit Fund 9.4% +0.03pp Trend sparkline Watch Ravenswood Yield Fund" [ref=f13e4259]:
+                    - cell "Ravenswood Yield Fund Tokenized Diversified Credit Fund" [ref=f13e4260]:
+                      - button "Ravenswood Yield Fund Tokenized Diversified Credit Fund" [ref=f13e4261] [cursor=pointer]:
+                        - generic [ref=f13e4263]:
+                          - generic [ref=f13e4264]: Ravenswood Yield Fund
+                          - text: Tokenized Diversified Credit Fund
+                    - cell "9.4%" [ref=f13e4265]:
+                      - generic [ref=f13e4266]: 9.4%
+                    - cell "+0.03pp" [ref=f13e4267]:
+                      - generic [ref=f13e4268]:
+                        - img [ref=f13e4270]
+                        - generic [ref=f13e4272]: +0.03pp
+                    - cell "Trend sparkline" [ref=f13e4273]:
+                      - img "Trend sparkline" [ref=f13e4274]
+                    - cell "Watch Ravenswood Yield Fund" [ref=f13e4276]:
+                      - button "Watch Ravenswood Yield Fund" [ref=f13e4277] [cursor=pointer]:
+                        - img [ref=f13e4281]
+                        - status
+                  - row "Old Harbor Credit Partners Tokenized Diversified Credit Fund 7.6% +0.10pp Trend sparkline Watch Old Harbor Credit Partners" [ref=f13e4284]:
+                    - cell "Old Harbor Credit Partners Tokenized Diversified Credit Fund" [ref=f13e4285]:
+                      - button "Old Harbor Credit Partners Tokenized Diversified Credit Fund" [ref=f13e4286] [cursor=pointer]:
+                        - generic [ref=f13e4288]:
+                          - generic [ref=f13e4289]: Old Harbor Credit Partners
+                          - text: Tokenized Diversified Credit Fund
+                    - cell "7.6%" [ref=f13e4290]:
+                      - generic [ref=f13e4291]: 7.6%
+                    - cell "+0.10pp" [ref=f13e4292]:
+                      - generic [ref=f13e4293]:
+                        - img [ref=f13e4295]
+                        - generic [ref=f13e4297]: +0.10pp
+                    - cell "Trend sparkline" [ref=f13e4298]:
+                      - img "Trend sparkline" [ref=f13e4299]
+                    - cell "Watch Old Harbor Credit Partners" [ref=f13e4301]:
+                      - button "Watch Old Harbor Credit Partners" [ref=f13e4302] [cursor=pointer]:
+                        - img [ref=f13e4306]
+                        - status
+                  - row "Silverline Yield Fund Tokenized Diversified Credit Fund 9.1% +0.10pp Trend sparkline Watch Silverline Yield Fund" [ref=f13e4309]:
+                    - cell "Silverline Yield Fund Tokenized Diversified Credit Fund" [ref=f13e4310]:
+                      - button "Silverline Yield Fund Tokenized Diversified Credit Fund" [ref=f13e4311] [cursor=pointer]:
+                        - generic [ref=f13e4313]:
+                          - generic [ref=f13e4314]: Silverline Yield Fund
+                          - text: Tokenized Diversified Credit Fund
+                    - cell "9.1%" [ref=f13e4315]:
+                      - generic [ref=f13e4316]: 9.1%
+                    - cell "+0.10pp" [ref=f13e4317]:
+                      - generic [ref=f13e4318]:
+                        - img [ref=f13e4320]
+                        - generic [ref=f13e4322]: +0.10pp
+                    - cell "Trend sparkline" [ref=f13e4323]:
+                      - img "Trend sparkline" [ref=f13e4324]
+                    - cell "Watch Silverline Yield Fund" [ref=f13e4326]:
+                      - button "Watch Silverline Yield Fund" [ref=f13e4327] [cursor=pointer]:
+                        - img [ref=f13e4331]
+                        - status
+                  - row "Amberfield Credit Fund Tokenized Diversified Credit Fund 8.3% -0.01pp Trend sparkline Watch Amberfield Credit Fund" [ref=f13e4334]:
+                    - cell "Amberfield Credit Fund Tokenized Diversified Credit Fund" [ref=f13e4335]:
+                      - button "Amberfield Credit Fund Tokenized Diversified Credit Fund" [ref=f13e4336] [cursor=pointer]:
+                        - generic [ref=f13e4338]:
+                          - generic [ref=f13e4339]: Amberfield Credit Fund
+                          - text: Tokenized Diversified Credit Fund
+                    - cell "8.3%" [ref=f13e4340]:
+                      - generic [ref=f13e4341]: 8.3%
+                    - cell "-0.01pp" [ref=f13e4342]:
+                      - generic [ref=f13e4343]:
+                        - img [ref=f13e4345]
+                        - generic [ref=f13e4347]: "-0.01pp"
+                    - cell "Trend sparkline" [ref=f13e4348]:
+                      - img "Trend sparkline" [ref=f13e4349]
+                    - cell "Watch Amberfield Credit Fund" [ref=f13e4351]:
+                      - button "Watch Amberfield Credit Fund" [ref=f13e4352] [cursor=pointer]:
+                        - img [ref=f13e4356]
+                        - status
+                  - row "Thornbury Yield Partners Tokenized Diversified Credit Fund 7.9% -0.11pp Trend sparkline Watch Thornbury Yield Partners" [ref=f13e4359]:
+                    - cell "Thornbury Yield Partners Tokenized Diversified Credit Fund" [ref=f13e4360]:
+                      - button "Thornbury Yield Partners Tokenized Diversified Credit Fund" [ref=f13e4361] [cursor=pointer]:
+                        - generic [ref=f13e4363]:
+                          - generic [ref=f13e4364]: Thornbury Yield Partners
+                          - text: Tokenized Diversified Credit Fund
+                    - cell "7.9%" [ref=f13e4365]:
+                      - generic [ref=f13e4366]: 7.9%
+                    - cell "-0.11pp" [ref=f13e4367]:
+                      - generic [ref=f13e4368]:
+                        - img [ref=f13e4370]
+                        - generic [ref=f13e4372]: "-0.11pp"
+                    - cell "Trend sparkline" [ref=f13e4373]:
+                      - img "Trend sparkline" [ref=f13e4374]
+                    - cell "Watch Thornbury Yield Partners" [ref=f13e4376]:
+                      - button "Watch Thornbury Yield Partners" [ref=f13e4377] [cursor=pointer]:
+                        - img [ref=f13e4381]
+                        - status
+                  - row "Westgate Credit Fund Tokenized Diversified Credit Fund 8.3% -0.15pp Trend sparkline Watch Westgate Credit Fund" [ref=f13e4384]:
+                    - cell "Westgate Credit Fund Tokenized Diversified Credit Fund" [ref=f13e4385]:
+                      - button "Westgate Credit Fund Tokenized Diversified Credit Fund" [ref=f13e4386] [cursor=pointer]:
+                        - generic [ref=f13e4388]:
+                          - generic [ref=f13e4389]: Westgate Credit Fund
+                          - text: Tokenized Diversified Credit Fund
+                    - cell "8.3%" [ref=f13e4390]:
+                      - generic [ref=f13e4391]: 8.3%
+                    - cell "-0.15pp" [ref=f13e4392]:
+                      - generic [ref=f13e4393]:
+                        - img [ref=f13e4395]
+                        - generic [ref=f13e4397]: "-0.15pp"
+                    - cell "Trend sparkline" [ref=f13e4398]:
+                      - img "Trend sparkline" [ref=f13e4399]
+                    - cell "Watch Westgate Credit Fund" [ref=f13e4401]:
+                      - button "Watch Westgate Credit Fund" [ref=f13e4402] [cursor=pointer]:
+                        - img [ref=f13e4406]
+                        - status
+                  - row "Ironwood Yield Fund Tokenized Diversified Credit Fund 8.8% -0.10pp Trend sparkline Watch Ironwood Yield Fund" [ref=f13e4409]:
+                    - cell "Ironwood Yield Fund Tokenized Diversified Credit Fund" [ref=f13e4410]:
+                      - button "Ironwood Yield Fund Tokenized Diversified Credit Fund" [ref=f13e4411] [cursor=pointer]:
+                        - generic [ref=f13e4413]:
+                          - generic [ref=f13e4414]: Ironwood Yield Fund
+                          - text: Tokenized Diversified Credit Fund
+                    - cell "8.8%" [ref=f13e4415]:
+                      - generic [ref=f13e4416]: 8.8%
+                    - cell "-0.10pp" [ref=f13e4417]:
+                      - generic [ref=f13e4418]:
+                        - img [ref=f13e4420]
+                        - generic [ref=f13e4422]: "-0.10pp"
+                    - cell "Trend sparkline" [ref=f13e4423]:
+                      - img "Trend sparkline" [ref=f13e4424]
+                    - cell "Watch Ironwood Yield Fund" [ref=f13e4426]:
+                      - button "Watch Ironwood Yield Fund" [ref=f13e4427] [cursor=pointer]:
+                        - img [ref=f13e4431]
+                        - status
+                  - row "Cobalt Credit Partners Tokenized Diversified Credit Fund 7.4% +0.03pp Trend sparkline Watch Cobalt Credit Partners" [ref=f13e4434]:
+                    - cell "Cobalt Credit Partners Tokenized Diversified Credit Fund" [ref=f13e4435]:
+                      - button "Cobalt Credit Partners Tokenized Diversified Credit Fund" [ref=f13e4436] [cursor=pointer]:
+                        - generic [ref=f13e4438]:
+                          - generic [ref=f13e4439]: Cobalt Credit Partners
+                          - text: Tokenized Diversified Credit Fund
+                    - cell "7.4%" [ref=f13e4440]:
+                      - generic [ref=f13e4441]: 7.4%
+                    - cell "+0.03pp" [ref=f13e4442]:
+                      - generic [ref=f13e4443]:
+                        - img [ref=f13e4445]
+                        - generic [ref=f13e4447]: +0.03pp
+                    - cell "Trend sparkline" [ref=f13e4448]:
+                      - img "Trend sparkline" [ref=f13e4449]
+                    - cell "Watch Cobalt Credit Partners" [ref=f13e4451]:
+                      - button "Watch Cobalt Credit Partners" [ref=f13e4452] [cursor=pointer]:
+                        - img [ref=f13e4456]
+                        - status
+                  - row "Vantara Metals Tokenized Copper-Royalty Note 6.4% -0.02pp Trend sparkline Watch Vantara Metals" [ref=f13e4459]:
+                    - cell "Vantara Metals Tokenized Copper-Royalty Note" [ref=f13e4460]:
+                      - button "Vantara Metals Tokenized Copper-Royalty Note" [ref=f13e4461] [cursor=pointer]:
+                        - generic [ref=f13e4463]:
+                          - generic [ref=f13e4464]: Vantara Metals
+                          - text: Tokenized Copper-Royalty Note
+                    - cell "6.4%" [ref=f13e4465]:
+                      - generic [ref=f13e4466]: 6.4%
+                    - cell "-0.02pp" [ref=f13e4467]:
+                      - generic [ref=f13e4468]:
+                        - img [ref=f13e4470]
+                        - generic [ref=f13e4472]: "-0.02pp"
+                    - cell "Trend sparkline" [ref=f13e4473]:
+                      - img "Trend sparkline" [ref=f13e4474]
+                    - cell "Watch Vantara Metals" [ref=f13e4476]:
+                      - button "Watch Vantara Metals" [ref=f13e4477] [cursor=pointer]:
+                        - img [ref=f13e4481]
+                        - status
+                  - row "Gold Royalty Note Tokenized Commodity Royalty Note 5.6% -0.07pp Trend sparkline Watch Gold Royalty Note" [ref=f13e4484]:
+                    - cell "Gold Royalty Note Tokenized Commodity Royalty Note" [ref=f13e4485]:
+                      - button "Gold Royalty Note Tokenized Commodity Royalty Note" [ref=f13e4486] [cursor=pointer]:
+                        - generic [ref=f13e4488]:
+                          - generic [ref=f13e4489]: Gold Royalty Note
+                          - text: Tokenized Commodity Royalty Note
+                    - cell "5.6%" [ref=f13e4490]:
+                      - generic [ref=f13e4491]: 5.6%
+                    - cell "-0.07pp" [ref=f13e4492]:
+                      - generic [ref=f13e4493]:
+                        - img [ref=f13e4495]
+                        - generic [ref=f13e4497]: "-0.07pp"
+                    - cell "Trend sparkline" [ref=f13e4498]:
+                      - img "Trend sparkline" [ref=f13e4499]
+                    - cell "Watch Gold Royalty Note" [ref=f13e4501]:
+                      - button "Watch Gold Royalty Note" [ref=f13e4502] [cursor=pointer]:
+                        - img [ref=f13e4506]
+                        - status
+                  - row "Silver Streaming Note Tokenized Commodity Royalty Note 5.8% -0.12pp Trend sparkline Watch Silver Streaming Note" [ref=f13e4509]:
+                    - cell "Silver Streaming Note Tokenized Commodity Royalty Note" [ref=f13e4510]:
+                      - button "Silver Streaming Note Tokenized Commodity Royalty Note" [ref=f13e4511] [cursor=pointer]:
+                        - generic [ref=f13e4513]:
+                          - generic [ref=f13e4514]: Silver Streaming Note
+                          - text: Tokenized Commodity Royalty Note
+                    - cell "5.8%" [ref=f13e4515]:
+                      - generic [ref=f13e4516]: 5.8%
+                    - cell "-0.12pp" [ref=f13e4517]:
+                      - generic [ref=f13e4518]:
+                        - img [ref=f13e4520]
+                        - generic [ref=f13e4522]: "-0.12pp"
+                    - cell "Trend sparkline" [ref=f13e4523]:
+                      - img "Trend sparkline" [ref=f13e4524]
+                    - cell "Watch Silver Streaming Note" [ref=f13e4526]:
+                      - button "Watch Silver Streaming Note" [ref=f13e4527] [cursor=pointer]:
+                        - img [ref=f13e4531]
+                        - status
+                  - row "Lithium Supply Note Tokenized Commodity Royalty Note 7.0% -0.08pp Trend sparkline Watch Lithium Supply Note" [ref=f13e4534]:
+                    - cell "Lithium Supply Note Tokenized Commodity Royalty Note" [ref=f13e4535]:
+                      - button "Lithium Supply Note Tokenized Commodity Royalty Note" [ref=f13e4536] [cursor=pointer]:
+                        - generic [ref=f13e4538]:
+                          - generic [ref=f13e4539]: Lithium Supply Note
+                          - text: Tokenized Commodity Royalty Note
+                    - cell "7.0%" [ref=f13e4540]:
+                      - generic [ref=f13e4541]: 7.0%
+                    - cell "-0.08pp" [ref=f13e4542]:
+                      - generic [ref=f13e4543]:
+                        - img [ref=f13e4545]
+                        - generic [ref=f13e4547]: "-0.08pp"
+                    - cell "Trend sparkline" [ref=f13e4548]:
+                      - img "Trend sparkline" [ref=f13e4549]
+                    - cell "Watch Lithium Supply Note" [ref=f13e4551]:
+                      - button "Watch Lithium Supply Note" [ref=f13e4552] [cursor=pointer]:
+                        - img [ref=f13e4556]
+                        - status
+                  - row "Cobalt Royalty Certificate Tokenized Commodity Royalty Note 6.9% +0.03pp Trend sparkline Watch Cobalt Royalty Certificate" [ref=f13e4559]:
+                    - cell "Cobalt Royalty Certificate Tokenized Commodity Royalty Note" [ref=f13e4560]:
+                      - button "Cobalt Royalty Certificate Tokenized Commodity Royalty Note" [ref=f13e4561] [cursor=pointer]:
+                        - generic [ref=f13e4563]:
+                          - generic [ref=f13e4564]: Cobalt Royalty Certificate
+                          - text: Tokenized Commodity Royalty Note
+                    - cell "6.9%" [ref=f13e4565]:
+                      - generic [ref=f13e4566]: 6.9%
+                    - cell "+0.03pp" [ref=f13e4567]:
+                      - generic [ref=f13e4568]:
+                        - img [ref=f13e4570]
+                        - generic [ref=f13e4572]: +0.03pp
+                    - cell "Trend sparkline" [ref=f13e4573]:
+                      - img "Trend sparkline" [ref=f13e4574]
+                    - cell "Watch Cobalt Royalty Certificate" [ref=f13e4576]:
+                      - button "Watch Cobalt Royalty Certificate" [ref=f13e4577] [cursor=pointer]:
+                        - img [ref=f13e4581]
+                        - status
+                  - row "Nickel Forward Note Tokenized Commodity Royalty Note 6.3% +0.10pp Trend sparkline Watch Nickel Forward Note" [ref=f13e4584]:
+                    - cell "Nickel Forward Note Tokenized Commodity Royalty Note" [ref=f13e4585]:
+                      - button "Nickel Forward Note Tokenized Commodity Royalty Note" [ref=f13e4586] [cursor=pointer]:
+                        - generic [ref=f13e4588]:
+                          - generic [ref=f13e4589]: Nickel Forward Note
+                          - text: Tokenized Commodity Royalty Note
+                    - cell "6.3%" [ref=f13e4590]:
+                      - generic [ref=f13e4591]: 6.3%
+                    - cell "+0.10pp" [ref=f13e4592]:
+                      - generic [ref=f13e4593]:
+                        - img [ref=f13e4595]
+                        - generic [ref=f13e4597]: +0.10pp
+                    - cell "Trend sparkline" [ref=f13e4598]:
+                      - img "Trend sparkline" [ref=f13e4599]
+                    - cell "Watch Nickel Forward Note" [ref=f13e4601]:
+                      - button "Watch Nickel Forward Note" [ref=f13e4602] [cursor=pointer]:
+                        - img [ref=f13e4606]
+                        - status
+                  - row "Platinum Allocation Note Tokenized Commodity Royalty Note 5.5% +0.10pp Trend sparkline Watch Platinum Allocation Note" [ref=f13e4609]:
+                    - cell "Platinum Allocation Note Tokenized Commodity Royalty Note" [ref=f13e4610]:
+                      - button "Platinum Allocation Note Tokenized Commodity Royalty Note" [ref=f13e4611] [cursor=pointer]:
+                        - generic [ref=f13e4613]:
+                          - generic [ref=f13e4614]: Platinum Allocation Note
+                          - text: Tokenized Commodity Royalty Note
+                    - cell "5.5%" [ref=f13e4615]:
+                      - generic [ref=f13e4616]: 5.5%
+                    - cell "+0.10pp" [ref=f13e4617]:
+                      - generic [ref=f13e4618]:
+                        - img [ref=f13e4620]
+                        - generic [ref=f13e4622]: +0.10pp
+                    - cell "Trend sparkline" [ref=f13e4623]:
+                      - img "Trend sparkline" [ref=f13e4624]
+                    - cell "Watch Platinum Allocation Note" [ref=f13e4626]:
+                      - button "Watch Platinum Allocation Note" [ref=f13e4627] [cursor=pointer]:
+                        - img [ref=f13e4631]
+                        - status
+                  - row "Rare Earth Royalty Note Tokenized Commodity Royalty Note 7.5% -0.01pp Trend sparkline Watch Rare Earth Royalty Note" [ref=f13e4634]:
+                    - cell "Rare Earth Royalty Note Tokenized Commodity Royalty Note" [ref=f13e4635]:
+                      - button "Rare Earth Royalty Note Tokenized Commodity Royalty Note" [ref=f13e4636] [cursor=pointer]:
+                        - generic [ref=f13e4638]:
+                          - generic [ref=f13e4639]: Rare Earth Royalty Note
+                          - text: Tokenized Commodity Royalty Note
+                    - cell "7.5%" [ref=f13e4640]:
+                      - generic [ref=f13e4641]: 7.5%
+                    - cell "-0.01pp" [ref=f13e4642]:
+                      - generic [ref=f13e4643]:
+                        - img [ref=f13e4645]
+                        - generic [ref=f13e4647]: "-0.01pp"
+                    - cell "Trend sparkline" [ref=f13e4648]:
+                      - img "Trend sparkline" [ref=f13e4649]
+                    - cell "Watch Rare Earth Royalty Note" [ref=f13e4651]:
+                      - button "Watch Rare Earth Royalty Note" [ref=f13e4652] [cursor=pointer]:
+                        - img [ref=f13e4656]
+                        - status
+                  - row "Uranium Supply Note Tokenized Commodity Royalty Note 6.7% -0.11pp Trend sparkline Watch Uranium Supply Note" [ref=f13e4659]:
+                    - cell "Uranium Supply Note Tokenized Commodity Royalty Note" [ref=f13e4660]:
+                      - button "Uranium Supply Note Tokenized Commodity Royalty Note" [ref=f13e4661] [cursor=pointer]:
+                        - generic [ref=f13e4663]:
+                          - generic [ref=f13e4664]: Uranium Supply Note
+                          - text: Tokenized Commodity Royalty Note
+                    - cell "6.7%" [ref=f13e4665]:
+                      - generic [ref=f13e4666]: 6.7%
+                    - cell "-0.11pp" [ref=f13e4667]:
+                      - generic [ref=f13e4668]:
+                        - img [ref=f13e4670]
+                        - generic [ref=f13e4672]: "-0.11pp"
+                    - cell "Trend sparkline" [ref=f13e4673]:
+                      - img "Trend sparkline" [ref=f13e4674]
+                    - cell "Watch Uranium Supply Note" [ref=f13e4676]:
+                      - button "Watch Uranium Supply Note" [ref=f13e4677] [cursor=pointer]:
+                        - img [ref=f13e4681]
+                        - status
+                  - row "Palladium Note Tokenized Commodity Royalty Note 5.5% -0.15pp Trend sparkline Watch Palladium Note" [ref=f13e4684]:
+                    - cell "Palladium Note Tokenized Commodity Royalty Note" [ref=f13e4685]:
+                      - button "Palladium Note Tokenized Commodity Royalty Note" [ref=f13e4686] [cursor=pointer]:
+                        - generic [ref=f13e4688]:
+                          - generic [ref=f13e4689]: Palladium Note
+                          - text: Tokenized Commodity Royalty Note
+                    - cell "5.5%" [ref=f13e4690]:
+                      - generic [ref=f13e4691]: 5.5%
+                    - cell "-0.15pp" [ref=f13e4692]:
+                      - generic [ref=f13e4693]:
+                        - img [ref=f13e4695]
+                        - generic [ref=f13e4697]: "-0.15pp"
+                    - cell "Trend sparkline" [ref=f13e4698]:
+                      - img "Trend sparkline" [ref=f13e4699]
+                    - cell "Watch Palladium Note" [ref=f13e4701]:
+                      - button "Watch Palladium Note" [ref=f13e4702] [cursor=pointer]:
+                        - img [ref=f13e4706]
+                        - status
+                  - row "Timber Royalty Note Tokenized Commodity Royalty Note 4.9% -0.10pp Trend sparkline Watch Timber Royalty Note" [ref=f13e4709]:
+                    - cell "Timber Royalty Note Tokenized Commodity Royalty Note" [ref=f13e4710]:
+                      - button "Timber Royalty Note Tokenized Commodity Royalty Note" [ref=f13e4711] [cursor=pointer]:
+                        - generic [ref=f13e4713]:
+                          - generic [ref=f13e4714]: Timber Royalty Note
+                          - text: Tokenized Commodity Royalty Note
+                    - cell "4.9%" [ref=f13e4715]:
+                      - generic [ref=f13e4716]: 4.9%
+                    - cell "-0.10pp" [ref=f13e4717]:
+                      - generic [ref=f13e4718]:
+                        - img [ref=f13e4720]
+                        - generic [ref=f13e4722]: "-0.10pp"
+                    - cell "Trend sparkline" [ref=f13e4723]:
+                      - img "Trend sparkline" [ref=f13e4724]
+                    - cell "Watch Timber Royalty Note" [ref=f13e4726]:
+                      - button "Watch Timber Royalty Note" [ref=f13e4727] [cursor=pointer]:
+                        - img [ref=f13e4731]
+                        - status
+                  - row "Agricultural Commodities Basket Tokenized Commodity Royalty Note 5.8% +0.03pp Trend sparkline Watch Agricultural Commodities Basket" [ref=f13e4734]:
+                    - cell "Agricultural Commodities Basket Tokenized Commodity Royalty Note" [ref=f13e4735]:
+                      - button "Agricultural Commodities Basket Tokenized Commodity Royalty Note" [ref=f13e4736] [cursor=pointer]:
+                        - generic [ref=f13e4738]:
+                          - generic [ref=f13e4739]: Agricultural Commodities Basket
+                          - text: Tokenized Commodity Royalty Note
+                    - cell "5.8%" [ref=f13e4740]:
+                      - generic [ref=f13e4741]: 5.8%
+                    - cell "+0.03pp" [ref=f13e4742]:
+                      - generic [ref=f13e4743]:
+                        - img [ref=f13e4745]
+                        - generic [ref=f13e4747]: +0.03pp
+                    - cell "Trend sparkline" [ref=f13e4748]:
+                      - img "Trend sparkline" [ref=f13e4749]
+                    - cell "Watch Agricultural Commodities Basket" [ref=f13e4751]:
+                      - button "Watch Agricultural Commodities Basket" [ref=f13e4752] [cursor=pointer]:
+                        - img [ref=f13e4756]
+                        - status
+                  - row "Solstice Index Token Tokenized Crypto Index 3.0% -0.06pp Trend sparkline Watch Solstice Index Token" [ref=f13e4759]:
+                    - cell "Solstice Index Token Tokenized Crypto Index" [ref=f13e4760]:
+                      - button "Solstice Index Token Tokenized Crypto Index" [ref=f13e4761] [cursor=pointer]:
+                        - generic [ref=f13e4763]:
+                          - generic [ref=f13e4764]: Solstice Index Token
+                          - text: Tokenized Crypto Index
+                    - cell "3.0%" [ref=f13e4765]:
+                      - generic [ref=f13e4766]: 3.0%
+                    - cell "-0.06pp" [ref=f13e4767]:
+                      - generic [ref=f13e4768]:
+                        - img [ref=f13e4770]
+                        - generic [ref=f13e4772]: "-0.06pp"
+                    - cell "Trend sparkline" [ref=f13e4773]:
+                      - img "Trend sparkline" [ref=f13e4774]
+                    - cell "Watch Solstice Index Token" [ref=f13e4776]:
+                      - button "Watch Solstice Index Token" [ref=f13e4777] [cursor=pointer]:
+                        - img [ref=f13e4781]
+                        - status
+                  - row "Vector Chain Fund Tokenized Crypto Index 4.0% +0.06pp Trend sparkline Watch Vector Chain Fund" [ref=f13e4784]:
+                    - cell "Vector Chain Fund Tokenized Crypto Index" [ref=f13e4785]:
+                      - button "Vector Chain Fund Tokenized Crypto Index" [ref=f13e4786] [cursor=pointer]:
+                        - generic [ref=f13e4788]:
+                          - generic [ref=f13e4789]: Vector Chain Fund
+                          - text: Tokenized Crypto Index
+                    - cell "4.0%" [ref=f13e4790]:
+                      - generic [ref=f13e4791]: 4.0%
+                    - cell "+0.06pp" [ref=f13e4792]:
+                      - generic [ref=f13e4793]:
+                        - img [ref=f13e4795]
+                        - generic [ref=f13e4797]: +0.06pp
+                    - cell "Trend sparkline" [ref=f13e4798]:
+                      - img "Trend sparkline" [ref=f13e4799]
+                    - cell "Watch Vector Chain Fund" [ref=f13e4801]:
+                      - button "Watch Vector Chain Fund" [ref=f13e4802] [cursor=pointer]:
+                        - img [ref=f13e4806]
+                        - status
+                  - row "Nimbus Protocol Note Tokenized Crypto Index 2.8% +0.15pp Trend sparkline Watch Nimbus Protocol Note" [ref=f13e4809]:
+                    - cell "Nimbus Protocol Note Tokenized Crypto Index" [ref=f13e4810]:
+                      - button "Nimbus Protocol Note Tokenized Crypto Index" [ref=f13e4811] [cursor=pointer]:
+                        - generic [ref=f13e4813]:
+                          - generic [ref=f13e4814]: Nimbus Protocol Note
+                          - text: Tokenized Crypto Index
+                    - cell "2.8%" [ref=f13e4815]:
+                      - generic [ref=f13e4816]: 2.8%
+                    - cell "+0.15pp" [ref=f13e4817]:
+                      - generic [ref=f13e4818]:
+                        - img [ref=f13e4820]
+                        - generic [ref=f13e4822]: +0.15pp
+                    - cell "Trend sparkline" [ref=f13e4823]:
+                      - img "Trend sparkline" [ref=f13e4824]
+                    - cell "Watch Nimbus Protocol Note" [ref=f13e4826]:
+                      - button "Watch Nimbus Protocol Note" [ref=f13e4827] [cursor=pointer]:
+                        - img [ref=f13e4831]
+                        - status
+                  - row "Halcyon Ledger Index Tokenized Crypto Index 3.8% +0.13pp Trend sparkline Watch Halcyon Ledger Index" [ref=f13e4834]:
+                    - cell "Halcyon Ledger Index Tokenized Crypto Index" [ref=f13e4835]:
+                      - button "Halcyon Ledger Index Tokenized Crypto Index" [ref=f13e4836] [cursor=pointer]:
+                        - generic [ref=f13e4838]:
+                          - generic [ref=f13e4839]: Halcyon Ledger Index
+                          - text: Tokenized Crypto Index
+                    - cell "3.8%" [ref=f13e4840]:
+                      - generic [ref=f13e4841]: 3.8%
+                    - cell "+0.13pp" [ref=f13e4842]:
+                      - generic [ref=f13e4843]:
+                        - img [ref=f13e4845]
+                        - generic [ref=f13e4847]: +0.13pp
+                    - cell "Trend sparkline" [ref=f13e4848]:
+                      - img "Trend sparkline" [ref=f13e4849]
+                    - cell "Watch Halcyon Ledger Index" [ref=f13e4851]:
+                      - button "Watch Halcyon Ledger Index" [ref=f13e4852] [cursor=pointer]:
+                        - img [ref=f13e4856]
+                        - status
+                  - row "Quanta Chain Fund Tokenized Crypto Index 4.6% +0.04pp Trend sparkline Watch Quanta Chain Fund" [ref=f13e4859]:
+                    - cell "Quanta Chain Fund Tokenized Crypto Index" [ref=f13e4860]:
+                      - button "Quanta Chain Fund Tokenized Crypto Index" [ref=f13e4861] [cursor=pointer]:
+                        - generic [ref=f13e4863]:
+                          - generic [ref=f13e4864]: Quanta Chain Fund
+                          - text: Tokenized Crypto Index
+                    - cell "4.6%" [ref=f13e4865]:
+                      - generic [ref=f13e4866]: 4.6%
+                    - cell "+0.04pp" [ref=f13e4867]:
+                      - generic [ref=f13e4868]:
+                        - img [ref=f13e4870]
+                        - generic [ref=f13e4872]: +0.04pp
+                    - cell "Trend sparkline" [ref=f13e4873]:
+                      - img "Trend sparkline" [ref=f13e4874]
+                    - cell "Watch Quanta Chain Fund" [ref=f13e4876]:
+                      - button "Watch Quanta Chain Fund" [ref=f13e4877] [cursor=pointer]:
+                        - img [ref=f13e4881]
+                        - status
+                  - row "Embernet Token Basket Tokenized Crypto Index 3.1% -0.07pp Trend sparkline Watch Embernet Token Basket" [ref=f13e4884]:
+                    - cell "Embernet Token Basket Tokenized Crypto Index" [ref=f13e4885]:
+                      - button "Embernet Token Basket Tokenized Crypto Index" [ref=f13e4886] [cursor=pointer]:
+                        - generic [ref=f13e4888]:
+                          - generic [ref=f13e4889]: Embernet Token Basket
+                          - text: Tokenized Crypto Index
+                    - cell "3.1%" [ref=f13e4890]:
+                      - generic [ref=f13e4891]: 3.1%
+                    - cell "-0.07pp" [ref=f13e4892]:
+                      - generic [ref=f13e4893]:
+                        - img [ref=f13e4895]
+                        - generic [ref=f13e4897]: "-0.07pp"
+                    - cell "Trend sparkline" [ref=f13e4898]:
+                      - img "Trend sparkline" [ref=f13e4899]
+                    - cell "Watch Embernet Token Basket" [ref=f13e4901]:
+                      - button "Watch Embernet Token Basket" [ref=f13e4902] [cursor=pointer]:
+                        - img [ref=f13e4906]
+                        - status
+                  - row "Driftwood Protocol Index Tokenized Crypto Index 3.8% -0.12pp Trend sparkline Watch Driftwood Protocol Index" [ref=f13e4909]:
+                    - cell "Driftwood Protocol Index Tokenized Crypto Index" [ref=f13e4910]:
+                      - button "Driftwood Protocol Index Tokenized Crypto Index" [ref=f13e4911] [cursor=pointer]:
+                        - generic [ref=f13e4913]:
+                          - generic [ref=f13e4914]: Driftwood Protocol Index
+                          - text: Tokenized Crypto Index
+                    - cell "3.8%" [ref=f13e4915]:
+                      - generic [ref=f13e4916]: 3.8%
+                    - cell "-0.12pp" [ref=f13e4917]:
+                      - generic [ref=f13e4918]:
+                        - img [ref=f13e4920]
+                        - generic [ref=f13e4922]: "-0.12pp"
+                    - cell "Trend sparkline" [ref=f13e4923]:
+                      - img "Trend sparkline" [ref=f13e4924]
+                    - cell "Watch Driftwood Protocol Index" [ref=f13e4926]:
+                      - button "Watch Driftwood Protocol Index" [ref=f13e4927] [cursor=pointer]:
+                        - img [ref=f13e4931]
+                        - status
+                  - row "Lumen Chain Note Tokenized Crypto Index 2.4% -0.08pp Trend sparkline Watch Lumen Chain Note" [ref=f13e4934]:
+                    - cell "Lumen Chain Note Tokenized Crypto Index" [ref=f13e4935]:
+                      - button "Lumen Chain Note Tokenized Crypto Index" [ref=f13e4936] [cursor=pointer]:
+                        - generic [ref=f13e4938]:
+                          - generic [ref=f13e4939]: Lumen Chain Note
+                          - text: Tokenized Crypto Index
+                    - cell "2.4%" [ref=f13e4940]:
+                      - generic [ref=f13e4941]: 2.4%
+                    - cell "-0.08pp" [ref=f13e4942]:
+                      - generic [ref=f13e4943]:
+                        - img [ref=f13e4945]
+                        - generic [ref=f13e4947]: "-0.08pp"
+                    - cell "Trend sparkline" [ref=f13e4948]:
+                      - img "Trend sparkline" [ref=f13e4949]
+                    - cell "Watch Lumen Chain Note" [ref=f13e4951]:
+                      - button "Watch Lumen Chain Note" [ref=f13e4952] [cursor=pointer]:
+                        - img [ref=f13e4956]
+                        - status
+                  - row "Cinder Ledger Fund Tokenized Crypto Index 4.7% +0.03pp Trend sparkline Watch Cinder Ledger Fund" [ref=f13e4959]:
+                    - cell "Cinder Ledger Fund Tokenized Crypto Index" [ref=f13e4960]:
+                      - button "Cinder Ledger Fund Tokenized Crypto Index" [ref=f13e4961] [cursor=pointer]:
+                        - generic [ref=f13e4963]:
+                          - generic [ref=f13e4964]: Cinder Ledger Fund
+                          - text: Tokenized Crypto Index
+                    - cell "4.7%" [ref=f13e4965]:
+                      - generic [ref=f13e4966]: 4.7%
+                    - cell "+0.03pp" [ref=f13e4967]:
+                      - generic [ref=f13e4968]:
+                        - img [ref=f13e4970]
+                        - generic [ref=f13e4972]: +0.03pp
+                    - cell "Trend sparkline" [ref=f13e4973]:
+                      - img "Trend sparkline" [ref=f13e4974]
+                    - cell "Watch Cinder Ledger Fund" [ref=f13e4976]:
+                      - button "Watch Cinder Ledger Fund" [ref=f13e4977] [cursor=pointer]:
+                        - img [ref=f13e4981]
+                        - status
+                  - row "Wavelength Protocol Token Tokenized Crypto Index 3.5% +0.10pp Trend sparkline Watch Wavelength Protocol Token" [ref=f13e4984]:
+                    - cell "Wavelength Protocol Token Tokenized Crypto Index" [ref=f13e4985]:
+                      - button "Wavelength Protocol Token Tokenized Crypto Index" [ref=f13e4986] [cursor=pointer]:
+                        - generic [ref=f13e4988]:
+                          - generic [ref=f13e4989]: Wavelength Protocol Token
+                          - text: Tokenized Crypto Index
+                    - cell "3.5%" [ref=f13e4990]:
+                      - generic [ref=f13e4991]: 3.5%
+                    - cell "+0.10pp" [ref=f13e4992]:
+                      - generic [ref=f13e4993]:
+                        - img [ref=f13e4995]
+                        - generic [ref=f13e4997]: +0.10pp
+                    - cell "Trend sparkline" [ref=f13e4998]:
+                      - img "Trend sparkline" [ref=f13e4999]
+                    - cell "Watch Wavelength Protocol Token" [ref=f13e5001]:
+                      - button "Watch Wavelength Protocol Token" [ref=f13e5002] [cursor=pointer]:
+                        - img [ref=f13e5006]
+                        - status
+                  - row "Tesseract Chain Index Tokenized Crypto Index 4.1% +0.10pp Trend sparkline Watch Tesseract Chain Index" [ref=f13e5009]:
+                    - cell "Tesseract Chain Index Tokenized Crypto Index" [ref=f13e5010]:
+                      - button "Tesseract Chain Index Tokenized Crypto Index" [ref=f13e5011] [cursor=pointer]:
+                        - generic [ref=f13e5013]:
+                          - generic [ref=f13e5014]: Tesseract Chain Index
+                          - text: Tokenized Crypto Index
+                    - cell "4.1%" [ref=f13e5015]:
+                      - generic [ref=f13e5016]: 4.1%
+                    - cell "+0.10pp" [ref=f13e5017]:
+                      - generic [ref=f13e5018]:
+                        - img [ref=f13e5020]
+                        - generic [ref=f13e5022]: +0.10pp
+                    - cell "Trend sparkline" [ref=f13e5023]:
+                      - img "Trend sparkline" [ref=f13e5024]
+                    - cell "Watch Tesseract Chain Index" [ref=f13e5026]:
+                      - button "Watch Tesseract Chain Index" [ref=f13e5027] [cursor=pointer]:
+                        - img [ref=f13e5031]
+                        - status
+                  - row "Obsidian Ledger Fund Tokenized Crypto Index 4.3% -0.01pp Trend sparkline Watch Obsidian Ledger Fund" [ref=f13e5034]:
+                    - cell "Obsidian Ledger Fund Tokenized Crypto Index" [ref=f13e5035]:
+                      - button "Obsidian Ledger Fund Tokenized Crypto Index" [ref=f13e5036] [cursor=pointer]:
+                        - generic [ref=f13e5038]:
+                          - generic [ref=f13e5039]: Obsidian Ledger Fund
+                          - text: Tokenized Crypto Index
+                    - cell "4.3%" [ref=f13e5040]:
+                      - generic [ref=f13e5041]: 4.3%
+                    - cell "-0.01pp" [ref=f13e5042]:
+                      - generic [ref=f13e5043]:
+                        - img [ref=f13e5045]
+                        - generic [ref=f13e5047]: "-0.01pp"
+                    - cell "Trend sparkline" [ref=f13e5048]:
+                      - img "Trend sparkline" [ref=f13e5049]
+                    - cell "Watch Obsidian Ledger Fund" [ref=f13e5051]:
+                      - button "Watch Obsidian Ledger Fund" [ref=f13e5052] [cursor=pointer]:
+                        - img [ref=f13e5056]
+                        - status
+          - generic [ref=f13e1852]:
+            - generic [ref=f13e1853]: Other tracked entities
+            - list [ref=f13e1854]:
+              - listitem [ref=f13e1855] [cursor=pointer]:
+                - button "Kestrel Holdings Counterparty (Cyprus-registered)" [ref=f13e1856]:
+                  - generic [ref=f13e1857]: Kestrel Holdings
+                  - generic [ref=f13e1858]: Counterparty (Cyprus-registered)
+                - button "Watch Kestrel Holdings" [ref=f13e1861]:
+                  - img [ref=f13e1865]
+                  - status
+              - listitem [ref=f13e1868] [cursor=pointer]:
+                - button "Solent Custody Venue Custodian" [ref=f13e1869]:
+                  - generic [ref=f13e1870]: Solent Custody
+                  - generic [ref=f13e1871]: Venue Custodian
+                - button "Watch Solent Custody" [ref=f13e1874]:
+                  - img [ref=f13e1878]
+                  - status
+              - listitem [ref=f13e1881] [cursor=pointer]:
+                - button "EUR/USD 3M Risk Reversal FX Option" [ref=f13e1882]:
+                  - generic [ref=f13e1883]: EUR/USD 3M Risk Reversal
+                  - generic [ref=f13e1884]: FX Option
+                - generic [ref=f13e1886]:
+                  - button "Watch EUR/USD 3M Risk Reversal" [ref=f13e1887]:
+                    - img [ref=f13e1891]
+                    - status
+                  - button "Investigate EUR/USD 3M Risk Reversal" [ref=f13e1894]:
+                    - img [ref=f13e1898]
+                    - status
+              - listitem [ref=f13e1902] [cursor=pointer]:
+                - button "5Y EUR Interest Rate Swap Interest Rate Swap" [ref=f13e1903]:
+                  - generic [ref=f13e1904]: 5Y EUR Interest Rate Swap
+                  - generic [ref=f13e1905]: Interest Rate Swap
+                - button "Watch 5Y EUR Interest Rate Swap" [ref=f13e1908]:
+                  - img [ref=f13e1912]
+                  - status
+              - listitem [ref=f13e1915] [cursor=pointer]:
+                - button "GBP/EUR 6M FX Forward FX Forward" [ref=f13e1916]:
+                  - generic [ref=f13e1917]: GBP/EUR 6M FX Forward
+                  - generic [ref=f13e1918]: FX Forward
+                - button "Watch GBP/EUR 6M FX Forward" [ref=f13e1921]:
+                  - img [ref=f13e1925]
+                  - status
+              - listitem [ref=f13e1928] [cursor=pointer]:
+                - button "10Y USD Interest Rate Swap Interest Rate Swap" [ref=f13e1929]:
+                  - generic [ref=f13e1930]: 10Y USD Interest Rate Swap
+                  - generic [ref=f13e1931]: Interest Rate Swap
+                - button "Watch 10Y USD Interest Rate Swap" [ref=f13e1934]:
+                  - img [ref=f13e1938]
+                  - status
+              - listitem [ref=f13e1941] [cursor=pointer]:
+                - button "Mira Voss Person — Head of Issuance, Fjellbank" [ref=f13e1942]:
+                  - generic [ref=f13e1943]: Mira Voss
+                  - generic [ref=f13e1944]: Person — Head of Issuance, Fjellbank
+                - button "Watch Mira Voss" [ref=f13e1947]:
+                  - img [ref=f13e1951]
+                  - status
+              - listitem [ref=f13e1954] [cursor=pointer]:
+                - button "Halberg Materials AG Equity — Listed Common Stock" [ref=f13e1955]:
+                  - generic [ref=f13e1956]: Halberg Materials AG
+                  - generic [ref=f13e1957]: Equity — Listed Common Stock
+                - button "Watch Halberg Materials AG" [ref=f13e1960]:
+                  - img [ref=f13e1964]
+                  - status
+              - listitem [ref=f13e1967] [cursor=pointer]:
+                - button "South Bow Corp Equity — Pipeline & Infrastructure" [ref=f13e1968]:
+                  - generic [ref=f13e1969]: South Bow Corp
+                  - generic [ref=f13e1970]: Equity — Pipeline & Infrastructure
+                - generic [ref=f13e1972]:
+                  - button "Watch South Bow Corp" [ref=f13e1973]:
+                    - img [ref=f13e1977]
+                    - status
+                  - button "Investigate South Bow Corp" [ref=f13e1980]:
+                    - img [ref=f13e1984]
+                    - status

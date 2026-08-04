@@ -1,0 +1,347 @@
+- generic [active] [ref=f44e3]:
+  - generic [ref=f44e6]:
+    - link "Skip to content" [ref=f44e7] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f44e10]:
+      - navigation "Side navigation" [ref=f44e12]:
+        - generic [ref=f44e17]: Merlin
+        - generic [ref=f44e18]:
+          - group "Places" [ref=f44e19]:
+            - generic [ref=f44e22]: Places
+            - generic [ref=f44e23]:
+              - button "New investigation" [ref=f44e25] [cursor=pointer]:
+                - img [ref=f44e26]
+                - generic [ref=f44e28]: New investigation
+              - button "Discover" [ref=f44e30] [cursor=pointer]:
+                - img [ref=f44e32]
+                - generic [ref=f44e35]: Discover
+              - button "Watchlist" [ref=f44e37] [cursor=pointer]:
+                - img [ref=f44e39]
+                - generic [ref=f44e42]: Watchlist
+              - button "Data Sources" [ref=f44e44] [cursor=pointer]:
+                - img [ref=f44e46]
+                - generic [ref=f44e50]: Data Sources
+              - button "Market Pulse" [ref=f44e52] [cursor=pointer]:
+                - img [ref=f44e54]
+                - generic [ref=f44e56]: Market Pulse
+              - button "Investigations" [ref=f44e58] [cursor=pointer]:
+                - img [ref=f44e60]
+                - generic [ref=f44e63]: Investigations
+              - button "Portfolio" [ref=f44e65] [cursor=pointer]:
+                - img [ref=f44e67]
+                - generic [ref=f44e69]: Portfolio
+              - button "Risk" [ref=f44e71] [cursor=pointer]:
+                - img [ref=f44e73]
+                - generic [ref=f44e75]: Risk
+          - group "Recent" [ref=f44e76]:
+            - generic [ref=f44e77]:
+              - generic [ref=f44e79]: Recent
+              - button "Filter recent" [ref=f44e82] [cursor=pointer]:
+                - img [ref=f44e86]
+                - status
+            - generic [ref=f44e88]:
+              - button "Conservative Screen, Refined — EU-R… Thinking…" [ref=f44e690] [cursor=pointer]:
+                - generic [ref=f44e174]: Conservative Screen, Refined — EU-R…
+                - img "Thinking…" [ref=f44e691]
+              - button "View all" [ref=f44e92] [cursor=pointer]:
+                - generic [ref=f44e93]: View all
+        - generic [ref=f44e95]:
+          - button "Collapse sidebar" [ref=f44e97] [cursor=pointer]:
+            - img [ref=f44e101]
+            - status
+          - generic [ref=f44e103]:
+            - button "Analyst Analyst" [ref=f44e104] [cursor=pointer]:
+              - generic [ref=f44e105]:
+                - img "Analyst" [ref=f44e107]:
+                  - generic [ref=f44e109]: A
+                - generic [ref=f44e110]: Analyst
+                - img [ref=f44e113]
+              - status
+            - button "Notifications" [ref=f44e116] [cursor=pointer]:
+              - img [ref=f44e119]
+              - status
+      - main [ref=f44e123]:
+        - generic [ref=f44e128]:
+          - generic [ref=f44e177]:
+            - generic [ref=f44e178]: Tokenized Assets Above 6% Yield — Conservative Screen
+            - generic [ref=f44e179]:
+              - button "Artifacts" [ref=f44e180] [cursor=pointer]:
+                - img [ref=f44e183]
+                - status
+              - generic:
+                - generic: "1"
+          - generic [ref=f44e129]:
+            - generic [ref=f44e130]:
+              - generic [ref=f44e190]:
+                - generic [ref=f44e191]:
+                  - article "Message from user" [ref=f44e192]:
+                    - generic [ref=f44e194]:
+                      - generic [ref=f44e195]: show me tokenized assets yielding above 6%
+                      - generic [ref=f44e198]: Answered
+                  - article "Message from assistant" [ref=f44e199]:
+                    - generic [ref=f44e202]:
+                      - generic [ref=f44e203]:
+                        - generic [ref=f44e204]: 3 sources
+                        - generic [ref=f44e205]: 7.3s
+                      - generic [ref=f44e231]:
+                        - button "6 reasoning steps · 7.3s" [expanded] [ref=f44e232] [cursor=pointer]:
+                          - generic [ref=f44e234]:
+                            - img [ref=f44e236]
+                            - generic [ref=f44e238]: 6 reasoning steps · 7.3s
+                          - img [ref=f44e240]
+                        - generic [ref=f44e243]:
+                          - generic [ref=f44e244]:
+                            - img [ref=f44e247]
+                            - generic [ref=f44e250]:
+                              - generic [ref=f44e251]: Parsing mandate constraints — yield floor, conservative risk tolerance
+                              - generic [ref=f44e252]: 0.9s
+                          - generic [ref=f44e253]:
+                            - img [ref=f44e256]
+                            - generic [ref=f44e259]:
+                              - generic [ref=f44e260]:
+                                - generic [ref=f44e261]: Scanning listed assets above the 6% yield threshold
+                                - generic [ref=f44e262]: 1.1s
+                              - generic [ref=f44e265]: MarketTape
+                          - generic [ref=f44e266]:
+                            - img [ref=f44e269]
+                            - generic [ref=f44e272]:
+                              - generic [ref=f44e273]:
+                                - generic [ref=f44e274]: Pulling risk, liquidity, and jurisdiction data for candidates
+                                - generic [ref=f44e275]: 1.4s
+                              - generic [ref=f44e276]:
+                                - generic [ref=f44e278]: RiskLens
+                                - generic [ref=f44e280]: PortfolioAtlas
+                          - generic [ref=f44e281]:
+                            - img [ref=f44e284]
+                            - generic [ref=f44e287]:
+                              - generic [ref=f44e288]: Cross-referencing candidates against the conservative mandate in PortfolioAtlas
+                              - generic [ref=f44e289]: 1.3s
+                          - generic [ref=f44e290]:
+                            - img [ref=f44e293]
+                            - generic [ref=f44e296]:
+                              - generic [ref=f44e297]:
+                                - generic [ref=f44e298]: Weighing yield against risk concentration and audit status
+                                - generic [ref=f44e299]: 1.6s
+                              - generic [ref=f44e300]: 0.74 · moderate
+                          - generic [ref=f44e301]:
+                            - img [ref=f44e304]
+                            - generic [ref=f44e306]:
+                              - generic [ref=f44e307]:
+                                - generic [ref=f44e308]: Confirming NordBond as a reference point below threshold and flagging Aldergate's pending audit
+                                - generic [ref=f44e309]: 1.0s
+                              - generic [ref=f44e310]: 0.81 · high
+                      - generic [ref=f44e311] [cursor=pointer]:
+                        - button "Open Tokenized Assets Above 6% Yield — Conservative Screen" [ref=f44e312]
+                        - generic [ref=f44e313]:
+                          - img [ref=f44e314]
+                          - generic [ref=f44e319]:
+                            - generic [ref=f44e320]: Tokenized Assets Above 6% Yield — Conservative Screen
+                            - generic [ref=f44e321]: discover
+                          - generic [ref=f44e322]: Ready
+                          - img [ref=f44e324]
+                - generic [ref=f44e692]:
+                  - article "Message from user" [ref=f44e693]:
+                    - generic [ref=f44e695]:
+                      - generic [ref=f44e696]: only eu regulated minimum 50 million
+                      - generic [ref=f44e699]: Answered
+                  - article "Message from assistant" [ref=f44e700]:
+                    - generic [ref=f44e703]:
+                      - generic [ref=f44e704]:
+                        - generic [ref=f44e705]: 2 sources
+                        - generic [ref=f44e706]: 0.0s
+                      - button "Thinking trail — click to skip" [ref=f44e707] [cursor=pointer]:
+                        - generic [ref=f44e708]:
+                          - img [ref=f44e711]
+                          - generic [ref=f44e715]: Applying refined filters — EU jurisdiction, €50M minimum, distribution history
+              - generic [ref=f44e218]:
+                - generic [ref=f44e220]:
+                  - generic: Ask a question about the venue…
+                  - textbox "Message input" [ref=f44e221]
+                - button "Send" [disabled] [ref=f44e224]:
+                  - img [ref=f44e227]
+                  - status
+            - generic [ref=f44e326]:
+              - separator "Resize artifact stack"
+              - generic [ref=f44e329]:
+                - toolbar "Artifact stack actions" [ref=f44e332]:
+                  - generic [ref=f44e334]:
+                    - button "Back to list" [ref=f44e335] [cursor=pointer]:
+                      - img [ref=f44e339]
+                      - status
+                    - generic [ref=f44e341]: Tokenized Assets Above 6% Yield — Conservative Screen
+                  - generic [ref=f44e343]:
+                    - button "Maximize" [ref=f44e344] [cursor=pointer]:
+                      - img [ref=f44e348]
+                      - status
+                    - button "Close artifacts" [ref=f44e350] [cursor=pointer]:
+                      - img [ref=f44e354]
+                      - status
+                - generic [ref=f44e360]:
+                  - generic [ref=f44e362]:
+                    - generic [ref=f44e364]:
+                      - generic [ref=f44e365]:
+                        - generic [ref=f44e367]:
+                          - 'img "Recommendation confidence: 0.74, moderate" [ref=f44e368]':
+                            - generic [ref=f44e372]: 74%
+                          - generic [ref=f44e373]:
+                            - generic [ref=f44e374]: Recommendation confidence
+                            - generic [ref=f44e375]: 0.74 · moderate
+                        - generic [ref=f44e377]:
+                          - term [ref=f44e378]: Sources
+                          - definition [ref=f44e379]: "3"
+                          - term [ref=f44e380]: Unknowns
+                          - definition [ref=f44e381]: —
+                          - term [ref=f44e382]: Assumptions
+                          - definition [ref=f44e383]: "0"
+                      - generic [ref=f44e384]:
+                        - generic [ref=f44e385]: Aldergate's audit renewal is still pending — size the position accordingly.
+                        - generic [ref=f44e386]:
+                          - generic [ref=f44e388]: MarketTape
+                          - generic [ref=f44e390]: RiskLens
+                          - generic [ref=f44e392]: PortfolioAtlas
+                    - generic [ref=f44e393]:
+                      - generic [ref=f44e395]:
+                        - generic [ref=f44e396]: Summary
+                        - generic [ref=f44e397]: Helios's yield is real, but its RiskLens score of 61 and retail concentration sit outside the conservative mandate cited from PortfolioAtlas. NordBond remains the reference point — 5.8%, just below the 6% threshold.
+                      - generic [ref=f44e399]:
+                        - generic [ref=f44e400]: Recommended
+                        - generic [ref=f44e401]: Aldergate Estates fits the conservative mandate best, pending its audit renewal. Vantara stands as the portfolio's diversifier.
+                  - generic [ref=f44e406]:
+                    - generic [ref=f44e408]:
+                      - generic [ref=f44e409]: Candidates above 6%
+                      - generic [ref=f44e411]: 3 assets
+                    - generic [ref=f44e413]:
+                      - generic [ref=f44e414]: Reference — NordBond 2029
+                      - generic [ref=f44e416]: 5.8%
+                      - generic [ref=f44e417]: Below threshold
+                    - generic [ref=f44e419]:
+                      - generic [ref=f44e420]: Highest yield
+                      - generic [ref=f44e422]: 9.1%
+                      - generic [ref=f44e423]: Helios Yield Fund
+                  - generic [ref=f44e425]:
+                    - generic [ref=f44e427]: Candidates ranked by yield
+                    - generic [ref=f44e430]:
+                      - generic [ref=f44e431]: 3 results
+                      - group "Table" [ref=f44e432]:
+                        - table [ref=f44e433]:
+                          - rowgroup [ref=f44e434]:
+                            - row "Asset Yield RiskLens score Liquidity Jurisdiction" [ref=f44e435]:
+                              - columnheader "Asset" [ref=f44e436]
+                              - columnheader "Yield" [ref=f44e437]
+                              - columnheader "RiskLens score" [ref=f44e438]
+                              - columnheader "Liquidity" [ref=f44e439]
+                              - columnheader "Jurisdiction" [ref=f44e440]
+                          - rowgroup [ref=f44e441]:
+                            - row "Aldergate Estates 7.2% 34/100 Moderate Germany" [ref=f44e442]:
+                              - cell "Aldergate Estates" [ref=f44e443]
+                              - cell "7.2%" [ref=f44e444]
+                              - cell "34/100" [ref=f44e445]
+                              - cell "Moderate" [ref=f44e446]
+                              - cell "Germany" [ref=f44e447]
+                            - row "Vantara Metals 6.4% 45/100 Thin Switzerland" [ref=f44e448]:
+                              - cell "Vantara Metals" [ref=f44e449]
+                              - cell "6.4%" [ref=f44e450]
+                              - cell "45/100" [ref=f44e451]
+                              - cell "Thin" [ref=f44e452]
+                              - cell "Switzerland" [ref=f44e453]
+                            - row "Helios Yield Fund 9.1% 61/100 Moderate Luxembourg" [ref=f44e454]:
+                              - cell "Helios Yield Fund" [ref=f44e455]
+                              - cell "9.1%" [ref=f44e456]
+                              - cell "61/100" [ref=f44e457]
+                              - cell "Moderate" [ref=f44e458]
+                              - cell "Luxembourg" [ref=f44e459]
+                  - generic [ref=f44e461]:
+                    - generic [ref=f44e463]: Candidates compared
+                    - group "Table" [ref=f44e467]:
+                      - table [ref=f44e468]:
+                        - rowgroup [ref=f44e469]:
+                          - row "Dimension Aldergate Estates Vantara Metals Helios Yield Fund" [ref=f44e470]:
+                            - columnheader "Dimension" [ref=f44e471]
+                            - columnheader "Aldergate Estates" [ref=f44e472]
+                            - columnheader "Vantara Metals" [ref=f44e473]
+                            - columnheader "Helios Yield Fund" [ref=f44e474]
+                        - rowgroup [ref=f44e475]:
+                          - row "Yield 7.2% 6.4% 9.1%" [ref=f44e476]:
+                            - cell "Yield" [ref=f44e477]
+                            - cell "7.2%" [ref=f44e478]
+                            - cell "6.4%" [ref=f44e479]
+                            - cell "9.1%" [ref=f44e480]
+                          - row "RiskLens score 34/100 45/100 61/100" [ref=f44e481]:
+                            - cell "RiskLens score" [ref=f44e482]
+                            - cell "34/100" [ref=f44e483]
+                            - cell "45/100" [ref=f44e484]
+                            - cell "61/100" [ref=f44e485]
+                          - row "Liquidity Moderate Thin Moderate" [ref=f44e486]:
+                            - cell "Liquidity" [ref=f44e487]
+                            - cell "Moderate" [ref=f44e488]
+                            - cell "Thin" [ref=f44e489]
+                            - cell "Moderate" [ref=f44e490]
+                          - row "Jurisdiction Germany Switzerland Luxembourg" [ref=f44e491]:
+                            - cell "Jurisdiction" [ref=f44e492]
+                            - cell "Germany" [ref=f44e493]
+                            - cell "Switzerland" [ref=f44e494]
+                            - cell "Luxembourg" [ref=f44e495]
+                  - generic [ref=f44e497]:
+                    - generic [ref=f44e499]: 90-day yield vs. volatility
+                    - generic [ref=f44e500]:
+                      - generic [ref=f44e502]:
+                        - generic [ref=f44e503]: Aldergate Estates
+                        - application [ref=f44e506]:
+                          - generic [ref=f44e527]:
+                            - generic [ref=f44e528]:
+                              - generic [ref=f44e530]: 2026-04-24
+                              - generic [ref=f44e532]: 2026-05-14
+                              - generic [ref=f44e534]: 2026-06-03
+                              - generic [ref=f44e536]: 2026-07-02
+                            - generic [ref=f44e537]:
+                              - generic [ref=f44e539]: "0"
+                              - generic [ref=f44e541]: "2"
+                              - generic [ref=f44e543]: "4"
+                              - generic [ref=f44e545]: "6"
+                              - generic [ref=f44e547]: "8"
+                      - generic [ref=f44e549]:
+                        - generic [ref=f44e550]: Vantara Metals
+                        - application [ref=f44e553]:
+                          - generic [ref=f44e574]:
+                            - generic [ref=f44e575]:
+                              - generic [ref=f44e577]: 2026-04-24
+                              - generic [ref=f44e579]: 2026-05-14
+                              - generic [ref=f44e581]: 2026-06-03
+                              - generic [ref=f44e583]: 2026-07-02
+                            - generic [ref=f44e584]:
+                              - generic [ref=f44e586]: "0"
+                              - generic [ref=f44e588]: "2"
+                              - generic [ref=f44e590]: "4"
+                              - generic [ref=f44e592]: "6"
+                              - generic [ref=f44e594]: "8"
+                      - generic [ref=f44e596]:
+                        - generic [ref=f44e597]: Helios Yield Fund
+                        - application [ref=f44e600]:
+                          - generic [ref=f44e621]:
+                            - generic [ref=f44e622]:
+                              - generic [ref=f44e624]: 2026-04-24
+                              - generic [ref=f44e626]: 2026-05-14
+                              - generic [ref=f44e628]: 2026-06-03
+                              - generic [ref=f44e630]: 2026-07-02
+                            - generic [ref=f44e631]:
+                              - generic [ref=f44e633]: "0"
+                              - generic [ref=f44e635]: "3"
+                              - generic [ref=f44e637]: "6"
+                              - generic [ref=f44e639]: "9"
+                              - generic [ref=f44e641]: "12"
+                      - generic [ref=f44e643]:
+                        - generic [ref=f44e644]: NordBond 2029 (reference)
+                        - application [ref=f44e647]:
+                          - generic [ref=f44e668]:
+                            - generic [ref=f44e669]:
+                              - generic [ref=f44e671]: 2026-04-24
+                              - generic [ref=f44e673]: 2026-05-14
+                              - generic [ref=f44e675]: 2026-06-03
+                              - generic [ref=f44e677]: 2026-07-02
+                            - generic [ref=f44e678]:
+                              - generic [ref=f44e680]: "0"
+                              - generic [ref=f44e682]: "2"
+                              - generic [ref=f44e684]: "4"
+                              - generic [ref=f44e686]: "6"
+                              - generic [ref=f44e688]: "8"
+  - generic [ref=f44e689]: "3"

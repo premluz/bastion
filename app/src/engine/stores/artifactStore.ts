@@ -3,6 +3,9 @@ import type { HydratedScene } from "../../contracts/scene";
 import { config } from "../../config";
 import { useSceneStore } from "./sceneStore";
 import { useSessionStore } from "./sessionStore";
+import { createPaneVisibilitySlice, type PaneVisibilityState } from "./paneVisibilitySlice";
+
+export type { PaneKind } from "./paneVisibilitySlice";
 
 export interface Artifact {
   scene: HydratedScene;
@@ -20,8 +23,11 @@ export interface Artifact {
 // multi-pane store (and its cross-store subscription hack) redundant:
 // there's exactly one pane now, tightly coupled to this store's own
 // openArtifactId, so it lives on the same object rather than a second
-// store kept in sync with this one.
-interface ArtifactState {
+// store kept in sync with this one. Pane-visibility fields (paneActivity/
+// collapsedPane/isChatForcedOpen) are still part of THIS SAME store —
+// only their definitions moved to paneVisibilitySlice.ts (2026-07-29,
+// file budget) via Zustand's slice pattern, composed back in below.
+interface ArtifactState extends PaneVisibilityState {
   artifacts: Record<string, Artifact>;
   openArtifactId: string | null;
   isStackOpen: boolean;
@@ -46,6 +52,7 @@ export const useArtifactStore = create<ArtifactState>((set, get) => ({
   isMaximized: false,
   stackWidth: config.artifactStack.defaultWidth,
   viewedArtifactIds: {},
+  ...createPaneVisibilitySlice(set),
   registerArtifact: (id, artifact) => set((state) => ({ artifacts: { ...state.artifacts, [id]: artifact } })),
   // liveChannel's update-in-place path (2026-07-25): a pushed scene whose
   // id matches the CURRENTLY OPEN artifact swaps that artifact's scene in
@@ -137,5 +144,9 @@ export const useArtifactStore = create<ArtifactState>((set, get) => ({
       isStackOpen: false,
       isMaximized: false,
       viewedArtifactIds: {},
+      paneActivity: {},
+      collapsedPane: null,
+      isChatForcedOpen: false,
+      isChatManuallyClosed: false,
     }),
 }));

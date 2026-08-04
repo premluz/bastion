@@ -1,0 +1,252 @@
+{
+  "id": "stress-test-dense",
+  "title": "Scene Scale Stress Test",
+  "intents": ["stress test scene"],
+  "thinking": [
+    { "id": "plan", "kind": "plan", "label": "Assembling a deliberately dense scene", "durationMs": 500 }
+  ],
+  "data": {
+    "status-table": {
+      "kind": "table",
+      "columns": [
+        { "key": "position", "label": "Position", "type": "string" },
+        { "key": "tone", "label": "Tone", "type": "string" }
+      ],
+      "rows": [
+        { "position": "Alpha line", "tone": "ok" },
+        { "position": "Bravo line", "tone": "warn" },
+        { "position": "Charlie line", "tone": "alert" },
+        { "position": "Delta line", "tone": "neutral" }
+      ]
+    },
+    "ring-table": {
+      "kind": "table",
+      "columns": [
+        { "key": "segment", "label": "Segment", "type": "string" },
+        { "key": "share", "label": "Share", "type": "number" }
+      ],
+      "rows": [
+        { "segment": "North", "share": 34 },
+        { "segment": "South", "share": 22 },
+        { "segment": "East", "share": 18 },
+        { "segment": "West", "share": 26 }
+      ]
+    },
+    "bar-data": {
+      "kind": "series",
+      "series": [
+        {
+          "id": "load",
+          "label": "Load",
+          "points": [
+            { "x": "Mon", "y": 12 },
+            { "x": "Tue", "y": 18 },
+            { "x": "Wed", "y": 9 },
+            { "x": "Thu", "y": 22 },
+            { "x": "Fri", "y": 15 }
+          ]
+        }
+      ]
+    },
+    "big-table": {
+      "kind": "table",
+      "columns": [
+        { "key": "id", "label": "ID", "type": "string" },
+        { "key": "name", "label": "Name", "type": "string" },
+        { "key": "category", "label": "Category", "type": "string" },
+        { "key": "value", "label": "Value", "type": "number" },
+        { "key": "status", "label": "Status", "type": "string" },
+        { "key": "updated", "label": "Updated", "type": "date" }
+      ],
+      "rows": [
+        { "id": "R-01", "name": "Node Alpha", "category": "cluster-a", "value": 120, "status": "active", "updated": "2026-07-01" },
+        { "id": "R-02", "name": "Node Bravo", "category": "cluster-a", "value": 98, "status": "active", "updated": "2026-07-02" },
+        { "id": "R-03", "name": "Node Charlie", "category": "cluster-b", "value": 76, "status": "idle", "updated": "2026-07-03" },
+        { "id": "R-04", "name": "Node Delta", "category": "cluster-b", "value": 143, "status": "active", "updated": "2026-07-04" },
+        { "id": "R-05", "name": "Node Echo", "category": "cluster-c", "value": 61, "status": "flagged", "updated": "2026-07-05" },
+        { "id": "R-06", "name": "Node Foxtrot", "category": "cluster-c", "value": 87, "status": "active", "updated": "2026-07-06" },
+        { "id": "R-07", "name": "Node Golf", "category": "cluster-a", "value": 55, "status": "idle", "updated": "2026-07-07" },
+        { "id": "R-08", "name": "Node Hotel", "category": "cluster-b", "value": 132, "status": "active", "updated": "2026-07-08" }
+      ]
+    },
+    "trend-data": {
+      "kind": "series",
+      "series": [
+        {
+          "id": "primary",
+          "label": "Primary metric",
+          "points": [
+            { "x": "2026-06-20", "y": 10 },
+            { "x": "2026-06-21", "y": 12 },
+            { "x": "2026-06-22", "y": 11 },
+            { "x": "2026-06-23", "y": 14 },
+            { "x": "2026-06-24", "y": 13 },
+            { "x": "2026-06-25", "y": 16 },
+            { "x": "2026-06-26", "y": 15 },
+            { "x": "2026-06-27", "y": 18 },
+            { "x": "2026-06-28", "y": 17 },
+            { "x": "2026-06-29", "y": 20 }
+          ]
+        }
+      ]
+    },
+    "entity-data": {
+      "kind": "entity",
+      "entity": {
+        "id": "stress-test-entity",
+        "name": "Stress Test Entity",
+        "type": "Synthetic Fixture",
+        "attributes": [
+          { "label": "Field one", "value": "Value one" },
+          { "label": "Field two", "value": 42 },
+          { "label": "Field three", "value": "Value three" }
+        ]
+      }
+    },
+    "signal-table": {
+      "kind": "table",
+      "columns": [
+        { "key": "date", "label": "Date", "type": "date" },
+        { "key": "position", "label": "Position", "type": "string" },
+        { "key": "detail", "label": "Detail", "type": "string" }
+      ],
+      "rows": [
+        { "date": "2026-07-10", "position": "Signal one", "detail": "Synthetic detail for stress-test row one" },
+        { "date": "2026-07-11", "position": "Signal two", "detail": "Synthetic detail for stress-test row two" },
+        { "date": "2026-07-12", "position": "Signal three", "detail": "Synthetic detail for stress-test row three" }
+      ]
+    },
+    "news-table": {
+      "kind": "table",
+      "columns": [
+        { "key": "date", "label": "Date", "type": "date" },
+        { "key": "headline", "label": "Headline", "type": "string" },
+        { "key": "dek", "label": "Dek", "type": "string" },
+        { "key": "source", "label": "Source", "type": "string" }
+      ],
+      "rows": [
+        { "date": "2026-07-13", "headline": "Synthetic headline one", "dek": "A one-line dek for stress-test coverage.", "source": "StressFeed" },
+        { "date": "2026-07-14", "headline": "Synthetic headline two", "dek": "A second one-line dek for stress-test coverage.", "source": "StressFeed" }
+      ]
+    }
+  },
+  "layout": {
+    "id": "root",
+    "type": "scene-grid",
+    "reveal": 0,
+    "children": [
+      {
+        "id": "summary",
+        "type": "scene-summary",
+        "reveal": 1,
+        "props": {
+          "recommendation": "This is a synthetic, deliberately dense scene (20-25 nodes, mixed layout types) built only to stress-test the renderer's reveal stagger and layout math — not a real investigation.",
+          "confidence": 0.5,
+          "confidenceLabel": "N/A — synthetic fixture",
+          "sourceRefs": ["StressFeed"]
+        }
+      },
+      {
+        "id": "panel-metrics",
+        "type": "panel",
+        "reveal": 2,
+        "props": { "title": "Metrics" },
+        "children": [
+          {
+            "id": "metric-grid",
+            "type": "metric-grid",
+            "reveal": 3,
+            "children": [
+              { "id": "metric-1", "type": "metric", "reveal": 4, "props": { "label": "Metric one", "value": "12" } },
+              { "id": "metric-2", "type": "metric", "reveal": 5, "props": { "label": "Metric two", "value": "34" } },
+              { "id": "metric-3", "type": "metric", "reveal": 6, "props": { "label": "Metric three", "value": "56" } },
+              { "id": "metric-4", "type": "metric", "reveal": 7, "props": { "label": "Metric four", "value": "78" } }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "panel-dashboard",
+        "type": "panel",
+        "reveal": 8,
+        "props": { "title": "Nested dashboard-layout inside scene-grid" },
+        "children": [
+          {
+            "id": "nested-dashboard-layout",
+            "type": "dashboard-layout",
+            "reveal": 9,
+            "children": [
+              {
+                "id": "ring-gauge",
+                "type": "ring-gauge",
+                "reveal": 10,
+                "props": { "label": "Utilization", "value": 7, "max": 10, "tone": "warn" }
+              },
+              {
+                "id": "status-grid",
+                "type": "status-grid",
+                "reveal": 11,
+                "props": { "labelColumn": "position", "toneColumn": "tone" },
+                "bind": { "data": "status-table" }
+              },
+              {
+                "id": "ring-chart",
+                "type": "ring-chart",
+                "reveal": 12,
+                "props": { "labelColumn": "segment", "valueColumn": "share" },
+                "bind": { "data": "ring-table" }
+              },
+              {
+                "id": "bar-series",
+                "type": "bar-series",
+                "reveal": 13,
+                "bind": { "data": "bar-data" }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "panel-table",
+        "type": "panel",
+        "reveal": 14,
+        "props": { "title": "Dense table" },
+        "children": [{ "id": "data-table", "type": "data-table", "reveal": 15, "bind": { "data": "big-table" } }]
+      },
+      {
+        "id": "panel-timeseries",
+        "type": "panel",
+        "reveal": 16,
+        "props": { "title": "Trend" },
+        "children": [{ "id": "time-series", "type": "time-series", "reveal": 17, "bind": { "data": "trend-data" } }]
+      },
+      {
+        "id": "panel-entity-header",
+        "type": "panel",
+        "reveal": 18,
+        "props": { "title": "Entity" },
+        "children": [{ "id": "entity-header", "type": "entity-header", "reveal": 19, "bind": { "data": "entity-data" } }]
+      },
+      {
+        "id": "panel-signal-feed",
+        "type": "panel",
+        "reveal": 20,
+        "props": { "title": "Signals" },
+        "children": [{ "id": "signal-feed", "type": "signal-feed", "reveal": 21, "bind": { "data": "signal-table" } }]
+      },
+      {
+        "id": "panel-news-feed",
+        "type": "panel",
+        "reveal": 22,
+        "props": { "title": "Coverage" },
+        "children": [{ "id": "news-feed", "type": "news-feed", "reveal": 23, "bind": { "data": "news-table" } }]
+      },
+      {
+        "id": "filter-summary",
+        "type": "filter-summary",
+        "reveal": 24,
+        "props": { "constraints": ["Synthetic fixture", "Not a real narrative scene", "20-25 nodes"] }
+      }
+    ]
+  }
+}

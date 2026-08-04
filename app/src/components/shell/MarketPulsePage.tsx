@@ -85,11 +85,16 @@ export function MarketPulsePage() {
           {cards.map((card) => {
             const artifactRef = artifactRefByIntent.get(card.intent);
             const isInvestigated = !!artifactRef;
+            // panelFlat (Panel.tsx's own class, theme files) — transparent
+            // background + edge-only border, no elevation at rest,
+            // consistent with RelatedEntitiesStrip.tsx's same reuse
+            // (direct feedback, 2026-08-02).
             return (
               <ClickableCard
                 key={card.id}
                 label={isInvestigated ? `Open ${card.headline}` : card.headline}
-                variant="muted"
+                variant="default"
+                className="panelFlat"
                 padding={3}
                 onClick={() => handleClick(card)}
               >

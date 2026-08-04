@@ -1,0 +1,33 @@
+/* Scene-swap exit (Canvas, Phase 5): the outgoing scene fades out using
+   --motion-exit-duration/-ease before the incoming scene mounts and runs
+   its own merlin-reveal assembly — sequenced via onAnimationEnd, not a
+   guessed JS timeout, so it always matches the CSS duration exactly.
+
+   Plain .css, not .module.css (2026-07-27 root-cause fix): Canvas.tsx
+   toggles this animation by raw string name (`animationName: 'merlin-exit'`)
+   because it's a dynamic, JS-driven on/off switch that doesn't map to a
+   static CSS Modules class the way SceneRenderer's `.nodeWrapper` does.
+   This keyframe used to live in assembly.module.css alongside
+   `merlin-reveal` — but Vite's CSS Modules DOES scope `@keyframes` names
+   defined inside a .module.css file (confirmed live: the registered rule
+   was `_merlin-exit_13mms_1`, not `merlin-exit`), so the raw-string
+   reference silently matched nothing. `merlin-reveal` stayed correct
+   because SceneRenderer references it only through the scoped `.nodeWrapper`
+   class (`styles.nodeWrapper`), never by its own raw name — same file,
+   same module, consistently rewritten together. `merlin-exit` had no such
+   class to hide behind, so it broke: onAnimationEnd never fired, Canvas's
+   `displayedScene` state never advanced past the first scene, and every
+   scene after the first left its predecessor's content stuck on screen.
+   Moving it to a plain .css file (matching the working precedent already
+   set by ArtifactStackMount.css/trail.css for every other raw-string-
+   referenced keyframe in this codebase) is the fix, not a workaround —
+   this is exactly how every OTHER JS-toggled keyframe here already avoids
+   this trap. */
+@keyframes merlin-exit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

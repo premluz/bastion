@@ -1,0 +1,55 @@
+/* The pane every page's content now lives inside (direct feedback,
+   2026-08-02: "each page would be in the same pane as entity") — raised
+   one surface level above the content area's own background
+   (#astryx-app-shell-main, --surface-0, theme files) instead of an
+   outline, same reversal and reasoning as ArtifactStack.module.css's
+   .artifactCard and this pattern's own origin, EntityDetailPage.module.css
+   (now deleted, generalized here). No border: real background contrast
+   is what defines the pane, matching the artifact pane's own treatment. */
+.pane {
+  background-color: var(--surface-1);
+  border-radius: var(--radius-12);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  /* Makes the rounded corners real (direct feedback, 2026-08-03: "page
+     content pane not rounded as artifact pane") — without this, a
+     child's own background could render straight past the corner instead
+     of clipping to it. Also required for .paneScroll below to be the one
+     thing that scrolls: overflow:hidden here is what keeps .pane itself
+     visually still while its content moves underneath. */
+  overflow: hidden;
+  /* Overrides PaneTitleBar.module.css's --pane-title-padding-inline
+     default so the title lines up flush-left with .paneBody's own
+     padding below it (direct feedback, 2026-08-02), instead of the
+     wider inset that matches the outer page margin in every other
+     PaneTitleBar context (WorkbenchTitleBar's icon-only top bar).
+     --pane-title-bg (direct feedback, 2026-08-03: title bar's fade
+     gradient) overrides PaneTitleBar.module.css's own --surface-0
+     default so the fade matches this pane's actual background instead
+     of the app-wide one. Both cascade down to PaneTitleBar.tsx's root
+     fine despite it now sitting one level deeper, inside .paneScroll —
+     custom properties inherit through every descendant level. */
+  --pane-title-padding-inline: var(--space-16);
+  --pane-title-bg: var(--surface-1);
+}
+
+/* The one thing that scrolls (direct feedback, 2026-08-03: "scrollbar
+   should be inner on page content pane... so the actual panes are not
+   scrolling"). PaneTitleBar now lives INSIDE this div, sticky to its top
+   (direct feedback, same day: "gradient... to imitate smooth fadeout of
+   content scrolling underneath") — .paneBody scrolls past underneath it,
+   same box, not a separate one. .pane (above) stays visually fixed;
+   only this scrolls. */
+.paneScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.paneBody {
+  padding: var(--space-16);
+  display: grid;
+  gap: var(--space-24);
+}

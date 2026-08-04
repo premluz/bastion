@@ -1,3 +1,55 @@
+/* Container query, not a media query (2026-07-27): this node renders
+   inside a resizable artifact panel whose width is independent of the
+   viewport — a media query would key off the browser window, not the
+   pane, and could stay 2-column while the pane itself is too narrow to
+   hold it. Container queries are in Astryx's own supported baseline
+   (astryx docs browser-support: "widely available since 2023"). */
+.root {
+  display: grid;
+  gap: var(--space-12);
+  container-type: inline-size;
+}
+
+.confidenceMetricsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-12);
+}
+
+.confidenceColumn {
+  display: grid;
+  gap: var(--space-12);
+  justify-items: center;
+  text-align: center;
+}
+
+.metadataColumn {
+  display: grid;
+  gap: var(--space-12);
+  align-content: start;
+}
+
+.summaryRecommendationRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-12);
+}
+
+@container (max-width: 480px) {
+  .summaryRecommendationRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.paneContent {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.voiceFace {
+  font-family: var(--face-voice);
+}
+
 .sources {
   display: flex;
   flex-wrap: wrap;
@@ -7,4 +59,13 @@
 .assumptions {
   display: grid;
   gap: var(--space-4);
+}
+
+.kicker {
+  font-size: var(--text-12);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-signal);
+  margin-bottom: var(--space-4);
 }

@@ -1,0 +1,87 @@
+- generic [ref=f81e3]:
+  - generic [ref=f81e6]:
+    - link "Skip to content" [ref=f81e7] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f81e10]:
+      - navigation "Side navigation" [ref=f81e12]:
+        - generic [ref=f81e17]: Merlin
+        - generic [ref=f81e18]:
+          - group "Places" [ref=f81e19]:
+            - generic [ref=f81e22]: Places
+            - generic [ref=f81e23]:
+              - button "New investigation" [ref=f81e25] [cursor=pointer]:
+                - img [ref=f81e26]
+                - generic [ref=f81e28]: New investigation
+              - button "Discover" [ref=f81e30] [cursor=pointer]:
+                - img [ref=f81e32]
+                - generic [ref=f81e35]: Discover
+              - button "Watchlist" [ref=f81e37] [cursor=pointer]:
+                - img [ref=f81e39]
+                - generic [ref=f81e42]: Watchlist
+              - button "Data Sources" [ref=f81e44] [cursor=pointer]:
+                - img [ref=f81e46]
+                - generic [ref=f81e50]: Data Sources
+              - button "Market Pulse" [ref=f81e52] [cursor=pointer]:
+                - img [ref=f81e54]
+                - generic [ref=f81e56]: Market Pulse
+              - button "Investigations" [active] [ref=f81e58] [cursor=pointer]:
+                - img [ref=f81e60]
+                - generic [ref=f81e63]: Investigations
+              - button "Portfolio" [ref=f81e65] [cursor=pointer]:
+                - img [ref=f81e67]
+                - generic [ref=f81e69]: Portfolio
+              - button "Risk" [ref=f81e71] [cursor=pointer]:
+                - img [ref=f81e73]
+                - generic [ref=f81e75]: Risk
+          - group "Recent" [ref=f81e76]:
+            - generic [ref=f81e77]:
+              - generic [ref=f81e79]: Recent
+              - button "Filter recent" [ref=f81e82] [cursor=pointer]:
+                - img [ref=f81e86]
+                - status
+            - generic [ref=f81e88]:
+              - generic [ref=f81e89]: Nothing yet.
+              - button "View all" [ref=f81e92] [cursor=pointer]:
+                - generic [ref=f81e93]: View all
+        - generic [ref=f81e95]:
+          - button "Collapse sidebar" [ref=f81e97] [cursor=pointer]:
+            - img [ref=f81e101]
+            - status
+          - generic [ref=f81e103]:
+            - button "Analyst Analyst" [ref=f81e104] [cursor=pointer]:
+              - generic [ref=f81e105]:
+                - img "Analyst" [ref=f81e107]:
+                  - generic [ref=f81e109]: A
+                - generic [ref=f81e110]: Analyst
+                - img [ref=f81e113]
+              - status
+            - button "Notifications" [ref=f81e116] [cursor=pointer]:
+              - img [ref=f81e119]
+              - status
+      - main [ref=f81e123]:
+        - generic [ref=f81e128]:
+          - generic [ref=f81e129]:
+            - generic [ref=f81e130]: Investigations
+            - generic [ref=f81e131]:
+              - button "Chat" [ref=f81e153] [cursor=pointer]:
+                - img [ref=f81e156]
+                - status
+              - button "Artifacts" [disabled] [ref=f81e159]:
+                - img [ref=f81e162]
+                - status
+          - generic [ref=f81e523]:
+            - generic [ref=f81e524]:
+              - radiogroup "View" [ref=f81e525]:
+                - radio "By module" [checked] [ref=f81e526] [cursor=pointer]:
+                  - generic [ref=f81e527]: By module
+                - radio "All" [ref=f81e528] [cursor=pointer]:
+                  - generic [ref=f81e529]: All
+              - generic [ref=f81e531]:
+                - generic: Search investigations
+                - textbox "Search investigations" [ref=f81e534]:
+                  - /placeholder: Search investigations…
+            - status [ref=f81e535]:
+              - generic [ref=f81e536]:
+                - heading "No investigations yet" [level=3] [ref=f81e537]
+                - generic [ref=f81e538]: Ask a question from Home to start one.
+  - generic [ref=f81e423]: 5Y EUR IRS

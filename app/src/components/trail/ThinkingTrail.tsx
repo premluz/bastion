@@ -3,6 +3,7 @@ import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
 import type { ThinkingStep } from '../../contracts/thinking';
 import { StepRow } from './StepRow';
+import styles from './ThinkingTrail.module.css';
 
 interface ThinkingTrailProps {
   steps: ThinkingStep[];
@@ -47,7 +48,7 @@ export function ThinkingTrail({ steps, activeIndex, isComplete, elapsedMs, skip 
       <Collapsible
         defaultIsOpen
         trigger={
-          <div style={{ display: 'flex', gap: 'var(--space-8)', alignItems: 'center' }}>
+          <div className={styles.triggerHeader}>
             <Icon icon="wrench" color="secondary" size="sm" />
             <Text type="supporting" color="secondary">
               {`${steps.length} reasoning step${steps.length === 1 ? '' : 's'} · ${(elapsedMs / 1000).toFixed(1)}s`}
@@ -55,7 +56,7 @@ export function ThinkingTrail({ steps, activeIndex, isComplete, elapsedMs, skip 
           </div>
         }
       >
-        <div style={{ display: 'grid', gap: 'var(--space-12)' }}>{stepRows}</div>
+        <div className={styles.stepsContainer}>{stepRows}</div>
       </Collapsible>
     );
   }
@@ -72,7 +73,7 @@ export function ThinkingTrail({ steps, activeIndex, isComplete, elapsedMs, skip 
         }
       }}
       aria-label="Thinking trail — click to skip"
-      style={{ display: 'grid', gap: 'var(--space-12)', cursor: 'pointer' }}
+      className={styles.traiContainer}
     >
       {stepRows}
     </div>

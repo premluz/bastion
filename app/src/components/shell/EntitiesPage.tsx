@@ -13,7 +13,7 @@ import { resolveEntityDetail, type EntityDetail } from '../../engine/entityDetai
 import { usePageStore } from '../../engine/stores/pageStore';
 import { PageShell } from './PageShell';
 import { EntityDiscoveryStrips, type DiscoveryRow } from './EntityDiscoveryStrips';
-import { EntityAssetGrid } from './EntityAssetGrid';
+import { DiscoverAssetsSection } from './DiscoverAssetsSection';
 
 interface UniverseEntityRecord {
   entity: { id: string; name: string; type: string };
@@ -32,10 +32,13 @@ const otherEntities = entities.filter(({ entity }) => !marketAssetById.has(entit
 // citation count: Phase 14 shipped this as a turns-derived counter that
 // read as permanently blank until a query actually cited something in a
 // fresh session — direct feedback (2026-07-25) asked for it populated on
-// load instead. Three real, already-authored entities, curated for
-// narrative variety against Notable movers' own top-3 (the Solent bonds
-// ranked by |delta|) rather than re-showing them.
-const TRENDING_ENTITY_IDS = ['south-bow-corp', 'aldergate-estates', 'kestrel-holdings'] as const;
+// load instead. Category-isolated per node-vocabulary rule (2026-07-30):
+// Trending is a momentum-framed surface, scoped to crypto/stocks only —
+// excludes fixed-income/real-estate/credit-funds. Three diverse equities
+// (south-bow-corp, meridian-logistics, kynthia-renewables) curated for
+// narrative variety and to differentiate from Notable Movers' top-3 and
+// Newly Added's rotation — each strip has distinct entities visible.
+const TRENDING_ENTITY_IDS = ['south-bow-corp', 'meridian-logistics', 'kynthia-renewables'] as const;
 
 // Kestrel Holdings carries no chart series (it's a counterparty, not a
 // priced asset) — chartValue() has nothing to match against for it, so
@@ -45,6 +48,17 @@ const TRENDING_ENTITY_IDS = ['south-bow-corp', 'aldergate-estates', 'kestrel-hol
 const CURATED_VALUE_LABEL: Record<string, string> = {
   'kestrel-holdings': 'NordBond float accumulated',
 };
+
+// Trend indicator gate ("mostly crypto and equity," direct feedback
+// 2026-08-01) — mirrors movers' own filter below. getMarketAssets() never
+// populates delta24hPercent/price for real universe entities (only
+// yield/deltaRecent, computed uniformly regardless of category — a
+// pre-existing data gap, not something this pass fixes), so deltaRecent
+// (already correct, already used the same way by EntityAssetTableCells.
+// tsx's own default-category delta cell) is the trend source, unit "pp".
+function isMomentumCategory(category: string | undefined): boolean {
+  return category === 'crypto' || category === 'asset' || category === 'equity' || category === 'commodities';
+}
 
 const STRIP_COUNT = 3;
 const CARDS_PER_CATEGORY = 12;
@@ -103,15 +117,20 @@ function trendingValue(detail: EntityDetail): string {
 // real chart series get a deterministic MOCK trend glyph — a logged
 // exception to this page's usual "never fabricate" rule, made only
 // because full visual parity across every strip row was explicitly
-// requested over an honest gap. Reuses assetDiscoveryMock.ts's own
-// seeded-sine generator, not a second implementation. Anchors: Kestrel
-// Holdings' ties to its own real "11%" fact (see CURATED_VALUE_LABEL) so
-// the invented trend at least agrees with something true about it;
-// Halberg Materials AG (an equity) and Mira Voss (a person, no numeric
-// fact at all) have no real number to anchor to, so theirs are arbitrary
-// but fixed. A REAL value already shown (Kestrel's "11%") is never
-// overwritten by the mock endpoint — only entities with no real value at
-// all (Halberg, Mira Voss) get their displayed value from the mock too.
+// requested over an honest gap. Generalized (direct feedback, 2026-08-01):
+// every strip row needs a sparkline, not just the three originally
+// curated — equity/commodities/real-estate entities with no real series
+// were rendering blank. Reuses assetDiscoveryMock.ts's own seeded-sine
+// generator, not a second implementation. Anchor priority: (1) an
+// explicitly curated value below, kept for the entities it was chosen
+// for (Kestrel's tie to its own real "11%" fact; Halberg/Mira Voss, which
+// have no numeric fact at all, arbitrary but fixed); (2) the real value
+// already being displayed, parsed back to a number, so the fabricated
+// trend at least agrees with a fact already shown instead of inventing an
+// unrelated one; (3) a flat generic default only when neither exists. A
+// REAL value already shown is never overwritten by the mock endpoint —
+// only entities with no real value at all get their displayed value from
+// the mock too.
 const MOCK_SPARKLINE_ANCHOR: Record<string, number> = {
   'kestrel-holdings': 11,
   'halberg-materials': 24.5,
@@ -120,6 +139,7 @@ const MOCK_SPARKLINE_ANCHOR: Record<string, number> = {
 const MOCK_VALUE_UNIT: Record<string, '$' | '%'> = {
   'halberg-materials': '$',
 };
+const DEFAULT_MOCK_ANCHOR = 50;
 
 function withMockFallback(
   entityId: string,
@@ -127,8 +147,7 @@ function withMockFallback(
   realPoints: { x: string; y: number }[] | undefined,
 ): { value: string; sparklinePoints?: { x: string; y: number }[] } {
   if (realPoints) return { value: realValue, sparklinePoints: realPoints };
-  const anchor = MOCK_SPARKLINE_ANCHOR[entityId];
-  if (anchor === undefined) return { value: realValue };
+  const anchor = MOCK_SPARKLINE_ANCHOR[entityId] ?? parseLeadingNumber(realValue) ?? DEFAULT_MOCK_ANCHOR;
   const points = mockSparkline(anchor, entityId.length);
   const last = points[points.length - 1]?.y ?? anchor;
   const value = realValue !== '—' ? realValue : MOCK_VALUE_UNIT[entityId] === '$' ? `$${last.toFixed(2)}` : `${last.toFixed(1)}%`;
@@ -172,16 +191,37 @@ export function EntitiesPage() {
   const openEntityDetail = usePageStore((state) => state.openEntityDetail);
   const resolver = useMemo(() => createKeywordResolver(), []);
 
+  // Notable Movers scoped to crypto/stocks/commodities per category-isolation rule
+  // (node-vocabulary.md): momentum-framed surfaces exclude fixed-income/RE/credit-funds
   const movers: DiscoveryRow[] = useMemo(
     () =>
-      rankMovers(marketAssets, STRIP_COUNT).map((asset) => ({
-        id: asset.id,
-        name: asset.name,
-        detail: formatDelta(asset.deltaRecent),
-        value: `${asset.yield.toFixed(1)}%`,
-        sparklinePoints: asset.sparklinePoints,
-        ...(asset.intent !== undefined ? { intent: asset.intent } : {}),
-      })),
+      rankMovers(
+        marketAssets.filter((a) => a.category === 'crypto' || a.category === 'asset' || a.category === 'equity' || a.category === 'commodities'),
+        STRIP_COUNT,
+      ).map((asset) => {
+        // getMarketAssets() only has a real chart for bond/yield-fund
+        // entities (getYieldPoints's dataset key is yield-specific) — every
+        // crypto/asset/commodities row lands here with sparklinePoints: []
+        // (truthy, but empty — Sparkline renders blank). withMockFallback
+        // (below) is the same mechanism Trending already uses to guarantee
+        // a glyph either way.
+        const priceValue = asset.price ? `$${asset.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—';
+        const { value, sparklinePoints } = withMockFallback(asset.id, priceValue, asset.sparklinePoints.length > 0 ? asset.sparklinePoints : undefined);
+        return {
+          id: asset.id,
+          name: asset.name,
+          // Descriptor under the name is the entity's type (matching
+          // every other strip's row — "Tokenized Covered Bond" etc.), not
+          // a redundant percentage: TrendDelta already carries the delta
+          // in endContent, and the category Badge (now dropped from
+          // EntityDiscoveryStrips.tsx) was the same fact shown twice.
+          detail: asset.type,
+          value,
+          ...(sparklinePoints ? { sparklinePoints } : {}),
+          deltaPercent: asset.deltaRecent,
+          ...(asset.intent !== undefined ? { intent: asset.intent } : {}),
+        };
+      }),
     [],
   );
 
@@ -202,23 +242,33 @@ export function EntitiesPage() {
         value,
         ...(sparklinePoints ? { sparklinePoints } : {}),
         ...(detail.intent !== undefined ? { intent: detail.intent } : {}),
+        ...(detail.deltaRecent !== undefined && isMomentumCategory(detail.category) ? { deltaPercent: detail.deltaRecent } : {}),
       });
     }
     return rows;
   }, []);
 
+  // Newly Added: mixed-category allowed (a newly issued bond is as legitimately
+  // "new" as a newly listed crypto token). Category tag required on every card
+  // for disambiguation. No filtering — recency is neutral observation, not
+  // momentum claim (unlike Movers/Trending which stay crypto/stocks-only).
   const newlyAdded: DiscoveryRow[] = useMemo(
     () =>
       getNewlyAdded(STRIP_COUNT).map((entity) => {
         const intent = intentById.get(entity.id);
         const asset = marketAssetById.get(entity.id);
         if (asset) {
+          // Same empty-sparklinePoints gap as movers above — route through
+          // withMockFallback so every category gets a glyph.
+          const assetValue = asset.price ? `$${asset.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : `${asset.yield?.toFixed(1) ?? '—'}%`;
+          const { value, sparklinePoints } = withMockFallback(entity.id, assetValue, asset.sparklinePoints.length > 0 ? asset.sparklinePoints : undefined);
           return {
             id: entity.id,
             name: entity.name,
             detail: entity.type,
-            value: `${asset.yield.toFixed(1)}%`,
-            sparklinePoints: asset.sparklinePoints,
+            value,
+            ...(sparklinePoints ? { sparklinePoints } : {}),
+            ...(isMomentumCategory(asset.category) ? { deltaPercent: asset.deltaRecent } : {}),
             ...(intent !== undefined ? { intent } : {}),
           };
         }
@@ -239,6 +289,7 @@ export function EntitiesPage() {
           value,
           ...(sparklinePoints ? { sparklinePoints } : {}),
           ...(intent !== undefined ? { intent } : {}),
+          ...(detail?.deltaRecent !== undefined && isMomentumCategory(detail?.category) ? { deltaPercent: detail.deltaRecent } : {}),
         };
       }),
     [],
@@ -254,14 +305,11 @@ export function EntitiesPage() {
           onInvestigate={(intent) => void submitQuery(intent, resolver)}
         />
 
-        <div style={{ display: 'grid', gap: 'var(--space-12)' }}>
-          <Text type="label">Discover Assets</Text>
-          <EntityAssetGrid
-            assets={gridAssets}
-            onWatch={(id, name) => watch(id, name, 'manual')}
-            onOpenDetail={openEntityDetail}
-          />
-        </div>
+        <DiscoverAssetsSection
+          assets={gridAssets}
+          onWatch={(id, name) => watch(id, name, 'manual')}
+          onOpenDetail={openEntityDetail}
+        />
 
         <div style={{ display: 'grid', gap: 'var(--space-12)' }}>
           <Text type="label">Other tracked entities</Text>

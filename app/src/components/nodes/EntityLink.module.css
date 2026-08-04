@@ -1,0 +1,9 @@
+.link {
+  cursor: pointer;
+  text-decoration: none;
+  transition: text-decoration var(--duration-240) var(--ease-standard);
+}
+
+.link:hover {
+  text-decoration: underline;
+}

@@ -19,8 +19,13 @@ interface ArtifactCardProps {
 // transcript only once its trail has completed (Phase 8B WO-1's
 // artifactRef is set), so there's no in-progress state to represent here.
 export function ArtifactCard({ title, module, onOpen }: ArtifactCardProps) {
+  // panelFlat (Panel.tsx's own class, theme files) — transparent
+  // background + edge-only border, no elevation at rest, same treatment
+  // as RelatedEntitiesStrip.tsx / MarketPulsePage.tsx / LandingState.tsx's
+  // suggestion cards (direct feedback, 2026-08-02: this card was missed
+  // in that earlier pass).
   return (
-    <ClickableCard label={`Open ${title}`} onClick={onOpen} variant="muted" padding={3} maxWidth={360}>
+    <ClickableCard label={`Open ${title}`} onClick={onOpen} variant="default" className="panelFlat" padding={3} maxWidth={360}>
       <HStack gap={3} vAlign="center" width="100%">
         <Icon icon={DocumentIcon} size="md" color="secondary" />
         <StackItem size="fill">

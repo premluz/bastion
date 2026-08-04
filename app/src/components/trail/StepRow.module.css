@@ -1,0 +1,37 @@
+.root {
+  display: flex;
+  gap: var(--space-8);
+  align-items: flex-start;
+}
+
+.activeIndicator {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  animation-name: merlin-step-pulse;
+  animation-duration: var(--duration-480);
+  animation-timing-function: var(--ease-standard);
+  animation-iteration-count: infinite;
+}
+
+.contentBlock {
+  display: grid;
+  gap: var(--space-4);
+  flex: 1;
+  min-width: 0;
+}
+
+.headerRow {
+  display: flex;
+  gap: var(--space-8);
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.sourceChips {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}

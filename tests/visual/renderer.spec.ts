@@ -13,6 +13,8 @@ const RENDERER_STORIES = [
   'renderer-fixtures--eurusd-risk-reversal-detail',
   'renderer-fixtures--south-bow-capacity-filing',
   'renderer-fixtures--broken',
+  'renderer-fixtures--stress-test-dense',
+  'renderer-fixtures--stress-test-dense-broken',
 ] as const;
 
 const THEMES = ['default', 'ops-dark', 'glass'] as const;

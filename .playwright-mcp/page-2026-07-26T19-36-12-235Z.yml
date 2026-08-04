@@ -1,0 +1,90 @@
+- generic [ref=f27e6]:
+  - link "Skip to content" [ref=f27e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f27e10]:
+    - navigation "Side navigation" [ref=f27e12]:
+      - generic [ref=f27e17]: Merlin
+      - generic [ref=f27e18]:
+        - group "Places" [ref=f27e19]:
+          - generic [ref=f27e22]: Places
+          - generic [ref=f27e23]:
+            - button "New investigation" [ref=f27e25] [cursor=pointer]:
+              - img [ref=f27e26]
+              - generic [ref=f27e28]: New investigation
+            - button "Discover" [ref=f27e30] [cursor=pointer]:
+              - img [ref=f27e32]
+              - generic [ref=f27e35]: Discover
+            - button "Watchlist" [ref=f27e37] [cursor=pointer]:
+              - img [ref=f27e39]
+              - generic [ref=f27e42]: Watchlist
+            - button "Data Sources" [ref=f27e44] [cursor=pointer]:
+              - img [ref=f27e46]
+              - generic [ref=f27e50]: Data Sources
+            - button "Market Pulse" [ref=f27e52] [cursor=pointer]:
+              - img [ref=f27e54]
+              - generic [ref=f27e56]: Market Pulse
+            - button "Investigations" [ref=f27e58] [cursor=pointer]:
+              - img [ref=f27e60]
+              - generic [ref=f27e63]: Investigations
+            - button "Portfolio" [ref=f27e65] [cursor=pointer]:
+              - img [ref=f27e67]
+              - generic [ref=f27e69]: Portfolio
+            - button "Risk" [ref=f27e71] [cursor=pointer]:
+              - img [ref=f27e73]
+              - generic [ref=f27e75]: Risk
+        - group "Recent" [ref=f27e76]:
+          - generic [ref=f27e77]:
+            - generic [ref=f27e79]: Recent
+            - button "Filter recent" [ref=f27e82] [cursor=pointer]:
+              - img [ref=f27e86]
+              - status
+          - generic [ref=f27e88]:
+            - button "Aldergate Estates — Issuer Dossier Thinking…" [ref=f27e173] [cursor=pointer]:
+              - generic [ref=f27e174]: Aldergate Estates — Issuer Dossier
+              - img "Thinking…" [ref=f27e176]
+            - button "View all" [ref=f27e92] [cursor=pointer]:
+              - generic [ref=f27e93]: View all
+      - generic [ref=f27e95]:
+        - button "Collapse sidebar" [ref=f27e97] [cursor=pointer]:
+          - img [ref=f27e101]
+          - status
+        - generic [ref=f27e103]:
+          - button "Analyst Analyst" [ref=f27e104] [cursor=pointer]:
+            - generic [ref=f27e105]:
+              - img "Analyst" [ref=f27e107]:
+                - generic [ref=f27e109]: A
+              - generic [ref=f27e110]: Analyst
+              - img [ref=f27e113]
+            - status
+          - button "Notifications" [ref=f27e116] [cursor=pointer]:
+            - img [ref=f27e119]
+            - status
+    - main [ref=f27e123]:
+      - generic [ref=f27e128]:
+        - generic [ref=f27e177]:
+          - generic [ref=f27e178]: give me the full picture on aldergate estates
+          - button "Artifacts" [disabled] [ref=f27e180]:
+            - img [ref=f27e183]
+            - status
+        - generic [ref=f27e130]:
+          - generic [ref=f27e191]:
+            - article "Message from user" [ref=f27e192]:
+              - generic [ref=f27e194]:
+                - generic [ref=f27e195]: give me the full picture on aldergate estates
+                - generic [ref=f27e198]: Answered
+            - article "Message from assistant" [ref=f27e199]:
+              - generic [ref=f27e202]:
+                - generic [ref=f27e203]:
+                  - generic [ref=f27e204]: 3 sources
+                  - generic [ref=f27e205]: 0.0s
+                - button "Thinking trail — click to skip" [ref=f27e206] [cursor=pointer]:
+                  - generic [ref=f27e207]:
+                    - img [ref=f27e210]
+                    - generic [ref=f27e214]: Assembling the full issuer profile for Aldergate Estates
+          - generic [ref=f27e218]:
+            - generic [ref=f27e220]:
+              - generic: Ask a question about the venue…
+              - textbox "Message input" [ref=f27e221]
+            - button "Send" [disabled] [ref=f27e224]:
+              - img [ref=f27e227]
+              - status

@@ -1,0 +1,25 @@
+/* Staggered item entrance animations for page components (cards, rows,
+   sections, etc.). Apply to individual list items, grid cards, or sections
+   to create a cascading entrance effect. The animation-delay is controlled
+   via CSS custom property --item-index, which should be set inline per
+   item (e.g., style={{ --item-index: 0 }}). Uses motion-table-stagger for
+   tighter spacing compared to assembly-stagger. */
+
+.animatedItem {
+  animation-name: merlin-item-fade-in;
+  animation-duration: var(--motion-enter-duration);
+  animation-timing-function: var(--motion-enter-ease);
+  animation-fill-mode: backwards;
+  animation-delay: calc(var(--item-index, 0) * var(--motion-table-stagger));
+}
+
+@keyframes merlin-item-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

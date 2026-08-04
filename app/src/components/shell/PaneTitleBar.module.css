@@ -1,0 +1,84 @@
+/* Sticky again (direct feedback, 2026-08-03: "content panes title bar
+   should have gradient... to imitate smooth fadeout of content scrolling
+   underneath") — reverses the previous turn's "no sticky, matches
+   ArtifactStack's plain Toolbar" call, which was this file's own
+   assumption, not something asked for; content panes specifically want
+   scrolled rows to pass under the bar and fade out, which only works if
+   the bar is inside the scrolling container it fades over
+   (PageShell.tsx now nests it inside .paneScroll instead of beside it —
+   WorkbenchTitleBar's icon-only top-bar context isn't inside any scroll
+   container, so sticky is a no-op harmless default there). The gradient
+   (opaque through the bar's own content, fading to transparent over its
+   last ~16px) is what sells the fade rather than a hard clip line.
+   --pane-title-bg defaults to --surface-0 (WorkbenchTitleBar's own
+   context, sitting straight on the app background) — PageShell.module.css's
+   .pane and ArtifactStack.module.css's .artifactCard both override it to
+   --surface-1 (each pane's own actual background) so the fade matches
+   whatever it's actually sitting on instead of hardcoding one context's
+   color into all three. --pane-title-padding-inline (direct feedback,
+   2026-08-02: "title should have same padding left as content") defaults
+   to --space-24, matching the outer content-column inset — PageShell's
+   .pane and ArtifactStack's .artifactCard both override it to --space-16
+   to line up with their own content's padding (.paneBody and
+   PanePadding.module.css's .padded, respectively). As of 2026-08-04
+   (direct feedback: "should be a comp, with optional icon buttons in
+   front of title... and right hand side") this is also the artifact
+   pane's own header — startContent below is that front-of-title slot,
+   used there for the list↔detail back button. */
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--pane-title-padding-inline, var(--space-24));
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  /* Must beat every other sticky thing that can scroll underneath it
+     (direct feedback, 2026-08-03: "discover asset table is on top of the
+     header... header should be on top of everything") — confirmed live,
+     not guessed: Astryx's own useTableStickyColumns plugin
+     (EntityAssetTable.tsx's pinned Asset column) puts its sticky header
+     cell at z-index:3 ("header cells stack above body cells," its own
+     source comment), which was winning over this bar's old z-index:1
+     whenever a page's content scrolled a sticky-column table under it.
+     4 is the deliberate one-above-3 floor, not an arbitrary round number. */
+  z-index: 4;
+  background: linear-gradient(
+    to bottom,
+    var(--pane-title-bg, var(--surface-0)) 0%,
+    var(--pane-title-bg, var(--surface-0)) calc(100% - 16px),
+    transparent 100%
+  );
+}
+
+/* Holds startContent (e.g. a back button) + the title in one flex row.
+   min-width:0 is load-bearing (direct feedback, 2026-08-04: title
+   "should be... truncated if no room, not breaking in 2 lines") — flex
+   items default to min-width:auto, which refuses to shrink below the
+   title text's own natural width; without this override .title's own
+   ellipsis rules never get the chance to apply, same class of bug as
+   the min-height:0 fix PageShell.tsx needed for its pane's height. */
+.startGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.endContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  /* Icons never get squeezed by a long title — only .title (via
+     .startGroup) gives up space. */
+  flex-shrink: 0;
+}

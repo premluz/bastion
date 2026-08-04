@@ -1,0 +1,138 @@
+- generic [ref=f81e3]:
+  - generic [ref=f81e6]:
+    - link "Skip to content" [ref=f81e7] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f81e10]:
+      - navigation "Side navigation" [ref=f81e12]:
+        - generic [ref=f81e17]: Merlin
+        - generic [ref=f81e18]:
+          - group "Places" [ref=f81e19]:
+            - generic [ref=f81e22]: Places
+            - generic [ref=f81e23]:
+              - button "New investigation" [ref=f81e25] [cursor=pointer]:
+                - img [ref=f81e26]
+                - generic [ref=f81e28]: New investigation
+              - button "Discover" [ref=f81e30] [cursor=pointer]:
+                - img [ref=f81e32]
+                - generic [ref=f81e35]: Discover
+              - button "Watchlist" [ref=f81e37] [cursor=pointer]:
+                - img [ref=f81e39]
+                - generic [ref=f81e42]: Watchlist
+              - button "Data Sources" [ref=f81e44] [cursor=pointer]:
+                - img [ref=f81e46]
+                - generic [ref=f81e50]: Data Sources
+              - button "Market Pulse" [ref=f81e52] [cursor=pointer]:
+                - img [ref=f81e54]
+                - generic [ref=f81e56]: Market Pulse
+              - button "Investigations" [ref=f81e58] [cursor=pointer]:
+                - img [ref=f81e60]
+                - generic [ref=f81e63]: Investigations
+              - button "Portfolio" [ref=f81e65] [cursor=pointer]:
+                - img [ref=f81e67]
+                - generic [ref=f81e69]: Portfolio
+              - button "Risk" [active] [ref=f81e71] [cursor=pointer]:
+                - img [ref=f81e73]
+                - generic [ref=f81e75]: Risk
+          - group "Recent" [ref=f81e76]:
+            - generic [ref=f81e77]:
+              - generic [ref=f81e79]: Recent
+              - button "Filter recent" [ref=f81e82] [cursor=pointer]:
+                - img [ref=f81e86]
+                - status
+            - generic [ref=f81e88]:
+              - generic [ref=f81e89]: Nothing yet.
+              - button "View all" [ref=f81e92] [cursor=pointer]:
+                - generic [ref=f81e93]: View all
+        - generic [ref=f81e95]:
+          - button "Collapse sidebar" [ref=f81e97] [cursor=pointer]:
+            - img [ref=f81e101]
+            - status
+          - generic [ref=f81e103]:
+            - button "Analyst Analyst" [ref=f81e104] [cursor=pointer]:
+              - generic [ref=f81e105]:
+                - img "Analyst" [ref=f81e107]:
+                  - generic [ref=f81e109]: A
+                - generic [ref=f81e110]: Analyst
+                - img [ref=f81e113]
+              - status
+            - button "Notifications" [ref=f81e116] [cursor=pointer]:
+              - img [ref=f81e119]
+              - status
+      - main [ref=f81e123]:
+        - generic [ref=f81e128]:
+          - generic [ref=f81e129]:
+            - generic [ref=f81e130]: Risk
+            - generic [ref=f81e131]:
+              - button "Chat" [ref=f81e153] [cursor=pointer]:
+                - img [ref=f81e156]
+                - status
+              - button "Artifacts" [disabled] [ref=f81e159]:
+                - img [ref=f81e162]
+                - status
+          - generic [ref=f81e426]:
+            - generic [ref=f81e428]:
+              - generic [ref=f81e429]: Recommended
+              - blockquote [ref=f81e430]: No positions are currently in breach of their risk limit. One position — the EUR/USD 3M Risk Reversal — carries an unrated counterparty and remains flagged for escalation review; recommend completing that review before the position's notional grows further.
+              - generic [ref=f81e431]:
+                - 'img "Escalation-posture confidence: 0.70, moderate" [ref=f81e432]':
+                  - generic [ref=f81e436]: 70%
+                - generic [ref=f81e437]:
+                  - generic [ref=f81e438]: Escalation-posture confidence
+                  - generic [ref=f81e439]: 0.70 · moderate
+              - generic [ref=f81e440]: The 10Y USD Interest Rate Swap is monitoring-only (tenor risk, not counterparty risk) — only the EUR/USD position has an open escalation.
+              - generic [ref=f81e441]:
+                - generic [ref=f81e443]: RiskLens
+                - generic [ref=f81e445]: PortfolioAtlas
+            - generic [ref=f81e446]:
+              - generic [ref=f81e448]:
+                - generic [ref=f81e450]: Limit posture
+                - generic [ref=f81e452]:
+                  - generic [ref=f81e453]:
+                    - generic [ref=f81e454]: Positions in breach
+                    - generic [ref=f81e456]: "0"
+                  - generic [ref=f81e457]:
+                    - generic [ref=f81e458]: Flagged for escalation
+                    - generic [ref=f81e460]: "1"
+                  - generic [ref=f81e461]:
+                    - generic [ref=f81e462]: Open escalations
+                    - generic [ref=f81e464]: "1"
+                  - generic [ref=f81e465]:
+                    - generic [ref=f81e466]: Monitoring only
+                    - generic [ref=f81e468]: "1"
+              - generic [ref=f81e470]:
+                - generic [ref=f81e472]: Escalation review SLA
+                - generic [ref=f81e474]:
+                  - 'img "EUR/USD 3M Risk Reversal — review window: 2 days of 5 days, 40%" [ref=f81e475]':
+                    - generic [ref=f81e479]: 40%
+                  - generic [ref=f81e480]:
+                    - generic [ref=f81e481]: EUR/USD 3M Risk Reversal — review window
+                    - generic [ref=f81e482]: 2 days of 5 days
+              - generic [ref=f81e484]:
+                - generic [ref=f81e486]: Position status
+                - generic [ref=f81e489]:
+                  - generic [ref=f81e490]:
+                    - img "EUR/USD 3M Risk Reversal" [ref=f81e491]
+                    - generic [ref=f81e492]: EUR/USD 3M Risk Reversal
+                  - generic [ref=f81e493]:
+                    - img "5Y EUR Interest Rate Swap" [ref=f81e494]
+                    - generic [ref=f81e495]: 5Y EUR Interest Rate Swap
+                  - generic [ref=f81e496]:
+                    - img "GBP/EUR 6M FX Forward" [ref=f81e497]
+                    - generic [ref=f81e498]: GBP/EUR 6M FX Forward
+                  - generic [ref=f81e499]:
+                    - img "10Y USD Interest Rate Swap" [ref=f81e500]
+                    - generic [ref=f81e501]: 10Y USD Interest Rate Swap
+              - generic [ref=f81e503]:
+                - generic [ref=f81e505]: Escalation log
+                - generic [ref=f81e507]:
+                  - generic [ref=f81e508]:
+                    - generic [ref=f81e509]:
+                      - generic [ref=f81e510]: EUR/USD 3M Risk Reversal
+                      - generic [ref=f81e511]: Escalated for hedge review — counterparty Kestrel Holdings unrated
+                    - time [ref=f81e514]: Jul 16, 2026
+                  - generic [ref=f81e515]:
+                    - generic [ref=f81e516]:
+                      - generic [ref=f81e517]: 10Y USD Interest Rate Swap
+                      - generic [ref=f81e518]: Flagged for tenor risk — monitoring only, no escalation opened
+                    - time [ref=f81e521]: Jul 16, 2026
+  - generic [ref=f81e423]: 5Y EUR IRS

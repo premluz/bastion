@@ -7,6 +7,7 @@ import { useWatchlistStore } from '../../engine/stores/watchlistStore';
 import { submitQuery } from '../../engine/submitQuery';
 import { createKeywordResolver } from '../../engine/resolver/keywordResolver';
 import { PageShell } from './PageShell';
+import animatedItemStyles from './AnimatedListItem.module.css';
 
 interface UniverseEntityRecord {
   intent?: string;
@@ -41,7 +42,7 @@ export function WatchlistPage() {
         />
       ) : (
         <List hasDividers density="compact">
-          {rows.map((item) => {
+          {rows.map((item, index) => {
             const intent = intentById.get(item.entityId);
             // The row itself is the click target when there's somewhere to
             // go — Astryx's ListItem only gains hover/press styling once
@@ -51,9 +52,20 @@ export function WatchlistPage() {
             // rather than sitting alongside it. A row with no intent has
             // nothing to click into and correctly stays plain — no hover
             // implying an action that isn't there.
+            //
+            // Animation is applied directly to ListItem's own <li> (via
+            // className/style, not an AnimatedListItem wrapper div): List's
+            // hasDividers styling keys off ':last-child' on the <li> itself
+            // (ListItem.tsx's withDivider style) — wrapping each row in a
+            // div would make every <li> the sole/last child of its own
+            // wrapper, matching ':last-child' every time and silently
+            // killing every divider, on top of producing invalid
+            // <ul><div><li> nesting.
             return (
               <ListItem
                 key={item.entityId}
+                className={animatedItemStyles.animatedItem}
+                style={{ '--item-index': index } as React.CSSProperties}
                 label={item.label}
                 description={`${item.status} · ${SOURCE_LABEL[item.source]}`}
                 endContent={intent ? <Icon icon="externalLink" size="sm" /> : undefined}

@@ -1,0 +1,90 @@
+- generic [ref=f3e3]:
+  - generic [ref=f3e4]:
+    - banner [ref=f3e6]:
+      - heading "Storybook" [level=1] [ref=f3e7]
+      - generic [ref=f3e11]:
+        - generic [ref=f3e13]:
+          - link "Skip to content" [ref=f3e14] [cursor=pointer]:
+            - /url: "#storybook-preview-wrapper"
+          - link "Storybook" [ref=f3e16] [cursor=pointer]:
+            - /url: ./
+            - img "Storybook" [ref=f3e17]
+          - switch "Settings" [ref=f3e22] [cursor=pointer]
+        - generic [ref=f3e26]: Search for components
+        - search [ref=f3e27]:
+          - combobox [ref=f3e28]:
+            - searchbox "Search for components" [ref=f3e29]
+            - code:
+              - generic: ⌘
+              - text: K
+            - button "Tag filters" [ref=f3e31] [cursor=pointer]
+          - button "Create a new story" [ref=f3e34] [cursor=pointer]
+        - switch "Review new and modified stories" [ref=f3e38] [cursor=pointer]
+        - navigation [ref=f3e42]:
+          - heading "Stories" [level=2] [ref=f3e43]
+          - generic [ref=f3e45]:
+            - generic [ref=f3e46]:
+              - button "Collapse" [expanded] [ref=f3e47] [cursor=pointer]: Components
+              - button "Expand all" [ref=f3e51] [cursor=pointer]
+            - button [ref=f3e55] [cursor=pointer]
+            - generic [ref=f3e62]:
+              - button "Collapse" [expanded] [ref=f3e63] [cursor=pointer]: Nodes
+              - button "Expand all" [ref=f3e67] [cursor=pointer]
+            - button [ref=f3e71] [cursor=pointer]
+            - button [ref=f3e79] [cursor=pointer]
+            - button [ref=f3e87] [cursor=pointer]
+            - button [ref=f3e95] [cursor=pointer]
+            - button [ref=f3e103] [cursor=pointer]
+            - button [ref=f3e111] [cursor=pointer]
+            - button [ref=f3e119] [cursor=pointer]
+            - button [ref=f3e127] [cursor=pointer]
+            - button [ref=f3e135] [cursor=pointer]
+            - button [ref=f3e143] [cursor=pointer]
+            - button [ref=f3e151] [cursor=pointer]
+            - button [ref=f3e159] [cursor=pointer]
+            - button [ref=f3e167] [cursor=pointer]
+            - button [ref=f3e175] [cursor=pointer]
+            - button [ref=f3e183] [cursor=pointer]
+            - button [ref=f3e191] [cursor=pointer]
+            - button [ref=f3e199] [cursor=pointer]
+            - button [ref=f3e207] [cursor=pointer]
+            - button [ref=f3e215] [cursor=pointer]
+            - button [ref=f3e223] [cursor=pointer]
+            - button [ref=f3e231] [cursor=pointer]
+            - button [ref=f3e239] [cursor=pointer]
+            - button [ref=f3e247] [cursor=pointer]
+            - button [ref=f3e255] [cursor=pointer]
+            - button [ref=f3e263] [cursor=pointer]
+            - generic [ref=f3e270]:
+              - button "Collapse" [expanded] [ref=f3e271] [cursor=pointer]: Shell
+              - button "Expand all" [ref=f3e275] [cursor=pointer]
+            - button [ref=f3e279] [cursor=pointer]
+            - generic [ref=f3e286]:
+              - button [ref=f3e287] [cursor=pointer]
+              - 'button "Change status: New" [ref=f3e294] [cursor=pointer]'
+            - generic [ref=f3e297]:
+              - button "Collapse" [expanded] [ref=f3e298] [cursor=pointer]: Trail
+              - button "Expand all" [ref=f3e302] [cursor=pointer]
+            - button [ref=f3e306] [cursor=pointer]
+            - button [ref=f3e314] [cursor=pointer]
+            - button [ref=f3e322] [cursor=pointer]
+            - generic [ref=f3e329]:
+              - button "Collapse" [expanded] [ref=f3e330] [cursor=pointer]: Renderer
+              - button "Expand all" [ref=f3e334] [cursor=pointer]
+            - button [ref=f3e338] [cursor=pointer]
+            - button [ref=f3e346] [cursor=pointer]
+            - generic [ref=f3e353]:
+              - button "Collapse" [expanded] [ref=f3e354] [cursor=pointer]: Theme
+              - button "Expand all" [ref=f3e358] [cursor=pointer]
+            - button [ref=f3e362] [cursor=pointer]
+    - separator "Sidebar resize handle" [ref=f3e369]
+  - generic [ref=f3e371]:
+    - region [ref=f3e372]:
+      - heading "Toolbar" [level=2] [ref=f3e373]
+      - toolbar [ref=f3e374]
+    - main [ref=f3e375]:
+      - heading "Main preview area" [level=2] [ref=f3e376]
+      - generic [ref=f3e377]:
+        - progressbar "Content is loading..." [ref=f3e379]
+        - iframe [ref=f3e384]:
+          

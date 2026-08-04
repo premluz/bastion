@@ -1,0 +1,325 @@
+- generic [active] [ref=f1e15]:
+  - generic [ref=f1e18]:
+    - link "Skip to content" [ref=f1e19] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f1e22]:
+      - navigation "Side navigation" [ref=f1e24]:
+        - generic [ref=f1e25]: Merlin
+        - generic [ref=f1e30]:
+          - group "Places" [ref=f1e31]:
+            - generic [ref=f1e35]:
+              - button "New investigation" [ref=f1e37] [cursor=pointer]
+              - button "Discover" [ref=f1e42] [cursor=pointer]
+              - button "Watchlist" [ref=f1e49] [cursor=pointer]
+              - button "Data Sources" [ref=f1e56] [cursor=pointer]
+              - button "Market Pulse" [ref=f1e64] [cursor=pointer]
+              - button "Investigations" [ref=f1e70] [cursor=pointer]
+              - button "Portfolio" [ref=f1e77] [cursor=pointer]
+              - button "Risk" [ref=f1e83] [cursor=pointer]
+          - group "Recent" [ref=f1e88]:
+            - generic [ref=f1e89]:
+              - generic [ref=f1e90]: Recent
+              - button "Filter recent" [ref=f1e94] [cursor=pointer]:
+                - status
+            - generic [ref=f1e100]:
+              - button "Tokenized Assets Above 6% Yield — C… Thinking…" [ref=f1e102] [cursor=pointer]:
+                - generic [ref=f1e103]: Tokenized Assets Above 6% Yield — C…
+                - img "Thinking…" [ref=f1e105]
+              - button "Aldergate Estates — Issuer Dossier Answered" [ref=f1e107] [cursor=pointer]:
+                - generic [ref=f1e108]: Aldergate Estates — Issuer Dossier
+                - img "Answered" [ref=f1e110]
+              - button "View all" [ref=f1e113] [cursor=pointer]
+        - generic [ref=f1e116]:
+          - button "Collapse sidebar" [ref=f1e118] [cursor=pointer]:
+            - status
+          - generic [ref=f1e124]:
+            - button "Analyst Analyst" [ref=f1e125] [cursor=pointer]:
+              - generic [ref=f1e126]:
+                - img "Analyst" [ref=f1e128]:
+                  - generic [ref=f1e129]: A
+                - generic [ref=f1e131]: Analyst
+              - status
+            - button "Notifications" [ref=f1e137] [cursor=pointer]:
+              - status
+      - main [ref=f1e144]:
+        - generic [ref=f1e149]:
+          - generic [ref=f1e150]:
+            - generic [ref=f1e151]: NordBond 2029
+            - generic [ref=f1e152]:
+              - button "Watch NordBond 2029" [ref=f1e153] [cursor=pointer]:
+                - status
+              - button "Chat" [ref=f1e160] [cursor=pointer]:
+                - status
+              - generic [ref=f1e165]:
+                - button "Artifacts" [ref=f1e166] [cursor=pointer]:
+                  - status
+                - generic: "1"
+          - generic [ref=f1e173]:
+            - generic [ref=f1e177]:
+              - generic [ref=f1e179]:
+                - generic [ref=f1e180]: Trend
+                - generic [ref=f1e183]:
+                  - generic [ref=f1e184]:
+                    - generic [ref=f1e185]:
+                      - generic [ref=f1e186]: Latest yield
+                      - heading "5.80" [level=2] [ref=f1e188]
+                    - generic [ref=f1e189]:
+                      - generic [ref=f1e190]: Recent move
+                      - heading "+0.04" [level=2] [ref=f1e192]
+                  - application [ref=f1e195]:
+                    - generic [ref=f1e219]:
+                      - generic [ref=f1e220]:
+                        - generic [ref=f1e221]: 2026-04-22
+                        - generic [ref=f1e223]: 2026-05-15
+                        - generic [ref=f1e225]: 2026-06-08
+                        - generic [ref=f1e227]: 2026-07-02
+                      - generic [ref=f1e229]:
+                        - generic [ref=f1e230]: "0"
+                        - generic [ref=f1e232]: "2"
+                        - generic [ref=f1e234]: "4"
+                        - generic [ref=f1e236]: "6"
+                        - generic [ref=f1e238]: "8"
+                      - generic [ref=f1e240]:
+                        - generic [ref=f1e241]: "0"
+                        - generic [ref=f1e243]: "0.4"
+                        - generic [ref=f1e245]: "0.8"
+                        - generic [ref=f1e247]: "1.2"
+                        - generic [ref=f1e249]: "1.6"
+              - generic [ref=f1e252]:
+                - generic [ref=f1e254]:
+                  - generic [ref=f1e255]: Statistics
+                  - generic [ref=f1e258]:
+                    - generic [ref=f1e259]:
+                      - generic [ref=f1e260]: Yield (%)
+                      - generic [ref=f1e261]: "5.80"
+                    - generic [ref=f1e263]:
+                      - generic [ref=f1e264]: Recent move
+                      - generic [ref=f1e265]: "+0.04"
+                    - generic [ref=f1e267]:
+                      - generic [ref=f1e268]: Issuer
+                      - generic [ref=f1e269]: Fjellbank
+                    - generic [ref=f1e271]:
+                      - generic [ref=f1e272]: Credit rating
+                      - generic [ref=f1e273]: AA-
+                    - generic [ref=f1e275]:
+                      - generic [ref=f1e276]: Outstanding
+                      - generic [ref=f1e277]: €140M
+                    - generic [ref=f1e279]:
+                      - generic [ref=f1e280]: Jurisdiction
+                      - generic [ref=f1e281]: Norway
+                - generic [ref=f1e284]:
+                  - generic [ref=f1e285]: About
+                  - generic [ref=f1e288]:
+                    - generic [ref=f1e289]:
+                      - generic [ref=f1e290]: Issuer
+                      - generic [ref=f1e291]: Fjellbank
+                    - generic [ref=f1e293]:
+                      - generic [ref=f1e294]: Yield
+                      - generic [ref=f1e295]: 5.8%
+                    - generic [ref=f1e297]:
+                      - generic [ref=f1e298]: Credit rating
+                      - generic [ref=f1e299]: AA-
+                    - generic [ref=f1e301]:
+                      - generic [ref=f1e302]: Outstanding
+                      - generic [ref=f1e303]: €140M
+                    - generic [ref=f1e305]:
+                      - generic [ref=f1e306]: Jurisdiction
+                      - generic [ref=f1e307]: Norway
+                    - generic [ref=f1e309]:
+                      - generic [ref=f1e310]: RiskLens score
+                      - generic [ref=f1e311]: 18/100
+                    - generic [ref=f1e313]:
+                      - generic [ref=f1e314]: Liquidity
+                      - generic [ref=f1e315]: Deep
+                    - generic [ref=f1e317]:
+                      - generic [ref=f1e318]: Desk role
+                      - generic [ref=f1e319]: Benchmark safe asset
+              - generic [ref=f1e322]:
+                - generic [ref=f1e323]: Coverage
+                - generic [ref=f1e326]:
+                  - generic [ref=f1e327]:
+                    - generic [ref=f1e328]:
+                      - generic [ref=f1e329]: Two NordBond 2029 settlements fail this week, both traced to Kestrel-linked wallets
+                      - generic [ref=f1e330]: CustodyGrid logs settlement outpacing confirmation cycles on wallets 03 and 09.
+                    - generic [ref=f1e332]:
+                      - generic [ref=f1e333]: CustodyGrid
+                      - time [ref=f1e336]: Jul 8, 2026
+                  - generic [ref=f1e337]:
+                    - generic [ref=f1e338]:
+                      - generic [ref=f1e339]: NordBond 2029 remains the venue's benchmark safe asset despite settlement flags
+                      - generic [ref=f1e340]: 5.8% yield, AA- rating unchanged; Fjellbank issuance fundamentals unaffected by the wallet-cluster review.
+                    - generic [ref=f1e342]:
+                      - generic [ref=f1e343]: MarketTape
+                      - time [ref=f1e346]: Jul 8, 2026
+                  - generic [ref=f1e347]:
+                    - generic [ref=f1e348]:
+                      - generic [ref=f1e349]: Kestrel Holdings' float accumulation reaches 11% across 14 wallets
+                      - generic [ref=f1e350]: Six-week build-up precedes both failed settlements; counterparty remains unrated.
+                    - generic [ref=f1e352]:
+                      - generic [ref=f1e353]: LedgerWatch
+                      - time [ref=f1e356]: Jul 6, 2026
+                  - generic [ref=f1e357]:
+                    - generic [ref=f1e358]:
+                      - generic [ref=f1e359]: Fjellbank's Mira Voss reaffirms issuance calendar, no comment on wallet activity
+                      - generic [ref=f1e360]: Head of Issuance quoted in filings; NordBond 2029 issuance schedule unchanged.
+                    - generic [ref=f1e362]:
+                      - generic [ref=f1e363]: IssuerRegistry
+                      - time [ref=f1e366]: Jun 15, 2026
+              - generic [ref=f1e368]:
+                - generic [ref=f1e369]: Related
+                - generic [ref=f1e370]:
+                  - generic [ref=f1e371] [cursor=pointer]:
+                    - button "Open Aldergate Estates" [ref=f1e372]
+                    - generic [ref=f1e375]:
+                      - generic [ref=f1e376]: Aldergate Estates
+                      - text: Tokenized Real Estate Portfolio
+                  - generic [ref=f1e377] [cursor=pointer]:
+                    - button "Open Helios Yield Fund" [ref=f1e378]
+                    - generic [ref=f1e381]:
+                      - generic [ref=f1e382]: Helios Yield Fund
+                      - text: Tokenized Diversified Credit Fund
+                  - generic [ref=f1e383] [cursor=pointer]:
+                    - button "Open Vantara Metals" [ref=f1e384]
+                    - generic [ref=f1e387]:
+                      - generic [ref=f1e388]: Vantara Metals
+                      - text: Tokenized Copper-Royalty Note
+              - generic [ref=f1e390]:
+                - generic [ref=f1e391]: Investigations
+                - status [ref=f1e392]:
+                  - generic [ref=f1e393]:
+                    - heading "No investigations yet this session" [level=3] [ref=f1e394]
+                    - generic [ref=f1e395]: No investigation this session has referenced this entity.
+            - generic [ref=f1e396]:
+              - separator "Resize artifact stack"
+              - generic [ref=f1e399]:
+                - toolbar "Artifact stack actions" [ref=f1e402]:
+                  - generic [ref=f1e404]:
+                    - button "Back to list" [ref=f1e405] [cursor=pointer]:
+                      - status
+                    - generic [ref=f1e411]: Aldergate Estates — Issuer Dossier
+                  - generic [ref=f1e413]:
+                    - button "Maximize" [ref=f1e414] [cursor=pointer]:
+                      - status
+                    - button "Close artifacts" [ref=f1e420] [cursor=pointer]:
+                      - status
+                - generic [ref=f1e430]:
+                  - generic [ref=f1e432]:
+                    - generic [ref=f1e433]:
+                      - generic [ref=f1e434]: Forward-looking confidence
+                      - generic [ref=f1e436]:
+                        - generic [ref=f1e437]:
+                          - generic [ref=f1e438]:
+                            - 'img "Forward-looking confidence: 0.58, moderate" [ref=f1e440]':
+                              - generic [ref=f1e444]: 58%
+                            - generic [ref=f1e445]: Moderate
+                          - generic [ref=f1e446]:
+                            - generic [ref=f1e447]:
+                              - generic [ref=f1e448]: Sources
+                              - generic [ref=f1e449]: "3"
+                            - generic [ref=f1e451]:
+                              - generic [ref=f1e452]: Unknowns
+                              - generic [ref=f1e453]: "0"
+                            - generic [ref=f1e455]:
+                              - generic [ref=f1e456]: Assumptions
+                              - generic [ref=f1e457]: "0"
+                        - generic [ref=f1e459]: History confidence is high (0.86); this recommendation carries the lower forward-looking confidence pending IssuerRegistry's audit update.
+                        - generic [ref=f1e460]:
+                          - generic [ref=f1e461]: IssuerRegistry
+                          - generic [ref=f1e463]: CustodyGrid
+                          - generic [ref=f1e465]: PortfolioAtlas
+                    - generic [ref=f1e467]:
+                      - generic [ref=f1e469]:
+                        - generic [ref=f1e470]: Reasoning
+                        - generic [ref=f1e471]: Aldergate's fundamentals are sound and distributions have run unbroken for eight consecutive quarters. The single open risk is the pending audit renewal — IssuerRegistry has not yet confirmed the outcome.
+                      - generic [ref=f1e473]:
+                        - generic [ref=f1e474]: Recommended
+                        - generic [ref=f1e475]: Size the Aldergate Estates position, but gate settlement on audit confirmation.
+                  - generic [ref=f1e477]:
+                    - generic [ref=f1e478]:
+                      - heading "Aldergate Estates" [level=2] [ref=f1e479]
+                      - generic [ref=f1e480]: Renewal pending (12 days)
+                      - button "Watch Aldergate Estates" [ref=f1e481] [cursor=pointer]: Watch
+                    - generic [ref=f1e486]: Tokenized Real Estate Portfolio
+                    - generic [ref=f1e488]:
+                      - generic [ref=f1e489]:
+                        - term [ref=f1e490]: Underlying
+                        - definition [ref=f1e491]: Berlin commercial real estate portfolio
+                      - generic [ref=f1e492]:
+                        - term [ref=f1e493]: Yield
+                        - definition [ref=f1e494]: 7.2%
+                      - generic [ref=f1e495]:
+                        - term [ref=f1e496]: Outstanding
+                        - definition [ref=f1e497]: €62M
+                      - generic [ref=f1e498]:
+                        - term [ref=f1e499]: Audit status
+                        - definition [ref=f1e500]: Renewal lapsed — IssuerRegistry filing not received
+                      - generic [ref=f1e501]:
+                        - term [ref=f1e502]: Auditor
+                        - definition [ref=f1e503]: Nordkap Assurance
+                  - generic [ref=f1e508]:
+                    - generic [ref=f1e509]: Yield
+                    - generic [ref=f1e510]:
+                      - heading "7.2%" [level=2] [ref=f1e511]
+                      - img "Trend sparkline" [ref=f1e512]
+                    - generic [ref=f1e515]: 90-day trend
+                  - generic [ref=f1e517]:
+                    - generic [ref=f1e518]: Distribution record
+                    - generic [ref=f1e524]:
+                      - generic:
+                        - generic:
+                          - generic: Q1 2026
+                          - generic:
+                            - generic: Distribution (€M)
+                            - generic: "1.14"
+                      - application [ref=f1e525]:
+                        - generic [ref=f1e565]:
+                          - generic [ref=f1e566]:
+                            - generic [ref=f1e567]: Q4 2024
+                            - generic [ref=f1e569]: Q2 2025
+                            - generic [ref=f1e571]: Q4 2025
+                            - generic [ref=f1e573]: Q2 2026
+                          - generic [ref=f1e575]:
+                            - generic [ref=f1e576]: "0"
+                            - generic [ref=f1e578]: "0.3"
+                            - generic [ref=f1e580]: "0.6"
+                            - generic [ref=f1e582]: "0.9"
+                            - generic [ref=f1e584]: "1.2"
+                  - generic [ref=f1e587]:
+                    - generic [ref=f1e588]: Top holder concentration
+                    - img "Concentration map" [ref=f1e593]:
+                      - generic [ref=f1e594]:
+                        - 'generic "Other holders: 61%" [ref=f1e595]'
+                        - generic [ref=f1e596]:
+                          - generic [ref=f1e597]: Other holders
+                          - generic [ref=f1e598]: 61%
+                      - generic [ref=f1e599]:
+                        - 'generic "Meridian Capital Partners: 18%" [ref=f1e600]'
+                        - generic [ref=f1e601]:
+                          - generic [ref=f1e602]: Meridian …
+                          - generic [ref=f1e603]: 18%
+                      - generic [ref=f1e604]:
+                        - 'generic "Nordkap Pension Trust: 12%" [ref=f1e605]'
+                        - generic [ref=f1e606]:
+                          - generic [ref=f1e607]: Nordk…
+                          - generic [ref=f1e608]: 12%
+                      - generic [ref=f1e609]:
+                        - 'generic "Rhein Family Office: 9%" [ref=f1e610]'
+                        - generic [ref=f1e611]: Rhein Family Office
+            - generic [ref=f1e613]:
+              - generic [ref=f1e618]:
+                - article "Message from user" [ref=f1e619]:
+                  - generic [ref=f1e620]: show me tokenized assets yielding above 6%
+                - article "Message from assistant" [ref=f1e623]:
+                  - generic [ref=f1e626]:
+                    - generic [ref=f1e627]:
+                      - generic [ref=f1e628]: 3 sources
+                      - generic [ref=f1e629]: 0.0s
+                    - button "Thinking trail — click to skip" [ref=f1e630] [cursor=pointer]:
+                      - generic [ref=f1e631]: Parsing mandate constraints — yield floor, conservative risk tolerance
+              - generic [ref=f1e4]:
+                - generic [ref=f1e6]:
+                  - generic: Ask a question about the venue…
+                  - textbox "Message input" [ref=f1e7]
+                - button "Send" [disabled] [ref=f1e10]:
+                  - status
+  - generic [ref=f1e641]: Q3 2024

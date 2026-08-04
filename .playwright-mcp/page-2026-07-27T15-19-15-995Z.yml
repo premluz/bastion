@@ -1,0 +1,305 @@
+- generic [active] [ref=f38e3]:
+  - generic [ref=f38e2827]:
+    - link "Skip to content" [ref=f38e2828] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f38e2831]:
+      - navigation "Side navigation" [ref=f38e2833]:
+        - generic [ref=f38e2838]: Merlin
+        - generic [ref=f38e2839]:
+          - group "Places" [ref=f38e2840]:
+            - generic [ref=f38e2843]: Places
+            - generic [ref=f38e2844]:
+              - button "New investigation" [ref=f38e2846] [cursor=pointer]:
+                - img [ref=f38e2847]
+                - generic [ref=f38e2849]: New investigation
+              - button "Discover" [ref=f38e2851] [cursor=pointer]:
+                - img [ref=f38e2853]
+                - generic [ref=f38e2856]: Discover
+              - button "Watchlist" [ref=f38e2858] [cursor=pointer]:
+                - img [ref=f38e2860]
+                - generic [ref=f38e2863]: Watchlist
+              - button "Data Sources" [ref=f38e2865] [cursor=pointer]:
+                - img [ref=f38e2867]
+                - generic [ref=f38e2871]: Data Sources
+              - button "Market Pulse" [ref=f38e2873] [cursor=pointer]:
+                - img [ref=f38e2875]
+                - generic [ref=f38e2877]: Market Pulse
+              - button "Investigations" [ref=f38e2879] [cursor=pointer]:
+                - img [ref=f38e2881]
+                - generic [ref=f38e2884]: Investigations
+              - button "Portfolio" [ref=f38e2886] [cursor=pointer]:
+                - img [ref=f38e2888]
+                - generic [ref=f38e2890]: Portfolio
+              - button "Risk" [ref=f38e2892] [cursor=pointer]:
+                - img [ref=f38e2894]
+                - generic [ref=f38e2896]: Risk
+          - group "Recent" [ref=f38e2897]:
+            - generic [ref=f38e2898]:
+              - generic [ref=f38e2900]: Recent
+              - button "Filter recent" [ref=f38e2903] [cursor=pointer]:
+                - img [ref=f38e2907]
+                - status
+            - generic [ref=f38e2909]:
+              - button "Aldergate Estates — Issuer Dossier Answered" [ref=f38e2911] [cursor=pointer]:
+                - generic [ref=f38e2912]: Aldergate Estates — Issuer Dossier
+                - img "Answered" [ref=f38e2914]
+              - button "View all" [ref=f38e2917] [cursor=pointer]:
+                - generic [ref=f38e2918]: View all
+        - generic [ref=f38e2920]:
+          - button "Collapse sidebar" [ref=f38e2922] [cursor=pointer]:
+            - img [ref=f38e2926]
+            - status
+          - generic [ref=f38e2928]:
+            - button "Analyst Analyst" [ref=f38e2929] [cursor=pointer]:
+              - generic [ref=f38e2930]:
+                - img "Analyst" [ref=f38e2932]:
+                  - generic [ref=f38e2934]: A
+                - generic [ref=f38e2935]: Analyst
+                - img [ref=f38e2938]
+              - status
+            - button "Notifications" [ref=f38e2941] [cursor=pointer]:
+              - img [ref=f38e2944]
+              - status
+      - main [ref=f38e2948]:
+        - generic [ref=f38e2954]:
+          - generic [ref=f38e3202]:
+            - generic [ref=f38e3207]:
+              - article "Message from user" [ref=f38e3208]:
+                - generic [ref=f38e3210]:
+                  - generic [ref=f38e3211]: give me the full picture on aldergate estates
+                  - generic [ref=f38e3214]: Answered
+              - article "Message from assistant" [ref=f38e3215]:
+                - generic [ref=f38e3218]:
+                  - generic [ref=f38e3219]:
+                    - generic [ref=f38e3220]: 3 sources
+                    - generic [ref=f38e3221]: 8.6s
+                  - generic [ref=f38e3222]:
+                    - button "7 reasoning steps · 8.6s" [expanded] [ref=f38e3223] [cursor=pointer]:
+                      - generic [ref=f38e3225]:
+                        - img [ref=f38e3227]
+                        - generic [ref=f38e3229]: 7 reasoning steps · 8.6s
+                      - img [ref=f38e3231]
+                    - generic [ref=f38e3234]:
+                      - generic [ref=f38e3235]:
+                        - img [ref=f38e3238]
+                        - generic [ref=f38e3241]:
+                          - generic [ref=f38e3242]: Assembling the full issuer profile for Aldergate Estates
+                          - generic [ref=f38e3243]: 0.8s
+                      - generic [ref=f38e3244]:
+                        - img [ref=f38e3247]
+                        - generic [ref=f38e3250]:
+                          - generic [ref=f38e3251]:
+                            - generic [ref=f38e3252]: Pulling filings and audit history from IssuerRegistry
+                            - generic [ref=f38e3253]: 1.2s
+                          - generic [ref=f38e3256]: IssuerRegistry
+                      - generic [ref=f38e3257]:
+                        - img [ref=f38e3260]
+                        - generic [ref=f38e3263]:
+                          - generic [ref=f38e3264]:
+                            - generic [ref=f38e3265]: Retrieving distribution record and custody position from CustodyGrid
+                            - generic [ref=f38e3266]: 1.4s
+                          - generic [ref=f38e3269]: CustodyGrid
+                      - generic [ref=f38e3270]:
+                        - img [ref=f38e3273]
+                        - generic [ref=f38e3276]:
+                          - generic [ref=f38e3277]:
+                            - generic [ref=f38e3278]: Mapping top holder concentration and counterparty relationships
+                            - generic [ref=f38e3279]: 1.3s
+                          - generic [ref=f38e3282]: PortfolioAtlas
+                      - generic [ref=f38e3283]:
+                        - img [ref=f38e3286]
+                        - generic [ref=f38e3289]:
+                          - generic [ref=f38e3290]: Correlating distribution continuity against the pending audit renewal
+                          - generic [ref=f38e3291]: 1.5s
+                      - generic [ref=f38e3292]:
+                        - img [ref=f38e3295]
+                        - generic [ref=f38e3298]:
+                          - generic [ref=f38e3299]:
+                            - generic [ref=f38e3300]: Weighing fundamentals against the single open risk — audit renewal
+                            - generic [ref=f38e3301]: 1.4s
+                          - generic [ref=f38e3302]: 0.86 · high
+                      - generic [ref=f38e3303]:
+                        - img [ref=f38e3306]
+                        - generic [ref=f38e3308]:
+                          - generic [ref=f38e3309]:
+                            - generic [ref=f38e3310]: Flagging lower confidence on the forward view pending IssuerRegistry's audit update
+                            - generic [ref=f38e3311]: 1.0s
+                          - generic [ref=f38e3312]: 0.58 · moderate
+                  - generic [ref=f38e3313] [cursor=pointer]:
+                    - button "Open Aldergate Estates — Issuer Dossier" [ref=f38e3314]
+                    - generic [ref=f38e3315]:
+                      - img [ref=f38e3316]
+                      - generic [ref=f38e3321]:
+                        - generic [ref=f38e3322]: Aldergate Estates — Issuer Dossier
+                        - generic [ref=f38e3323]: research
+                      - generic [ref=f38e3324]: Ready
+                      - img [ref=f38e3326]
+            - generic [ref=f38e3331]:
+              - generic [ref=f38e3333]:
+                - generic: Ask a question about the venue…
+                - textbox "Message input" [ref=f38e3334]
+              - button "Send" [disabled] [ref=f38e3337]:
+                - img [ref=f38e3340]
+                - status
+          - generic [ref=f38e5186]:
+            - generic [ref=f38e5187]:
+              - generic [ref=f38e5188]: Aldergate Estates
+              - generic [ref=f38e5189]:
+                - button "Watch Aldergate Estates" [ref=f38e5190] [cursor=pointer]:
+                  - img [ref=f38e5194]
+                  - status
+                - button "Investigate Aldergate Estates" [ref=f38e5197] [cursor=pointer]:
+                  - img [ref=f38e5201]
+                  - status
+            - generic [ref=f38e5206]:
+              - generic [ref=f38e5207]: Tokenized Real Estate Portfolio
+              - generic [ref=f38e5208]:
+                - generic [ref=f38e5210]: Trend
+                - generic [ref=f38e5212]:
+                  - generic [ref=f38e5213]:
+                    - generic [ref=f38e5214]:
+                      - generic [ref=f38e5216]: "7.20"
+                      - generic [ref=f38e5217]: Latest yield
+                    - generic [ref=f38e5218]:
+                      - generic [ref=f38e5220]: "0.00"
+                      - generic [ref=f38e5221]: Recent move
+                  - application [ref=f38e5224]:
+                    - generic [ref=f38e5248]:
+                      - generic [ref=f38e5249]:
+                        - generic [ref=f38e5251]: 2026-04-09
+                        - generic [ref=f38e5253]: 2026-04-20
+                        - generic [ref=f38e5255]: 2026-05-01
+                        - generic [ref=f38e5257]: 2026-05-11
+                        - generic [ref=f38e5259]: 2026-05-21
+                        - generic [ref=f38e5261]: 2026-06-01
+                        - generic [ref=f38e5263]: 2026-06-11
+                        - generic [ref=f38e5265]: 2026-06-21
+                        - generic [ref=f38e5267]: 2026-07-02
+                      - generic [ref=f38e5268]:
+                        - generic [ref=f38e5270]: "0"
+                        - generic [ref=f38e5272]: "2"
+                        - generic [ref=f38e5274]: "4"
+                        - generic [ref=f38e5276]: "6"
+                        - generic [ref=f38e5278]: "8"
+                      - generic [ref=f38e5279]:
+                        - generic [ref=f38e5281]: "0"
+                        - generic [ref=f38e5283]: "0.8"
+                        - generic [ref=f38e5285]: "1.6"
+                        - generic [ref=f38e5287]: "2.4"
+                        - generic [ref=f38e5289]: "3.2"
+              - generic [ref=f38e5290]:
+                - generic [ref=f38e5292]: Statistics
+                - generic [ref=f38e5294]:
+                  - generic [ref=f38e5295]:
+                    - generic [ref=f38e5297]: "7.20"
+                    - generic [ref=f38e5298]: Yield (%)
+                  - generic [ref=f38e5299]:
+                    - generic [ref=f38e5301]: "0.00"
+                    - generic [ref=f38e5302]: Recent move
+                  - generic [ref=f38e5303]:
+                    - generic [ref=f38e5305]: €62M
+                    - generic [ref=f38e5306]: Outstanding
+                  - generic [ref=f38e5307]:
+                    - generic [ref=f38e5309]: Nordkap Assurance
+                    - generic [ref=f38e5310]: Auditor
+                  - generic [ref=f38e5311]:
+                    - generic [ref=f38e5313]: Quarterly
+                    - generic [ref=f38e5314]: Distribution frequency
+                  - generic [ref=f38e5315]:
+                    - generic [ref=f38e5317]: Germany
+                    - generic [ref=f38e5318]: Jurisdiction
+              - generic [ref=f38e5319]:
+                - generic [ref=f38e5321]: About
+                - generic [ref=f38e5324]:
+                  - generic [ref=f38e5325]:
+                    - term [ref=f38e5326]: Underlying
+                    - definition [ref=f38e5327]: Berlin commercial real estate portfolio
+                  - generic [ref=f38e5328]:
+                    - term [ref=f38e5329]: Yield
+                    - definition [ref=f38e5330]: 7.2%
+                  - generic [ref=f38e5331]:
+                    - term [ref=f38e5332]: Outstanding
+                    - definition [ref=f38e5333]: €62M
+                  - generic [ref=f38e5334]:
+                    - term [ref=f38e5335]: Audit status
+                    - definition [ref=f38e5336]: Renewal lapsed — IssuerRegistry filing not received
+                  - generic [ref=f38e5337]:
+                    - term [ref=f38e5338]: Auditor
+                    - definition [ref=f38e5339]: Nordkap Assurance
+                  - generic [ref=f38e5340]:
+                    - term [ref=f38e5341]: Distribution frequency
+                    - definition [ref=f38e5342]: Quarterly
+                  - generic [ref=f38e5343]:
+                    - term [ref=f38e5344]: Distribution record
+                    - definition [ref=f38e5345]: 8 consecutive quarters paid
+                  - generic [ref=f38e5346]:
+                    - term [ref=f38e5347]: Jurisdiction
+                    - definition [ref=f38e5348]: Germany
+                  - generic [ref=f38e5349]:
+                    - term [ref=f38e5350]: RiskLens score
+                    - definition [ref=f38e5351]: 34/100
+                  - generic [ref=f38e5352]:
+                    - term [ref=f38e5353]: Liquidity
+                    - definition [ref=f38e5354]: Moderate
+                  - generic [ref=f38e5355]:
+                    - term [ref=f38e5356]: Custodian
+                    - definition [ref=f38e5357]: Solent Custody
+              - generic [ref=f38e5358]:
+                - generic [ref=f38e5360]: Coverage
+                - generic [ref=f38e5362]:
+                  - generic [ref=f38e5363]:
+                    - generic [ref=f38e5364]:
+                      - generic [ref=f38e5365]: Aldergate Estates' audit renewal still pending as Q3 distribution nears
+                      - generic [ref=f38e5366]: Eight consecutive quarters paid, but IssuerRegistry has yet to log the renewal filing.
+                    - generic [ref=f38e5368]:
+                      - generic [ref=f38e5370]: IssuerRegistry
+                      - time [ref=f38e5372]: Jul 14, 2026
+                  - generic [ref=f38e5373]:
+                    - generic [ref=f38e5374]:
+                      - generic [ref=f38e5375]: Berlin commercial portfolio holds steady at 7.2% amid broader EU real estate softening
+                      - generic [ref=f38e5376]: Aldergate outpaces the regional benchmark for the third straight quarter.
+                    - generic [ref=f38e5378]:
+                      - generic [ref=f38e5380]: MarketTape
+                      - time [ref=f38e5382]: Jul 2, 2026
+                  - generic [ref=f38e5383]:
+                    - generic [ref=f38e5384]:
+                      - generic [ref=f38e5385]: Nordkap Assurance reconfirmed as Aldergate's sole auditor for FY2026
+                      - generic [ref=f38e5386]: No auditor change filed despite the open renewal question.
+                    - generic [ref=f38e5388]:
+                      - generic [ref=f38e5390]: IssuerRegistry
+                      - time [ref=f38e5392]: Jun 20, 2026
+                  - generic [ref=f38e5393]:
+                    - generic [ref=f38e5394]:
+                      - generic [ref=f38e5395]: Solent Custody confirms no disruption to Aldergate settlement despite audit uncertainty
+                      - generic [ref=f38e5396]: Custody and distribution mechanics remain unaffected while the filing question stays open.
+                    - generic [ref=f38e5398]:
+                      - generic [ref=f38e5400]: CustodyGrid
+                      - time [ref=f38e5402]: Jun 11, 2026
+              - generic [ref=f38e5403]:
+                - generic [ref=f38e5404]: Related
+                - generic [ref=f38e5405]:
+                  - generic [ref=f38e5406] [cursor=pointer]:
+                    - button "Open NordBond 2029" [ref=f38e5407]
+                    - generic [ref=f38e5410]:
+                      - generic [ref=f38e5411]: NordBond 2029
+                      - text: Tokenized Covered Bond
+                  - generic [ref=f38e5412] [cursor=pointer]:
+                    - button "Open Helios Yield Fund" [ref=f38e5413]
+                    - generic [ref=f38e5416]:
+                      - generic [ref=f38e5417]: Helios Yield Fund
+                      - text: Tokenized Diversified Credit Fund
+                  - generic [ref=f38e5418] [cursor=pointer]:
+                    - button "Open Vantara Metals" [ref=f38e5419]
+                    - generic [ref=f38e5422]:
+                      - generic [ref=f38e5423]: Vantara Metals
+                      - text: Tokenized Copper-Royalty Note
+              - generic [ref=f38e5424]:
+                - generic [ref=f38e5425]: Investigations
+                - generic [ref=f38e5426]: "Investigated once this session: Aldergate Estates — Issuer Dossier (Jul 27)."
+                - list [ref=f38e5427]:
+                  - listitem [ref=f38e5428] [cursor=pointer]:
+                    - button "Aldergate Estates — Issuer Dossier 04:10 PM" [ref=f38e5429]:
+                      - generic [ref=f38e5430]: Aldergate Estates — Issuer Dossier
+                      - generic [ref=f38e5431]: 04:10 PM
+                    - img "Answered" [ref=f38e5433]
+  - generic [ref=f38e548]: 2026-04-15

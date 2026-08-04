@@ -1,0 +1,230 @@
+- generic [active] [ref=f5e1]:
+  - generic [ref=f5e2]:
+    - log
+    - log [ref=f5e546]:
+      - generic [ref=f5e547]: Component test is rendering.
+      - generic [ref=f5e548]: Component test completed successfully.
+  - generic [ref=f5e4]:
+    - generic [ref=f5e5]:
+      - banner [ref=f5e7]:
+        - heading "Storybook" [level=1] [ref=f5e8]
+        - generic [ref=f5e12]:
+          - generic [ref=f5e13]:
+            - generic [ref=f5e14]:
+              - link "Skip to content" [ref=f5e15] [cursor=pointer]:
+                - /url: "#storybook-preview-wrapper"
+              - link "Storybook" [ref=f5e17] [cursor=pointer]:
+                - /url: ./
+                - img "Storybook" [ref=f5e18]
+              - switch "Settings" [ref=f5e23] [cursor=pointer]
+            - generic [ref=f5e29]:
+              - generic [ref=f5e31] [cursor=pointer]:
+                - button "Open onboarding guide" [ref=f5e35]:
+                  - strong [ref=f5e39]: Get started
+                - generic [ref=f5e40]:
+                  - button "Collapse onboarding guide" [expanded] [ref=f5e41]
+                  - button "25% completed" [ref=f5e44]:
+                    - generic [ref=f5e50]: 25%
+              - list [ref=f5e53]:
+                - listitem [ref=f5e61]:
+                  - button "Open onboarding guide for Change a story with Controls" [ref=f5e62] [cursor=pointer]:
+                    - generic [ref=f5e66]: Change a story with Controls
+                - listitem [ref=f5e68]:
+                  - button "Open onboarding guide for Publish your Storybook for feedback" [ref=f5e69] [cursor=pointer]:
+                    - generic [ref=f5e73]: Publish your Storybook for feedback
+                - listitem [ref=f5e549]:
+                  - button "Open onboarding guide for Install Vitest addon" [ref=f5e550] [cursor=pointer]:
+                    - generic [ref=f5e554]: Install Vitest addon
+          - generic [ref=f5e75]: Search for components
+          - search [ref=f5e76]:
+            - combobox [ref=f5e77]:
+              - searchbox "Search for components" [ref=f5e78]
+              - code:
+                - generic: ⌘
+                - text: K
+              - button "Tag filters" [ref=f5e80] [cursor=pointer]
+            - button "Create a new story" [ref=f5e83] [cursor=pointer]
+          - switch "Review new and modified stories" [ref=f5e87] [cursor=pointer]
+          - navigation [ref=f5e91]:
+            - heading "Stories" [level=2] [ref=f5e92]
+            - generic [ref=f5e94]:
+              - generic [ref=f5e95]:
+                - button "Collapse" [expanded] [ref=f5e96] [cursor=pointer]: Components
+                - button "Expand all" [ref=f5e100] [cursor=pointer]
+              - button [ref=f5e104] [cursor=pointer]
+              - generic [ref=f5e111]:
+                - button "Collapse" [expanded] [ref=f5e112] [cursor=pointer]: Nodes
+                - button "Expand all" [ref=f5e116] [cursor=pointer]
+              - button [ref=f5e120] [cursor=pointer]
+              - button [ref=f5e128] [cursor=pointer]
+              - button [ref=f5e136] [cursor=pointer]
+              - button [ref=f5e144] [cursor=pointer]
+              - button [ref=f5e152] [cursor=pointer]
+              - button [ref=f5e160] [cursor=pointer]
+              - button [ref=f5e168] [cursor=pointer]
+              - button [ref=f5e176] [cursor=pointer]
+              - button [ref=f5e184] [cursor=pointer]
+              - button [ref=f5e192] [cursor=pointer]
+              - button [ref=f5e200] [cursor=pointer]
+              - button [ref=f5e208] [cursor=pointer]
+              - button [ref=f5e216] [cursor=pointer]
+              - button [ref=f5e224] [cursor=pointer]
+              - button [ref=f5e232] [cursor=pointer]
+              - button [ref=f5e240] [cursor=pointer]
+              - button [ref=f5e248] [cursor=pointer]
+              - button [ref=f5e256] [cursor=pointer]
+              - button [ref=f5e264] [cursor=pointer]
+              - button [ref=f5e272] [cursor=pointer]
+              - button [ref=f5e280] [cursor=pointer]
+              - button [ref=f5e288] [cursor=pointer]
+              - button [ref=f5e296] [cursor=pointer]
+              - button [ref=f5e304] [cursor=pointer]
+              - button [ref=f5e312] [cursor=pointer]
+              - generic [ref=f5e319]:
+                - button "Collapse" [expanded] [ref=f5e320] [cursor=pointer]: Shell
+                - button "Expand all" [ref=f5e324] [cursor=pointer]
+              - button [expanded] [ref=f5e328] [cursor=pointer]
+              - generic [ref=f5e335]:
+                - link [ref=f5e336] [cursor=pointer]:
+                  - /url: /?path=/story/shell-frame--default
+                - link "Skip to content" [ref=f5e340] [cursor=pointer]:
+                  - /url: "#storybook-preview-wrapper"
+              - generic [ref=f5e341]:
+                - button [ref=f5e342] [cursor=pointer]
+                - 'button "Change status: New" [ref=f5e349] [cursor=pointer]'
+              - generic [ref=f5e352]:
+                - button "Collapse" [expanded] [ref=f5e353] [cursor=pointer]: Trail
+                - button "Expand all" [ref=f5e357] [cursor=pointer]
+              - button [ref=f5e361] [cursor=pointer]
+              - button [ref=f5e369] [cursor=pointer]
+              - button [ref=f5e377] [cursor=pointer]
+              - generic [ref=f5e384]:
+                - button "Collapse" [expanded] [ref=f5e385] [cursor=pointer]: Renderer
+                - button "Expand all" [ref=f5e389] [cursor=pointer]
+              - button [ref=f5e393] [cursor=pointer]
+              - button [ref=f5e401] [cursor=pointer]
+              - generic [ref=f5e408]:
+                - button "Collapse" [expanded] [ref=f5e409] [cursor=pointer]: Theme
+                - button "Expand all" [ref=f5e413] [cursor=pointer]
+              - button [ref=f5e417] [cursor=pointer]
+      - separator "Sidebar resize handle" [ref=f5e424]
+    - generic [ref=f5e426]:
+      - region [ref=f5e427]:
+        - heading "Toolbar" [level=2] [ref=f5e428]
+        - toolbar [ref=f5e429]:
+          - generic [ref=f5e430]:
+            - button "Reload story" [ref=f5e431] [cursor=pointer]
+            - switch "Grid visibility" [ref=f5e556] [cursor=pointer]
+            - button "Preview background" [ref=f5e559] [cursor=pointer]
+            - switch "Measure tool" [ref=f5e434] [cursor=pointer]
+            - switch "Outline tool" [ref=f5e438] [cursor=pointer]
+            - button "Viewport size" [ref=f5e441] [cursor=pointer]
+            - button "Meridian semantic theme default" [ref=f5e564] [cursor=pointer]: default
+            - button "Astryx stock theme neutral" [ref=f5e567] [cursor=pointer]: neutral
+            - button "Astryx's own light-dark() color-scheme (unmapped variables only — Meridian's bridge always stays dark) dark" [ref=f5e570] [cursor=pointer]: dark
+          - generic [ref=f5e446]:
+            - button "Open in isolation mode" [ref=f5e447] [cursor=pointer]
+            - switch "Change zoom level" [ref=f5e453] [cursor=pointer]: 100%
+            - button "Enter full screen" [ref=f5e454] [cursor=pointer]
+            - button "Open in editor" [ref=f5e457] [cursor=pointer]
+      - main [ref=f5e461]:
+        - heading "Main preview area" [level=2] [ref=f5e462]
+        - generic [ref=f5e466]:
+          - link "Skip to sidebar" [ref=f5e467] [cursor=pointer]:
+            - /url: "#shell-frame--default"
+          - iframe [ref=f5e471]:
+            - generic [ref=f6e4]:
+              - link "Skip to content" [ref=f6e5] [cursor=pointer]:
+                - /url: "#astryx-app-shell-main"
+              - generic [ref=f6e8]:
+                - navigation "Side navigation" [ref=f6e10]:
+                  - generic [ref=f6e11]: Merlin
+                  - generic [ref=f6e16]:
+                    - group "Places" [ref=f6e17]:
+                      - generic [ref=f6e21]:
+                        - button "New investigation" [ref=f6e23] [cursor=pointer]
+                        - button "Discover" [ref=f6e28] [cursor=pointer]
+                        - button "Watchlist" [ref=f6e35] [cursor=pointer]
+                        - button "Data Sources" [ref=f6e42] [cursor=pointer]
+                        - button "Market Pulse" [ref=f6e50] [cursor=pointer]
+                        - button "Investigations" [ref=f6e56] [cursor=pointer]
+                        - button "Portfolio" [ref=f6e63] [cursor=pointer]
+                        - button "Risk" [ref=f6e69] [cursor=pointer]
+                    - group "Recent" [ref=f6e74]:
+                      - generic [ref=f6e75]:
+                        - generic [ref=f6e76]: Recent
+                        - button "Filter recent" [ref=f6e80] [cursor=pointer]:
+                          - status
+                      - generic [ref=f6e86]:
+                        - generic [ref=f6e87]: Nothing yet.
+                        - button "View all" [ref=f6e90] [cursor=pointer]
+                  - generic [ref=f6e93]:
+                    - button "Collapse sidebar" [ref=f6e95] [cursor=pointer]:
+                      - status
+                    - generic [ref=f6e101]:
+                      - button "Analyst Analyst" [ref=f6e102] [cursor=pointer]:
+                        - generic [ref=f6e103]:
+                          - img "Analyst" [ref=f6e105]:
+                            - generic [ref=f6e106]: A
+                          - generic [ref=f6e108]: Analyst
+                        - status
+                      - button "Notifications" [ref=f6e114] [cursor=pointer]:
+                        - status
+                - main [ref=f6e121]:
+                  - generic [ref=f6e132]:
+                    - heading "Where should we start?" [level=1] [ref=f6e135]
+                    - generic [ref=f6e138]:
+                      - generic [ref=f6e140]:
+                        - generic: Ask a question about the venue…
+                        - textbox "Message input" [ref=f6e141]
+                      - button "Send" [disabled] [ref=f6e144]:
+                        - status
+                    - generic [ref=f6e150]:
+                      - generic [ref=f6e152] [cursor=pointer]:
+                        - button "Three tokenized assets now clear the 6% yield floor, led by Helios Yield Fund at 9.1%." [ref=f6e153]
+                        - generic [ref=f6e154]:
+                          - generic [ref=f6e155]: Three tokenized assets now clear the 6% yield floor, led by Helios Yield Fund at 9.1%.
+                          - generic [ref=f6e156]: The conservative screen's candidate pool has grown since the mandate was last run.
+                      - generic [ref=f6e158] [cursor=pointer]:
+                        - button "Aldergate Estates' audit renewal has lapsed — IssuerRegistry never received the filing." [ref=f6e159]
+                        - generic [ref=f6e160]:
+                          - generic [ref=f6e161]: Aldergate Estates' audit renewal has lapsed — IssuerRegistry never received the filing.
+                          - generic [ref=f6e162]: It's the one open risk on an otherwise investment-grade profile.
+                      - generic [ref=f6e164] [cursor=pointer]:
+                        - button "Two NordBond 2029 settlements failed this week, both traced to Kestrel-linked wallets." [ref=f6e165]
+                        - generic [ref=f6e166]:
+                          - generic [ref=f6e167]: Two NordBond 2029 settlements failed this week, both traced to Kestrel-linked wallets.
+                          - generic [ref=f6e168]: Kestrel has accumulated 11% of the float over six weeks.
+    - generic [ref=f5e472]:
+      - separator "Addon panel resize handle" [ref=f5e473]
+      - region [ref=f5e475]:
+        - heading "Addon panel" [level=2] [ref=f5e476]
+        - generic [ref=f5e477]:
+          - generic [ref=f5e478]:
+            - generic [ref=f5e479]:
+              - button "Move addon panel to right" [ref=f5e480] [cursor=pointer]
+              - button "Hide addon panel" [ref=f5e484] [cursor=pointer]
+            - tablist "Available addons" [ref=f5e490]:
+              - tab "Controls 1" [selected] [ref=f5e573] [cursor=pointer]:
+                - generic [ref=f5e492]:
+                  - generic [ref=f5e493]: Controls
+                  - generic [ref=f5e574]: "1"
+              - tab "Actions" [ref=f5e494] [cursor=pointer]
+              - tab "Interactions" [ref=f5e497] [cursor=pointer]
+          - tabpanel "Controls 1" [ref=f5e575]:
+            - generic [ref=f5e577]:
+              - button "Reset controls" [ref=f5e579] [cursor=pointer]
+              - table [ref=f5e582]:
+                - rowgroup [ref=f5e583]:
+                  - row [ref=f5e584]:
+                    - columnheader "Name" [ref=f5e585]
+                    - columnheader "Description" [ref=f5e586]
+                    - columnheader "Default" [ref=f5e587]
+                    - columnheader "Control" [ref=f5e588]
+                - rowgroup [ref=f5e589]:
+                  - row [ref=f5e590]:
+                    - cell "initialTheme" [ref=f5e591]
+                    - cell "unknown[number]" [ref=f5e592]
+                    - cell "'default'" [ref=f5e594]
+                    - cell [ref=f5e597]:
+                      - button "Set object" [ref=f5e598] [cursor=pointer]

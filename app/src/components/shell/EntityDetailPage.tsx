@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
-import { MetadataList, MetadataListItem } from '@astryxdesign/core/MetadataList';
 import { List } from '@astryxdesign/core/List';
-import { IconButton } from '@astryxdesign/core/IconButton';
-import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
+import { IconButton } from '@astryxdesign/core/IconButton';
+import { Icon } from '@astryxdesign/core/Icon';
 import { Panel } from '../nodes/Panel';
 import { NewsFeed } from '../nodes/NewsFeed';
 import { resolveEntityDetail, findRelatedEntities } from '../../engine/entityDetail';
@@ -15,15 +14,40 @@ import { useSessionStore } from '../../engine/stores/sessionStore';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
 import { useWatchlistStore } from '../../engine/stores/watchlistStore';
 import { usePageStore } from '../../engine/stores/pageStore';
-import { submitQuery } from '../../engine/submitQuery';
-import { createKeywordResolver } from '../../engine/resolver/keywordResolver';
 import { PageShell } from './PageShell';
 import { ThreadRow } from './ThreadRow';
 import { RelatedEntitiesStrip } from './RelatedEntitiesStrip';
-import { EntityTrendStats } from './EntityTrendStats';
+import { EntityTrend } from './EntityTrend';
+import { EntityStatistics } from './EntityStatistics';
+import { EntityAbout } from './EntityAbout';
+import { AnimatedListItem } from './AnimatedListItem';
+import type { ThreadSummary } from '../../engine/threads';
 
-const resolver = createKeywordResolver();
 const RELATED_COUNT = 3;
+
+// Coverage summary (2026-07-25 order) — a template-generated sentence,
+// not live LLM generation, same discipline as scene-summary/
+// recommendation: real data (the same ThreadSummary[] the Investigations
+// list below already renders — one computation, not a second query),
+// scripted synthesis. Chosen rule, the simplest one that's still
+// correct: concatenate each thread's own title with its date, joined by
+// connectives — no attempt at deeper NLG (e.g. inferring a theme across
+// threads), since the titles themselves already carry that meaning.
+function joinWithAnd(items: string[]): string {
+  if (items.length <= 1) return items[0] ?? '';
+  if (items.length === 2) return `${items[0]} and ${items[1]}`;
+  return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
+}
+
+function formatShortDate(ms: number): string {
+  return new Date(ms).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function buildCoverageSummary(threads: ThreadSummary[]): string {
+  const parts = threads.map((thread) => `${thread.title} (${formatShortDate(thread.timestamp)})`);
+  const count = threads.length === 1 ? 'once' : threads.length === 2 ? 'twice' : `${threads.length} times`;
+  return `Investigated ${count} this session: ${joinWithAnd(parts)}.`;
+}
 
 // Page (Phase 16, revised scope 2026-07-23) — reached by clicking any
 // Discover grid card, real or mocked filler (EntityAssetGrid.tsx), or a
@@ -62,92 +86,92 @@ export function EntityDetailPage() {
     );
   }
 
-  const intent = entity.intent;
-
   return (
     <PageShell
       title={entity.name}
-      headerActions={
-        <div style={{ display: 'flex', gap: 'var(--space-4)' }}>
-          <IconButton
-            label={`Watch ${entity.name}`}
-            tooltip="Add to watchlist"
-            icon={<Icon icon="checkDouble" size="sm" />}
-            variant="ghost"
-            size="sm"
-            onClick={() => watch(entity.id, entity.name, 'manual')}
-          />
-          {intent && (
-            <IconButton
-              label={`Investigate ${entity.name}`}
-              tooltip="Investigate"
-              icon={<Icon icon="externalLink" size="sm" />}
-              variant="ghost"
-              size="sm"
-              onClick={() => void submitQuery(intent, resolver)}
-            />
-          )}
-        </div>
+      titleEndContent={
+        <IconButton
+          label={`Watch ${entity.name}`}
+          tooltip="Add to watchlist"
+          icon={<Icon icon="checkDouble" size="sm" />}
+          variant="ghost"
+          size="sm"
+          onClick={() => watch(entity.id, entity.name, 'manual')}
+        />
       }
     >
-      <div style={{ display: 'grid', gap: 'var(--space-24)' }}>
+      {/* <AnimatedListItem index={0}>
         <Text type="supporting" color="secondary">
           {entity.type}
         </Text>
+      </AnimatedListItem> */}
 
-        <EntityTrendStats entity={entity} />
+      <AnimatedListItem index={0}>
+        <EntityTrend entity={entity} />
+      </AnimatedListItem>
 
-        <Panel title="About">
-          {entity.attributes.length === 0 ? (
-            <Text type="supporting" color="secondary">
-              No further profile authored for this entry.
-            </Text>
-          ) : (
-            <MetadataList columns="multi" orientation="horizontal">
-              {entity.attributes.map((attribute) => (
-                <MetadataListItem key={attribute.label} label={attribute.label}>
-                  <Text type="body" hasTabularNumbers>
-                    {attribute.value}
-                  </Text>
-                </MetadataListItem>
-              ))}
-            </MetadataList>
-          )}
-        </Panel>
+      {/* Statistics + About side by side (direct order, 2026-07-29):
+          two flex columns in one row, each shrinkable (minWidth: 0) so
+          neither forces the row wider than its container — wraps to
+          stacked on a narrow content column rather than overflowing,
+          same reasoning as every other flex-row split on this page. */}
+      <AnimatedListItem index={1}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-24)' }}>
+          <div style={{ flex: '1 1 320px', minWidth: 0 }}>
+            <EntityStatistics entity={entity} />
+          </div>
+          <div style={{ flex: '1 1 320px', minWidth: 0 }}>
+            <EntityAbout entity={entity} />
+          </div>
+        </div>
+      </AnimatedListItem>
 
-        {entity.news && (
+      {entity.news && (
+        <AnimatedListItem index={2}>
           <Panel title="Coverage">
             <NewsFeed data={entity.news} />
           </Panel>
-        )}
+        </AnimatedListItem>
+      )}
 
+      <AnimatedListItem index={entity.news ? 3 : 2}>
         <RelatedEntitiesStrip entities={related} onOpen={openEntityDetail} />
+      </AnimatedListItem>
 
+      <AnimatedListItem index={entity.news ? 4 : 3}>
         <div style={{ display: 'grid', gap: 'var(--space-12)' }}>
           <Text type="label">Investigations</Text>
           {relatedThreads.length === 0 ? (
-            <EmptyState title="No investigations yet" description="No investigation this session has referenced this entity." />
+            <EmptyState title="No investigations yet this session" description="No investigation this session has referenced this entity." />
           ) : (
-            <List hasDividers density="compact">
-              {relatedThreads.map((thread) => {
-                const module = thread.latestTurn.artifactRef ? artifacts[thread.latestTurn.artifactRef]?.module : undefined;
-                return (
-                  <ThreadRow
-                    key={thread.threadId}
-                    thread={thread}
-                    module={module}
-                    isSelected={activeThreadId === thread.threadId}
-                    onClick={() => {
-                      setPage('home');
-                      reopenThread(thread);
-                    }}
-                  />
-                );
-              })}
-            </List>
+            <>
+              {/* Coverage summary: additive, above the list, never a
+                  replacement for it — analysts still want the raw
+                  citations (title/date/status) the list below provides. */}
+              <Text type="body" style={{ fontFamily: 'var(--face-voice)' }}>
+                {buildCoverageSummary(relatedThreads)}
+              </Text>
+              <List hasDividers density="compact">
+                {relatedThreads.map((thread) => {
+                  const module = thread.latestTurn.artifactRef ? artifacts[thread.latestTurn.artifactRef]?.module : undefined;
+                  return (
+                    <ThreadRow
+                      key={thread.threadId}
+                      thread={thread}
+                      module={module}
+                      isSelected={activeThreadId === thread.threadId}
+                      onClick={() => {
+                        setPage('home');
+                        reopenThread(thread);
+                      }}
+                    />
+                  );
+                })}
+              </List>
+            </>
           )}
         </div>
-      </div>
+      </AnimatedListItem>
     </PageShell>
   );
 }

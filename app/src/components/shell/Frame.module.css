@@ -10,9 +10,40 @@
   gap: var(--space-16);
 }
 
+/* Phase 18: protected minimum, replacing min-width: 0 — the primary
+   content (a page, an investigation) is never a collapse candidate, so
+   it needs a real floor of its own rather than shrinking toward
+   nothing while its siblings hold theirs. 420px keeps EntityDetailPage's
+   own 2-column reflow (Demo Flow #1 order) legible at the floor, the
+   narrowest real content this column renders today.
+   min-height: 0 (direct feedback, 2026-08-03: "there is no general body
+   scrollbar... content should not push panes") — without it, this flex
+   item (a column, in .row's row-direction layout) defaults to
+   min-height:auto, which for a flex container means "don't shrink below
+   my own children's natural content size." Home's own content
+   (ScrollAnchor.tsx) already opts out of that per-child, so it never hit
+   this; every PageShell-backed place page didn't, so tall page content
+   grew .contentColumn (and everything above it, up to body) taller than
+   the viewport instead of staying put and scrolling internally —
+   producing exactly the stray page-level scrollbar reported. */
 .contentColumn {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  min-width: 0;
+  min-width: 420px;
+  min-height: 0;
+}
+
+/* Phase 18: fixed 480px → proportional/shrinkable with a real floor
+   (was: Demo Flow #1's fixed-width, no-new-store constraint — tier 2
+   is exactly the "new store" scope that constraint was deferring to).
+   flex-shrink alone, down to TRANSCRIPT_PANE_FLOOR (paneFloors.ts,
+   kept in sync by hand — CSS can't import the JS constant) — grows back
+   toward 480px whenever the row has room, never wider. */
+.transcriptPane {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 480px;
+  min-width: 320px;
+  min-height: 0;
 }
