@@ -345,6 +345,14 @@ Explicitly still no trade/buy-sell — News/Stats/Compare is the SeekingAlpha re
 
 *Gate:* notice fires correctly at <768px (own checkpoint, can close independently of the rest); at 768–1024px, panes shrink to floor before anything collapses, verified with a real 3-pane-open scenario forcing a 4th; `comparison`/`concentration-map` render legibly at their floor widths; 3 themes; report, stop.
 
+**Phase 19 — Entity Detail tabs + Analyst Consensus.** Depends on Phase 15 (My Portfolio, multi-wallet mock-connect) landing first for full credibility — Entity Detail's third-party-opinion surface reads strongest once the portfolio/holdings context it sits alongside is real, not still queued. Phase 15 remains queued/unfired as of this writing; this phase may be scoped/built in parallel if Phase 15 is still pending when reached, per the order's own escape hatch — not a hard block.
+
+1. Entity Detail gains tab navigation (Overview / Financials / Coverage / Historical Data — names adapted to Merlin's actual data, not a literal copy of any reference UI's labels, since Merlin's entities aren't all equities). Overview = today's default view; other tabs house content that currently over-crowds the single scroll (news-feed moves to Coverage, deeper historical series to Historical Data).
+2. New node: `analyst-consensus` (or similar name — cite the node-addition test per `merlin-new-node`) — buy/hold/sell distribution bar + low/average/high/current price positions. FACTS register (permanent, per principle 2) — this displays third-party opinion, not Merlin's own recommendation, so it is explicitly NOT provisional. Bind to a new consensus data field on relevant entities (crypto/stocks only — bonds don't have analyst consensus in the same sense; commodities likely N/A too — scope to where it's genuinely applicable, don't force it everywhere).
+3. Data: author or extrapolate 1–2 real-feeling analyst-consensus datasets for South Bow Corp and one crypto/equity entity, consistent with whatever real/authored price data already exists there.
+
+*Gate:* tabs work on Entity Detail without breaking existing content; `analyst-consensus` renders correctly where scoped; register-correct (facts, not reasoning); 3 themes; report, stop.
+
 ## 9. Session protocol
 
 Every session:
