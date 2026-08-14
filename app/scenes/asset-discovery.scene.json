@@ -123,19 +123,19 @@
                 "id": "candidates-found",
                 "type": "metric",
                 "reveal": 4,
-                "props": { "label": "Candidates above 6%", "value": 3, "unit": "assets" }
+                "props": { "label": "Candidates above 6%", "value": 3, "unit": "assets", "size": "compact" }
               },
               {
                 "id": "reference-asset",
                 "type": "metric",
                 "reveal": 5,
-                "props": { "label": "Reference — NordBond 2029", "value": "5.8%", "detail": "Below threshold" }
+                "props": { "label": "Reference — NordBond 2029", "value": "5.8%", "detail": "Below threshold", "size": "compact" }
               },
               {
                 "id": "top-yield",
                 "type": "metric",
                 "reveal": 6,
-                "props": { "label": "Highest yield", "value": "9.1%", "detail": "Helios Yield Fund" }
+                "props": { "label": "Highest yield", "value": "9.1%", "detail": "Helios Yield Fund", "size": "compact" }
               }
             ]
           }

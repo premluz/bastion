@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Table, useTableStickyColumns } from '@astryxdesign/core/Table';
+import { Table } from '@astryxdesign/core/Table';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import styles from './EntityAssetTable.module.css';
 import type { MarketAsset } from '../../engine/assetDiscovery';
@@ -38,11 +38,6 @@ interface EntityAssetTableProps {
 export function EntityAssetTable({ assets, onWatch, onOpenDetail, category }: EntityAssetTableProps) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
-  // Pins the Asset column (fixed 260px, EntityAssetTableCells.tsx) to the
-  // start edge so it stays visible while the rest of the row scrolls
-  // horizontally. Called unconditionally, above the empty-state return,
-  // per Rules of Hooks — useTableStickyColumns uses useRef internally.
-  const stickyColumns = useTableStickyColumns<Row>({ startKeys: ['name'] });
 
   if (assets.length === 0) {
     return <EmptyState title="No assets in this category" description="Try a different filter." />;
@@ -93,7 +88,7 @@ export function EntityAssetTable({ assets, onWatch, onOpenDetail, category }: En
   return (
     <div style={{ width: '100%', minWidth: 0, overflow: 'auto', maxWidth: '100%' }}>
       <div className={styles.animatedTable}>
-        <Table<Row> data={rows} columns={columns} density="compact" dividers="rows" hasHover textOverflow="wrap" plugins={{ stickyColumns }} />
+        <Table<Row> data={rows} columns={columns} density="compact" dividers="rows" hasHover textOverflow="wrap" />
       </div>
     </div>
   );

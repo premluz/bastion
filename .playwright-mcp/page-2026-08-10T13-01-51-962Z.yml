@@ -1,0 +1,53 @@
+- generic [ref=f10e6]:
+  - link "Skip to content" [ref=f10e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f10e10]:
+    - navigation "Side navigation" [ref=f10e12]:
+      - generic [ref=f10e13]: Merlin
+      - generic [ref=f10e18]:
+        - group "Places" [ref=f10e19]:
+          - generic [ref=f10e23]:
+            - button "New investigation" [ref=f10e25] [cursor=pointer]
+            - button "Discover" [ref=f10e30] [cursor=pointer]
+            - button "Watchlist" [ref=f10e35] [cursor=pointer]
+            - button "Market Pulse" [ref=f10e40] [cursor=pointer]
+            - button "Portfolio" [ref=f10e45] [cursor=pointer]
+            - button "Risk" [ref=f10e50] [cursor=pointer]
+            - button "Data Sources" [ref=f10e55] [cursor=pointer]
+        - group "Recent" [ref=f10e59]:
+          - generic [ref=f10e60]:
+            - generic [ref=f10e61]: Recent
+            - button "Filter recent" [ref=f10e65] [cursor=pointer]:
+              - status
+          - generic [ref=f10e71]:
+            - button "why is aldergate audit pending No match" [ref=f10e73] [cursor=pointer]:
+              - generic [ref=f10e74]: why is aldergate audit pending
+              - img "No match" [ref=f10e76]
+            - button "View all" [ref=f10e79] [cursor=pointer]
+      - generic [ref=f10e82]:
+        - button "Collapse sidebar" [ref=f10e84] [cursor=pointer]:
+          - status
+        - generic [ref=f10e90]:
+          - button "Analyst Analyst" [ref=f10e91] [cursor=pointer]:
+            - generic [ref=f10e92]:
+              - img "Analyst" [ref=f10e94]:
+                - generic [ref=f10e95]: A
+              - generic [ref=f10e97]: Analyst
+            - status
+          - button "Notifications" [ref=f10e103] [cursor=pointer]:
+            - status
+    - main [ref=f10e110]:
+      - generic [ref=f10e115]:
+        - generic [ref=f10e116]:
+          - generic [ref=f10e117]: why is aldergate audit pending
+          - button "Artifacts" [disabled] [ref=f10e121]:
+            - status
+        - generic [ref=f10e129]:
+          - article "Message from user" [ref=f10e135]:
+            - generic [ref=f10e136]: why is aldergate audit pending
+          - generic [ref=f10e142]:
+            - generic [ref=f10e144]:
+              - generic: Ask a question about the venue…
+              - textbox "Message input" [ref=f10e145]
+            - button "Send" [disabled] [ref=f10e148]:
+              - status

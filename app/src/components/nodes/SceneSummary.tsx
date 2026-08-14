@@ -1,4 +1,3 @@
-import { Card } from '@astryxdesign/core/Card';
 import { Text } from '@astryxdesign/core/Text';
 import { SourceChip } from '../trail/SourceChip';
 import { ConfidenceMeter } from './ConfidenceMeter';
@@ -36,7 +35,14 @@ export function SceneSummary({
         <div className={styles.confidenceMetricsRow}>
           <div className={styles.confidenceColumn}>
             <ConfidenceMeter label={confidenceLabel} value={confidence} hideCaption />
-            <Text type="large" weight="semibold" display="block">
+            {/* body, not large (direct feedback, 2026-08-08: "value Moderate
+                should be smaller scale... same as [EntityStatistics's
+                Metric size='compact' values]") — Metric.tsx's own compact
+                branch is exactly this: body + semibold, one step below the
+                large (17px) this used before. Matches the confidence pane's
+                sibling metrics (Sources/Unknowns/Assumptions, all
+                size="compact") rather than standing out a step larger. */}
+            <Text type="body" weight="semibold" display="block">
               {capitalize(confidenceQualifier(confidence))}
             </Text>
           </div>
@@ -56,28 +62,32 @@ export function SceneSummary({
         )}
       </Panel>
 
-      {/* Summary + Recommendation row — 2 columns */}
+      {/* Summary + Recommendation row — 2 columns. Uses Panel itself now
+          (direct feedback, 2026-08-08: "these titles should be like others
+          not upper case not grey") rather than a hand-rolled Card + .kicker
+          div trying to imitate Panel's title styling in parallel — the
+          .kicker class had already drifted once (accent color, then
+          uppercase+letter-spacing on top of that) precisely because it was
+          a second implementation of the same visual idea instead of a
+          shared one. Panel's own <Text type="label"> title is what every
+          other section (confidence pane above, page sections elsewhere)
+          renders, so reusing it structurally guarantees the match instead
+          of re-copying values that can drift again. */}
       <div className={styles.summaryRecommendationRow}>
         {/* Summary pane — left */}
         {investigationSummary && (
-          <Card variant="default" padding={4} className="panelProvisional">
-            <div className={styles.paneContent}>
-              <div className={styles.kicker}>Reasoning</div>
-              <div className={styles.voiceFace}>
-                <Text type="body">{investigationSummary}</Text>
-              </div>
+          <Panel title="Reasoning">
+            <div className={styles.voiceFace}>
+              <Text type="body">{investigationSummary}</Text>
             </div>
-          </Card>
+          </Panel>
         )}
         {/* Recommendation pane — right */}
-        <Card variant="default" padding={4} className="panelProvisional">
-          <div className={styles.paneContent}>
-            <div className={styles.kicker}>Recommended</div>
-            <div className={styles.voiceFace}>
-              <Text type="body">{recommendation}</Text>
-            </div>
+        <Panel title="Recommended">
+          <div className={styles.voiceFace}>
+            <Text type="body">{recommendation}</Text>
           </div>
-        </Card>
+        </Panel>
       </div>
     </div>
   );

@@ -2,18 +2,55 @@
   display: flex;
   gap: var(--space-8);
   align-items: flex-start;
+  /* Anchors .rail below — the connecting timeline is positioned relative
+     to this row, not a shared container, so each row can draw its own
+     segment down to the next row's icon center (see .rail). */
+  position: relative;
 }
 
-.activeIndicator {
+.iconBox {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: var(--space-24);
+  height: var(--space-24);
   border-radius: var(--radius-full);
+  /* Opaque backdrop, always on (not just while active) — .rail sits at
+     z-index:0 behind this box so the connecting line passes visually
+     behind each icon (git-log node style) rather than through it. */
+  background-color: var(--surface-1);
+  position: relative;
+  z-index: 1;
+}
+
+.activeIndicator {
   animation-name: merlin-step-pulse;
   animation-duration: var(--duration-480);
   animation-timing-function: var(--ease-standard);
   animation-iteration-count: infinite;
+}
+
+/* Connecting vertical rail (direct order, 2026-08-10: git-log-style
+   timeline). Each row draws only the segment BELOW its own icon, extended
+   past its own bottom edge by exactly the trail's own row gap
+   (--space-12, ThinkingTrail.module.css) so it reaches the next row's icon
+   center with no seam — stacked segments concatenate into one continuous
+   line without a shared absolute-positioned overlay or JS height math.
+   left:11px centers a 2px line on the 24px (--space-24) icon box. Only
+   rendered (StepRow.tsx) when !isLast — the last row (including the
+   synthetic Done row) has no next icon to reach, so it renders no .rail
+   element at all rather than a zero-height variant. 2px is a single-use
+   geometry constant, not a token — no --border-width-* scale exists in
+   tokens.base.css, same posture as trail.css's own raw clip-path calc(). */
+.rail {
+  position: absolute;
+  left: 11px;
+  top: 0;
+  bottom: calc(-1 * var(--space-12));
+  width: 2px;
+  background-color: var(--edge);
+  z-index: 0;
 }
 
 .contentBlock {

@@ -1,0 +1,209 @@
+- generic [active] [ref=f18e1]:
+  - generic [ref=f18e4]:
+    - link "Skip to content" [ref=f18e5] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f18e8]:
+      - navigation "Side navigation" [ref=f18e10]:
+        - generic [ref=f18e11]: Merlin
+        - generic [ref=f18e16]:
+          - group "Places" [ref=f18e17]:
+            - generic [ref=f18e21]:
+              - button "New investigation" [ref=f18e23] [cursor=pointer]
+              - button "Discover" [ref=f18e28] [cursor=pointer]
+              - button "Watchlist" [ref=f18e33] [cursor=pointer]
+              - button "Market Pulse" [ref=f18e38] [cursor=pointer]
+              - button "Portfolio" [ref=f18e43] [cursor=pointer]
+              - button "Risk" [ref=f18e48] [cursor=pointer]
+              - button "Data Sources" [ref=f18e53] [cursor=pointer]
+          - group "Recent" [ref=f18e57]:
+            - generic [ref=f18e58]:
+              - generic [ref=f18e59]: Recent
+              - button "Filter recent" [ref=f18e63] [cursor=pointer]:
+                - status
+            - generic [ref=f18e69]:
+              - button "NordBond 2029 — Settlement Failure … Answered" [ref=f18e167] [cursor=pointer]:
+                - generic [ref=f18e72]: NordBond 2029 — Settlement Failure …
+                - img "Answered" [ref=f18e168]
+              - button "View all" [ref=f18e77] [cursor=pointer]
+        - generic [ref=f18e80]:
+          - button "Collapse sidebar" [ref=f18e82] [cursor=pointer]:
+            - status
+          - generic [ref=f18e88]:
+            - button "Analyst Analyst" [ref=f18e89] [cursor=pointer]:
+              - generic [ref=f18e90]:
+                - img "Analyst" [ref=f18e92]:
+                  - generic [ref=f18e93]: A
+                - generic [ref=f18e95]: Analyst
+              - status
+            - button "Notifications" [ref=f18e101] [cursor=pointer]:
+              - status
+      - main [ref=f18e108]:
+        - generic [ref=f18e113]:
+          - generic [ref=f18e114]:
+            - generic [ref=f18e115]: NordBond 2029 — Settlement Failure Investigation
+            - generic [ref=f18e118]:
+              - button "Artifacts" [ref=f18e119] [cursor=pointer]:
+                - status
+              - generic: "1"
+          - generic [ref=f18e126]:
+            - generic [ref=f18e127]:
+              - generic [ref=f18e132]:
+                - article "Message from user" [ref=f18e133]:
+                  - generic [ref=f18e134]: why is nordbond failing settlement
+                - article "Message from assistant" [ref=f18e137]:
+                  - generic [ref=f18e140]:
+                    - generic [ref=f18e141]:
+                      - generic [ref=f18e142]: 4 sources
+                      - generic [ref=f18e143]: 8.9s
+                    - generic [ref=f18e169]:
+                      - button "7 reasoning steps · 8.9s" [expanded] [ref=f18e170] [cursor=pointer]
+                      - generic [ref=f18e181]:
+                        - generic [ref=f18e188]:
+                          - generic [ref=f18e189]: Scoping the investigation — two failed NordBond settlements this week
+                          - generic [ref=f18e190]: 0.8s
+                        - generic [ref=f18e197]:
+                          - generic [ref=f18e198]:
+                            - generic [ref=f18e199]: Pulling the failed-delivery log from CustodyGrid
+                            - generic [ref=f18e200]: 1.1s
+                          - generic [ref=f18e201]: CustodyGrid
+                        - generic [ref=f18e210]:
+                          - generic [ref=f18e211]:
+                            - generic [ref=f18e212]: Tracing wallet clusters behind the failed deliveries via LedgerWatch
+                            - generic [ref=f18e213]: 1.5s
+                          - generic [ref=f18e214]: LedgerWatch
+                        - generic [ref=f18e223]:
+                          - generic [ref=f18e224]:
+                            - generic [ref=f18e225]: Cross-checking counterparty screening in CompliancePulse
+                            - generic [ref=f18e226]: 1.2s
+                          - generic [ref=f18e227]: CompliancePulse
+                        - generic [ref=f18e235]:
+                          - generic [ref=f18e236]:
+                            - generic [ref=f18e237]: Correlating wallet accumulation against MarketTape volume spikes preceding both failures
+                            - generic [ref=f18e238]: 1.7s
+                          - generic [ref=f18e239]: MarketTape
+                        - generic [ref=f18e248]:
+                          - generic [ref=f18e249]:
+                            - generic [ref=f18e250]: Attributing failures to Kestrel-cluster wallets settling faster than custody confirmation cycles
+                            - generic [ref=f18e251]: 1.5s
+                          - generic [ref=f18e252]: 0.88 · high
+                        - generic [ref=f18e258]:
+                          - generic [ref=f18e259]:
+                            - generic [ref=f18e260]: Weighing motive — position-building ahead of a yield event versus fraud
+                            - generic [ref=f18e261]: 1.1s
+                          - generic [ref=f18e262]: 0.62 · moderate
+                    - generic [ref=f18e263] [cursor=pointer]:
+                      - button "Open NordBond 2029 — Settlement Failure Investigation" [ref=f18e264]
+                      - generic [ref=f18e265]:
+                        - generic [ref=f18e271]:
+                          - generic [ref=f18e272]: NordBond 2029 — Settlement Failure Investigation
+                          - generic [ref=f18e273]: investigate
+                        - generic [ref=f18e274]: Ready
+              - generic [ref=f18e156]:
+                - generic [ref=f18e158]:
+                  - generic: Ask a question about the venue…
+                  - textbox "Message input" [ref=f18e159]
+                - button "Send" [disabled] [ref=f18e162]:
+                  - status
+            - generic [ref=f18e281]:
+              - generic [ref=f18e282]:
+                - generic [ref=f18e283]:
+                  - button "Back to list" [ref=f18e284] [cursor=pointer]:
+                    - status
+                  - generic [ref=f18e290]: NordBond 2029 — Settlement Failure Investigation
+                - generic [ref=f18e291]:
+                  - button "Maximize" [ref=f18e292] [cursor=pointer]:
+                    - status
+                  - button "Close artifacts" [ref=f18e298] [cursor=pointer]:
+                    - status
+              - generic [ref=f18e307]:
+                - generic [ref=f18e309]:
+                  - generic [ref=f18e310]:
+                    - generic [ref=f18e311]: Recommendation confidence
+                    - generic [ref=f18e313]:
+                      - generic [ref=f18e314]:
+                        - generic [ref=f18e315]:
+                          - 'img "Recommendation confidence: 0.62, moderate" [ref=f18e317]':
+                            - generic [ref=f18e321]: 62%
+                          - generic [ref=f18e322]: Moderate
+                        - generic [ref=f18e323]:
+                          - generic [ref=f18e324]:
+                            - generic [ref=f18e325]: Sources
+                            - generic [ref=f18e326]: "4"
+                          - generic [ref=f18e328]:
+                            - generic [ref=f18e329]: Unknowns
+                            - generic [ref=f18e330]: "0"
+                          - generic [ref=f18e332]:
+                            - generic [ref=f18e333]: Assumptions
+                            - generic [ref=f18e334]: "0"
+                      - generic [ref=f18e336]: Wallet attribution is high-confidence (0.88); the position-building motive read is moderate.
+                      - generic [ref=f18e337]:
+                        - generic [ref=f18e338]: CustodyGrid
+                        - generic [ref=f18e340]: LedgerWatch
+                        - generic [ref=f18e342]: CompliancePulse
+                        - generic [ref=f18e344]: MarketTape
+                  - generic [ref=f18e346]:
+                    - generic [ref=f18e347]:
+                      - generic [ref=f18e348]: Reasoning
+                      - generic [ref=f18e350]: Failures trace to Kestrel-cluster wallets settling faster than custody confirmation cycles — a pattern consistent with position-building ahead of an expected yield event, not fraud.
+                    - generic [ref=f18e352]:
+                      - generic [ref=f18e353]: Recommended
+                      - generic [ref=f18e355]: Recommend a counterparty review of Kestrel Holdings and a settlement hold on its wallet cluster.
+                - generic [ref=f18e361]:
+                  - generic [ref=f18e363]:
+                    - generic [ref=f18e364]: Failed settlements this week
+                    - heading "2" [level=2] [ref=f18e366]
+                  - generic [ref=f18e368]:
+                    - generic [ref=f18e369]: NordBond float accumulated by Kestrel
+                    - heading "11%" [level=2] [ref=f18e371]
+                  - generic [ref=f18e372]: Clean
+                  - generic [ref=f18e374]: Unrated
+                - generic [ref=f18e377]:
+                  - generic [ref=f18e378]: Failed deliveries this month
+                  - generic [ref=f18e382]:
+                    - generic [ref=f18e383]:
+                      - generic [ref=f18e384]:
+                        - generic [ref=f18e385]: NordBond 2029
+                        - generic [ref=f18e386]: Wallet 09 (Kestrel-linked) · Settlement outpaced custody confirmation cycle
+                      - time [ref=f18e389]: Jul 8, 2026
+                    - generic [ref=f18e390]:
+                      - generic [ref=f18e391]:
+                        - generic [ref=f18e392]: NordBond 2029
+                        - generic [ref=f18e393]: Wallet 03 (Kestrel-linked) · Settlement outpaced custody confirmation cycle
+                      - time [ref=f18e396]: Jul 6, 2026
+                - generic [ref=f18e398]:
+                  - generic [ref=f18e399]: MarketTape volume, 10-day window
+                  - application [ref=f18e406]:
+                    - generic [ref=f18e458]:
+                      - generic [ref=f18e459]:
+                        - generic [ref=f18e460]: 2026-06-29
+                        - generic [ref=f18e462]: 2026-07-02
+                        - generic [ref=f18e464]: 2026-07-05
+                        - generic [ref=f18e466]: 2026-07-08
+                      - generic [ref=f18e468]:
+                        - generic [ref=f18e469]: "0"
+                        - generic [ref=f18e471]: "9"
+                        - generic [ref=f18e473]: "18"
+                        - generic [ref=f18e475]: "27"
+                        - generic [ref=f18e477]: "36"
+                      - generic [ref=f18e479]: Settlement failed
+                      - generic [ref=f18e480]: Settlement failed
+                - generic [ref=f18e482]:
+                  - generic [ref=f18e483]: Kestrel wallet cluster — NordBond float accumulation
+                  - img "Entity relationship graph" [ref=f18e488]:
+                    - generic [ref=f18e503]: Kestrel Holdings
+                    - generic [ref=f18e506]: NordBond 2029
+                    - generic [ref=f18e509]: Wallet 01
+                    - generic [ref=f18e512]: Wallet 02
+                    - generic [ref=f18e515]: Wallet 03
+                    - generic [ref=f18e518]: Wallet 04
+                    - generic [ref=f18e521]: Wallet 05
+                    - generic [ref=f18e524]: Wallet 06
+                    - generic [ref=f18e527]: Wallet 07
+                    - generic [ref=f18e530]: Wallet 08
+                    - generic [ref=f18e533]: Wallet 09
+                    - generic [ref=f18e536]: Wallet 10
+                    - generic [ref=f18e539]: Wallet 11
+                    - generic [ref=f18e542]: Wallet 12
+                    - generic [ref=f18e545]: Wallet 13
+                    - generic [ref=f18e548]: Wallet 14
+  - generic [ref=f18e551]: "18"

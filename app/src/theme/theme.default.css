@@ -9,6 +9,24 @@
   --surface-2: var(--color-background-card);
   --surface-3: var(--color-background-popover);
 
+  /* Opaque twin of --surface-1, for anything that must OCCLUDE rather than
+     tint (e.g. content painted on top of a surface that should not show what
+     is behind it). Added 2026-08-07 when the glass themes gave --surface-1
+     alpha and silently broke a consumer relying on it being opaque
+     (EntityAssetTable's sticky-column pin, since removed — the pin itself is
+     gone, but the general problem this token solves is not theme-specific).
+     Identical value to --surface-1 in the matte themes. */
+  --surface-1-solid: var(--color-background-surface);
+
+  /* Fill for a full-height PAGE pane, as distinct from a card. Alpha that
+     reads as crisp frosted glass at card scale reads as a barely-there wash
+     across a ~1460px pane, which is what "page panes have not got bg like
+     artifacts" was describing. Matte themes just point at --surface-1 (no
+     behaviour change); the glass themes raise the alpha for the larger area
+     while staying translucent, so the canvas backdrop still shows through
+     and the material is still real. */
+  --pane-surface: var(--surface-1);
+
   /* Ink */
   --ink-primary: var(--color-text-primary);
   --ink-secondary: var(--color-text-secondary);
@@ -35,10 +53,32 @@
   /* Structure — no Astryx equivalent for these; neutral/off, not a color decision */
   --edge: var(--color-border);
   --edge-highlight: transparent;
+
+  /* Neumorphic shading (see tokens.base.css's --shading-raised/-pressed for
+     the geometry) — whisper-soft on a light matte surface, since Linear's
+     own light-mode reference (the source of this pattern) is itself barely
+     visible at normal viewing distance. --shading-light needs to read as
+     "lighter than the surface" against default theme's near-white body, so
+     it's pure white at low alpha rather than the ink colour inverted. */
+  --shading-light: oklch(1 0 0 / .5);
+  --shading-dark: oklch(0 0 0 / .06);
   --surface-blur: 0px;
   --surface-opacity: 1;
   --glow: none;
   --scrim: transparent;
+
+  /* Glass material — the backdrop-filter value panes actually consume, and
+     the pointer-specular intensity/geometry. `none` (not `blur(0px)`) is
+     deliberate: a zero-radius filter still spins up the filter pipeline and
+     makes the element a containing block for fixed descendants, which would
+     silently change layout behaviour in a theme that wants no material at
+     all. --spec-alpha: 0 switches the specular layer off outright — the
+     shell hook still tracks the pointer (one rAF-throttled listener, theme
+     -agnostic by design), but nothing renders. This theme is matte. */
+  --canvas-backdrop: none;
+  --surface-material: none;
+  --spec-alpha: 0;
+  --spec-radius: var(--spec-radius-lg);
 
   /* Motion binding — default has no bespoke ◆ register to dictate its own
      pacing, so this mirrors ops-dark's values exactly (Phase 4 gap: the
@@ -76,7 +116,15 @@
    numerals), which one inherited value can't express — see
    ConcentrationMap.tsx/chartCraft.tsx. */
 :where(html, body) {
-  background: var(--surface-0);
+  /* Split from the `background` shorthand (2026-08-06) so a theme can supply
+     a canvas backdrop without the shorthand resetting it. --canvas-backdrop
+     is the deep field the glass themes' backdrop-filter actually refracts:
+     tokens-spec.md's glass ◆ has always said "canvas shows through — app
+     supplies deep backdrop," and until now the app never supplied one, so
+     the blur had nothing but flat page behind it and glass read as tinted
+     rectangles. `none` in every matte theme, so this changes nothing there. */
+  background-color: var(--surface-0);
+  background-image: var(--canvas-backdrop);
   color: var(--ink-primary);
   font-family: var(--face-ui);
   /* height + overflow:hidden, not min-height:100% (direct feedback,
@@ -112,6 +160,21 @@
   background-color: var(--color-overlay-hover);
 }
 
+/* Neumorphic shading on the selected row (direct order, 2026-08-07: "very
+   subtle shadows on buttons and main pane," Linear's own active-row
+   reference) — a soft light-top/dark-bottom inset, distinct from the hover
+   rule above (a flat color wash) and from --edge (a border). Reads as
+   "this row sits very slightly differently than its neighbours," which is
+   what Linear's own active-row screenshot shows: not a background color
+   change alone, a directional light cue. Scoped to :not(:hover) so hover's
+   own background-color change is the dominant cue in that state — shading
+   this same rest-state token underneath a hover fill would be invisible
+   anyway (box-shadow paints under an opaque background), so this is a
+   readability note, not a functional guard. */
+.astryx-list-item[aria-selected='true']:not(:hover) {
+  box-shadow: var(--shading-raised);
+}
+
 /* Same rule, same reasoning, extended to Item (direct feedback,
    2026-07-20: "all should have hover even if no source to click," the
    Discover page's discovery-strip rows) — astryx-item is Item's own
@@ -120,6 +183,19 @@
    onClick/href, same gap ListItem had; this closes it the identical way. */
 .astryx-item:hover:not([aria-disabled='true']) {
   background-color: var(--color-overlay-hover);
+}
+
+/* Neumorphic shading on buttons (direct order, 2026-08-07, same reference as
+   the selected-row rule above) — every Astryx button variant gets a resting-
+   state light-top/dark-bottom cue, `:not(:disabled)` since a disabled
+   control shouldn't read as "gently lit," that would contradict its own
+   disabled affordance. Unconditional across variant (ghost/primary/
+   secondary/destructive all get it) rather than variant-specific: the cue
+   is about surface texture, not about which action a button represents, so
+   scoping it to one variant would be an arbitrary distinction the reference
+   doesn't draw either. */
+.astryx-button:not(:disabled) {
+  box-shadow: var(--shading-raised);
 }
 
 /* Composer shadow removed, direct feedback ("the composer should not have
@@ -199,15 +275,22 @@
 /* Panel treatment per node-vocabulary.md principle 2: facts (permanent
    register) and reasoning (provisional register) both render with zero
    elevation (outline only, no background). Visual distinction is typography
-   (voice face for reasoning) + kicker label, NOT border differences. */
+   (voice face for reasoning) + kicker label, NOT border differences.
+
+   panelProvisional RETIRED (direct order, 2026-08-08: "reasoning and
+   recommended panes should be in pane with border, no content should be
+   without pane with border in artifacts... that's a ruling each section
+   must go with that pane that is using same class so we can ensure
+   consistency"). This reverses the 2026-07-29 "permanent facts bordered,
+   provisional reasoning borderless" two-tier design and its 2026-08-08
+   same-day reaffirmation — both superseded by direct order, not a drift
+   this time. Every content block (fact or reasoning) now gets the identical
+   bordered treatment below; the fact/reasoning register distinction lives in
+   typography (voice face, kicker label) only, never in chrome. All former
+   panelProvisional consumers (SceneSummary's Summary/Recommendation panes,
+   DashboardSummaryHeader) now pass panelFlat directly. */
 
 .astryx-card.panelFlat {
-  background-color: transparent;
-  border: 1px solid var(--edge);
-  box-shadow: none;
-}
-
-.astryx-card.panelProvisional {
   background-color: transparent;
   border: 1px solid var(--edge);
   box-shadow: none;
@@ -229,4 +312,17 @@
    unconditionally. */
 #astryx-app-shell-main {
   background-color: var(--surface-0);
+}
+
+/* Tooltip legibility (direct feedback, 2026-08-07: "tooltip on dark mode text
+   too pale"). Astryx's Tooltip inverts — it paints its chip in --ink-primary
+   and its text in the surface colour, which is correct while surfaces are
+   opaque. The glass themes gave --surface-1 a .40 alpha, so the tooltip's own
+   TEXT became 40%-transparent dark ink on a light chip: measured live at
+   color: oklch(.19 .015 250 / .4), which is exactly the "too pale" reported.
+   Same root cause as the sticky-column bug in this same change — a consumer
+   that needed an opaque surface silently inheriting a translucent one. Pinned
+   to --surface-1-solid so the chip's text is fully opaque in every theme. */
+.astryx-tooltip {
+  color: var(--surface-1-solid);
 }

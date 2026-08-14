@@ -1,6 +1,15 @@
 import { useMemo, useState, type SVGProps } from 'react';
 import { SideNav, SideNavHeading, SideNavItem, SideNavSection, SideNavCollapseButton } from '@astryxdesign/core/SideNav';
-import { Icon } from '@astryxdesign/core/Icon';
+import { type ReactNode } from 'react';
+import {
+  MagnifyingGlassIcon,
+  BookmarkIcon,
+  SignalIcon,
+  FolderIcon,
+  BriefcaseIcon,
+  ShieldExclamationIcon,
+  ServerStackIcon,
+} from '@heroicons/react/24/outline';
 import { useSessionStore } from '../../engine/stores/sessionStore';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
 import { usePageStore, type Page } from '../../engine/stores/pageStore';
@@ -9,10 +18,11 @@ import { reopenThread } from '../../engine/openThread';
 import { NotificationBell } from './NotificationBell';
 import { ProfileMenu } from './ProfileMenu';
 import { RecentSection } from './RecentSection';
+import { BrandMark } from './BrandMark';
 import { config } from '../../config';
 import styles from './Sidebar.module.css';
 
-const NAV_ITEMS: { page: Page; label: string; icon: 'clock' | 'search' | 'checkDouble' | 'externalLink' | 'info' | 'viewColumns' | 'warning' }[] = [
+const NAV_ITEMS: { page: Page; label: string; icon: ReactNode }[] = [
   // Phase 14: relabeled from "Entities" — same page/route (id stays
   // 'entities', only its nav label and PageShell title change), now
   // fronted by the asset-discovery grid rather than a plain list. Kept
@@ -20,25 +30,20 @@ const NAV_ITEMS: { page: Page; label: string; icon: 'clock' | 'search' | 'checkD
   // page: it's the same content upgraded in place, and a second entry
   // pointing at overlapping content would be dead-nav-adjacent (no
   // ordering instruction was given for a split that doesn't exist).
-  { page: 'entities', label: 'Discover', icon: 'search' },
-  { page: 'watchlist', label: 'Watchlist', icon: 'checkDouble' },
-  { page: 'data-sources', label: 'Data Sources', icon: 'externalLink' },
+  { page: 'entities', label: 'Discover', icon: <MagnifyingGlassIcon width={16} height={16} /> },
+  //{ page: 'investigations', label: 'Investigations', icon: <FolderIcon width={16} height={16} /> },
+  { page: 'watchlist', label: 'Watchlist', icon: <BookmarkIcon width={16} height={16} /> },
   // Market Pulse (Phase 8I) sits between Data Sources and Investigations
   // deliberately — surfaced-but-unactioned observations read as a step
   // before the investigated record, not alongside the other index pages.
-  // No "pulse/activity" icon exists in Astryx's closed set (exhibit 10);
-  // `info` is the closest fit — ambient, surfaced-for-awareness content.
-  { page: 'market-pulse', label: 'Market Pulse', icon: 'info' },
-  { page: 'investigations', label: 'Investigations', icon: 'clock' },
+  { page: 'market-pulse', label: 'Market Pulse', icon: <SignalIcon width={16} height={16} /> },
+  { page: 'portfolio-dashboard', label: 'Portfolio', icon: <BriefcaseIcon width={16} height={16} /> },
+  { page: 'risk-dashboard', label: 'Risk', icon: <ShieldExclamationIcon width={16} height={16} /> },
   // Portfolio/Risk (Phase 13): pinned, always-available static dashboard
   // pages, appended after the existing index pages rather than
   // interleaved — no ordering instruction was given, flagged for review.
-  // `viewColumns`/`warning` are both real entries in Astryx's closed icon
-  // set (no dashboard/briefcase or risk-shield icon exists) — reused
-  // rather than adding a fifth custom SVG to this file's own exhibit
-  // list (8-11).
-  { page: 'portfolio-dashboard', label: 'Portfolio', icon: 'viewColumns' },
-  { page: 'risk-dashboard', label: 'Risk', icon: 'warning' },
+
+    { page: 'data-sources', label: 'Data Sources', icon: <ServerStackIcon width={16} height={16} /> },
 ];
 
 // No "add/new/plus" icon exists in Astryx's closed set (exhibit 11 —
@@ -122,7 +127,7 @@ export function Sidebar() {
       // placed manually inside `footer` below, reading context, no
       // handleRef needed since it's still inside this SideNav.
       collapsible={{ isCollapsed, onCollapsedChange: setIsCollapsed, hasButton: false }}
-      header={<SideNavHeading heading="Merlin" />}
+      header={<SideNavHeading icon={<BrandMark isCollapsed={isCollapsed} />} heading="Merlin" />}
       footer={
         <div className={styles.footerStack}>
           <div className={styles.collapseSection}>
@@ -138,7 +143,7 @@ export function Sidebar() {
       <SideNavSection title="Places" isHeaderHidden>
         <SideNavItem
           label="New investigation"
-          icon={<Icon icon={PlusIcon} size="sm" />}
+          icon={<PlusIcon width={16} height={16} />}
           onClick={newInvestigation}
           isSelected={page === 'home' && activeThreadId === null}
         />
@@ -146,7 +151,7 @@ export function Sidebar() {
           <SideNavItem
             key={item.page}
             label={item.label}
-            icon={<Icon icon={item.icon} size="sm" />}
+            icon={item.icon}
             isSelected={page === item.page}
             onClick={() => setPage(item.page)}
           />

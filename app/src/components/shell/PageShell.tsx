@@ -29,30 +29,15 @@ interface PageShellProps {
 // thing whose height varies with content).
 export function PageShell({ title, titleEndContent, children }: PageShellProps) {
   return (
-    // minHeight: 0 (direct feedback, 2026-08-03: "content should not push
-    // panes, they should be viewport height - margin bottom, same as in
-    // composer") — height:100% alone doesn't stop a column flex item from
-    // growing past its parent's height to fit tall content (min-height:
-    // auto is the actual default fighting it); explicit 0 is what lets
-    // this shrink to Frame.module.css's .contentColumn instead, the same
-    // way ScrollAnchor.tsx's own root div already does for Home.
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0, minWidth: 0 }}>
-      {/* display:flex is load-bearing here, not decorative: .pane's own
-          flex:1 (PageShell.module.css) only has any effect inside a flex
-          container — without this, .pane sat in a plain block-level box
-          and sized itself to its own content instead of the space this
-          div actually has available, which was the real reason content
-          kept pushing past the viewport (confirmed live via computed
-          styles: every ancestor up to here correctly reported the real
-          927px available height; only .pane, right where the flex
-          container turned out to be block instead, ignored it). */}
-      {/* Bottom gap matches the composer's own bottom padding (direct
-          feedback, 2026-08-03: "content panes should have same
-          margin-bottom as composer") — PanePadding.module.css's .padded,
-          shared by the composer dock and the artifact pane's content,
-          uses --space-32 vertical; this was --space-24, a mismatch. */}
-      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, padding: '0 var(--space-24) var(--space-32)' }}>
-        <div className={styles.pane}>
+    <div className={styles.root}>
+      <div className={styles.margin}>
+        {/* data-glass-surface: useSpecularPointer's opt-in selector. A
+            behaviour hook, not a style — the pane's material and whether a
+            specular renders at all are decided entirely by tokens (see
+            PageShell.module.css). Same posture as EntityLink's data
+            attributes: the shell reaches DOM through attributes, never
+            through callbacks reaching into components. */}
+        <div className={styles.pane} data-glass-surface>
           <div className={styles.paneScroll}>
             <PaneTitleBar title={title} endContent={titleEndContent} />
             <div className={styles.paneBody}>{children}</div>

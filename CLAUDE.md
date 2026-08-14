@@ -123,6 +123,7 @@ Do not add top-level directories. Do not relocate files between layers.
 - zod, zustand
 - recharts (charts wrapped as registry nodes — Astryx's vega package is not on npm yet)
 - `d3-scale`, `d3-shape`, `d3-hierarchy`, `d3-array` (+ their `@types/d3-*`) — math only, for custom-SVG registry nodes (`concentration-map`'s treemap layout, `bar-series`/`sparkline`'s scales); never canvas, never a rendering library — approved 2026-07-11, see STATE.md, Phase 8E
+- `@heroicons/react` (2.2.0, exact pin) — extends Astryx's closed `IconName` set: import individual outline glyphs from `@heroicons/react/24/outline` as real `IconType` components, matching Astryx's own `defaultIcons.tsx` convention (24x24, currentColor, 1.5 stroke), same role the hand-copied `DocumentIcon.tsx`/`ChatIcon.tsx`/`BellIcon.tsx` precedent filled — approved 2026-08-05, see STATE.md
 - storybook (react-vite)
 - `@modelcontextprotocol/sdk` (mcp-server package only)
 - `@types/node` (mcp-server package only, types-only, zero runtime — required to type `node:*` builtins in a plain Node process; approved 2026-07-11, see STATE.md)

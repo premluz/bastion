@@ -1,3 +1,41 @@
+/* Outer flex column (PageShell.tsx's root) — height:100%/minHeight:0 lets
+   .pane shrink to Frame.module.css's .contentColumn instead of growing
+   past the viewport to fit tall content (min-height:auto is the default
+   fighting it otherwise; see .margin below for the fuller history). */
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Page-margin wrapper around .pane. Bottom (--space-32) matches the
+   composer dock's own bottom padding (direct feedback, 2026-08-03:
+   "content panes should have same margin-bottom as composer") —
+   PanePadding.module.css's .padded, shared by the composer dock and the
+   artifact pane's content, uses --space-32 vertical; this was --space-24,
+   a mismatch, fixed here to match.
+   padding-right is the one side that varies: --space-24 is a real outer
+   page margin (mirrors the sidebar's own margin on the left) that only
+   makes sense when .pane has no neighbour pane of its own — once a side
+   pane (artifact/transcript) sits next to it, Frame.module.css's own row
+   gap (--space-16) already separates them, and stacking this margin on
+   top of that gap made content↔artifact read as visibly wider than
+   artifact↔transcript's plain row gap (confirmed live, direct feedback,
+   2026-08-10: "gap between page pane and artifacts... too big... should
+   be same as between artifacts and chat" — traced to exactly this double-
+   spacing, not a flex-ratio bug this time). --content-has-sibling-pane is
+   written by Frame.tsx onto .row (1/0, not a boolean, so it plugs directly
+   into this calc) whenever showArtifact || showTranscript is true. */
+.margin {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 0 calc(var(--space-24) * (1 - var(--content-has-sibling-pane, 0))) var(--space-32);
+}
+
 /* The pane every page's content now lives inside (direct feedback,
    2026-08-02: "each page would be in the same pane as entity") — raised
    one surface level above the content area's own background
@@ -7,7 +45,15 @@
    (now deleted, generalized here). No border: real background contrast
    is what defines the pane, matching the artifact pane's own treatment. */
 .pane {
-  background-color: var(--surface-1);
+  /* --pane-surface, not --surface-1 directly (direct feedback, 2026-08-07:
+     "page panes e.g. discover has not got bg like artifacts"). Each theme
+     decides what a full-height pane's fill should be: the matte themes point
+     it straight at --surface-1 (no change), and the glass themes point it at
+     a dedicated value tuned for a pane-sized area rather than a small card.
+     A .40 alpha that reads as a crisp frosted chip at card scale reads as
+     barely-there wash across a 1460px pane — measured, not eyeballed. This
+     also makes the pinned column's fill agree with the pane it sits on. */
+  background-color: var(--pane-surface);
   border-radius: var(--radius-12);
   display: flex;
   flex-direction: column;
@@ -32,8 +78,63 @@
      fine despite it now sitting one level deeper, inside .paneScroll —
      custom properties inherit through every descendant level. */
   --pane-title-padding-inline: var(--space-16);
-  --pane-title-bg: var(--surface-1);
+  /* --surface-1-solid, not --surface-1 (direct feedback, 2026-08-09:
+     scrolled content visibly bleeding through the sticky title bar —
+     reproduced live on ArtifactStack.module.css's own instance of the
+     identical bug; see its comment for the full root cause). A sticky
+     header content scrolls UNDER exists to occlude it — translucency
+     there is wrong by definition regardless of this pane's own
+     (correctly translucent) --pane-surface resting background. */
+  --pane-title-bg: var(--surface-1-solid);
+  /* Glass material (2026-08-06). Theme-agnostic by construction: the VALUE
+     is --surface-material, which is `none` in default/ops-dark and a real
+     blur+saturate in the glass themes — this rule states that a pane is a
+     surface that CAN carry a material, never which material. Same posture
+     as --surface-1 above: the token decides, not the component.
+     position:relative anchors the ::before specular layer below. */
+  position: relative;
+  backdrop-filter: var(--surface-material);
+  -webkit-backdrop-filter: var(--surface-material);
+  /* "Pop" panel register (direct order, 2026-08-10: page panes are one of
+     the named "pop" panes — see tokens.base.css's own note on the two-
+     variant system this belongs to). Border reuses --edge, the SAME token
+     panelFlat's inner-panel outline already uses (explicitly kept as the
+     "no-pop" register's own treatment, unchanged) — one edge language at
+     two strengths, not a second colour. box-shadow was --shading-raised
+     until this order weakened it to --shading-pop-raised now that the new
+     outline is doing the edge-definition work the inset used to carry
+     alone. Near-zero in the glass themes by design (see theme.glass.css)
+     so the pane doesn't carry two competing "softness" cues (blur +
+     neumorphism) at once — the outline still applies there, at --edge's
+     own already-tuned glass alpha. */
+  border: 1px solid var(--edge);
+  box-shadow: var(--shading-pop-raised);
 }
+
+/* Pointer-tracked specular sweep — the highlight that makes glass read as a
+   lit material rather than a blurred rectangle. --spec-x/--spec-y are written
+   by useSpecularPointer (shell-level, element-relative, rAF-throttled) onto
+   whichever surface the pointer is over; the 50%/-20% fallback is a static
+   top-lit position for surfaces that have never been hovered, so this never
+   renders as an unlit dead patch. opacity:0 in matte themes switches it off
+   entirely. Fades rather than snapping when the pointer leaves, via the
+   theme's own exit motion binding — motion is data, not decoration. */
+.pane::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+  opacity: var(--spec-alpha);
+  transition: opacity var(--motion-exit-duration) var(--motion-exit-ease);
+  background: radial-gradient(
+    var(--spec-radius) circle at var(--spec-x, 50%) var(--spec-y, -20%),
+    var(--edge-highlight),
+    transparent 70%
+  );
+}
+
 
 /* The one thing that scrolls (direct feedback, 2026-08-03: "scrollbar
    should be inner on page content pane... so the actual panes are not
@@ -46,10 +147,25 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  /* Keeps content above .pane::before's specular layer — that pseudo-element
+     is inset:0 across the whole pane, so without its own stacking position
+     the highlight would wash over the text instead of sitting behind it. */
+  position: relative;
+  z-index: 1;
 }
 
 .paneBody {
   padding: var(--space-16);
   display: grid;
-  gap: var(--space-24);
+  /* Page-section gap, standardized to --space-16 (direct feedback,
+     2026-08-10: "gap between pains [sections]... needs to be the same
+     as... Portfolio... global system wide gap size which needs to be
+     documented"). Was --space-24 — an independently-authored value that
+     had drifted from DashboardLayout.tsx's own Astryx Grid `gap={4}`
+     (Astryx's own spacing scale step 4 = 16px), the two never compared
+     side by side until this report. 16px is now the one documented
+     page-section gap for the whole system (tokens-spec.md's own layout
+     section) — DashboardLayout's Grid already matches it by construction,
+     nothing to change there. */
+  gap: var(--space-16);
 }

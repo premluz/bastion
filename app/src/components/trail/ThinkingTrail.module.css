@@ -14,3 +14,21 @@
   gap: var(--space-12);
   cursor: pointer;
 }
+
+/* Persistent thinking pulse (direct order, 2026-08-10) — see
+   ThinkingIndicator.tsx's own comment for the full rationale. Reuses
+   merlin-step-pulse from trail.css verbatim (imported into
+   ThinkingTrail.tsx directly, since this global keyframe isn't reachable
+   from inside a CSS Module by name otherwise). */
+.thinkingIndicator {
+  animation-name: merlin-step-pulse;
+  animation-duration: var(--duration-480);
+  animation-timing-function: var(--ease-standard);
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thinkingIndicator {
+    animation: none;
+  }
+}

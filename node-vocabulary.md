@@ -21,16 +21,17 @@ this at Phase 3/7 alongside the merlin-new-node skill; components built without 
    face. The voice face is allowed ONLY in text-block and recommendation
    prose — never numerals, never labels, never data.
    
-   Visual mechanism (Phase-adjacent, 2026-07-29, revised 2026-07-29):
-   permanent-fact displays (Panel node, scene-summary's confidence
-   metadata) render with zero elevation — outline only (`--surface-0` +
-   `--edge` border), no shadow or raised surface. Provisional/reasoning
-   displays (scene-summary's Summary + Recommendation panes) render
-   completely transparent — no background, no border — allowing their
-   content to read independently from any frame, distinct from the
-   structured, outlined panels that present facts. The visual difference
-   is the mechanism that enforces principle 2's "never share a visual
-   register" rule at the CSS layer.
+   Visual mechanism (Phase-adjacent, 2026-07-29, revised 2026-07-29,
+   SUPERSEDED 2026-08-08): every content pane — fact or reasoning —
+   now renders with the SAME zero-elevation treatment: outline only
+   (`--surface-0` + `--edge` border), no shadow or raised surface, no
+   borderless tier. Direct architect order retiring the prior "provisional
+   content renders completely borderless" design: "each section must go
+   with that pane that is using same class so we can ensure consistency."
+   Principle 2's "never share a visual register" rule is now enforced
+   entirely through typography (three-voice face + kicker label per
+   paragraph 2 above) — chrome no longer participates in the distinction.
+   `panelFlat` is the one class; `panelProvisional` is retired.
 3. Confidence belongs to conclusions, never to facts — data isn't confident;
    the agent is.
 4. Every recommendation is prose with its evidence adjacent — recommendations
@@ -505,6 +506,48 @@ cards are venue peers or sector peers (same tag or same venue), a lighter
 echo of an entity's identity than entity-header itself, not the node
 reused verbatim — click browses to that entity's own page, same law.
 
+**Page-section gap law (2026-08-10, architect-ordered, system-wide):**
+`--space-16` is the ONE documented gap between top-level sections within a
+page's content — the space between "Notable movers" and "Discover Assets"
+on Discover, between "Trend"/"Statistics"/"About" on Entity Detail, between
+metric-grid/ring-gauge/bar-series rows on Portfolio/Risk. Found
+undocumented and drifted: `PageShell.module.css`'s `.paneBody` (Discover,
+Entity Detail, Watchlist, Data Sources — every page that renders through
+`PageShell`) had independently authored `--space-24`, never compared
+side-by-side against `DashboardLayout.tsx`'s own Astryx `Grid gap={4}`
+(Portfolio/Risk, = 16px) or `SceneGrid.tsx`'s identical `Grid gap={4}`
+(every investigation artifact's own top-level layout) until reported live
+("gap between pains [sections]... needs to be the same as... Portfolio...
+global system wide gap size which needs to be documented"). Fixed to
+`--space-16` everywhere — `DashboardLayout`/`SceneGrid` needed no change,
+already correct by construction; `PageShell.module.css`'s `.paneBody` was
+the one outlier, corrected to match. Any new page-level content wrapper
+uses `--space-16` for this purpose — this is now the standing decision,
+not a per-page judgment call.
+
+**Proactive sweep, 2026-08-13** (`merlin-layout-law` skill, closing the
+reactive-discovery gap this law's own four earlier rounds exposed — each
+prior violation was found only after Prem reported it, one component at a
+time): grepped every `gap:`/`Grid gap={N}` in `components/shell/` and
+`components/nodes/` for the same relationship (sibling top-level sections/
+cards) rather than waiting for each to surface independently. Found and
+fixed three more: `InvestigationsPage.tsx`'s module-group wrapper (was
+`--space-24`), `MarketPulsePage.tsx`'s card grid (was `gap={3}`/12px), and
+`LandingState.tsx`'s suggestion-chip grid (was `gap={3}`/12px — this one
+confirmed in scope specifically because it's documented elsewhere as "an
+echo of Market Pulse's same data source," so the two renderings of the
+same content needed to match; its `minWidth` was re-derived from 200px to
+210px for the new gap math, live-verified via computed
+`grid-template-columns`, not guessed). Two false positives correctly
+excluded on inspection, not swept blind: `Transcript.tsx`'s `--space-24`
+governs vertical space between conversation turns (a different register —
+chat history rhythm, not sibling page sections) and `EntityDetailPage.tsx`
+line 119's `--space-24` is a gap WITHIN one section (Statistics/About
+sub-columns), not between top-level siblings — both left untouched.
+`StatusGrid.tsx`'s `gap={3}` also excluded: a registry node's dense
+status-row grid, the same denser register as `RelatedEntitiesStrip.tsx`'s
+already-excluded `--space-12`, not this law's relationship.
+
 Left nav (Sidebar) is now the app's primary navigation, not a
 turn-history list — it names PLACES: New investigation (resets the
 session outright, including the artifact stack — no confirm dialog,
@@ -643,15 +686,56 @@ Design intent, same standing as the nodes above:
 **ThinkingTrail** — "what is the agent doing right now?" The container: steps
 appear on the player's clock, active step visibly alive, completed steps settle.
 Skippable by click. Reads as work being done, never as a fake chat transcript.
+Connected git-log-style vertical timeline (direct order, 2026-08-10) — a single
+rail runs through the center of every step icon, first step to the trail's own
+terminal "Done" row (a synthetic, client-only settled step ThinkingTrail itself
+appends once complete — never persisted, never validated against a scene
+fixture). Once complete, the whole trail is still an Astryx Collapsible with
+the "N reasoning steps · X.Xs" summary, unchanged — the count excludes Done,
+which is a terminal marker, not a reasoning step.
 
-**StepRow** — one atomic reasoning action: kind icon, present-continuous label,
-optional one-line detail. Active state = the only animated thing on screen at
-that moment (principle 5).
+**StepRow** — one atomic reasoning action, present-continuous label, optional
+one-line detail. **Icon SUPERSEDED, 2026-08-10, direct order**: was "kind icon
+(plan/search/retrieve/correlate/synthesize/verify), not a status icon — our
+steps don't have a failure state, and kind is the meaningful fact here." Now a
+STATUS icon — clock while active, check once settled — to read as a real
+progress timeline against the new connecting rail; a kind icon on a git-log
+node answers the wrong question once the rail exists. Kind itself is
+unchanged and still governs everything else about a step (label voice, which
+node renders below it), just no longer the icon. **Motion SUPERSEDED, same
+order**: was "active state = the only animated thing on screen at that moment
+(principle 5)," absolute. Now principle 5 governs StepRow's own rows only — a
+new, separate persistent pulse (ThinkingIndicator, below) runs continuously
+for the trail's whole active lifetime, simultaneously with whichever row is
+mid-settle. A deliberate, scoped exception, not a blanket repeal: nothing
+else on the trail gained motion, and settled rows still carry none.
+
+**ThinkingIndicator** — new, 2026-08-10. A persistent "Thinking…" label above
+the step rows, pulsing continuously (reuses StepRow's own settle-pulse
+keyframe/duration/easing verbatim) for as long as the trail is running;
+absent once complete. The one place in this vocabulary where motion is
+deliberately NOT scoped to a single active element — see StepRow's motion
+amendment above.
+
+**SearchResultsCard** — new, 2026-08-10, `search`-kind steps only. An
+expandable, scrollable card of mock web-search results (logo placeholder +
+title + domain per row, "N results" count) rendered below a search step's
+label. Populated from `ThinkingStep.webResults` (contracts/thinking.ts), a
+field wholly separate from `sources`/SourceChip below — mock/placeholder data
+for now (engine/mockSearchResults.ts), intended to become a real per-scenario
+web-search integration later without changing this card's own shape.
+Explicitly NOT a SourceChip variant and does not touch SourceChip's own
+"identical everywhere" guarantee (next entry) — a different register (an
+external web citation, not an internal system) with a different rendering,
+scoped to this one surface.
 
 **SourceChip** — the canonical visual representation of every source system,
 wherever cited: trail steps, panel attributions, recommendations. Identical
 rendering everywhere — users should recognize a source by its chip before reading
-its name. Chips are the provenance language of the whole product.
+its name. Chips are the provenance language of the whole product. Unchanged
+by SearchResultsCard above — `sources`/SourceChip cites internal system
+provenance (MarketTape, RiskLens); SearchResultsCard/`webResults` cites
+external web pages. Two registers, never merged.
 
 **ConfidenceBadge** — the trail-side sibling of confidence-meter: compact value +
 qualifier on synthesize/verify steps. Same instrument register, smaller form.

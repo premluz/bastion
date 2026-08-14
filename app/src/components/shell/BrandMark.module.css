@@ -1,0 +1,26 @@
+/* Sized to match SideNavItem's own icon slot (16px icons, confirmed live —
+   Sidebar.tsx's NAV_ITEMS all pass width={16} height={16}) so the collapsed
+   rail reads as one consistent icon column, logo mark included. */
+.mark {
+  width: var(--space-16);
+  height: var(--space-16);
+  object-fit: contain;
+}
+
+/* Letter-M fallback — ink-on-transparent, no background fill: this sits in
+   SideNavHeading's own icon slot (not a card/token), so it should read as
+   text taking that slot, not a swatch. Matches --space-16's footprint via
+   line-height/font-size rather than an explicit box, since a single
+   character has no intrinsic square aspect the way an SVG mark does. */
+.fallback {
+  width: var(--space-16);
+  height: var(--space-16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--face-ui);
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink-primary);
+}

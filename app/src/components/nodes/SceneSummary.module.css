@@ -41,11 +41,6 @@
   }
 }
 
-.paneContent {
-  display: grid;
-  gap: var(--space-8);
-}
-
 .voiceFace {
   font-family: var(--face-voice);
 }
@@ -59,13 +54,4 @@
 .assumptions {
   display: grid;
   gap: var(--space-4);
-}
-
-.kicker {
-  font-size: var(--text-12);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--accent-signal);
-  margin-bottom: var(--space-4);
 }

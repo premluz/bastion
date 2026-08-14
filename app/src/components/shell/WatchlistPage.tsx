@@ -7,6 +7,7 @@ import { useWatchlistStore } from '../../engine/stores/watchlistStore';
 import { submitQuery } from '../../engine/submitQuery';
 import { createKeywordResolver } from '../../engine/resolver/keywordResolver';
 import { PageShell } from './PageShell';
+import { PageSection } from './PageSection';
 import animatedItemStyles from './AnimatedListItem.module.css';
 
 interface UniverseEntityRecord {
@@ -41,7 +42,8 @@ export function WatchlistPage() {
           description="Watch an entity from its header or the Entities page to track it here — session-scoped, nothing persists after a reset."
         />
       ) : (
-        <List hasDividers density="compact">
+        <PageSection>
+          <List hasDividers density="compact">
           {rows.map((item, index) => {
             const intent = intentById.get(item.entityId);
             // The row itself is the click target when there's somewhere to
@@ -73,7 +75,8 @@ export function WatchlistPage() {
               />
             );
           })}
-        </List>
+          </List>
+        </PageSection>
       )}
     </PageShell>
   );

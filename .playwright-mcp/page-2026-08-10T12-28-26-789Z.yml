@@ -1,0 +1,74 @@
+- generic [ref=f3e6]:
+  - link "Skip to content" [ref=f3e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f3e10]:
+    - navigation "Side navigation" [ref=f3e12]:
+      - generic [ref=f3e13]: Merlin
+      - generic [ref=f3e18]:
+        - group "Places" [ref=f3e19]:
+          - generic [ref=f3e23]:
+            - button "New investigation" [ref=f3e25] [cursor=pointer]
+            - button "Discover" [ref=f3e30] [cursor=pointer]
+            - button "Watchlist" [ref=f3e35] [cursor=pointer]
+            - button "Market Pulse" [ref=f3e40] [cursor=pointer]
+            - button "Portfolio" [ref=f3e45] [cursor=pointer]
+            - button "Risk" [ref=f3e50] [cursor=pointer]
+            - button "Data Sources" [ref=f3e55] [cursor=pointer]
+        - group "Recent" [ref=f3e59]:
+          - generic [ref=f3e60]:
+            - generic [ref=f3e61]: Recent
+            - button "Filter recent" [ref=f3e65] [cursor=pointer]:
+              - status
+          - generic [ref=f3e71]:
+            - button "NordBond 2029 — Settlement Failure … Thinking…" [ref=f3e161] [cursor=pointer]:
+              - generic [ref=f3e162]: NordBond 2029 — Settlement Failure …
+              - img "Thinking…" [ref=f3e164]
+            - button "View all" [ref=f3e75] [cursor=pointer]
+      - generic [ref=f3e78]:
+        - button "Collapse sidebar" [ref=f3e80] [cursor=pointer]:
+          - status
+        - generic [ref=f3e86]:
+          - button "Analyst Analyst" [ref=f3e87] [cursor=pointer]:
+            - generic [ref=f3e88]:
+              - img "Analyst" [ref=f3e90]:
+                - generic [ref=f3e91]: A
+              - generic [ref=f3e93]: Analyst
+            - status
+          - button "Notifications" [ref=f3e99] [cursor=pointer]:
+            - status
+    - main [ref=f3e106]:
+      - generic [ref=f3e111]:
+        - generic [ref=f3e113]:
+          - button "Chat" [ref=f3e114] [cursor=pointer]:
+            - status
+          - button "Artifacts" [disabled] [ref=f3e120]:
+            - status
+        - generic [ref=f3e127]:
+          - generic [ref=f3e132]:
+            - generic [ref=f3e133]: Entity
+            - status [ref=f3e137]:
+              - generic [ref=f3e138]:
+                - heading "No entity selected" [level=3] [ref=f3e139]
+                - generic [ref=f3e140]: Open an entity from the Discover grid to see its detail page here.
+          - generic [ref=f3e143]:
+            - generic [ref=f3e167]:
+              - article "Message from user" [ref=f3e168]:
+                - generic [ref=f3e169]: why is nordbond failing settlement
+              - article "Message from assistant" [ref=f3e172]:
+                - generic [ref=f3e175]:
+                  - generic [ref=f3e176]:
+                    - generic [ref=f3e177]: 4 sources
+                    - generic [ref=f3e178]: 0.8s
+                  - button "Thinking trail — click to skip" [ref=f3e179] [cursor=pointer]:
+                    - generic [ref=f3e186]:
+                      - generic [ref=f3e187]: Scoping the investigation — two failed NordBond settlements this week
+                      - generic [ref=f3e188]: 0.8s
+                    - generic [ref=f3e195]:
+                      - generic [ref=f3e196]: Pulling the failed-delivery log from CustodyGrid
+                      - generic [ref=f3e198]: CustodyGrid
+            - generic [ref=f3e149]:
+              - generic [ref=f3e151]:
+                - generic: Ask a question about the venue…
+                - textbox "Message input" [ref=f3e152]
+              - button "Send" [disabled] [ref=f3e155]:
+                - status

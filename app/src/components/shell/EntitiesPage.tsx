@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import { List, ListItem } from '@astryxdesign/core/List';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
-import { Text } from '@astryxdesign/core/Text';
 import entitiesJson from '../../../universe/entities.json';
 import { useWatchlistStore } from '../../engine/stores/watchlistStore';
 import { submitQuery } from '../../engine/submitQuery';
@@ -14,6 +13,7 @@ import { usePageStore } from '../../engine/stores/pageStore';
 import { PageShell } from './PageShell';
 import { EntityDiscoveryStrips, type DiscoveryRow } from './EntityDiscoveryStrips';
 import { DiscoverAssetsSection } from './DiscoverAssetsSection';
+import { PageSection } from './PageSection';
 
 interface UniverseEntityRecord {
   entity: { id: string; name: string; type: string };
@@ -297,56 +297,53 @@ export function EntitiesPage() {
 
   return (
     <PageShell title="Discover">
-      <div style={{ display: 'grid', gap: 'var(--space-32)' }}>
-        <EntityDiscoveryStrips
-          movers={movers}
-          trending={trending}
-          newlyAdded={newlyAdded}
-          onInvestigate={(intent) => void submitQuery(intent, resolver)}
-        />
+      <EntityDiscoveryStrips
+        movers={movers}
+        trending={trending}
+        newlyAdded={newlyAdded}
+        onInvestigate={(intent) => void submitQuery(intent, resolver)}
+      />
 
-        <DiscoverAssetsSection
-          assets={gridAssets}
-          onWatch={(id, name) => watch(id, name, 'manual')}
-          onOpenDetail={openEntityDetail}
-        />
+      <DiscoverAssetsSection
+        assets={gridAssets}
+        onWatch={(id, name) => watch(id, name, 'manual')}
+        onOpenDetail={openEntityDetail}
+      />
 
-        <div style={{ display: 'grid', gap: 'var(--space-12)' }}>
-          <Text type="label">Other tracked entities</Text>
-          <List hasDividers density="compact">
-            {otherEntities.map(({ entity, intent }) => (
-              <ListItem
-                key={entity.id}
-                label={entity.name}
-                description={entity.type}
-                onClick={() => openEntityDetail(entity.id)}
-                endContent={
-                  <div style={{ display: 'flex', gap: 'var(--space-4)' }}>
+      <PageSection title="Other tracked entities">
+        <List hasDividers density="compact">
+          {otherEntities.map(({ entity, intent }) => (
+            <ListItem
+              key={entity.id}
+              label={entity.name}
+              description={entity.type}
+              onClick={() => openEntityDetail(entity.id)}
+              endContent={
+                <div style={{ display: 'flex', gap: 'var(--space-4)' }}>
+                  <IconButton
+                    label={`Watch ${entity.name}`}
+                    tooltip="Add to watchlist"
+                    icon={<Icon icon="checkDouble" size="sm" />}
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => watch(entity.id, entity.name, 'manual')}
+                  />
+                  {intent && (
                     <IconButton
-                      label={`Watch ${entity.name}`}
-                      tooltip="Add to watchlist"
-                      icon={<Icon icon="checkDouble" size="sm" />}
+                      label={`Investigate ${entity.name}`}
+                      tooltip="Investigate"
+                      icon={<Icon icon="externalLink" size="sm" />}
                       variant="ghost"
                       size="sm"
-                      onClick={() => watch(entity.id, entity.name, 'manual')}
+                      onClick={() => void submitQuery(intent, resolver)}
                     />
-                    {intent && (
-                      <IconButton
-                        label={`Investigate ${entity.name}`}
-                        tooltip="Investigate"
-                        icon={<Icon icon="externalLink" size="sm" />}
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => void submitQuery(intent, resolver)}
-                      />
-                    )}
-                  </div>
-                }
-              />
-            ))}
-          </List>
-        </div>
-      </div>
+                  )}
+                </div>
+              }
+            />
+          ))}
+        </List>
+      </PageSection>
     </PageShell>
   );
 }

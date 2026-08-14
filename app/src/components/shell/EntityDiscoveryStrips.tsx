@@ -1,12 +1,12 @@
 import { Fragment } from 'react';
 import { Item } from '@astryxdesign/core/Item';
-import { Divider } from '@astryxdesign/core/Divider';
 import { Badge } from '@astryxdesign/core/Badge';
 import { Text } from '@astryxdesign/core/Text';
 import { Sparkline } from '../nodes/Sparkline';
 import { AssetLogo } from './AssetLogo';
 import { AnimatedListItem } from './AnimatedListItem';
 import { TrendDelta } from './TrendDelta';
+import { PageSection } from './PageSection';
 
 export interface DiscoveryRow {
   id: string;
@@ -40,9 +40,9 @@ interface EntityDiscoveryStripsProps {
 // exist, see that file's own comment) as startContent, name + detail as
 // label/description, Sparkline + value as endContent (moved to the
 // right per feedback; previously left). Each row wraps in AnimatedListItem
-// for staggered entrance. A Divider (Astryx's own separator, not a
-// hand-rolled border) sits between rows, not after the last one. Every row
-// hovers — even the ones with nothing to click (`.astryx-item:hover` in
+// for staggered entrance. No divider between rows (removed 2026-08-08,
+// direct feedback) — rows are separated by spacing/hover alone now. Every
+// row hovers — even the ones with nothing to click (`.astryx-item:hover` in
 // theme.default.css, unconditional/all-themes, same "consumed as-is"
 // precedent as the list-item hover rule beside it) — a deliberate,
 // explicit exception to the earlier "no hover implying an action that
@@ -74,7 +74,6 @@ function DiscoveryStripList({
         const animationIndex = startIndex + index;
         return (
           <Fragment key={row.id}>
-            {index > 0 && <Divider variant="subtle" />}
             <AnimatedListItem index={animationIndex}>
               <Item
                 density="compact"
@@ -101,26 +100,31 @@ function DiscoveryStripList({
   );
 }
 
+// Notable movers' title carries a trailing Badge ("24H") beside the label —
+// passed as PageSection's `title` ReactNode rather than its own prop, since
+// this is the only one of the three strips with a second element in its
+// header and doesn't warrant widening PageSection's API for one caller.
+const notableMoversTitle = (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
+    <Text type="label">Notable movers</Text>
+    <Badge variant="neutral" label="24H" />
+  </div>
+);
+
 export function EntityDiscoveryStrips({ movers, trending, newlyAdded, onInvestigate }: EntityDiscoveryStripsProps) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-24)' }}>
-      <div style={{ display: 'grid', gap: 'var(--space-8)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
-          <Text type="label">Notable movers</Text>
-          <Badge variant="neutral" label="24H" />
-        </div>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-16)' }}>
+      <PageSection title={notableMoversTitle}>
         <DiscoveryStripList rows={movers} emptyLabel="No market data this session." onInvestigate={onInvestigate} startIndex={0} />
-      </div>
+      </PageSection>
 
-      <div style={{ display: 'grid', gap: 'var(--space-8)' }}>
-        <Text type="label">Trending</Text>
+      <PageSection title="Trending">
         <DiscoveryStripList rows={trending} emptyLabel="Nothing cited yet this session." onInvestigate={onInvestigate} startIndex={movers.length} />
-      </div>
+      </PageSection>
 
-      <div style={{ display: 'grid', gap: 'var(--space-8)' }}>
-        <Text type="label">Newly Added</Text>
+      <PageSection title="Newly Added">
         <DiscoveryStripList rows={newlyAdded} emptyLabel="Nothing to show." onInvestigate={onInvestigate} startIndex={movers.length + trending.length} />
-      </div>
+      </PageSection>
     </div>
   );
 }

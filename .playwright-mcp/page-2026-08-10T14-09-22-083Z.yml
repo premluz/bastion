@@ -1,0 +1,61 @@
+- generic [ref=f13e6]:
+  - link "Skip to content" [ref=f13e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f13e10]:
+    - navigation "Side navigation" [ref=f13e12]:
+      - generic [ref=f13e13]: Merlin
+      - generic [ref=f13e18]:
+        - group "Places" [ref=f13e19]:
+          - generic [ref=f13e23]:
+            - button "New investigation" [ref=f13e25] [cursor=pointer]
+            - button "Discover" [ref=f13e30] [cursor=pointer]
+            - button "Watchlist" [ref=f13e35] [cursor=pointer]
+            - button "Market Pulse" [ref=f13e40] [cursor=pointer]
+            - button "Portfolio" [ref=f13e45] [cursor=pointer]
+            - button "Risk" [ref=f13e50] [cursor=pointer]
+            - button "Data Sources" [ref=f13e55] [cursor=pointer]
+        - group "Recent" [ref=f13e59]:
+          - generic [ref=f13e60]:
+            - generic [ref=f13e61]: Recent
+            - button "Filter recent" [ref=f13e65] [cursor=pointer]:
+              - status
+          - generic [ref=f13e71]:
+            - button "NordBond 2029 — Settlement Failure … Thinking…" [ref=f13e73] [cursor=pointer]:
+              - generic [ref=f13e74]: NordBond 2029 — Settlement Failure …
+              - img "Thinking…" [ref=f13e76]
+            - button "View all" [ref=f13e79] [cursor=pointer]
+      - generic [ref=f13e82]:
+        - button "Collapse sidebar" [ref=f13e84] [cursor=pointer]:
+          - status
+        - generic [ref=f13e90]:
+          - button "Analyst Analyst" [ref=f13e91] [cursor=pointer]:
+            - generic [ref=f13e92]:
+              - img "Analyst" [ref=f13e94]:
+                - generic [ref=f13e95]: A
+              - generic [ref=f13e97]: Analyst
+            - status
+          - button "Notifications" [ref=f13e103] [cursor=pointer]:
+            - status
+    - main [ref=f13e110]:
+      - generic [ref=f13e115]:
+        - generic [ref=f13e116]:
+          - generic [ref=f13e117]: why is nordbond failing settlement
+          - button "Artifacts" [disabled] [ref=f13e121]:
+            - status
+        - generic [ref=f13e129]:
+          - generic [ref=f13e134]:
+            - article "Message from user" [ref=f13e135]:
+              - generic [ref=f13e136]: why is nordbond failing settlement
+            - article "Message from assistant" [ref=f13e139]:
+              - generic [ref=f13e142]:
+                - generic [ref=f13e143]:
+                  - generic [ref=f13e144]: 4 sources
+                  - generic [ref=f13e145]: 0.0s
+                - button "Thinking trail — click to skip" [ref=f13e146] [cursor=pointer]:
+                  - generic [ref=f13e147]: Scoping the investigation — two failed NordBond settlements this week
+          - generic [ref=f13e158]:
+            - generic [ref=f13e160]:
+              - generic: Ask a question about the venue…
+              - textbox "Message input" [ref=f13e161]
+            - button "Send" [disabled] [ref=f13e164]:
+              - status

@@ -78,6 +78,19 @@
     transform var(--motion-exit-duration) var(--motion-exit-ease);
 }
 
+/* Equal-height suggestion cards (direct feedback, 2026-08-07: "all 3 boxes
+   should always match to same height (largest)"). Astryx's Grid already
+   stretches its own children to the tallest row item — but each card is
+   wrapped in a .fade div (the stagger/collapse animation layer), so the
+   stretch stopped at the wrapper and the ClickableCard inside it kept
+   sizing to its own text. Measured live before changing anything: 148/168/
+   148px, the 168 being the one two-line stake. Passing height through the
+   wrapper is what lets Grid's existing stretch reach the card; nothing here
+   sets a height itself, so the tallest card still defines the row. */
+.fade > :global(.astryx-card) {
+  height: 100%;
+}
+
 .collapsing .fade {
   opacity: 0;
   transform: translateY(12px);

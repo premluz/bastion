@@ -32,7 +32,7 @@ const NODE_STORIES = [
   'nodes-newsfeed--happy',
 ] as const;
 
-const THEMES = ['default', 'ops-dark', 'glass'] as const;
+const THEMES = ['default', 'ops-dark', 'glass', 'glass-light'] as const;
 
 for (const storyId of NODE_STORIES) {
   for (const theme of THEMES) {

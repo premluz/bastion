@@ -4,6 +4,7 @@ import { Badge } from '@astryxdesign/core/Badge';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
 import { DocumentIcon } from './DocumentIcon';
 import styles from './ArtifactStackControl.module.css';
+import controlStyles from './PaneControlButton.module.css';
 
 // Home top-bar control (Phase 8H, revised) — always present (disabled
 // rather than hidden when there are no artifacts yet, so the control's
@@ -21,11 +22,19 @@ export function ArtifactStackControl() {
 
   return (
     <div className={styles.wrapper}>
+      {/* Selected state: a soft accent-tinted layer, not Astryx's own
+          `primary` variant (a full solid accent fill) — direct feedback,
+          2026-08-04: "some layer state of theme accent color not full
+          accent color solid bg." Stays on `ghost` (transparent at rest,
+          Astryx's own hover/press overlay unaffected below the accent
+          layer) and adds PaneControlButton.module.css's .selected class
+          + a solid-accent icon color instead of switching variants. */}
       <IconButton
         label="Artifacts"
         tooltip="Artifacts"
-        icon={<Icon icon={DocumentIcon} size="sm" />}
-        variant={isStackOpen ? 'primary' : 'ghost'}
+        icon={<Icon icon={DocumentIcon} size="sm" {...(isStackOpen ? { color: 'accent' as const } : {})} />}
+        variant="ghost"
+        className={isStackOpen ? controlStyles.selected : undefined}
         isDisabled={count === 0}
         onClick={toggleStack}
       />

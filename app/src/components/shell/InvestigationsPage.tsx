@@ -128,7 +128,12 @@ export function InvestigationsPage() {
       {threads.length === 0 ? (
         <EmptyState title="No investigations yet" description="Ask a question from Home to start one." />
       ) : viewMode === 'module' ? (
-        <div style={{ display: 'grid', gap: 'var(--space-24)' }}>
+        // --space-16: ratified page-section gap (node-vocabulary.md
+        // Shell section, 2026-08-10) — module groups here are sibling
+        // top-level sections the same way Discover's cards are, found
+        // via merlin-layout-law's sweep (2026-08-13), not independently
+        // re-derived.
+        <div style={{ display: 'grid', gap: 'var(--space-16)' }}>
           {MODULE_ORDER.map((module) => {
             const rows = rowsByModule.grouped[module];
             if (rows.length === 0) return null;

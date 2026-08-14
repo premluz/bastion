@@ -26,13 +26,21 @@ interface DashboardSummaryHeaderProps {
 // reimplementing either rendering. Flagged for architect review: this is
 // a new application of the shell exception beyond "chat bar, theme
 // switch, frame."
+// Card variant "panelFlat" (direct feedback, 2026-08-08: "still see
+// recommended in portfolio as old panel with bg rather than like Book
+// summary" — Book summary is a Panel node, panelFlat, outline-only). This
+// header had been left on Astryx's bare `default` variant since Phase 13
+// first wrote it — a separate component from SceneSummary, so an earlier
+// pass's fix never reached this one. Was briefly panelProvisional (a
+// same-day intermediate fix) before that class was retired entirely by
+// direct order — see theme.default.css's own note on panelFlat. Label color
+// dropped from accent to plain ink for the same reason as the other two
+// fixes: accent is reserved for real signal, not a routine section label.
 export function DashboardSummaryHeader({ recommendation, confidence, confidenceLabel, sourceRefs, assumptions, caveat }: DashboardSummaryHeaderProps) {
   return (
-    <Card variant="default" padding={4}>
+    <Card variant="default" padding={4} className="panelFlat">
       <div style={{ display: 'grid', gap: 'var(--space-12)' }}>
-        <Text type="label" color="accent">
-          Recommended
-        </Text>
+        <Text type="label">Recommended</Text>
         <Blockquote style={{ fontFamily: 'var(--face-voice)' }}>{recommendation}</Blockquote>
         <ConfidenceMeter label={confidenceLabel} value={confidence} />
         {assumptions && assumptions.length > 0 && (

@@ -81,7 +81,11 @@ export function MarketPulsePage() {
       {cards.length === 0 ? (
         <EmptyState title="Nothing surfaced yet" description="The agent hasn't flagged anything new this session." />
       ) : (
-        <Grid columns={{ minWidth: 240, max: 3 }} gap={3}>
+        // gap={4} (16px): ratified page-section/card-grid gap
+        // (node-vocabulary.md Shell section, 2026-08-10) — found via
+        // merlin-layout-law's sweep (2026-08-13); was gap={3}/12px,
+        // never compared against Discover's sibling card grid.
+        <Grid columns={{ minWidth: 240, max: 3 }} gap={4}>
           {cards.map((card) => {
             const artifactRef = artifactRefByIntent.get(card.intent);
             const isInvestigated = !!artifactRef;

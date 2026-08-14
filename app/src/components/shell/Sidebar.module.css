@@ -11,6 +11,24 @@
   gap: var(--space-8);
 }
 
+/* Clears Astryx's own footer-wrapper border-top (direct feedback, 2026-08-08:
+   "bottom has border which we need to clear") and adds the requested bottom
+   margin. Confirmed live via computed styles before touching anything: the
+   border isn't ours — it's on `footer`'s own wrapper div, Astryx's
+   `SideNav` internals (`.astryx-side-nav`'s third direct child, a
+   StyleX-compiled class with no stable name to select directly — a hairline
+   top border baked into Astryx's own compiled output, confirmed the
+   same wrapper is `.footerStack`'s direct parent). No prop exists on
+   `SideNav`/`footer` to suppress it (checked Astryx's own SideNav docs),
+   so this reaches it via `:has()` from the one child class we DO control
+   — anchored to the stable `.astryx-side-nav` class already used elsewhere
+   in this codebase, not to the unstable atomic classes themselves. Logged
+   in astryx-bridge.md. */
+:global(.astryx-side-nav) > div:has(> .footerStack) {
+  border-top: none;
+  margin-bottom: var(--space-16);
+}
+
 /* Right-aligned to the sidebar's own edge, per direct feedback — matches
    the collapse arrow's own conventional position (top-right of a
    sidebar/panel in most IDE-style layouts) rather than sitting centered

@@ -75,4 +75,57 @@
   --opacity-40: .40;
   --opacity-55: .55;
   --opacity-70: .70;
+
+  /* Saturation scale — multipliers for backdrop-filter's saturate(), paired
+     with the blur scale above. A blurred backdrop loses apparent chroma
+     (averaging neighbouring pixels pulls the result toward grey), so real
+     frosted-glass materials pair blur with a saturation boost; without it
+     the surface reads as a grey smear rather than glass. Standard practice
+     across Fluent's Acrylic and every credible glassmorphism implementation.
+     Theme-agnostic — which step a theme uses is that theme's decision. */
+  --saturate-100: 1;
+  --saturate-140: 1.4;
+  --saturate-180: 1.8;
+
+  /* Specular sweep radius — the size of the pointer-tracked highlight that
+     travels across a glass surface. Two steps only: md for dense/compact
+     surfaces, lg for full panes. The highlight's COLOUR is --edge-highlight
+     (the same refracted-light token the top edge uses) and its intensity is
+     --spec-alpha, both per-theme; these are geometry, not light. */
+  --spec-radius-md: 320px;
+  --spec-radius-lg: 520px;
+
+  /* Neumorphic shading — a directional light cue on OPAQUE surfaces (list
+     rows, buttons, panes), added 2026-08-07 per direct reference (Linear's
+     own UI): a whisper-soft inset highlight along the top edge and shadow
+     along the bottom, so a surface reads as gently lit rather than flat —
+     distinct from glass's blur+specular vocabulary, which is about
+     translucency, not surface texture. This is geometry only (light comes
+     from above, always) — colour and intensity are per-theme semantic
+     tokens (--shading-light/--shading-dark) so it can register at a
+     different strength per surface class without a second primitive scale.
+     Two paired shapes, not a single shadow: --shading-raised (content
+     sitting slightly above its surroundings — the default resting state)
+     and --shading-pressed (content sitting slightly into it — active/
+     selected rows), inset so they never extend a surface's own box beyond
+     its border-radius the way a drop-shadow would. */
+  --shading-raised: inset 0 1px 0 0 var(--shading-light), inset 0 -1px 0 0 var(--shading-dark);
+  --shading-pressed: inset 0 -1px 0 0 var(--shading-light), inset 0 1px 0 0 var(--shading-dark);
+
+  /* "Pop" register (direct order, 2026-08-10) — the shadow half of a
+     two-variant panel system: "pop" panes get this weaker inset PLUS a
+     thin --edge outline (applied per-consumer, not here — see each
+     consumer's own comment); "no-pop" panes are panelFlat's existing
+     outline-only, zero-shadow treatment, unchanged. Weaker than
+     --shading-raised on purpose ("slightly stronger [outline], inner
+     weaker [shading]," confirmed live) — once an outline is doing the
+     job of defining the pane's edge, the inset no longer has to carry
+     that weight alone and can recede to a softer interior cue. Derived
+     via color-mix from --shading-light/--shading-dark themselves, not a
+     second set of raw per-theme values — any future retune of the base
+     pair propagates here automatically, and the two registers can never
+     drift out of relation to each other the way two independently-
+     authored value sets eventually would. */
+  --shading-pop-raised: inset 0 1px 0 0 color-mix(in srgb, var(--shading-light) 65%, transparent),
+    inset 0 -1px 0 0 color-mix(in srgb, var(--shading-dark) 65%, transparent);
 }

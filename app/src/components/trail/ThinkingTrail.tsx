@@ -3,7 +3,19 @@ import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
 import type { ThinkingStep } from '../../contracts/thinking';
 import { StepRow } from './StepRow';
+import { ThinkingIndicator } from './ThinkingIndicator';
+import './trail.css';
 import styles from './ThinkingTrail.module.css';
+
+// Synthetic, client-only terminal row appended once the trail completes
+// (direct order, 2026-08-10) — never persisted, never validated against a
+// scene fixture, never counted in the "N reasoning steps" trigger text
+// below (that stays keyed on the real `steps.length`). `kind: 'verify'` is
+// a type-satisfying placeholder only: StepRow's icon is status-driven
+// (clock/check), not kind-driven, so this has zero visual effect — it
+// always renders isActive:false, so it always gets the settled check icon
+// automatically, no special-casing needed inside StepRow.
+const DONE_STEP: ThinkingStep = { id: '__done__', kind: 'verify', label: 'Done', durationMs: 0 };
 
 interface ThinkingTrailProps {
   steps: ThinkingStep[];
@@ -39,8 +51,14 @@ export function ThinkingTrail({ steps, activeIndex, isComplete, elapsedMs, skip 
   if (steps.length === 0) return null;
 
   const visibleSteps = steps.slice(0, activeIndex + 1);
-  const stepRows = visibleSteps.map((step, index) => (
-    <StepRow key={step.id} step={step} isActive={index === activeIndex && !isComplete} />
+  const rowsSource = isComplete ? [...visibleSteps, DONE_STEP] : visibleSteps;
+  const stepRows = rowsSource.map((step, index) => (
+    <StepRow
+      key={step.id}
+      step={step}
+      isActive={index === activeIndex && !isComplete}
+      isLast={index === rowsSource.length - 1}
+    />
   ));
 
   if (isComplete) {
@@ -75,6 +93,7 @@ export function ThinkingTrail({ steps, activeIndex, isComplete, elapsedMs, skip 
       aria-label="Thinking trail — click to skip"
       className={styles.traiContainer}
     >
+      <ThinkingIndicator />
       {stepRows}
     </div>
   );

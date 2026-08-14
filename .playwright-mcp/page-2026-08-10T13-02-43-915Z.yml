@@ -1,0 +1,290 @@
+- generic [active] [ref=f10e1]:
+  - generic [ref=f10e6]:
+    - link "Skip to content" [ref=f10e7] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f10e10]:
+      - navigation "Side navigation" [ref=f10e12]:
+        - generic [ref=f10e13]: Merlin
+        - generic [ref=f10e18]:
+          - group "Places" [ref=f10e19]:
+            - generic [ref=f10e23]:
+              - button "New investigation" [ref=f10e25] [cursor=pointer]
+              - button "Discover" [ref=f10e30] [cursor=pointer]
+              - button "Watchlist" [ref=f10e35] [cursor=pointer]
+              - button "Market Pulse" [ref=f10e40] [cursor=pointer]
+              - button "Portfolio" [ref=f10e45] [cursor=pointer]
+              - button "Risk" [ref=f10e50] [cursor=pointer]
+              - button "Data Sources" [ref=f10e55] [cursor=pointer]
+          - group "Recent" [ref=f10e59]:
+            - generic [ref=f10e60]:
+              - generic [ref=f10e61]: Recent
+              - button "Filter recent" [ref=f10e65] [cursor=pointer]:
+                - status
+            - generic [ref=f10e71]:
+              - button "Tokenized Assets Above 6% Yield — C… Answered" [ref=f10e179] [cursor=pointer]:
+                - generic [ref=f10e155]: Tokenized Assets Above 6% Yield — C…
+                - img "Answered" [ref=f10e180]
+              - button "why is aldergate audit pending No match" [ref=f10e73] [cursor=pointer]:
+                - generic [ref=f10e74]: why is aldergate audit pending
+                - img "No match" [ref=f10e76]
+              - button "View all" [ref=f10e79] [cursor=pointer]
+        - generic [ref=f10e82]:
+          - button "Collapse sidebar" [ref=f10e84] [cursor=pointer]:
+            - status
+          - generic [ref=f10e90]:
+            - button "Analyst Analyst" [ref=f10e91] [cursor=pointer]:
+              - generic [ref=f10e92]:
+                - img "Analyst" [ref=f10e94]:
+                  - generic [ref=f10e95]: A
+                - generic [ref=f10e97]: Analyst
+              - status
+            - button "Notifications" [ref=f10e103] [cursor=pointer]:
+              - status
+      - main [ref=f10e110]:
+        - generic [ref=f10e115]:
+          - generic [ref=f10e116]:
+            - generic [ref=f10e117]: Tokenized Assets Above 6% Yield — Conservative Screen
+            - generic [ref=f10e120]:
+              - button "Artifacts" [ref=f10e121] [cursor=pointer]:
+                - status
+              - generic: "1"
+          - generic [ref=f10e128]:
+            - generic [ref=f10e129]:
+              - generic [ref=f10e158]:
+                - article "Message from user" [ref=f10e159]:
+                  - generic [ref=f10e160]: show me tokenized assets yielding above 6%
+                - article "Message from assistant" [ref=f10e163]:
+                  - generic [ref=f10e166]:
+                    - generic [ref=f10e167]:
+                      - generic [ref=f10e168]: 3 sources
+                      - generic [ref=f10e169]: 7.3s
+                    - generic [ref=f10e181]:
+                      - button "6 reasoning steps · 7.3s" [expanded] [ref=f10e182] [cursor=pointer]
+                      - generic [ref=f10e193]:
+                        - generic [ref=f10e200]:
+                          - generic [ref=f10e201]: Parsing mandate constraints — yield floor, conservative risk tolerance
+                          - generic [ref=f10e202]: 0.9s
+                        - generic [ref=f10e209]:
+                          - generic [ref=f10e210]:
+                            - generic [ref=f10e211]: Scanning listed assets above the 6% yield threshold
+                            - generic [ref=f10e212]: 1.1s
+                          - generic [ref=f10e213]: MarketTape
+                        - generic [ref=f10e222]:
+                          - generic [ref=f10e223]:
+                            - generic [ref=f10e224]: Pulling risk, liquidity, and jurisdiction data for candidates
+                            - generic [ref=f10e225]: 1.4s
+                          - generic [ref=f10e226]:
+                            - generic [ref=f10e227]: RiskLens
+                            - generic [ref=f10e229]: PortfolioAtlas
+                        - generic [ref=f10e237]:
+                          - generic [ref=f10e238]: Cross-referencing candidates against the conservative mandate in PortfolioAtlas
+                          - generic [ref=f10e239]: 1.3s
+                        - generic [ref=f10e246]:
+                          - generic [ref=f10e247]:
+                            - generic [ref=f10e248]: Weighing yield against risk concentration and audit status
+                            - generic [ref=f10e249]: 1.6s
+                          - generic [ref=f10e250]: 0.74 · moderate
+                        - generic [ref=f10e256]:
+                          - generic [ref=f10e257]:
+                            - generic [ref=f10e258]: Confirming NordBond as a reference point below threshold and flagging Aldergate's pending audit
+                            - generic [ref=f10e259]: 1.0s
+                          - generic [ref=f10e260]: 0.81 · high
+                    - generic [ref=f10e261] [cursor=pointer]:
+                      - button "Open Tokenized Assets Above 6% Yield — Conservative Screen" [ref=f10e262]
+                      - generic [ref=f10e263]:
+                        - generic [ref=f10e269]:
+                          - generic [ref=f10e270]: Tokenized Assets Above 6% Yield — Conservative Screen
+                          - generic [ref=f10e271]: discover
+                        - generic [ref=f10e272]: Ready
+              - generic [ref=f10e142]:
+                - generic [ref=f10e144]:
+                  - generic: Ask a question about the venue…
+                  - textbox "Message input" [ref=f10e145]
+                - button "Send" [disabled] [ref=f10e148]:
+                  - status
+            - generic [ref=f10e279]:
+              - generic [ref=f10e280]:
+                - generic [ref=f10e281]:
+                  - button "Back to list" [ref=f10e282] [cursor=pointer]:
+                    - status
+                  - generic [ref=f10e288]: Tokenized Assets Above 6% Yield — Conservative Screen
+                - generic [ref=f10e289]:
+                  - button "Maximize" [ref=f10e290] [cursor=pointer]:
+                    - status
+                  - button "Close artifacts" [ref=f10e296] [cursor=pointer]:
+                    - status
+              - generic [ref=f10e305]:
+                - generic [ref=f10e307]:
+                  - generic [ref=f10e308]:
+                    - generic [ref=f10e309]: Recommendation confidence
+                    - generic [ref=f10e311]:
+                      - generic [ref=f10e312]:
+                        - generic [ref=f10e313]:
+                          - 'img "Recommendation confidence: 0.74, moderate" [ref=f10e315]':
+                            - generic [ref=f10e319]: 74%
+                          - generic [ref=f10e320]: Moderate
+                        - generic [ref=f10e321]:
+                          - generic [ref=f10e322]:
+                            - generic [ref=f10e323]: Sources
+                            - generic [ref=f10e324]: "3"
+                          - generic [ref=f10e326]:
+                            - generic [ref=f10e327]: Unknowns
+                            - generic [ref=f10e328]: "0"
+                          - generic [ref=f10e330]:
+                            - generic [ref=f10e331]: Assumptions
+                            - generic [ref=f10e332]: "0"
+                      - generic [ref=f10e334]: Aldergate's audit renewal is still pending — size the position accordingly.
+                      - generic [ref=f10e335]:
+                        - generic [ref=f10e336]: MarketTape
+                        - generic [ref=f10e338]: RiskLens
+                        - generic [ref=f10e340]: PortfolioAtlas
+                  - generic [ref=f10e342]:
+                    - generic [ref=f10e343]:
+                      - generic [ref=f10e344]: Reasoning
+                      - generic [ref=f10e346]: Helios's yield is real, but its RiskLens score of 61 and retail concentration sit outside the conservative mandate cited from PortfolioAtlas. NordBond remains the reference point — 5.8%, just below the 6% threshold.
+                    - generic [ref=f10e348]:
+                      - generic [ref=f10e349]: Recommended
+                      - generic [ref=f10e351]: Aldergate Estates fits the conservative mandate best, pending its audit renewal. Vantara stands as the portfolio's diversifier.
+                - generic [ref=f10e357]:
+                  - generic [ref=f10e359]:
+                    - generic [ref=f10e360]: Candidates above 6%
+                    - generic [ref=f10e361]: 3 assets
+                  - generic [ref=f10e364]:
+                    - generic [ref=f10e365]: Reference — NordBond 2029
+                    - generic [ref=f10e366]: 5.8%
+                    - generic [ref=f10e368]: Below threshold
+                  - generic [ref=f10e370]:
+                    - generic [ref=f10e371]: Highest yield
+                    - generic [ref=f10e372]: 9.1%
+                    - generic [ref=f10e374]: Helios Yield Fund
+                - generic [ref=f10e376]:
+                  - generic [ref=f10e377]: Candidates ranked by yield
+                  - generic [ref=f10e381]:
+                    - generic [ref=f10e382]: 3 results
+                    - group "Table" [ref=f10e383]:
+                      - table [ref=f10e384]:
+                        - rowgroup [ref=f10e385]:
+                          - row [ref=f10e386]:
+                            - columnheader "Asset" [ref=f10e387]
+                            - columnheader "Yield" [ref=f10e388]
+                            - columnheader "RiskLens score" [ref=f10e389]
+                            - columnheader "Liquidity" [ref=f10e390]
+                            - columnheader "Jurisdiction" [ref=f10e391]
+                        - rowgroup [ref=f10e392]:
+                          - row [ref=f10e393]:
+                            - cell "Aldergate Estates" [ref=f10e394]
+                            - cell "7.2%" [ref=f10e395]
+                            - cell "34/100" [ref=f10e396]
+                            - cell "Moderate" [ref=f10e397]
+                            - cell "Germany" [ref=f10e398]
+                          - row [ref=f10e399]:
+                            - cell "Vantara Metals" [ref=f10e400]
+                            - cell "6.4%" [ref=f10e401]
+                            - cell "45/100" [ref=f10e402]
+                            - cell "Thin" [ref=f10e403]
+                            - cell "Switzerland" [ref=f10e404]
+                          - row [ref=f10e405]:
+                            - cell "Helios Yield Fund" [ref=f10e406]
+                            - cell "9.1%" [ref=f10e407]
+                            - cell "61/100" [ref=f10e408]
+                            - cell "Moderate" [ref=f10e409]
+                            - cell "Luxembourg" [ref=f10e410]
+                - generic [ref=f10e412]:
+                  - generic [ref=f10e413]: Candidates compared
+                  - group "Table" [ref=f10e418]:
+                    - table [ref=f10e419]:
+                      - rowgroup [ref=f10e420]:
+                        - row [ref=f10e421]:
+                          - columnheader "Dimension" [ref=f10e422]
+                          - columnheader "Aldergate Estates" [ref=f10e423]
+                          - columnheader "Vantara Metals" [ref=f10e424]
+                          - columnheader "Helios Yield Fund" [ref=f10e425]
+                      - rowgroup [ref=f10e426]:
+                        - row [ref=f10e427]:
+                          - cell "Yield" [ref=f10e428]
+                          - cell "7.2%" [ref=f10e429]
+                          - cell "6.4%" [ref=f10e430]
+                          - cell "9.1%" [ref=f10e431]
+                        - row [ref=f10e432]:
+                          - cell "RiskLens score" [ref=f10e433]
+                          - cell "34/100" [ref=f10e434]
+                          - cell "45/100" [ref=f10e435]
+                          - cell "61/100" [ref=f10e436]
+                        - row [ref=f10e437]:
+                          - cell "Liquidity" [ref=f10e438]
+                          - cell "Moderate" [ref=f10e439]
+                          - cell "Thin" [ref=f10e440]
+                          - cell "Moderate" [ref=f10e441]
+                        - row [ref=f10e442]:
+                          - cell "Jurisdiction" [ref=f10e443]
+                          - cell "Germany" [ref=f10e444]
+                          - cell "Switzerland" [ref=f10e445]
+                          - cell "Luxembourg" [ref=f10e446]
+                - generic [ref=f10e448]:
+                  - generic [ref=f10e449]: 90-day yield vs. volatility
+                  - generic [ref=f10e451]:
+                    - generic [ref=f10e453]:
+                      - generic [ref=f10e454]: Aldergate Estates
+                      - application [ref=f10e457]:
+                        - generic [ref=f10e478]:
+                          - generic [ref=f10e479]:
+                            - generic [ref=f10e480]: 2026-04-15
+                            - generic [ref=f10e482]: 2026-05-03
+                            - generic [ref=f10e484]: 2026-05-21
+                            - generic [ref=f10e486]: 2026-06-07
+                            - generic [ref=f10e488]: 2026-07-02
+                          - generic [ref=f10e490]:
+                            - generic [ref=f10e491]: "0"
+                            - generic [ref=f10e493]: "2"
+                            - generic [ref=f10e495]: "4"
+                            - generic [ref=f10e497]: "6"
+                            - generic [ref=f10e499]: "8"
+                    - generic [ref=f10e502]:
+                      - generic [ref=f10e503]: Vantara Metals
+                      - application [ref=f10e506]:
+                        - generic [ref=f10e523]:
+                          - generic [ref=f10e524]:
+                            - generic [ref=f10e525]: 2026-04-15
+                            - generic [ref=f10e527]: 2026-05-03
+                            - generic [ref=f10e529]: 2026-05-21
+                            - generic [ref=f10e531]: 2026-06-07
+                            - generic [ref=f10e533]: 2026-07-02
+                          - generic [ref=f10e535]:
+                            - generic [ref=f10e536]: "0"
+                            - generic [ref=f10e538]: "2"
+                            - generic [ref=f10e540]: "4"
+                            - generic [ref=f10e542]: "6"
+                            - generic [ref=f10e544]: "8"
+                    - generic [ref=f10e547]:
+                      - generic [ref=f10e548]: Helios Yield Fund
+                      - application [ref=f10e551]:
+                        - generic [ref=f10e572]:
+                          - generic [ref=f10e573]:
+                            - generic [ref=f10e574]: 2026-04-15
+                            - generic [ref=f10e576]: 2026-05-03
+                            - generic [ref=f10e578]: 2026-05-21
+                            - generic [ref=f10e580]: 2026-06-07
+                            - generic [ref=f10e582]: 2026-07-02
+                          - generic [ref=f10e584]:
+                            - generic [ref=f10e585]: "0"
+                            - generic [ref=f10e587]: "3"
+                            - generic [ref=f10e589]: "6"
+                            - generic [ref=f10e591]: "9"
+                            - generic [ref=f10e593]: "12"
+                    - generic [ref=f10e596]:
+                      - generic [ref=f10e597]: NordBond 2029 (reference)
+                      - application [ref=f10e600]:
+                        - generic [ref=f10e621]:
+                          - generic [ref=f10e622]:
+                            - generic [ref=f10e623]: 2026-04-15
+                            - generic [ref=f10e625]: 2026-05-03
+                            - generic [ref=f10e627]: 2026-05-21
+                            - generic [ref=f10e629]: 2026-06-07
+                            - generic [ref=f10e631]: 2026-07-02
+                          - generic [ref=f10e633]:
+                            - generic [ref=f10e634]: "0"
+                            - generic [ref=f10e636]: "2"
+                            - generic [ref=f10e638]: "4"
+                            - generic [ref=f10e640]: "6"
+                            - generic [ref=f10e642]: "8"
+  - generic [ref=f10e644]: "4"

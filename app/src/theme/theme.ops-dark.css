@@ -38,10 +38,47 @@
   /* Structure */
   --edge: oklch(1 0 0 / .08);
   --edge-highlight: transparent;
+
+  /* Neumorphic shading (see tokens.base.css) — dark matte register, so both
+     directions are white-based at low alpha: a dark surface's "shadow" edge
+     is just a lighter step of white than its "light" edge, not black (black
+     would vanish against an already-near-black surface). Slightly higher
+     alpha than default theme's light-mode version — needed to register at
+     all against ops-dark's own near-black surfaces, still whispered
+     relative to the theme's "nothing floats, nothing glows" register. */
+  --shading-light: oklch(1 0 0 / .06);
+  --shading-dark: oklch(1 0 0 / .02);
   --surface-blur: 0px;
   --surface-opacity: 1;
+
+  /* Opaque twin of --surface-1, for anything that must OCCLUDE rather than
+     tint (e.g. content painted on top of a surface that should not show what
+     is behind it). Added 2026-08-07 when the glass themes gave --surface-1
+     alpha and silently broke a consumer relying on it being opaque
+     (EntityAssetTable's sticky-column pin, since removed — the pin itself is
+     gone, but the general problem this token solves is not theme-specific).
+     Identical value to --surface-1 in the matte themes. */
+  --surface-1-solid: oklch(.19 .015 250);
+
+  /* Fill for a full-height PAGE pane, as distinct from a card. Alpha that
+     reads as crisp frosted glass at card scale reads as a barely-there wash
+     across a ~1460px pane, which is what "page panes have not got bg like
+     artifacts" was describing. Matte themes just point at --surface-1 (no
+     behaviour change); the glass themes raise the alpha for the larger area
+     while staying translucent, so the canvas backdrop still shows through
+     and the material is still real. */
+  --pane-surface: var(--surface-1);
+
   --glow: none;
   --scrim: transparent;
+
+  /* Glass material — off, per this theme's own register ("matte, dense,
+     precise. Nothing floats, nothing glows except signal states").
+     See theme.default.css for why `none` rather than `blur(0px)`. */
+  --canvas-backdrop: none;
+  --surface-material: none;
+  --spec-alpha: 0;
+  --spec-radius: var(--spec-radius-lg);
 
   /* Motion binding */
   --motion-enter-duration: var(--duration-200);
@@ -87,13 +124,10 @@
    both render with zero elevation (outline only, no background). Visual
    distinction is typography (voice face) + kicker label, NOT border differences. */
 
+/* panelProvisional RETIRED — see theme.default.css's own note for the full
+   rationale (2026-08-08 direct order: every content block gets the same
+   bordered treatment, no borderless tier). */
 .astryx-card.panelFlat {
-  background-color: transparent;
-  border: 1px solid var(--edge);
-  box-shadow: none;
-}
-
-.astryx-card.panelProvisional {
   background-color: transparent;
   border: 1px solid var(--edge);
   box-shadow: none;
@@ -137,4 +171,17 @@
 .astryx-chat-message-bubble.filled,
 .astryx-token.default {
   background-color: var(--surface-2);
+}
+
+/* Tooltip legibility (direct feedback, 2026-08-07: "tooltip on dark mode text
+   too pale"). Astryx's Tooltip inverts — it paints its chip in --ink-primary
+   and its text in the surface colour, which is correct while surfaces are
+   opaque. The glass themes gave --surface-1 a .40 alpha, so the tooltip's own
+   TEXT became 40%-transparent dark ink on a light chip: measured live at
+   color: oklch(.19 .015 250 / .4), which is exactly the "too pale" reported.
+   Same root cause as the sticky-column bug in this same change — a consumer
+   that needed an opaque surface silently inheriting a translucent one. Pinned
+   to --surface-1-solid so the chip's text is fully opaque in every theme. */
+.astryx-tooltip {
+  color: var(--surface-1-solid);
 }

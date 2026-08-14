@@ -1,0 +1,28 @@
+/* Astryx's "muted" variant is a fixed --color-background-muted token
+   (Card.tsx's variantStyles map — confirmed no ambient/inherit behavior),
+   so it doesn't track whatever surface ThinkingTrail actually sits on
+   here — same class of bug ArtifactStack.module.css's own .artifactCard
+   override already fixes for the artifact pane (see that file's comment
+   for the full reasoning: "one step up from ambient"). ThinkingTrail has
+   exactly two mount contexts (Transcript.tsx, mounted via
+   TranscriptAndComposer in Frame.tsx): Home, where the content column has
+   no background of its own and the ambient is --surface-0
+   (#astryx-app-shell-main) — one step up is --surface-1, the fallback
+   below; and the side transcript pane (Frame.module.css's
+   .transcriptPane), whose own background is --pane-surface
+   (== --surface-1 in every theme) — one step up there is --surface-2,
+   supplied via --search-results-surface (set on .transcriptPane itself,
+   inherited down through the cascade since it's a plain custom property,
+   not scoped to a CSS Modules class name the way a selector would need
+   to be). Specificity matches Astryx's own
+   `.astryx-card[data-variant="muted"]` rule so this reliably wins
+   regardless of import order. */
+.card:global(.astryx-card)[data-variant='muted'] {
+  background-color: var(--search-results-surface, var(--surface-1));
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  padding-block-end: var(--space-4);
+}

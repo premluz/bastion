@@ -24,6 +24,7 @@ import { usePageStore, connectPageHistory, type Page } from '../../engine/stores
 import { connectLiveChannel } from '../../engine/liveChannel';
 import { useViewportWidth } from './useViewportWidth';
 import { usePaneVisibility } from './usePaneVisibility';
+import { useSpecularPointer } from './useSpecularPointer';
 import layout from './Frame.module.css';
 
 // Phase 18, tier 3's fence: below this, the whole app shell gives way to
@@ -72,6 +73,13 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  // Pointer-tracked specular for glass surfaces. Deliberately unconditional
+  // on theme: the hook only writes coordinates, and every matte theme sets
+  // --spec-alpha: 0, so nothing renders there. Gating it on theme here would
+  // put a visual decision in application code — exactly what the token
+  // cascade exists to prevent.
+  useSpecularPointer();
 
   // Phase 9: subscribed for the app's whole lifetime, not just once a turn
   // exists — a push_scene while still on LandingState must still land (it
@@ -151,7 +159,18 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
                   hasStarted (LandingState has no title bar, unchanged);
                   every other page shows its bar unconditionally. */}
               {!isMaximizedStack && (page !== 'home' || hasStarted) && <WorkbenchTitleBar page={page} />}
-              <div className={layout.row} ref={rowRef}>
+              <div
+                className={layout.row}
+                ref={rowRef}
+                // Lets PageShell's own outer padding (its right side only)
+                // fall back to 0 when a side pane sits next to it — the
+                // row's own gap (below) already separates them at that
+                // point, so PageShell's page-margin padding would only
+                // double up with it. 1/0 rather than a boolean so the CSS
+                // side can consume it directly in a calc() (see
+                // PageShell.module.css's own comment on this variable).
+                style={{ '--content-has-sibling-pane': showArtifact || showTranscript ? 1 : 0 } as React.CSSProperties}
+              >
                 {/* Maximize (Phase 8H): the stack takes the full row
                     width and this column hides — display:none, not
                     unmounted, so an in-progress composer draft survives a

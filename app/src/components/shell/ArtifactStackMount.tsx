@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ArtifactStack } from './ArtifactStack';
-import { useArtifactStore } from '../../engine/stores/artifactStore';
-import { getSceneMinWidth } from '../../engine/sceneMinWidth';
-import { ARTIFACT_PANE_FLOOR } from './paneFloors';
+import layout from './Frame.module.css';
 import './ArtifactStackMount.css';
 
 interface ArtifactStackMountProps {
@@ -21,13 +19,6 @@ interface ArtifactStackMountProps {
 export function ArtifactStackMount({ show }: ArtifactStackMountProps) {
   const [isMounted, setIsMounted] = useState(show);
   const [isExiting, setIsExiting] = useState(false);
-  // Phase 18: same scene-aware floor ArtifactStack.tsx's own resizable
-  // uses, applied here too so the ROW's overflow detection (Frame.tsx's
-  // usePaneFitCollapse) sees the real minimum, not just the generic one —
-  // both reads are cheap/pure, deliberately not plumbed as a prop.
-  const openArtifactId = useArtifactStore((state) => state.openArtifactId);
-  const artifacts = useArtifactStore((state) => state.artifacts);
-  const sceneFloor = getSceneMinWidth(openArtifactId ? artifacts[openArtifactId]?.scene : undefined, ARTIFACT_PANE_FLOOR);
 
   useEffect(() => {
     if (show) {
@@ -47,9 +38,9 @@ export function ArtifactStackMount({ show }: ArtifactStackMountProps) {
 
   return (
     <div
+      className={layout.artifactPane}
       style={{
         display: 'flex',
-        minWidth: sceneFloor,
         animationName: isExiting ? 'merlin-panel-slide-out' : 'merlin-panel-slide-in',
         animationDuration: isExiting ? 'var(--motion-exit-duration)' : 'var(--motion-enter-duration)',
         animationTimingFunction: isExiting ? 'var(--motion-exit-ease)' : 'var(--motion-enter-ease)',

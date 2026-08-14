@@ -392,3 +392,77 @@ compact tables:
   oklch(.78 .26 165)` vs. `--accent-ok: oklch(.76 .15 165)`; `--delta-down:
   oklch(.72 .29 25)` vs. `--accent-alert: oklch(.68 .19 25)`), proven via
   live Discover page in all three themes (2026-07-30).
+
+## Tooltip text color (`.astryx-tooltip` → `--surface-1-solid`) — 2026-08-07
+
+Astryx's Tooltip is an *inverted* surface: it paints its chip in the primary
+ink color and its text in a surface color. That is correct while surfaces are
+opaque — and it silently broke when the glass themes gave `--surface-1` a .40
+alpha, because the tooltip's own TEXT then inherited that alpha. Measured
+live on a real rendered tooltip, not inferred: `color: oklch(.19 .015 250 /
+.4)` on `background: oklch(.93 .01 250)` — 40%-transparent dark ink on a light
+chip, which is exactly the "tooltip on dark mode text too pale" reported.
+
+Override: `.astryx-tooltip { color: var(--surface-1-solid); }`, unconditional,
+in all four theme files. Original value: whichever surface variable Astryx
+maps its inverted text to (StyleX-generated, not greppable as a literal —
+resolved by reading the live computed value). New value: the alpha-free twin
+of the same surface, so the tooltip's text is fully opaque in every theme
+while keeping Astryx's intended inversion.
+
+Same root cause as a pinned-table-column seam fixed in the same change (the
+pin itself was removed 2026-08-07, per direct feedback — Asset column no
+longer sticky, so that specific symptom no longer applies): a consumer that
+required an opaque surface silently inheriting a translucent one once glass
+landed. `--surface-1-solid` exists to make that requirement explicit rather
+than assumed.
+
+## Neumorphic shading on `.astryx-list-item`/`.astryx-item`/`.astryx-button` — 2026-08-07
+
+New cross-theme addition, direct order ("very subtle shadows on buttons and
+main pane," Linear reference). `--shading-raised` (tokens.base.css: paired
+inset box-shadows, light-top/dark-bottom) applied via `box-shadow` on:
+- `.astryx-list-item[aria-selected='true']:not(:hover)` — selected-row cue,
+  distinct from the existing hover rule (a flat `background-color` wash).
+- `.astryx-button:not(:disabled)` — every variant, unconditional; the cue is
+  about surface texture, not which action a button represents.
+
+Neither class carries its own `box-shadow` today (confirmed live via
+`getComputedStyle` before adding — `box-shadow: none` on both prior to this
+change), so this is additive, not an override of an existing Astryx value.
+Original value: none. New value: `var(--shading-raised)`, themed per-file
+(near-zero in the glass themes deliberately — see theme.glass.css's own
+comment for why stacking this on an already-translucent surface reads as mud).
+
+## `#astryx-app-shell-main` side-edge glow — shipped 2026-08-07, removed 2026-08-08
+
+`--edge-glow` added a paired soft box-shadow to AppShell's stable content-area
+id, meant to reproduce a "light kind of thing" on the sidebar/content
+boundary reportedly visible in a Linear reference screenshot. Retired the
+next day after re-examining the same screenshot: that panel has no visible
+sidebar/content seam at all — it reads as one continuous surface, and the
+only edges present in the reference are around its floating AI panel (a
+distinct pattern, not a divider). No override remains here; this element is
+back to carrying only its background-color rule.
+
+## SideNav footer-wrapper border-top — 2026-08-08
+
+Astryx's `SideNav` wraps the `footer` prop in its own internal div (a
+StyleX-compiled class with no stable name to select — the third direct
+child of `.astryx-side-nav`). That wrapper carries a hairline `border-top`
+in its own compiled output, confirmed live via `getComputedStyle` before
+touching anything (`rgba(255,255,255,.1)`, present in every theme). No
+`SideNav`/`footer` prop suppresses it (checked Astryx's own docs).
+
+Override: `:global(.astryx-side-nav) > div:has(> .footerStack) { border-top:
+none; margin-bottom: var(--space-16); }` in `Sidebar.module.css`, anchored to
+the stable `.astryx-side-nav` class (already used elsewhere in this
+codebase) rather than the unstable atomic classes, reaching the actual
+wrapper via `:has()` from the one child class we control. First draft of
+this rule wrote `.astryx-side-nav` as a bare selector inside a CSS Module —
+CSS Modules scope every bare class by default, so it silently became a
+locally-hashed class matching nothing on the real page (confirmed via
+inspecting the compiled stylesheet: the selector had been rewritten to
+`._astryx-side-nav_HASH`). Fixed with `:global(...)`. Worth remembering:
+any global/Astryx class referenced from inside a `.module.css` file needs
+`:global()` explicitly, or the module loader silently defeats it.

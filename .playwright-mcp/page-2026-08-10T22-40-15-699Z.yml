@@ -1,0 +1,62 @@
+- generic [ref=f41e6]:
+  - link "Skip to content" [ref=f41e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f41e10]:
+    - navigation "Side navigation" [ref=f41e12]:
+      - generic [ref=f41e13]: Merlin
+      - generic [ref=f41e18]:
+        - group "Places" [ref=f41e19]:
+          - generic [ref=f41e23]:
+            - button "New investigation" [ref=f41e25] [cursor=pointer]
+            - button "Discover" [ref=f41e30] [cursor=pointer]
+            - button "Watchlist" [ref=f41e35] [cursor=pointer]
+            - button "Market Pulse" [ref=f41e40] [cursor=pointer]
+            - button "Portfolio" [ref=f41e45] [cursor=pointer]
+            - button "Risk" [ref=f41e50] [cursor=pointer]
+            - button "Data Sources" [ref=f41e55] [cursor=pointer]
+        - group "Recent" [ref=f41e59]:
+          - generic [ref=f41e60]:
+            - generic [ref=f41e61]: Recent
+            - button "Filter recent" [ref=f41e65] [cursor=pointer]:
+              - status
+          - generic [ref=f41e71]:
+            - button "Tokenized Assets Above 6% Yield — C… Thinking…" [ref=f41e73] [cursor=pointer]:
+              - generic [ref=f41e74]: Tokenized Assets Above 6% Yield — C…
+              - img "Thinking…" [ref=f41e76]
+            - button "View all" [ref=f41e79] [cursor=pointer]
+      - generic [ref=f41e82]:
+        - button "Collapse sidebar" [ref=f41e84] [cursor=pointer]:
+          - status
+        - generic [ref=f41e90]:
+          - button "Analyst Analyst" [ref=f41e91] [cursor=pointer]:
+            - generic [ref=f41e92]:
+              - img "Analyst" [ref=f41e94]:
+                - generic [ref=f41e95]: A
+              - generic [ref=f41e97]: Analyst
+            - status
+          - button "Notifications" [ref=f41e103] [cursor=pointer]:
+            - status
+    - main [ref=f41e110]:
+      - generic [ref=f41e115]:
+        - generic [ref=f41e116]:
+          - generic [ref=f41e117]: show me tokenized assets yielding above 6%
+          - button "Artifacts" [disabled] [ref=f41e121]:
+            - status
+        - generic [ref=f41e129]:
+          - generic [ref=f41e134]:
+            - article "Message from user" [ref=f41e135]:
+              - generic [ref=f41e136]: show me tokenized assets yielding above 6%
+            - article "Message from assistant" [ref=f41e139]:
+              - generic [ref=f41e142]:
+                - generic [ref=f41e143]:
+                  - generic [ref=f41e144]: 3 sources
+                  - generic [ref=f41e145]: 0.0s
+                - button "Thinking trail — click to skip" [ref=f41e146] [cursor=pointer]:
+                  - generic [ref=f41e147]: Thinking…
+                  - generic [ref=f41e148]: Parsing mandate constraints — yield floor, conservative risk tolerance
+          - generic [ref=f41e160]:
+            - generic [ref=f41e162]:
+              - generic: Ask a question about the venue…
+              - textbox "Message input" [ref=f41e163]
+            - button "Send" [disabled] [ref=f41e166]:
+              - status

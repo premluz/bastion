@@ -7,6 +7,7 @@ import { getModuleForScene } from "./sceneModule";
 import { getAlertSubjectEntity } from "./alertSubjectEntity";
 import { useWatchlistStore } from "./stores/watchlistStore";
 import { config } from "../config";
+import { mockSearchResultsFor } from "./mockSearchResults";
 
 // Shared by submitQuery.ts (typed queries, after the resolver succeeds)
 // and liveChannel.ts (Phase 9 MCP push — a scene that arrives already
@@ -39,11 +40,22 @@ export function presentScene(utterance: string, scene: HydratedScene): void {
   // not re-derived here.
   if (!isAlert) useSessionStore.getState().setActiveThread(threadId);
 
-  playTrail(scene.thinking, () => {
+  // Mock web-search results (direct order, 2026-08-10): populated only on
+  // search-kind steps that don't already carry real webResults, so a
+  // scene authoring its own per-scenario results later is respected
+  // automatically — see mockSearchResults.ts's own comment. Mapped once,
+  // reused for both the live play and the persisted trail below, so a
+  // re-viewed settled turn still shows the results card, not just the
+  // live play.
+  const thinkingWithMocks = scene.thinking.map((step) =>
+    step.kind === "search" && !step.webResults ? { ...step, webResults: mockSearchResultsFor(step.kind) } : step,
+  );
+
+  playTrail(thinkingWithMocks, () => {
     const artifactId = crypto.randomUUID();
     useArtifactStore.getState().registerArtifact(artifactId, { scene, module: getModuleForScene(scene.id) });
     useSessionStore.getState().settleTurn(turnId, {
-      trail: scene.thinking,
+      trail: thinkingWithMocks,
       trailElapsedMs: useTrailStore.getState().elapsedMs,
       artifactRef: artifactId,
     });

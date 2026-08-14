@@ -1,9 +1,9 @@
 import { useMemo, useState, type SVGProps } from 'react';
 import { ToggleButton, ToggleButtonGroup } from '@astryxdesign/core/ToggleButton';
 import { Icon } from '@astryxdesign/core/Icon';
-import { Text } from '@astryxdesign/core/Text';
 import { EntityAssetGrid } from './EntityAssetGrid';
 import { EntityAssetTable } from './EntityAssetTable';
+import { PageSection } from './PageSection';
 import type { MarketAsset } from '../../engine/assetDiscovery';
 import { CATEGORY_LABELS } from '../../engine/assetDiscoveryMock';
 
@@ -48,8 +48,7 @@ export function DiscoverAssetsSection({ assets, onWatch, onOpenDetail }: Discove
   const filtered = category === ALL_CATEGORY ? assets : assets.filter((asset) => asset.category === category);
 
   return (
-    <div style={{ display: 'grid', gap: 'var(--space-12)' }}>
-      <Text type="label">Discover Assets</Text>
+    <PageSection title="Discover Assets">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 'var(--space-16)' }}>
         <ToggleButtonGroup label="Filter assets by category" type="single" value={category} onChange={(value) => setCategory(value ?? ALL_CATEGORY)}>
           <ToggleButton value={ALL_CATEGORY} label="All">
@@ -72,6 +71,6 @@ export function DiscoverAssetsSection({ assets, onWatch, onOpenDetail }: Discove
       ) : (
         <EntityAssetGrid assets={filtered} onWatch={onWatch} onOpenDetail={onOpenDetail} />
       )}
-    </div>
+    </PageSection>
   );
 }

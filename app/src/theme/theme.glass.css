@@ -4,10 +4,28 @@
   color-scheme: dark;
 
   /* Surfaces (same L-ramp, alpha channel active, blur on) */
-  --surface-0: transparent; /* canvas shows through — app supplies deep backdrop */
+  --surface-0: #0E111340; /* canvas shows through — app supplies deep backdrop */
   --surface-1: oklch(.19 .015 250 / .40);
   --surface-2: oklch(.22 .015 250 / .55);
   --surface-3: oklch(.26 .015 250 / .70);
+
+  /* Opaque twin of --surface-1, for anything that must OCCLUDE rather than
+     tint (e.g. content painted on top of a surface that should not show what
+     is behind it). Added 2026-08-07 when the glass themes gave --surface-1
+     alpha and silently broke a consumer relying on it being opaque
+     (EntityAssetTable's sticky-column pin, since removed — the pin itself is
+     gone, but the general problem this token solves is not theme-specific).
+     Identical value to --surface-1 in the matte themes. */
+  --surface-1-solid: oklch(.19 .015 250);
+
+  /* Fill for a full-height PAGE pane, as distinct from a card. Alpha that
+     reads as crisp frosted glass at card scale reads as a barely-there wash
+     across a ~1460px pane, which is what "page panes have not got bg like
+     artifacts" was describing. Matte themes just point at --surface-1 (no
+     behaviour change); the glass themes raise the alpha for the larger area
+     while staying translucent, so the canvas backdrop still shows through
+     and the material is still real. */
+  --pane-surface: oklch(.19 .015 250 / .62);
 
   /* Ink — identical trio to ops-dark, legibility constant across themes */
   --ink-primary: oklch(.93 .01 250);
@@ -40,6 +58,59 @@
   --surface-blur: 24px;
   --glow: 0 0 12px oklch(from var(--accent-signal) l c h / .35);
   --scrim: oklch(.13 .015 250 / .35); /* raise alpha here, nothing else, if a contrast audit fails */
+
+  /* Neumorphic shading (see tokens.base.css) — deliberately near-zero here,
+     unlike every other theme. Direct order, 2026-08-07: pull glass back
+     toward Linear's restraint rather than Raycast's drama, and Linear's own
+     glass panels carry almost no surface texture beyond the blur+edge
+     themselves — stacking a second soft-light cue on top of an already-soft
+     translucent surface reads as mud, not craft, confirmed by comparing
+     both references side by side rather than assumed. Present (not `none`)
+     so the SAME rows/buttons that get shading in matte themes don't
+     silently lose their box-shadow property entirely under glass — the
+     value is just too faint to see, which is the honest way to turn
+     something off within one shared mechanism. */
+  --shading-light: oklch(1 0 0 / .04);
+  --shading-dark: oklch(0 0 0 / .10);
+
+  /* --edge-glow removed 2026-08-08: reported live against a real Linear
+     screenshot that the sidebar/content boundary has NO visible seam at
+     all — the panel reads as one continuous surface; the only edges
+     visible anywhere in that reference are around the floating AI panel
+     (a separate floating object, not a sidebar/content divider). The
+     earlier "side has light" note was a misread of that screenshot.
+     Token/consumer/lint-parity entry retired in the same change — see
+     STATE.md for the removal record rather than re-adding a corrected
+     version of something that shouldn't exist. */
+
+  /* Glass material — the value panes actually consume. --saturate-140, not
+     -180 (direct order, 2026-08-07: pull back toward Linear's restraint —
+     Linear's own frosted panels are barely tinted, closer to "clarity
+     through diffusion" than a colored film; -180 was tuned against Raycast's
+     much more saturated reference and reads as tinted rather than merely
+     de-muddied once compared side by side with Linear). --spec-alpha also
+     pulled down for the same reason: Linear's glass shows almost no
+     specular sweep. Both remain taste dials, now anchored to a different
+     reference than before — flagged for Prem. */
+  --surface-material: blur(var(--surface-blur)) saturate(var(--saturate-140));
+  --spec-alpha: .08;
+  --spec-radius: var(--spec-radius-lg);
+
+  /* The deep field the panes actually refract. TONED DOWN 2026-08-07 (direct
+     order, pull back toward Linear): the previous version's pools were
+     tuned against Raycast's saturated red backdrop and read as visibly
+     colored once compared against Linear's own glass, which sits on a
+     near-monochrome field — blur does almost all the work, tint barely
+     registers. Kept the same two-pool-plus-gradient STRUCTURE (a uniform
+     backdrop still blurs to itself and reads flat, that finding hasn't
+     changed) but pulled chroma down by roughly half and lightness down
+     slightly, so the panes still pick up genuinely different backdrops
+     without the field itself reading as "a colored wash." TASTE DIAL —
+     `none` removes it entirely without touching anything else. */
+  --canvas-backdrop:
+    radial-gradient(60% 50% at 18% 0%, oklch(.24 .035 250) 0%, transparent 62%),
+    radial-gradient(52% 46% at 88% 12%, oklch(.21 .04 285) 0%, transparent 58%),
+    linear-gradient(180deg, oklch(.14 .012 250) 0%, oklch(.10 .01 250) 100%);
 
   /* Motion binding */
   --motion-enter-duration: var(--duration-320);
@@ -84,13 +155,10 @@
    both render with zero elevation (outline only, no background). Visual
    distinction is typography (voice face) + kicker label, NOT border differences. */
 
+/* panelProvisional RETIRED — see theme.default.css's own note for the full
+   rationale (2026-08-08 direct order: every content block gets the same
+   bordered treatment, no borderless tier). */
 .astryx-card.panelFlat {
-  background-color: transparent;
-  border: 1px solid var(--edge);
-  box-shadow: none;
-}
-
-.astryx-card.panelProvisional {
   background-color: transparent;
   border: 1px solid var(--edge);
   box-shadow: none;
@@ -131,4 +199,17 @@
 .astryx-chat-message-bubble.filled,
 .astryx-token.default {
   background-color: var(--surface-2);
+}
+
+/* Tooltip legibility (direct feedback, 2026-08-07: "tooltip on dark mode text
+   too pale"). Astryx's Tooltip inverts — it paints its chip in --ink-primary
+   and its text in the surface colour, which is correct while surfaces are
+   opaque. The glass themes gave --surface-1 a .40 alpha, so the tooltip's own
+   TEXT became 40%-transparent dark ink on a light chip: measured live at
+   color: oklch(.19 .015 250 / .4), which is exactly the "too pale" reported.
+   Same root cause as the sticky-column bug in this same change — a consumer
+   that needed an opaque surface silently inheriting a translucent one. Pinned
+   to --surface-1-solid so the chip's text is fully opaque in every theme. */
+.astryx-tooltip {
+  color: var(--surface-1-solid);
 }

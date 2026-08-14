@@ -3,23 +3,6 @@
    sequential animation-delay to each row. Table stagger (--motion-table-stagger)
    is smaller than assembly stagger for tighter row timing. */
 
-/* Astryx's useTableStickyColumns plugin gives the pinned Asset column an
-   opaque base background (defaults to --color-background-card, an
-   overridable CSS var it exposes for exactly this) so scrolled content
-   doesn't bleed through underneath it. This table has no Card/Panel
-   wrapper of its own, but AppShell's default variant ("elevated",
-   Frame.tsx never overrides it) renders an inset surface backdrop behind
-   the whole content area — --color-background-surface / --surface-1 —
-   not the raw body wash (--surface-0, confirmed wrong on first pass: it
-   left a visible seam because the page doesn't actually sit on the body
-   color at all). --surface-1 matches what's really behind this table, so
-   the pinned column blends in until an actual horizontal scroll makes the
-   shadow (already scroll-gated by the plugin itself, opacity 0 by
-   default) the only visible sign it's pinned. */
-.animatedTable {
-  --table-sticky-background: var(--surface-1);
-}
-
 .animatedTable tbody tr {
   animation-name: merlin-table-row-enter;
   animation-duration: var(--motion-enter-duration);

@@ -1,0 +1,234 @@
+/* glass-light ◆ — the same material as glass, lit from the other side.
+   Suspended panes, additive light, unhurried; legibility never traded for
+   translucency.
+
+   Registered 2026-08-06 by direct architect order ("let's make glass > light
+   mode"), together with the tokens-spec.md §Invariants amendment that made it
+   legal: ink is now "identical WITHIN a scheme," not identical across all
+   themes. This file is the only place that flips the ink ramp — surface
+   physics, accent hues, viz palette and motion binding are all held constant
+   against theme.glass.css, which is what keeps this a scheme of glass rather
+   than a fourth unrelated theme.
+
+   Selector shape is a sibling data-theme value, not a new orthogonal
+   attribute: the enum stays flat (default | ops-dark | glass | glass-light),
+   matching how every existing theme is selected. Revisit only if a third
+   scheme pair appears — one duplicated pattern is cheaper than a premature
+   axis.
+
+   The central asymmetry, and the thing most light-glass implementations get
+   wrong: light glass needs MORE opacity than dark glass, not the same. Dark
+   translucency is forgiving — anything behind it darkens toward the ink's
+   background and light text keeps its contrast. Light translucency is not:
+   dark content passing behind a 40%-opaque white pane drags the surface grey
+   and dark ink loses its footing. So this ramp runs .62 → .78 where the dark
+   theme runs .40 → .70, and the blur is heavier (32px vs 24px) to destroy
+   more of the backdrop's structure before it can compete with text. */
+[data-theme='glass-light'] {
+  /* Pins Astryx's own light-dark() variables — this is the one Meridian
+     theme that pins them LIGHT. Everything Meridian maps below overrides
+     Astryx anyway (direction B); this only governs the unmapped remainder
+     (syntax highlighting, muted status variants, categorical chart fills),
+     which must resolve light here or they read as dark artefacts punched
+     into a bright surface. */
+  color-scheme: light;
+
+  /* Surfaces — light L-ramp, alpha active, blur on. --surface-0 stays fully
+     transparent, same as glass: the canvas is whatever the app supplies
+     behind it, and the panes are what float on top. */
+  --surface-0: transparent;
+  --surface-1: oklch(.97 .004 250 / .62);
+  --surface-2: oklch(.99 .003 250 / .70);
+  --surface-3: oklch(1 0 0 / .78);
+
+  /* Opaque twin of --surface-1, for anything that must OCCLUDE rather than
+     tint (e.g. content painted on top of a surface that should not show what
+     is behind it). Added 2026-08-07 when the glass themes gave --surface-1
+     alpha and silently broke a consumer relying on it being opaque
+     (EntityAssetTable's sticky-column pin, since removed — the pin itself is
+     gone, but the general problem this token solves is not theme-specific).
+     Identical value to --surface-1 in the matte themes. */
+  --surface-1-solid: oklch(.97 .004 250);
+
+  /* Fill for a full-height PAGE pane, as distinct from a card. Alpha that
+     reads as crisp frosted glass at card scale reads as a barely-there wash
+     across a ~1460px pane, which is what "page panes have not got bg like
+     artifacts" was describing. Matte themes just point at --surface-1 (no
+     behaviour change); the glass themes raise the alpha for the larger area
+     while staying translucent, so the canvas backdrop still shows through
+     and the material is still real. */
+  --pane-surface: oklch(.97 .004 250 / .78);
+
+  /* Ink — the ONE thing this theme flips, and the reason the invariant had
+     to be amended. Same L-spacing as glass's ramp (.93/.70/.50) mirrored
+     into the dark end of the scale, so hierarchy reads identically; primary
+     lands well clear of the WCAG AA floor against the lightest surface this
+     theme can produce (--surface-3 over a white canvas). */
+  --ink-primary: oklch(.24 .012 250);
+  --ink-secondary: oklch(.44 .012 250);
+  --ink-muted: oklch(.60 .010 250);
+
+  /* Accents — hue identity held constant with glass/ops-dark (one signal hue
+     system-wide, H 225, per tokens-spec §Invariants), lightness pulled down
+     so each still carries against a light surface. The dark themes' .78 L
+     signal would wash out here; this is the same colour, correctly lit. */
+  --accent-signal: oklch(.55 .15 225);
+  --accent-alert: oklch(.52 .21 25);
+  --accent-warn: oklch(.58 .16 75);
+  --accent-ok: oklch(.52 .14 165);
+
+  /* Delta indicators — same darkening treatment, saturation kept high for
+     small-text readability in price tables. */
+  --delta-up: oklch(.52 .19 165);
+  --delta-down: oklch(.50 .22 25);
+
+  /* Data-viz series palette — same six hues as glass, darkened together so
+     series stay mutually distinguishable AND legible on a light ground. */
+  --viz-1: oklch(.55 .15 225);
+  --viz-2: oklch(.55 .15 165);
+  --viz-3: oklch(.55 .15 75);
+  --viz-4: oklch(.55 .15 285);
+  --viz-5: oklch(.55 .15 25);
+  --viz-6: oklch(.55 .15 115);
+
+  /* Structure — edges invert with the scheme. On dark glass the edge is
+     white-at-low-alpha (light catching a raised lip); on light glass a
+     white edge is invisible, so containment comes from a dark hairline
+     instead. --edge-highlight stays WHITE, though, and that is deliberate,
+     not an oversight: it is the specular/refraction colour, and a highlight
+     is where light hits, which is white regardless of scheme. */
+  --edge: oklch(.24 .012 250 / .12);
+  --edge-highlight: oklch(1 0 0 / .55);
+  --surface-blur: 32px;
+  --surface-opacity: 1;
+  --glow: 0 0 12px oklch(from var(--accent-signal) l c h / .28);
+  --scrim: oklch(1 0 0 / .40); /* raise alpha here, nothing else, if a contrast audit fails */
+
+  /* Neumorphic shading (see tokens.base.css) — near-zero, same reasoning as
+     theme.glass.css's own entry: this session's Linear reference shows
+     almost no surface texture beyond blur+edge on its own glass panels, and
+     stacking a second soft-light cue on an already-translucent surface reads
+     as mud. Light-scheme direction: the "light" edge is a touch of white
+     (light glass still needs SOME white to read as lit from above), the
+     "dark" edge uses the ink colour rather than pure black, since black at
+     any real alpha reads as dirt on a light surface (same principle as
+     --color-shadow's own scheme-flip below). */
+  --shading-light: oklch(1 0 0 / .10);
+  --shading-dark: oklch(.24 .012 250 / .06);
+
+  /* --edge-glow removed 2026-08-08 — see theme.glass.css's own note. */
+
+  /* Glass material — heavier blur than dark glass (see the file header) and
+     a stronger saturate step, because a light backdrop that has been blurred
+     toward white loses chroma faster than a dark one loses it toward black.
+     --spec-alpha PULLED BACK 2026-08-07 (direct order, same Linear-restraint
+     pass as theme.glass.css's own material change) — .22 was tuned before
+     that reference and reads as more specular presence than Linear's own
+     glass shows. Still runs higher than glass's .08: a white highlight over
+     a light surface has less contrast to work with, so it needs some extra
+     presence just to register at all — the asymmetry is preserved, only the
+     absolute level moved. Both remain taste dials — flagged for Prem. */
+  --surface-material: blur(var(--surface-blur)) saturate(var(--saturate-140));
+  --spec-alpha: .12;
+  --spec-radius: var(--spec-radius-lg);
+
+  /* The field the panes refract — TONED DOWN 2026-08-07, same Linear-
+     restraint pass and same construction as theme.glass.css's own change
+     (see it for the full rationale). Chroma pulled down by roughly half;
+     lightness barely moves, since this scheme was already near-white and
+     going darker risks the "dirt on light glass" failure mode noted
+     elsewhere in this file. Same TASTE DIAL note — `none` removes it. */
+  --canvas-backdrop:
+    radial-gradient(60% 50% at 18% 0%, oklch(.94 .022 250) 0%, transparent 62%),
+    radial-gradient(52% 46% at 88% 12%, oklch(.95 .02 285) 0%, transparent 58%),
+    linear-gradient(180deg, oklch(.99 .004 250) 0%, oklch(.965 .008 250) 100%);
+
+  /* Motion binding — identical to glass. Pacing is part of the glass
+     register ("unhurried"), not part of its lighting. */
+  --motion-enter-duration: var(--duration-320);
+  --motion-enter-ease: var(--ease-float);
+  --motion-exit-duration: var(--duration-200);
+  --motion-exit-ease: var(--ease-decel);
+  --motion-assembly-stagger: 90ms;
+  --motion-table-stagger: 45ms;
+
+  /* Type faces — identical across every registered theme; typeface isn't a
+     ◆ per-theme register. */
+  --face-ui: var(--font-ui);
+  --face-data: var(--font-data);
+  --face-voice: var(--font-voice);
+
+  /* Astryx cascade bridge — identical target set to theme.glass.css; see
+     astryx-bridge.md. --color-shadow flips to a much lighter alpha: a .4
+     black shadow that reads as depth on a dark canvas reads as dirt on a
+     light one. */
+  --color-background-body: var(--surface-0);
+  --color-background-surface: var(--surface-1);
+  --color-background-card: var(--surface-2);
+  --color-background-popover: var(--surface-3);
+  --color-text-primary: var(--ink-primary);
+  --color-text-secondary: var(--ink-secondary);
+  --color-text-disabled: var(--ink-muted);
+  --color-icon-primary: var(--ink-primary);
+  --color-icon-secondary: var(--ink-secondary);
+  --color-icon-disabled: var(--ink-muted);
+  --color-accent: var(--accent-signal);
+  --color-text-accent: var(--accent-signal);
+  --color-icon-accent: var(--accent-signal);
+  --color-error: var(--accent-alert);
+  --color-icon-red: var(--accent-alert);
+  --color-warning: var(--accent-warn);
+  --color-success: var(--accent-ok);
+  --color-border: var(--edge);
+  --color-shadow: oklch(.24 .012 250 / .12);
+}
+
+/* Panel treatment per node-vocabulary.md principle 2 — identical rules to
+   theme.glass.css. Facts and reasoning both render with zero elevation
+   (outline only, no background); the distinction is typography, not chrome.
+   Also load-bearing for the material: panes are frosted, cards inside them
+   are not. Stacking frosted-on-frosted is what turns real glassmorphism to
+   mud — one material layer per depth, then outlines. */
+/* panelProvisional RETIRED — see theme.default.css's own note for the full
+   rationale (2026-08-08 direct order: every content block gets the same
+   bordered treatment, no borderless tier). */
+[data-theme='glass-light'] .astryx-card.panelFlat {
+  background-color: transparent;
+  border: 1px solid var(--edge);
+  box-shadow: none;
+}
+
+/* Content area matches the sidenav's own background — same rule and
+   reasoning as theme.glass.css's equivalent entry. --surface-0 is
+   transparent here too, so the canvas shows through both equally. */
+[data-theme='glass-light'] #astryx-app-shell-main {
+  background-color: var(--surface-0);
+}
+
+/* Composer surface separation (direct feedback, 2026-08-02: "composer should
+   be 1 step more in surface layer than the bg it's on, on all themes") —
+   same rule and reasoning as theme.glass.css's own entry. */
+[data-theme='glass-light'] .astryx-chat-composer > div {
+  background-color: var(--surface-2);
+}
+
+/* Surface consistency (direct feedback, 2026-08-02) — the user's own chat
+   bubble and source tokens matched to the composer's value, same reasoning
+   as theme.glass.css's equivalent rule. */
+[data-theme='glass-light'] .astryx-chat-message-bubble.filled,
+[data-theme='glass-light'] .astryx-token.default {
+  background-color: var(--surface-2);
+}
+
+/* Tooltip legibility (direct feedback, 2026-08-07: "tooltip on dark mode text
+   too pale"). Astryx's Tooltip inverts — it paints its chip in --ink-primary
+   and its text in the surface colour, which is correct while surfaces are
+   opaque. The glass themes gave --surface-1 a .40 alpha, so the tooltip's own
+   TEXT became 40%-transparent dark ink on a light chip: measured live at
+   color: oklch(.19 .015 250 / .4), which is exactly the "too pale" reported.
+   Same root cause as the sticky-column bug in this same change — a consumer
+   that needed an opaque surface silently inheriting a translucent one. Pinned
+   to --surface-1-solid so the chip's text is fully opaque in every theme. */
+.astryx-tooltip {
+  color: var(--surface-1-solid);
+}

@@ -7,6 +7,7 @@ import '../app/src/theme/tokens.base.css';
 import '../app/src/theme/theme.default.css';
 import '../app/src/theme/theme.ops-dark.css';
 import '../app/src/theme/theme.glass.css';
+import '../app/src/theme/theme.glass-light.css';
 
 const preview: Preview = {
   parameters: {
@@ -22,6 +23,7 @@ const preview: Preview = {
           { value: 'default', title: 'default' },
           { value: 'ops-dark', title: 'ops-dark' },
           { value: 'glass', title: 'glass' },
+          { value: 'glass-light', title: 'glass-light' },
         ],
         dynamicTitle: true,
       },
@@ -61,7 +63,8 @@ const preview: Preview = {
       const theme = String(context.globals.theme ?? 'default');
       document.documentElement.setAttribute('data-theme', theme);
       document.documentElement.setAttribute('data-astryx-theme', String(context.globals.astryxTheme ?? 'neutral'));
-      // ops-dark/glass are scheme-locked (color-scheme: dark in their own CSS) —
+      // ops-dark/glass/glass-light are scheme-locked in their own CSS
+      // (dark, dark, and light respectively) —
       // the astryxScheme toggle only has meaning under theme=default. Clearing
       // the inline style lets their stylesheet rule apply unimpeded; setting it
       // only for 'default' is what makes the toggle work there.

@@ -1,0 +1,33 @@
+/* Selected/active state for the pane toggle controls (ArtifactStackControl,
+   ChatPaneControl) — direct feedback, 2026-08-04: Astryx's own `primary`
+   variant (a full solid --color-accent fill) was too heavy for "this pane
+   is open," which reads better as a soft accent layer, same weight class
+   as a hover overlay rather than a solid button. Base on `ghost` (see the
+   two control components), add this class only when selected.
+
+   color-mix(in srgb, var(--accent-signal) N%, transparent) is the same
+   technique Astryx's own ClickableCard hover overlay already uses
+   (`color-mix(in srgb, currentColor 5%, transparent)`) — a derivation
+   from an existing token, not a new raw color; scales correctly with
+   whichever theme's --accent-signal is active, no per-theme value needed.
+
+   Explicit :hover/:active progression, not relying on Astryx's own ghost
+   hover to layer on top: Astryx's variant hover/active sets `background:
+   linear-gradient(...)` (the shorthand), which resets background-color
+   to transparent for anything it doesn't specify — verified against
+   Button.tsx's own source, not assumed. Left to itself, hovering a
+   selected button would silently drop this tint back to nothing instead
+   of adding to it (the exact "hover on pressed also should be there" gap
+   reported). Explicit states here are what keep it visible and
+   progressive as the interaction gets more active. */
+.selected {
+  background-color: color-mix(in srgb, var(--accent-signal) 16%, transparent);
+}
+
+.selected:hover {
+  background-color: color-mix(in srgb, var(--accent-signal) 24%, transparent);
+}
+
+.selected:active {
+  background-color: color-mix(in srgb, var(--accent-signal) 32%, transparent);
+}

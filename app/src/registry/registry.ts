@@ -30,16 +30,6 @@ import { NewsFeedPropsSchema } from '../contracts/props/news-feed';
 interface RegistryEntry {
   component: ComponentType<never>;
   propSchema: ZodType<unknown>;
-  // Phase 18: additive, optional — a node's own legibility floor, wider
-  // than the generic pane floor (Frame.module.css/ArtifactStack.tsx).
-  // Absent means "the generic floor is fine," true for nearly every node;
-  // only set where a node's own known-cramped-narrow issue is already on
-  // record (comparison, Phase 8B WO-2's parked 480px finding; concentration
-  // -map, Phase 8D's ~353px label-clipping finding, already reworked but
-  // still worth a real floor rather than trusting reflow alone). Consumed
-  // by engine/sceneMinWidth.ts, never read by the renderer/registry lookup
-  // itself — a shell-layer concern layered on top of the same map.
-  minWidth?: number;
 }
 
 export const registry: Record<string, RegistryEntry> = {
@@ -102,15 +92,6 @@ export const registry: Record<string, RegistryEntry> = {
   comparison: {
     component: lazy(() => import('../components/nodes/Comparison').then((m) => ({ default: m.Comparison }))),
     propSchema: ComparisonPropsSchema,
-    // Astryx's Table gives every `proportional(1)` column a ~120px floor;
-    // the only fixture using this node (asset-discovery) has 4 columns
-    // (label + 3 candidates) → 480 is the verified true minimum, not a
-    // round guess. Confirmed live (Phase 18 gate): the earlier 560 was
-    // padded 80px past that, which forced the artifact pane to collapse
-    // at a standard 1280px viewport where the panel used to fit — a real
-    // regression against shell.spec.ts, root-caused to this over-padded
-    // constant rather than a bug in the collapse trigger itself.
-    minWidth: 480,
   },
   'confidence-meter': {
     component: lazy(() => import('../components/nodes/ConfidenceMeter').then((m) => ({ default: m.ConfidenceMeter }))),
@@ -119,7 +100,6 @@ export const registry: Record<string, RegistryEntry> = {
   'concentration-map': {
     component: lazy(() => import('../components/nodes/ConcentrationMap').then((m) => ({ default: m.ConcentrationMap }))),
     propSchema: ConcentrationMapPropsSchema,
-    minWidth: 400,
   },
   'bar-series': {
     component: lazy(() => import('../components/nodes/BarSeries').then((m) => ({ default: m.BarSeries }))),

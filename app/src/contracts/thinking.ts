@@ -27,6 +27,21 @@ export const ThinkingStepSourceSchema = z.object({
 });
 export type ThinkingStepSource = z.infer<typeof ThinkingStepSourceSchema>;
 
+// Mock web-search result — display-only placeholder data for StepRow's new
+// SearchResultsCard (search-kind steps only). Deliberately separate from
+// ThinkingStepSource/`sources` above: `sources` cites internal system
+// provenance (MarketTape, RiskLens) and renders as the canonical SourceChip
+// pill everywhere it appears (trail, panel attributions, recommendations,
+// per node-vocabulary.md) — untouched by this addition. `webResults` cites
+// external web pages (title + domain, no internal-system meaning) and
+// renders only in the trail's own expandable card, never as a SourceChip.
+export const WebResultSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  domain: z.string().min(1),
+});
+export type WebResult = z.infer<typeof WebResultSchema>;
+
 export const ThinkingStepSchema = z.object({
   id: z.string().min(1),
   kind: StepKindSchema,
@@ -35,5 +50,6 @@ export const ThinkingStepSchema = z.object({
   durationMs: z.number().int().positive(),
   sources: z.array(ThinkingStepSourceSchema).optional(),
   confidence: ConfidenceSchema.optional(),
+  webResults: z.array(WebResultSchema).optional(),
 });
 export type ThinkingStep = z.infer<typeof ThinkingStepSchema>;

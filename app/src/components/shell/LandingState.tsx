@@ -126,14 +126,19 @@ export function LandingState() {
           </div>
 
           <div className={styles.collapseWrap}>
-            {/* minWidth 200, not 220: at gap={3} (12px) and the shared
-                680px cap, 3 columns need 3*minWidth + 2*12 <= 680 — 220
-                works out to 684, 4px over, so the third card always
-                wrapped to its own row. Confirmed live via computed
-                grid-template-columns before picking a replacement value,
-                not guessed; 200 leaves real margin (624 total) rather
-                than sitting right at the threshold. */}
-            <Grid columns={{ minWidth: 200, max: 3 }} gap={3} width="100%" maxWidth={680}>
+            {/* gap={4} (16px): ratified page-section/card-grid gap
+                (node-vocabulary.md Shell section, 2026-08-10) — this grid
+                is the landing echo of Market Pulse's own card grid (Phase
+                8I), which uses the same ratified gap; found+fixed via
+                merlin-layout-law's sweep (2026-08-13), was gap={3}/12px.
+                minWidth re-derived for the new gap, not left at its old
+                value: at gap={4} (16px) and the shared 680px cap, 3
+                columns need 3*minWidth + 2*16 <= 680 → minWidth <= 216.
+                210 leaves the same kind of real margin below the
+                threshold (662 total) that the original 200-vs-220 case
+                did, confirmed live via computed grid-template-columns
+                before picking it, not guessed. */}
+            <Grid columns={{ minWidth: 210, max: 3 }} gap={4} width="100%" maxWidth={680}>
               {SUGGESTIONS.map((suggestion, index) => (
                 <div key={suggestion.headline} className={styles.fade} style={{ transitionDelay: `calc(var(--motion-assembly-stagger) * ${index})` }}>
                   {/* panelFlat (Panel.tsx's own class, theme files) —

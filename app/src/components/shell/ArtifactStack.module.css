@@ -4,31 +4,86 @@
    this rule originally implemented; same reversal, same reasoning,
    applied to EntityDetailPage.module.css's .detailCard). Content area
    sits on --surface-0 (Frame.tsx's #astryx-app-shell-main override,
-   theme.default.css et al.), so one step up is --surface-1; no border
-   needed once there's real background contrast. Scoped to this one Card
-   instance via .artifactCard class selector; other default-variant Cards
-   elsewhere use the correct card-level surface. Specificity matches
-   Astryx's own `.astryx-card[data-variant="default"]` rule exactly so
-   this reliably wins regardless of import order. Border explicitly
-   zeroed: Astryx's own `default` variant ships a real, non-transparent
-   border ("standard card background with visible border," its own
-   doc) — dropping only this rule's background override let that border
-   reassert, directly contradicting "instead of outline" (fill only). */
+   theme.default.css et al.), so one step up is --surface-1. Scoped to
+   this one Card instance via .artifactCard class selector; other
+   default-variant Cards elsewhere use the correct card-level surface.
+   Specificity matches Astryx's own `.astryx-card[data-variant="default"]`
+   rule exactly so this reliably wins regardless of import order.
+   Astryx's own `default` variant ships a real, non-transparent border
+   ("standard card background with visible border," its own doc) —
+   originally zeroed here since 2026-08-02's own ruling was fill-only,
+   "instead of outline." That ruling is superseded, not reversed by
+   accident: 2026-08-10's "pop" register (tokens.base.css's own note)
+   explicitly pairs a real background WITH a thin outline — border is
+   real again below, but --edge (this codebase's own outline token,
+   tuned per-theme already), never Astryx's own unbridged border colour. */
 .artifactCard:global(.astryx-card)[data-variant='default'] {
   background-color: var(--surface-1);
-  border: none;
+  border: 1px solid var(--edge);
   /* Overrides PaneTitleBar.module.css's own defaults (direct feedback,
      2026-08-04: "artifacts pane header should also have gradient like
      page panes... should be a comp") — same two overrides
      PageShell.module.css's .pane already applies, for the same reasons:
-     --pane-title-bg matches this pane's actual background (--surface-1)
-     so the fade-to-transparent gradient blends into it, not the app-wide
-     --surface-0 default; --pane-title-padding-inline matches
-     PanePadding.module.css's own --space-16 horizontal padding (the
-     Canvas/List content below the title, via the `.padded` class) so the
-     title lines up flush-left with it. */
-  --pane-title-bg: var(--surface-1);
+     --pane-title-padding-inline matches PanePadding.module.css's own
+     --space-16 horizontal padding (the Canvas/List content below the
+     title, via the `.padded` class) so the title lines up flush-left
+     with it.
+     --pane-title-bg: --surface-1-solid, NOT --surface-1 (direct feedback,
+     2026-08-09: scrolled trail/reasoning-step text visibly bleeding
+     through the sticky title bar — reproduced live: --surface-1 is .40
+     alpha in the glass themes, so even the gradient's "opaque" stop was
+     only 40% opaque, letting whatever scrolls underneath show through
+     nearly as strongly as the pane's own intentionally-frosted body.
+     Same ruling as the sticky-table-column fix earlier this session — a
+     sticky element that content scrolls UNDER exists specifically to
+     occlude it, so translucency there is wrong by definition, regardless
+     of how translucent the pane's own resting body is elsewhere. */
+  --pane-title-bg: var(--surface-1-solid);
   --pane-title-padding-inline: var(--space-16);
+  /* Glass material (2026-08-06) — same construction and reasoning as
+     PageShell.module.css's .pane: the rule says "this is a surface that can
+     carry a material," the theme's --surface-material says which (or
+     `none`). Kept on this same specificity-matched selector so it wins
+     against Astryx's own card rules exactly as the background above does. */
+  position: relative;
+  backdrop-filter: var(--surface-material);
+  -webkit-backdrop-filter: var(--surface-material);
+  /* "Pop" panel shading — same rule and reasoning as PageShell.module.css's
+     .pane (tokens.base.css's own note on the two-variant system), so the
+     two panes read as the same surface class: weaker inset now that the
+     border above is doing the edge-definition work. */
+  box-shadow: var(--shading-pop-raised);
+}
+
+/* Keeps the pane's content above .artifactCard::before's specular layer.
+   Targets the existing content wrapper (ArtifactStack.tsx's own flex column,
+   the Card's only child) rather than adding a class to the TSX — the
+   pseudo-element is this stylesheet's own addition, so containing its
+   stacking consequences belongs here too. Legibility floor first: this
+   theme's law is "legibility never traded for translucency," so the
+   highlight sits BEHIND text, never washes over it. */
+.artifactCard > div {
+  position: relative;
+  z-index: 1;
+}
+
+/* Pointer-tracked specular sweep — see PageShell.module.css's .pane::before
+   for the full rationale; identical treatment, so the two panes catch light
+   the same way rather than drifting into two different materials. */
+.artifactCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+  opacity: var(--spec-alpha);
+  transition: opacity var(--motion-exit-duration) var(--motion-exit-ease);
+  background: radial-gradient(
+    var(--spec-radius) circle at var(--spec-x, 50%) var(--spec-y, -20%),
+    var(--edge-highlight),
+    transparent 70%
+  );
 }
 
 /* Bottom margin restored (direct feedback, 2026-08-04: "artifacts pane

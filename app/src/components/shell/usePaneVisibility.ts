@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
-import { usePaneFitCollapse } from './usePaneFitCollapse';
 
 interface PaneVisibilityInput {
   naturalShowTranscript: boolean;
@@ -30,21 +29,24 @@ export function usePaneVisibility({ naturalShowTranscript, naturalShowStack }: P
     if (naturalShowStack) touchPaneActivity('artifact');
   }, [naturalShowStack, touchPaneActivity]);
 
-  // Stable reference across renders (was a fresh array literal every
-  // render, so usePaneFitCollapse's effect — dependent on this array —
-  // tore down and rebuilt its observers on every single Frame render, not
-  // just when the candidate set actually changed. Confirmed live (Phase
-  // 18 gate): that churn cancelled the pane's own exit CSS animation
-  // mid-flight, so `animationend` never fired and the panel + its
-  // collapse chip stayed permanently mounted together.
-  const collapseCandidates = useMemo(
-    () => [
-      ...(naturalShowTranscript ? ['transcript'] : []),
-      ...(naturalShowStack ? ['artifact'] : []),
-    ],
-    [naturalShowTranscript, naturalShowStack],
-  );
-  usePaneFitCollapse(rowRef, collapseCandidates);
+  // usePaneFitCollapse call REMOVED (direct order, 2026-08-09: "disable
+  // this mechanism and keep the code for later" — the auto-collapse and
+  // the three PER-PANE floors it was reconciling against were fighting
+  // each other: content/artifact/transcript had different min-widths
+  // (420/360/320px), so at some intermediate row widths one pane hit its
+  // floor before the others and visibly overlapped its neighbour, and
+  // this observer wasn't reliably catching every such width in time.
+  // usePaneFitCollapse.ts itself is untouched — this is the same "keep
+  // the mechanism, stop invoking it" treatment as ArtifactStack.tsx's own
+  // ResizeHandle removal earlier the same day. `rowRef` stays returned/
+  // attached below regardless, since Frame.tsx's row DOM node is the ref
+  // target either way — re-enabling is calling usePaneFitCollapse(rowRef,
+  // collapseCandidates) again with the collapseCandidates memo restored.
+  // `collapsedPane` below now always reads null (its own store default,
+  // since nothing calls setCollapsedPane anymore) — showTranscript/
+  // showArtifact correctly reduce to just naturalShowTranscript/
+  // naturalShowStack as a result, which is the intended "no collapse
+  // happens" behaviour, not a side effect to work around.
 
   return {
     rowRef,

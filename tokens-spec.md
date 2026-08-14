@@ -85,8 +85,45 @@ Motion binding: enter 320/float · exit 200/decel · assembly stagger step 90ms
 
 Register: suspended panes, additive light, unhurried. AR overlay credibility — legibility never traded for translucency.
 
+## Semantic — glass-light ◆
+
+The glass material lit from the other side. Registered 2026-08-06 (direct architect order), and the reason the ink invariant below was amended — a light scheme is exactly the case the original wording forbade.
+
+Surfaces (light L-ramp, alpha active, blur on)
+- --surface-0: transparent   (canvas shows through — app supplies backdrop)
+- --surface-1: oklch(.97 .004 250 / .62)
+- --surface-2: oklch(.99 .003 250 / .70)
+- --surface-3: oklch(1 0 0 / .78)
+- --surface-blur: 32px
+Ink: flipped ramp, same L-spacing as glass mirrored into the dark end
+- --ink-primary: oklch(.24 .012 250) · --ink-secondary: oklch(.44 .012 250) · --ink-muted: oklch(.60 .010 250)
+Accents: same hue identity (H 225 signal), lightness pulled to .52–.58 to carry on a light ground
+Structure
+- --edge: oklch(.24 .012 250 / .12)   (dark hairline — a white edge is invisible here)
+- --edge-highlight: oklch(1 0 0 / .55)   (stays WHITE — it is the specular/refraction colour, and a highlight is where light hits regardless of scheme)
+- --scrim: oklch(1 0 0 / .40)   (raise alpha when contrast audit fails — this token, nothing else)
+Motion binding: identical to glass (pacing belongs to the register, not the lighting)
+
+**Opacity asymmetry — the load-bearing rule.** Light glass needs MORE opacity than dark glass, not the same. Dark translucency is forgiving: whatever passes behind it darkens toward the ink's own ground and light text keeps its contrast. Light translucency is not — dark content behind a 40%-opaque white pane drags the surface grey and dark ink loses its footing. Hence .62→.78 here against glass's .40→.70, and a heavier blur (32 vs 24px) to destroy more backdrop structure before it can compete with text.
+
+Register: same as glass — suspended panes, additive light, unhurried. Legibility never traded for translucency.
+
+## Material
+
+The glass themes' blur is consumed as `--surface-material`, a complete `backdrop-filter` value, not as a bare radius. Two reasons it is a token rather than a rule in each pane's stylesheet: panes state that they are surfaces which *can* carry a material, never which one; and matte themes set it to `none` rather than `blur(0px)`, because a zero-radius filter still spins up the filter pipeline and makes the element a containing block for fixed descendants — a layout consequence no matte theme asked for.
+
+Blur always pairs with `saturate()` (`--saturate-140`/`--saturate-180`). A blurred backdrop loses apparent chroma — averaging neighbouring pixels pulls toward grey — so the saturation step is what separates frosted glass from a grey smear. Standard across Fluent Acrylic and every credible glassmorphism implementation.
+
+**Specular** (`--spec-alpha`, `--spec-radius`): a pointer-tracked radial highlight in `--edge-highlight`'s colour, the thing that makes glass read as a lit material rather than a blurred rectangle. `--spec-alpha: 0` switches it off wholesale, which is how the matte themes opt out. Coordinates come from `useSpecularPointer` (shell-level, rAF-throttled) writing `--spec-x`/`--spec-y`; CSS cannot source pointer position on its own. One material layer per depth — panes are frosted, cards inside them are outline-only. Stacking frosted on frosted is what turns glassmorphism to mud.
+
+**Restraint pass (2026-08-07).** Direct order: pull the glass themes back from an earlier Raycast-style reference (saturated, dramatic) toward a Linear-style one (near-monochrome, whisper-soft). `--saturate-180` → `--saturate-140` on `--surface-material` in `theme.glass.css` (glass-light was already at `-140`); `--spec-alpha` roughly halved in both glass themes; `--canvas-backdrop` chroma cut by roughly half in both, same two-pool structure retained (a uniform backdrop still blurs to itself and reads flat — that finding didn't change, only how saturated the pools are). Reference comparison, not a re-derivation from first principles: Linear's own frosted panels show almost no tint or specular presence, closer to "clarity through diffusion" than a colored film.
+
+**Neumorphic shading** (`--shading-light`, `--shading-dark`, consumed as the paired token `--shading-raised`/`--shading-pressed` in `tokens.base.css`): a directional light-top/dark-bottom inset cue on OPAQUE interactive/structural surfaces — list rows, buttons, panes — distinct from the glass material vocabulary above (this is about surface *texture*, not translucency, and applies in every theme including the matte ones). Reference: Linear's own light-mode UI, whisper-soft even on an opaque background. Deliberately near-zero in the glass themes — stacking a second soft-light cue on an already-translucent, already-blurred surface reads as mud rather than craft; the glass value exists (not `none`) so the same rule works unconditionally across every theme rather than each consumer needing a theme-conditional check.
+
+**Side-edge glow — removed (2026-08-08).** A `--edge-glow` token/consumer pair shipped 2026-08-07 based on a misread of the Linear reference screenshot (a "light kind of thing" on the sidebar/content boundary that turned out, on a closer look at the same screenshot, not to exist — that panel has no visible seam at all; the only edges in the reference are around its floating AI panel, a different pattern entirely). Retired same-day, all four theme files and its one consumer (`#astryx-app-shell-main`) — see STATE.md for the record.
+
 ## Invariants
-- Ink identical across themes; themes differ in surface physics and light, not in text color.
+- Ink identical WITHIN a scheme; a light scheme flips the ink ramp and nothing else. Themes otherwise differ in surface physics and light, not in text color — accents, viz palette, and motion hold constant across a scheme pair. (Amended 2026-08-06 for glass-light ◆; the original read "Ink identical across themes," which no light scheme can satisfy.)
 - One signal hue system-wide (H 225). New hue request = report, don't add.
 - No hex, rgb(), or hsl() anywhere in the codebase — Phase 0 gate greps for all three.
 - Astryx cascade overrides restated in OKLCH; log each in astryx-bridge.md with the original value.

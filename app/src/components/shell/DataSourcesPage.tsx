@@ -9,6 +9,7 @@ import { useSessionStore } from '../../engine/stores/sessionStore';
 import { useDataSourceConnectionStore } from '../../engine/stores/dataSourceConnectionStore';
 import { ConnectSourceDialog, type CatalogEntry } from './ConnectSourceDialog';
 import { PageShell } from './PageShell';
+import { PageSection } from './PageSection';
 
 interface UniverseSourceRecord {
   name: string;
@@ -55,7 +56,7 @@ export function DataSourcesPage() {
 
   return (
     <PageShell title="Data Sources">
-      <div style={{ display: 'grid', gap: 'var(--space-32)' }}>
+      <PageSection>
         <List header="Connected" hasDividers density="compact">
           {sources.map(([key, source]) => {
             const count = citationCounts[key] ?? 0;
@@ -76,8 +77,10 @@ export function DataSourcesPage() {
             );
           })}
         </List>
+      </PageSection>
 
-        {connectedThisSession.length > 0 && (
+      {connectedThisSession.length > 0 && (
+        <PageSection>
           <List header="Connected this session" hasDividers density="compact">
             {connectedThisSession.map((entry) => (
               <ListItem
@@ -88,8 +91,10 @@ export function DataSourcesPage() {
               />
             ))}
           </List>
-        )}
+        </PageSection>
+      )}
 
+      <PageSection>
         <div style={{ display: 'grid', gap: 'var(--space-8)' }}>
           <Text type="supporting" color="secondary">
             Public catalog — a design preview of an integration flow, wired to nothing real; nothing
@@ -120,7 +125,7 @@ export function DataSourcesPage() {
             </List>
           )}
         </div>
-      </div>
+      </PageSection>
 
       <ConnectSourceDialog entry={selectedEntry} onOpenChange={(isOpen) => !isOpen && setSelectedEntry(null)} onConfirm={connect} />
     </PageShell>

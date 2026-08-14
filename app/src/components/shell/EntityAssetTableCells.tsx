@@ -50,9 +50,9 @@ export function buildSortableHeader(sortKey: string | null, sortDir: 'asc' | 'de
   );
 }
 
-// Asset cell (always present, every category) — fixed 260px, pinned to the
-// table's start edge via the caller's useTableStickyColumns so it stays
-// visible while the rest of the row scrolls horizontally.
+// Asset cell (always present, every category) — fixed 260px. No longer
+// pinned to the table's start edge (removed 2026-08-07, direct feedback) —
+// scrolls with the rest of the row like every other column.
 export function buildAssetCell(onOpenDetail: (id: string) => void, sortableHeader: SortableHeader): TableColumn<Row> {
   return {
     key: 'name',

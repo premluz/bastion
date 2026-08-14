@@ -15,6 +15,7 @@ const FILES = [
   'app/src/theme/theme.default.css',
   'app/src/theme/theme.ops-dark.css',
   'app/src/theme/theme.glass.css',
+  'app/src/theme/theme.glass-light.css',
 ];
 
 function customPropertyNames(path) {
