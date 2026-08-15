@@ -3,8 +3,10 @@
   /* Pins Astryx's own light-dark() variables to dark, same reasoning as theme.default.css. */
   color-scheme: dark;
 
-  /* Surfaces (same L-ramp, alpha channel active, blur on) */
-  --surface-0: #0E111340; /* canvas shows through — app supplies deep backdrop */
+  /* Surfaces (same L-ramp, alpha channel active, blur on). --surface-0 stays
+     fully transparent, same as glass-light: the canvas is whatever the app
+     supplies behind it, and the panes are what float on top. */
+  --surface-0: transparent;
   --surface-1: oklch(.19 .015 250 / .40);
   --surface-2: oklch(.22 .015 250 / .55);
   --surface-3: oklch(.26 .015 250 / .70);

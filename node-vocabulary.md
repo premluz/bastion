@@ -388,6 +388,62 @@ register, permanent, muted per-segment token hues (`--accent-signal` +
 `--viz-2`..`--viz-6`) — no red/green performance coloring, same
 principle-8 discipline `concentration-map` already holds.
 
+## Phase 19 — Entity Detail Tabs + Analyst Consensus
+
+Explicit non-goal, restated here per Entity Detail's own existing register
+law (Shell section below): analyst-consensus is a facts-register display of
+THIRD-PARTY opinion (what outside analysts think), never Merlin's own
+recommendation and never a step toward one — it sits in the same
+"News/Stats/Compare is the SeekingAlpha register, not the Kraken one"
+posture the page already holds. No buy/sell/hold action is ever attached to
+it; a consensus bar is read, not acted on, same as every other fact this
+page renders.
+
+**analyst-consensus** — node-addition test (merlin-new-node skill §0), cited
+before any code: What single question does it answer? "What do outside
+analysts collectively think, and where does the current price sit against
+their range?" — two related facts (a sentiment distribution, a price
+position) that only mean something read together, not two separate node
+instances. Why can't an existing node answer it? `bar-series` compares bar
+HEIGHTS across categories/periods — it has no mode for one bar split into
+named proportional segments (buy/hold/sell as fractions of one whole).
+`ring-chart` is allocation-style (a whole divided into parts) but renders as
+a donut+legend, wrong shape for a linear low→high price axis with labeled
+point-markers. `ring-gauge` is fullness-of-one-value-against-one-ceiling,
+not a range with multiple named positions on it. `confidence-meter` is
+reserved exclusively for agent confidence about a conclusion (principle 3)
+— using it for third-party analyst sentiment would violate that boundary
+the same way ring-gauge's own test found for exposure utilization. No
+existing node combines "one bar, several proportional named segments" with
+"one bar, several labeled point-markers on a shared axis." Why is prose
+insufficient? "14 of 14 analysts bullish, average target above current
+price" as bare text doesn't carry the same instant at-a-glance read a
+segmented bar + marked price axis gives — the same family of reasoning
+`ring-gauge`'s and `concentration-map`'s own tests already established for
+this project (a shape reading faster than a sentence for a fact with real
+spatial structure).
+
+Two bars, both custom SVG/CSS (Astryx has no primitive for either shape —
+`ProgressBar` is explicitly single-segment only per its own doc comment,
+`Slider`'s `marks` prop is the nearest partial match but is an interactive
+input control, the wrong register for a passive fact display; checked
+before building custom, same `merlin-new-node` §0 discipline as
+`concentration-map`/`ring-chart`): (1) a single horizontal bar divided into
+bearish/neutral/bullish proportional segments, muted per-segment token
+hues (no red/green performance framing — this is a sentiment SPLIT, not a
+price move, same principle-8 discipline `concentration-map` already
+holds for share-of-whole); (2) a single horizontal bar/axis carrying four
+labeled point-markers (low/average/high/current), current visually
+distinguished from the three analyst-derived positions since it's a
+different kind of fact (today's real price vs. analysts' own numbers).
+Literal-prop node (distribution counts + price positions authored per
+scene/entity, same standing as `metric`/`ring-gauge`/`status-tag`) — facts
+register, permanent, never rendered in the voice face (principle 2). Scoped
+to crypto/stocks entities only, per CLAUDE.md's own Phase 19 order — bonds
+and commodities don't carry analyst buy/hold/sell consensus in the same
+sense, and this node is never forced onto an entity type it doesn't
+genuinely apply to.
+
 ## Shell (Phase 5 — frame components, NOT registry nodes; intent only, design at
 Phase 5; v2 model — Phase 8B WO-2/WO-3, architect-ratified via STATE.md;
 sidebar — Phase 8C, architect-ratified via STATE.md)
@@ -632,6 +688,26 @@ ships as Sources' content unchanged: every universe source with an
 honest "cited in N investigations this session" counter, zero until a
 real trail cites it, never seeded — WO-2 adds a public-catalog section
 and a mock connect flow on top, not a replacement of this.
+
+Holdings (Phase 15) is the ONE sanctioned wallet-connect surface in the
+app — the "no wallet-connect affordance" line two paragraphs up is
+Discover/Asset Discovery's own scoped rule (Phase 14), not a blanket ban;
+Holdings is where that affordance deliberately lives, nowhere else.
+Empty until at least one wallet is connected (session-scoped state gates
+content, same discipline as Watchlist's own empty state) — connecting is
+a mock flow (`ConnectWalletDialog`), architecturally identical to Data
+Sources' own mock-connect (Phase 8H WO-2): select a wallet row →
+permissions summary → confirm → holdings appear, session-scoped, nothing
+persists after a reset, stated in both the page body and the dialog
+itself. Once connected, a wallet's holdings render via existing nodes
+only (`data-table` with entity/sparkline cell types, `metric-grid` for
+the aggregate total) — no new registry node. A holding's quantity/price/
+value is a FACT (principle 2, permanent register), not reasoning or a
+recommendation. EXPLICITLY EXCLUDED, same law as Discover's own grid: no
+Buy/Sell/Trade/Send/Receive CTA anywhere on this page — this is a
+holdings VIEW, not a wallet app; a plain fact (quantity, price, value) is
+never itself a call to action, but no action control sits beside it
+either.
 
 Market Pulse (Phase 8I) is the agent's own surfaced-but-not-yet-
 investigated observations — authored per-session in universe data, never

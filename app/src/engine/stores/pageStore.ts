@@ -6,6 +6,7 @@ export const PAGES = [
   "investigations",
   "entities",
   "watchlist",
+  "holdings",
   "data-sources",
   "market-pulse",
   "portfolio-dashboard",

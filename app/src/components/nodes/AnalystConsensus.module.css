@@ -1,0 +1,92 @@
+.root {
+  display: grid;
+  gap: var(--space-16);
+}
+
+.section {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.distributionBar {
+  display: flex;
+  height: 8px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background-color: var(--edge);
+}
+
+/* Segment width/color are per-instance computed data (proportion of the
+   authored bearish/neutral/bullish counts, tone from SEGMENT_TOKENS) —
+   set as CSS custom properties from AnalystConsensus.tsx, consumed here,
+   same escape hatch AnimatedListItem.tsx's own --item-index already
+   uses for genuinely dynamic per-instance values (not a static token
+   this stylesheet could hold instead). */
+.segment {
+  width: var(--segment-percent);
+  background-color: var(--segment-color);
+}
+
+.legendRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.axisSection {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.axisTrack {
+  position: relative;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background-color: var(--edge);
+}
+
+/* left is per-instance computed data (this price target's position along
+   the authored low..high axis) — same --custom-property escape hatch as
+   .segment above. */
+.axisMarker {
+  position: absolute;
+  top: 50%;
+  left: var(--marker-percent);
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--ink-secondary);
+  transform: translate(-50%, -50%);
+}
+
+/* Current price marker — visually distinguished from the three
+   analyst-derived positions (larger, filled with --accent-signal, a
+   surface-colored ring) since it's a different kind of fact: today's
+   real price vs. analysts' own numbers (node-vocabulary.md's own
+   analyst-consensus entry). */
+.axisMarkerCurrent {
+  position: absolute;
+  top: 50%;
+  left: var(--marker-percent);
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--surface-1);
+  background-color: var(--accent-signal);
+  transform: translate(-50%, -50%);
+}
+
+.targetGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-8);
+}
+
+.targetCell {
+  display: grid;
+  gap: var(--space-2);
+}

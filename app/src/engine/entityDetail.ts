@@ -1,7 +1,9 @@
 import entitiesJson from "../../universe/entities.json";
 import datasetsJson from "../../universe/datasets.json";
 import newsJson from "../../universe/news.json";
+import analystConsensusJson from "../../universe/analystConsensus.json";
 import type { DataSet, TableDataSet } from "../contracts/data";
+import { AnalystConsensusSchema, type AnalystConsensus } from "../contracts/props/analyst-consensus";
 import { getMarketAssets } from "./assetDiscovery";
 import { getMockFilledAssets } from "./assetDiscoveryMock";
 
@@ -45,6 +47,7 @@ interface ChartLine {
 const entities = entitiesJson as Record<string, UniverseEntityRecord>;
 const datasets = datasetsJson as Record<string, DataSet>;
 const news = newsJson as Record<string, DataSet>;
+const analystConsensus = analystConsensusJson as Record<string, unknown>;
 
 const DERIVATIVE_LABELS: Record<keyof UniverseEntityDerivative, string> = {
   counterparty: "Counterparty",
@@ -72,6 +75,11 @@ export interface EntityDetail {
   primaryLatest?: number;
   deltaRecent?: number;
   news?: TableDataSet;
+  // Phase 19: third-party analyst opinion, crypto/stocks entities only —
+  // absent means genuinely none authored, never a forced empty state
+  // (node-vocabulary.md's analyst-consensus entry: scoped only to entity
+  // types where it genuinely applies).
+  analystConsensus?: AnalystConsensus;
 }
 
 const MOCK_CARDS_PER_CATEGORY = 12;
@@ -119,6 +127,13 @@ export function resolveEntityDetail(id: string): EntityDetail | undefined {
     const chart = findChartSeries(id);
     const primaryLatest = chart?.primary.points[chart.primary.points.length - 1]?.y;
     const newsData = news[`${id}-news`];
+    // Zod-validated, not a blanket cast like `news`/`datasets` above — this
+    // file authors analystConsensus.json by hand (no scene-loading pipeline
+    // validates it elsewhere the way SceneSchema validates scene JSON), so
+    // a malformed entry fails loud here instead of reaching the node as
+    // silently-wrong props.
+    const consensusRaw = analystConsensus[`${id}-analyst-consensus`];
+    const consensusParsed = consensusRaw ? AnalystConsensusSchema.safeParse(consensusRaw) : undefined;
     return {
       id,
       name: record.entity.name,
@@ -132,6 +147,7 @@ export function resolveEntityDetail(id: string): EntityDetail | undefined {
       ...(primaryLatest !== undefined ? { primaryLatest } : {}),
       ...(chart?.secondary ? { secondary: chart.secondary } : {}),
       ...(newsData && newsData.kind === "table" ? { news: newsData } : {}),
+      ...(consensusParsed?.success ? { analystConsensus: consensusParsed.data } : {}),
     };
   }
 

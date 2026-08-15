@@ -9,6 +9,7 @@ import {
   BriefcaseIcon,
   ShieldExclamationIcon,
   ServerStackIcon,
+  WalletIcon,
 } from '@heroicons/react/24/outline';
 import { useSessionStore } from '../../engine/stores/sessionStore';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
@@ -33,6 +34,10 @@ const NAV_ITEMS: { page: Page; label: string; icon: ReactNode }[] = [
   { page: 'entities', label: 'Discover', icon: <MagnifyingGlassIcon width={16} height={16} /> },
   //{ page: 'investigations', label: 'Investigations', icon: <FolderIcon width={16} height={16} /> },
   { page: 'watchlist', label: 'Watchlist', icon: <BookmarkIcon width={16} height={16} /> },
+  // Holdings (Phase 15) sits right after Watchlist — groups the two
+  // personal/session-tracked pages together, ahead of the market-wide
+  // pages below (per the phase order's own nav-position ruling).
+  { page: 'holdings', label: 'Holdings', icon: <WalletIcon width={16} height={16} /> },
   // Market Pulse (Phase 8I) sits between Data Sources and Investigations
   // deliberately — surfaced-but-unactioned observations read as a step
   // before the investigated record, not alongside the other index pages.

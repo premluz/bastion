@@ -12,6 +12,7 @@ import { DesktopOnlyNotice } from './DesktopOnlyNotice';
 import { InvestigationsPage } from './InvestigationsPage';
 import { EntitiesPage } from './EntitiesPage';
 import { WatchlistPage } from './WatchlistPage';
+import { HoldingsPage } from './HoldingsPage';
 import { DataSourcesPage } from './DataSourcesPage';
 import { MarketPulsePage } from './MarketPulsePage';
 import { PortfolioDashboardPage } from './PortfolioDashboardPage';
@@ -46,6 +47,8 @@ function renderPage(page: Page): ReactNode {
       return <EntitiesPage />;
     case 'watchlist':
       return <WatchlistPage />;
+    case 'holdings':
+      return <HoldingsPage />;
     case 'data-sources':
       return <DataSourcesPage />;
     case 'market-pulse':

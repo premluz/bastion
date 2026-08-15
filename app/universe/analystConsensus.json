@@ -1,0 +1,30 @@
+{
+  "south-bow-corp-analyst-consensus": {
+    "asOf": "2026-08-10",
+    "distribution": {
+      "bearish": 1,
+      "neutral": 4,
+      "bullish": 7
+    },
+    "priceTargets": {
+      "low": 34.5,
+      "average": 44.8,
+      "high": 52,
+      "current": 40.34
+    }
+  },
+  "zenith-protocol-analyst-consensus": {
+    "asOf": "2026-08-08",
+    "distribution": {
+      "bearish": 2,
+      "neutral": 3,
+      "bullish": 4
+    },
+    "priceTargets": {
+      "low": 2.6,
+      "average": 3.9,
+      "high": 5.25,
+      "current": 3.47
+    }
+  }
+}

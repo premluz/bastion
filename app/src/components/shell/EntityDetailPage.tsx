@@ -1,11 +1,13 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { List } from '@astryxdesign/core/List';
 import { Text } from '@astryxdesign/core/Text';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
+import { TabList, Tab } from '@astryxdesign/core/TabList';
 import { Panel } from '../nodes/Panel';
 import { NewsFeed } from '../nodes/NewsFeed';
+import { AnalystConsensus } from '../nodes/AnalystConsensus';
 import { resolveEntityDetail, findRelatedEntities } from '../../engine/entityDetail';
 import { sceneReferencesEntity } from '../../engine/assetDiscovery';
 import { buildThreads } from '../../engine/threads';
@@ -22,6 +24,8 @@ import { EntityStatistics } from './EntityStatistics';
 import { EntityAbout } from './EntityAbout';
 import { AnimatedListItem } from './AnimatedListItem';
 import type { ThreadSummary } from '../../engine/threads';
+
+type EntityDetailTab = 'overview' | 'financials' | 'coverage' | 'historical-data';
 
 const RELATED_COUNT = 3;
 
@@ -78,6 +82,8 @@ export function EntityDetailPage() {
 
   const related = useMemo(() => (entity ? findRelatedEntities(entity, RELATED_COUNT) : []), [entity]);
 
+  const [activeTab, setActiveTab] = useState<EntityDetailTab>('overview');
+
   if (!entity) {
     return (
       <PageShell title="Entity">
@@ -100,78 +106,99 @@ export function EntityDetailPage() {
         />
       }
     >
-      {/* <AnimatedListItem index={0}>
-        <Text type="supporting" color="secondary">
-          {entity.type}
-        </Text>
-      </AnimatedListItem> */}
+      <TabList value={activeTab} onChange={(value) => setActiveTab(value as EntityDetailTab)}>
+        <Tab value="overview" label="Overview" />
+        <Tab value="financials" label="Financials" />
+        {entity.news && <Tab value="coverage" label="Coverage" />}
+        <Tab value="historical-data" label="Historical Data" />
+      </TabList>
 
-      <AnimatedListItem index={0}>
-        <EntityTrend entity={entity} />
-      </AnimatedListItem>
+      {activeTab === 'overview' && (
+        <>
+          <AnimatedListItem index={0}>
+            <EntityTrend entity={entity} />
+          </AnimatedListItem>
 
-      {/* Statistics + About side by side (direct order, 2026-07-29):
-          two flex columns in one row, each shrinkable (minWidth: 0) so
-          neither forces the row wider than its container — wraps to
-          stacked on a narrow content column rather than overflowing,
-          same reasoning as every other flex-row split on this page. */}
-      <AnimatedListItem index={1}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-24)' }}>
-          <div style={{ flex: '1 1 320px', minWidth: 0 }}>
-            <EntityStatistics entity={entity} />
+          {entity.analystConsensus && (
+            <AnimatedListItem index={1}>
+              <Panel title="Analyst consensus">
+                <AnalystConsensus consensus={entity.analystConsensus} />
+              </Panel>
+            </AnimatedListItem>
+          )}
+
+          <AnimatedListItem index={entity.analystConsensus ? 2 : 1}>
+            <RelatedEntitiesStrip entities={related} onOpen={openEntityDetail} />
+          </AnimatedListItem>
+
+          <AnimatedListItem index={entity.analystConsensus ? 3 : 2}>
+            <div style={{ display: 'grid', gap: 'var(--space-12)' }}>
+              <Text type="label">Investigations</Text>
+              {relatedThreads.length === 0 ? (
+                <EmptyState title="No investigations yet this session" description="No investigation this session has referenced this entity." />
+              ) : (
+                <>
+                  {/* Coverage summary: additive, above the list, never a
+                      replacement for it — analysts still want the raw
+                      citations (title/date/status) the list below provides. */}
+                  <Text type="body" style={{ fontFamily: 'var(--face-voice)' }}>
+                    {buildCoverageSummary(relatedThreads)}
+                  </Text>
+                  <List hasDividers density="compact">
+                    {relatedThreads.map((thread) => {
+                      const module = thread.latestTurn.artifactRef ? artifacts[thread.latestTurn.artifactRef]?.module : undefined;
+                      return (
+                        <ThreadRow
+                          key={thread.threadId}
+                          thread={thread}
+                          module={module}
+                          isSelected={activeThreadId === thread.threadId}
+                          onClick={() => {
+                            setPage('home');
+                            reopenThread(thread);
+                          }}
+                        />
+                      );
+                    })}
+                  </List>
+                </>
+              )}
+            </div>
+          </AnimatedListItem>
+        </>
+      )}
+
+      {activeTab === 'financials' && (
+        // Statistics + About side by side (direct order, 2026-07-29):
+        // two flex columns in one row, each shrinkable (minWidth: 0) so
+        // neither forces the row wider than its container — wraps to
+        // stacked on a narrow content column rather than overflowing,
+        // same reasoning as every other flex-row split on this page.
+        <AnimatedListItem index={0}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-24)' }}>
+            <div style={{ flex: '1 1 320px', minWidth: 0 }}>
+              <EntityStatistics entity={entity} />
+            </div>
+            <div style={{ flex: '1 1 320px', minWidth: 0 }}>
+              <EntityAbout entity={entity} />
+            </div>
           </div>
-          <div style={{ flex: '1 1 320px', minWidth: 0 }}>
-            <EntityAbout entity={entity} />
-          </div>
-        </div>
-      </AnimatedListItem>
+        </AnimatedListItem>
+      )}
 
-      {entity.news && (
-        <AnimatedListItem index={2}>
+      {activeTab === 'coverage' && entity.news && (
+        <AnimatedListItem index={0}>
           <Panel title="Coverage">
             <NewsFeed data={entity.news} />
           </Panel>
         </AnimatedListItem>
       )}
 
-      <AnimatedListItem index={entity.news ? 3 : 2}>
-        <RelatedEntitiesStrip entities={related} onOpen={openEntityDetail} />
-      </AnimatedListItem>
-
-      <AnimatedListItem index={entity.news ? 4 : 3}>
-        <div style={{ display: 'grid', gap: 'var(--space-12)' }}>
-          <Text type="label">Investigations</Text>
-          {relatedThreads.length === 0 ? (
-            <EmptyState title="No investigations yet this session" description="No investigation this session has referenced this entity." />
-          ) : (
-            <>
-              {/* Coverage summary: additive, above the list, never a
-                  replacement for it — analysts still want the raw
-                  citations (title/date/status) the list below provides. */}
-              <Text type="body" style={{ fontFamily: 'var(--face-voice)' }}>
-                {buildCoverageSummary(relatedThreads)}
-              </Text>
-              <List hasDividers density="compact">
-                {relatedThreads.map((thread) => {
-                  const module = thread.latestTurn.artifactRef ? artifacts[thread.latestTurn.artifactRef]?.module : undefined;
-                  return (
-                    <ThreadRow
-                      key={thread.threadId}
-                      thread={thread}
-                      module={module}
-                      isSelected={activeThreadId === thread.threadId}
-                      onClick={() => {
-                        setPage('home');
-                        reopenThread(thread);
-                      }}
-                    />
-                  );
-                })}
-              </List>
-            </>
-          )}
-        </div>
-      </AnimatedListItem>
+      {activeTab === 'historical-data' && (
+        <AnimatedListItem index={0}>
+          <EntityTrend entity={entity} />
+        </AnimatedListItem>
+      )}
     </PageShell>
   );
 }

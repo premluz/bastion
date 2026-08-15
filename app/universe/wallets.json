@@ -1,0 +1,19 @@
+{
+  "meridian-crypto-wallet": {
+    "id": "meridian-crypto-wallet",
+    "name": "Meridian Crypto Wallet",
+    "type": "Self-custody wallet",
+    "holdings": [
+      { "entityId": "solent-stablecoin", "quantity": 18500, "costBasis": 1.0 },
+      { "entityId": "zenith-protocol", "quantity": 4200, "costBasis": 2.85 }
+    ]
+  },
+  "meridian-brokerage-account": {
+    "id": "meridian-brokerage-account",
+    "name": "Meridian Exchange Brokerage",
+    "type": "Brokerage account",
+    "holdings": [
+      { "entityId": "south-bow-corp", "quantity": 620, "costBasis": 35.10 }
+    ]
+  }
+}

@@ -30,6 +30,7 @@ const NODE_STORIES = [
   'nodes-statusgrid--happy',
   'nodes-ringchart--happy',
   'nodes-newsfeed--happy',
+  'nodes-analystconsensus--happy',
 ] as const;
 
 const THEMES = ['default', 'ops-dark', 'glass', 'glass-light'] as const;

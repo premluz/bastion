@@ -1,0 +1,11 @@
+.body {
+  padding: var(--space-16);
+  display: grid;
+  gap: var(--space-12);
+}
+
+.footerRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-8);
+}

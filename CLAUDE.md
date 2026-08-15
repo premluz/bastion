@@ -353,6 +353,24 @@ Explicitly still no trade/buy-sell — News/Stats/Compare is the SeekingAlpha re
 
 *Gate:* tabs work on Entity Detail without breaking existing content; `analyst-consensus` renders correctly where scoped; register-correct (facts, not reasoning); 3 themes; report, stop.
 
+**Phase 15 — My Portfolio, multi-wallet mock-connect.** New nav page "Holdings" (name distinct from the existing "Portfolio" nav entry, which stays Phase 12/13's derivatives/risk-desk dashboard unchanged — no collision, two different registers: risk-desk exposure vs. personal multi-wallet holdings). Two work orders.
+
+*WO-1 — Wallet connect flow + holdings data.*
+1. New universe file `universe/wallets.json`: two mock wallets, matching the two asset classes already given full entity-detail treatment (Phase 16/19) — a crypto wallet holding Zenith Protocol/Solent Stablecoin-style positions, and a brokerage-style account holding South Bow Corp/Halberg Materials-style equity positions. Each with holdings rows (entity id, quantity, cost basis, current value — value computed from each entity's own already-authored current price, per the internal-consistency rule). No new entities invented; holdings reference existing `entities.json` ids only.
+2. New `walletConnectionStore` (Zustand), same keyed-Record idempotency shape as `dataSourceConnectionStore.ts` (`connectedWalletIds: Record<string, true>`, one `connect(id)` action, in-memory only, session-scoped, never persisted — identical precedent, not a new pattern).
+3. New `ConnectWalletDialog`, built the same way `ConnectSourceDialog.tsx` was: Astryx `Dialog` (`purpose="form"`), permissions/scope summary specific to a wallet ("read balances and transaction history," fictional), confirm/cancel footer, same explicit session-scoped honesty copy in both the page body and the dialog itself ("wired to nothing real... nothing persists after a session reset") — the exact disclosure pattern already ratified for Data Sources, reused verbatim in register, not reinvented.
+4. Holdings page (WO-2) is empty/EmptyState until at least one wallet is connected — connecting is the only way holdings appear, same "session state gates content" discipline as Watchlist's own empty state.
+
+*WO-2 — Holdings page content.*
+1. New nav entry "Holdings," positioned immediately after "Watchlist" — groups the two personal/session-tracked pages together, ahead of the market-wide pages (Market Pulse, Portfolio, Risk, Data Sources).
+2. Static page (Phase 13's `DashboardPage` pattern — no `SceneRenderer`, no trail, no `submitQuery` involvement; same reuse posture as the existing Portfolio dashboard and Phase 14's Discover grid).
+3. Content per connected wallet: a card/section per wallet (name, type, connected-this-session marker) listing its holdings via existing nodes only — `data-table` or a card-grid reusing `dashboard-layout` (per Phase 14's precedent), `sparkline` per holding (existing node, already built), aggregate `metric-grid` header (total value across connected wallets, computed live, not authored). No new registry node required to prove this — if real gaps appear only at build time (e.g. a genuine "allocation by asset class" visual need), report and cite the node-addition test before adding one; don't pre-authorize a node in this order.
+4. Entity click-through uses the existing entity-link → `submitQuery`/`openEntityDetail` path (Phase 8F/14 precedent), no new interaction pattern.
+5. EXPLICITLY EXCLUDED, restated in the vocabulary entry: no Buy/Sell/Trade/Send/Receive CTA anywhere — this is a holdings *view*, not a wallet *app*. Same "informational, never a call to action" line already drawn for Phase 14's Discover grid and Phase 12's Portfolio dashboard.
+6. node-vocabulary.md gains a Holdings section (register: facts, permanent, per principle 2 — a holding's quantity/value is a fact, not reasoning) and the mock-connect disclosure pattern is cited as reused from Data Sources, not re-authored.
+
+*Gate:* connect flow walked live end-to-end (empty state → connect wallet → holdings appear) for at least 2 wallets across different asset classes; disconnected wallets' catalog stays separate from connected ones (mirroring Data Sources' "public catalog vs. connected this session" split); aggregate metric-grid value matches the sum of its own holdings (internal-consistency check, verified by hand at authoring time); no Buy/Sell surface anywhere; 3 themes; `test:visual` regenerated once; report, stop.
+
 ## 9. Session protocol
 
 Every session:

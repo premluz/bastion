@@ -26,6 +26,7 @@ import { DashboardLayoutPropsSchema } from '../contracts/props/dashboard-layout'
 import { StatusGridPropsSchema } from '../contracts/props/status-grid';
 import { RingChartPropsSchema } from '../contracts/props/ring-chart';
 import { NewsFeedPropsSchema } from '../contracts/props/news-feed';
+import { AnalystConsensusPropsSchema } from '../contracts/props/analyst-consensus';
 
 interface RegistryEntry {
   component: ComponentType<never>;
@@ -132,5 +133,9 @@ export const registry: Record<string, RegistryEntry> = {
   'news-feed': {
     component: lazy(() => import('../components/nodes/NewsFeed').then((m) => ({ default: m.NewsFeed }))),
     propSchema: NewsFeedPropsSchema,
+  },
+  'analyst-consensus': {
+    component: lazy(() => import('../components/nodes/AnalystConsensus').then((m) => ({ default: m.AnalystConsensus }))),
+    propSchema: AnalystConsensusPropsSchema,
   },
 };
