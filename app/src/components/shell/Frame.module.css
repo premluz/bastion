@@ -6,62 +6,90 @@
    different from the artifact↔transcript gap even though both are the
    same value below — removed 2026-08-09 ("hide the resize hand from
    artifacts... ensure gaps between pane are same") so every gap in this
-   row is now visually identical, not just numerically equal. */
+   row is now visually identical, not just numerically equal.
+
+   UN-unified 2026-08-17 (direct feedback: "gap between panes should be
+   larger [for] e.g. discover page level pane, or detail page level >
+   and artifact ... the gap between chat is ok") — flexbox `gap` is one
+   uniform value across every adjacent pair in the row, so it can't
+   express two different gaps directly. This row's own --space-16 stays
+   as the BASELINE for every pair (including artifact↔chat, confirmed as
+   the one to leave alone); the wider content↔artifact gap is reached by
+   adding an EXTRA margin-right on .contentColumn on top of this
+   baseline, not by replacing it — see .contentColumn's own comment for
+   the exact math (its own margin is the total-minus-baseline delta, not
+   the full target gap, since this gap still applies underneath it).
+   This is a DIRECT, CONFIRMED reversal of a 2026-08-10 order (see
+   PageShell.module.css's own --content-has-sibling-pane comment) that
+   went the opposite way — that order found the wider content↔artifact
+   gap read as "too big" and matched it down to the plain row gap; this
+   round's fresh, explicit feedback goes back the other way. Logged here
+   so a future session reads this as a real, acknowledged flip, not
+   silent drift or a rule this file forgot it already had. */
+/* margin-left added (2026-08-18, direct feedback: "give larger margin
+   right for the nav, the same as between Portfolio and/or page... and the
+   artifact" — the nav↔content gap was measured live at 0px, flush against
+   the sidebar with no separation at all, unlike content↔artifact's
+   already-established 24px (.contentColumn's own margin-right below).
+   Full --space-24 here, not a delta on top of .row's own gap like
+   .contentColumn uses: there's no existing baseline gap on the nav side
+   to build on top of (confirmed 0px, not --space-16), so the full target
+   value applies directly. Unconditional, not gated on a page/artifact
+   flag — the ask covers "Portfolio and/or page, whether it's Discover or
+   EntityDetail and the artifact," i.e. every state this row can be in
+   once nav sits beside it, not one specific pane combination. */
 .row {
   display: flex;
   flex: 1 1 auto;
   min-height: 0;
   gap: var(--space-16);
+  margin-left: var(--space-24);
 }
 
-/* Equal-share workbench split (direct order, 2026-08-10 — supersedes the
-   fixed-33%-basis rule below, reported as producing a visibly narrower
-   content pane once all three panes were open: 34% vs 33%/33% reads as
-   "close" on paper but the content pane's own card padding made the gap
-   look bigger than it measured — confirmed live at 1800px, 481px vs
-   498px). Rule, confirmed explicitly: every open pane gets an equal
-   1/N share, no special-casing by pane count.
+/* Equal-share workbench split, content ↔ artifact ONLY (2026-08-17
+   follow-up — supersedes the 2026-08-10 "every open pane, including
+   chat, gets an equal 1/N share" rule below, kept as history: direct
+   feedback that the chat/transcript column reading as a full equal
+   share was wrong — "the chat column should not actually be equal to
+   all cols, should actually max 400px width... the other 1 or 2 get
+   their 100 or 50% each." Chat's own sizing rule now lives on
+   .transcriptPane below, no longer identical to this rule.
      - content alone: flex-grow with basis 0 on nothing to share with → 100%.
-     - content + one side pane: both flex-grow equally from basis 0 → 50/50
-       (was 67/33 under the old fixed-basis rule — a deliberate change,
-       not a regression: "50/50 always... no special-casing by pane count").
-     - content + both side panes: all three flex-grow equally from basis 0
-       → an exact three-way split, not the old rule's 34/33/33 approximation.
-   All three panes now share the identical `flex: 1 1 0%` rule (this file's
-   prior fixed-33%-basis split is gone, not just content's rule) — flexbox
-   distributes remaining space evenly across equal flex-grow values by
-   construction, so this is exact, not an approximation.
-   Flex-shrink stays allowed — min-width floors below still apply once
-   shrinking reaches them.
+     - content + artifact: both flex-grow equally from basis 0 → 50/50.
+   Chat/transcript is capped, not part of this equal split at all — its
+   own presence still consumes real width (it's a flex sibling in the
+   same row), it just doesn't grow to match content/artifact's own share.
+   Flex-shrink stays allowed — min-width floor below still applies once
+   shrinking reaches it.
    Resizable-drag code (useResizable in ArtifactStack.tsx, ResizeHandle)
    is deliberately left in place, just no longer driving the active
    width — kept dormant for a future re-enable rather than deleted.
 
-   Floor UNIFIED to one shared value, PANE_FLOOR (paneFloors.ts), across
-   all three panes (direct order, 2026-08-09: "the panes... should be all
-   three the same even when the screen is such a small size"). Previously
-   content/artifact/transcript had three DIFFERENT floors (420/360/320px)
-   — usePaneFitCollapse was meant to reconcile that mismatch by collapsing
-   a pane before any of them actually hit their own floor, but wasn't
-   reliably doing so at every intermediate row width: one pane would hit
-   its (smaller) floor first and visibly overlap a neighbour still trying
-   to shrink toward its own (larger) floor. Same order disabled
-   usePaneFitCollapse itself (see usePaneVisibility.ts) — with auto-
-   collapse gone, three DIFFERENT floors would just overlap by design
-   instead of only occasionally; one shared floor is what makes "keep
-   shrinking together, never overlap" true without that mechanism. Value
-   kept in sync by hand with paneFloors.ts (CSS can't import the JS
-   constant) — 420px, the HIGHEST of the three previous values, not a new
-   number: this file's own prior comment on .contentColumn ("keeps
-   EntityDetailPage's own 2-column reflow legible at the floor") was a
-   live-verified legibility floor; raising the two smaller panes up to it
-   is the non-regressive choice over lowering it to match them. */
+   Floor: content/artifact stay on the shared PANE_FLOOR (paneFloors.ts,
+   420px, direct order 2026-08-09: "the panes... should be all three the
+   same" — chat is the one exception now, see .transcriptPane's own
+   comment for why its floor diverges). Kept in sync by hand with
+   paneFloors.ts (CSS can't import the JS constant). */
 .contentColumn {
   display: flex;
   flex-direction: column;
   flex: 1 1 0%;
   min-width: 420px;
   min-height: 0;
+  /* Wider content↔artifact gap (2026-08-17 direct feedback: "gap between
+     panes should be larger [for] discover page level pane, or detail
+     page level > and artifact... the gap between chat is ok"). Target
+     total gap --space-24 (24px); .row's own --space-16 (16px) gap
+     already applies underneath this margin (flexbox `gap` is uniform
+     across every pair, unavoidable), so this adds only the DELTA
+     (--space-24 - --space-16 = 8px, expressed as a calc() of the two
+     tokens rather than a bare 8px so it stays correct if either token's
+     own value ever changes) — the two together land content↔artifact at
+     the real target of 24px total, not 16+24=40px. Gated on
+     --content-artifact-gap (Frame.tsx, artifact-specific, not "any
+     sibling pane") so a chat-only row (no artifact open) doesn't inherit
+     this wider spacing meant for the artifact pairing. */
+  margin-right: calc((var(--space-24) - var(--space-16)) * var(--content-artifact-gap, 0));
 }
 
 /* "Pop" surface (border+background+shadow) REMOVED, direct order,
@@ -89,20 +117,128 @@
    background-color: var(--pane-surface) was flagged then as the one
    genuinely new judgment call in that change, not a re-application of an
    existing decision — now reversed by direct order above. */
+/* Capped, not equal-share (2026-08-17, direct feedback — see
+   .contentColumn's own comment above for the full order). flex-grow: 0
+   — chat never competes for the equal split content/artifact divide
+   between themselves, it takes exactly what it needs up to its own
+   max-width and no more. flex-basis with flex-shrink: 1 (not 0) so it
+   still shrinks toward its own floor under real width pressure, same
+   "keep shrinking, never overlap" behavior every pane already has, just
+   anchored to a smaller ceiling. Floor dropped from the shared
+   PANE_FLOOR (420px) to CHAT_PANE_FLOOR (320px, paneFloors.ts) — a
+   420px floor above a 400px max-width was a real contradiction (floor >
+   ceiling), confirmed via AskUserQuestion before picking a number:
+   chat gets its own genuinely smaller floor rather than forcing the
+   unified-floor rule to cover a pane it was never designed for.
+
+   Ceiling raised 400 → 480 (paneFloors.ts's own CHAT_PANE_MAX, 2026-08-30
+   follow-up, direct feedback: a 2-column inline asset-card-grid result
+   was visibly overlapping inside the 400px cap — 2 columns at that
+   node's own 240px minWidth genuinely needs more room than 400px has). */
 .transcriptPane {
   display: flex;
   flex-direction: column;
-  flex: 1 1 0%;
-  min-width: 420px;
+  flex: 0 1 480px;
+  max-width: 480px;
+  min-width: 320px;
   min-height: 0;
   --search-results-surface: var(--surface-2);
 }
 
-/* Same equal-share rule as .transcriptPane above, applied to
+/* Same equal-share rule as .contentColumn above, applied to
    ArtifactStackMount's own wrapper (previously an unclassed div driving
    its width entirely from useResizable's inline minWidth — that's the
    piece replaced here; see ArtifactStackMount.tsx's own comment). */
 .artifactPane {
   flex: 1 1 0%;
   min-width: 420px;
+}
+
+/* Mobile pane floor (Phase 20 WO-2, 2026-08-21) — direct order: "we need
+   mobile handling and purely responsive behavior... the three panes
+   underneath... They just resize, and they remain three in a row." All
+   three desktop floors above (420/320/420px) are the exact thing that
+   was forcing a horizontal overflow instead of a genuine shrink on a
+   phone-width viewport — this query drops all three to ONE shared
+   MOBILE_PANE_FLOOR (paneFloors.ts, 280px, kept in sync by hand — CSS
+   can't import the JS constant), the same "one floor for all panes"
+   principle PANE_FLOOR already established for desktop, just at a
+   genuinely mobile-appropriate number (confirmed via AskUserQuestion).
+   768px matches the same mobile breakpoint Frame.tsx's own
+   useMediaQuery check already uses for the hamburger/drawer nav — one
+   number, not two independently-chosen thresholds. .transcriptPane's own
+   max-width (480px as of the 2026-08-30 ceiling raise, was 400px) is
+   left untouched here deliberately: on any real phone viewport that cap
+   can never actually bind (480 > any phone's own width), so it's already
+   inert at mobile widths, not a competing constraint that needs
+   reconciling. Once three panes at this floor
+   still don't fit the real viewport, usePaneFitCollapse (re-enabled the
+   same round, usePaneVisibility.ts) is what resolves the remaining
+   overflow — this query only lowers the floor, it doesn't attempt to
+   guarantee three-at-once always fits every phone width on its own. */
+@media (max-width: 768px) {
+  .contentColumn,
+  .transcriptPane,
+  .artifactPane {
+    min-width: 280px;
+  }
+
+  /* Mobile scroll ownership moves up to .contentColumn (direct feedback,
+     2026-08-22: "drop page panes... those that have padding themselves
+     and scrollable within... since we are not on mobile displaying panes
+     next to each other we don't need them to have independent scroll and
+     pane container"). Desktop's .paneScroll (PageShell.module.css) is the
+     ONLY overflow boundary in the whole Frame→PageShell chain today — every
+     ancestor above it is height:100%/min-height:0 with no overflow of its
+     own, so PageShell.module.css's mobile query strips .paneScroll back to
+     plain flow (see that file) and this becomes the new scroll container
+     in its place, genuinely required, not cosmetic: without an overflow
+     boundary somewhere, content would be clipped by Frame.tsx's fixed
+     100dvh root instead of scrolling. Only .contentColumn needs this —
+     it's the sole page-content column ever visible on mobile
+     (transcript/artifact render as fullscreen Dialogs instead of row
+     siblings, MobilePaneModals.tsx), so there is no "independent scroll
+     competing with a sibling pane" concern this size class ever has to
+     solve. */
+  .contentColumn {
+    overflow-y: auto;
+  }
+
+  /* Single root padding (direct feedback, 2026-08-22: "we need to only
+     rely on root padding... clear on mobile these inner panes ones (only
+     for page panes)" — .row's own margin-left, PageShell.module.css's
+     .margin padding, and its .paneBody padding were all independently
+     applying at once, stacking into visibly excessive left inset. .row's
+     margin-left is zeroed here (its matching other half); .margin/
+     .paneBody are zeroed in PageShell.module.css's own mobile query.
+     .contentColumn becomes the ONE mobile inset source — page content,
+     the composer dock, and the mobile Dialogs (MobilePaneModals.tsx,
+     unaffected by this query, already scoped to their own padding) all
+     read from a single place instead of three summed together. */
+  .row {
+    margin-left: 0;
+  }
+
+  .contentColumn {
+    padding: var(--space-16);
+  }
+}
+
+/* Was three inline style objects on Frame.tsx — moved here per CLAUDE.md
+   rule 4, which bans inline style props even when token-sourced. */
+.viewport {
+  height: 100dvh;
+}
+
+.topBarActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.paneColumn {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
 }

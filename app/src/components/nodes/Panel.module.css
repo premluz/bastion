@@ -1,0 +1,17 @@
+/* Header row: title/source flex pair. min-width:0 lets the row itself
+   shrink inside a narrowing artifact pane; without it, a flex row sizes to
+   its children's intrinsic width and forces the whole panel wider (same
+   bug class as contentStyle's own minWidth:0 in Panel.tsx, traced 2026-08-28
+   to a residual ~16px overflow after that fix — this span was the last
+   unshrinkable node in the chain). */
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-8);
+  margin-bottom: var(--space-12);
+  min-width: 0;
+}
+
+.source {
+  min-width: 0;
+}

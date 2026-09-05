@@ -1,4 +1,4 @@
-import { useMemo, useState, type SVGProps } from 'react';
+import { useEffect, useMemo, useRef, useState, type SVGProps } from 'react';
 import { SideNav, SideNavHeading, SideNavItem, SideNavSection, SideNavCollapseButton } from '@astryxdesign/core/SideNav';
 import { type ReactNode } from 'react';
 import {
@@ -94,8 +94,44 @@ export function Sidebar() {
   const activeThreadId = useSessionStore((state) => state.activeThreadId);
   const setActiveThread = useSessionStore((state) => state.setActiveThread);
   const closeStack = useArtifactStore((state) => state.closeStack);
+  const isStackOpen = useArtifactStore((state) => state.isStackOpen);
+  const hasArtifacts = useArtifactStore((state) => Object.keys(state.artifacts).length > 0);
   const page = usePageStore((state) => state.page);
   const setPage = usePageStore((state) => state.setPage);
+
+  // Auto-collapse on a page pane or the artifact pane opening (direct
+  // feedback, 2026-08-17: "when one of page panes open and when artifacts
+  // pane is being opened then nav should collapse automatically") —
+  // rising-edge only, not a continuous lock: the user can still manually
+  // re-expand via the existing collapse button afterward (confirmed via
+  // AskUserQuestion). "Page pane open" = any non-Home page, matching this
+  // app's own place-vs-artifact routing law (node-vocabulary.md's Shell
+  // section); Home itself is the investigation surface, not a "page
+  // pane."
+  //
+  // TWO SEPARATE rising edges, not one shared boolean (fixed 2026-08-18,
+  // direct feedback: navigating to Portfolio correctly collapsed the nav,
+  // manually re-expanding it, then opening an artifact from that SAME
+  // page did NOT collapse it again). The original single
+  // `page !== 'home' || (isStackOpen && hasArtifacts)` OR'd both triggers
+  // into one combined flag — once page navigation had already driven it
+  // true, the artifact trigger firing later couldn't produce its own
+  // rising edge (the combined flag was already true, so "true and
+  // previously false" never re-evaluated for the second, independent
+  // cause). Each trigger now gets its own boolean and its own prevRef, so
+  // a manual re-expand followed by EITHER trigger firing again
+  // (independently) re-collapses the nav.
+  const isPagePane = page !== 'home';
+  const isArtifactPane = isStackOpen && hasArtifacts;
+  const prevIsPagePane = useRef(isPagePane);
+  const prevIsArtifactPane = useRef(isArtifactPane);
+  useEffect(() => {
+    if ((isPagePane && !prevIsPagePane.current) || (isArtifactPane && !prevIsArtifactPane.current)) {
+      setIsCollapsed(true);
+    }
+    prevIsPagePane.current = isPagePane;
+    prevIsArtifactPane.current = isArtifactPane;
+  }, [isPagePane, isArtifactPane]);
 
   const threads = useMemo(() => buildThreads(turns).slice(0, config.recent.count), [turns]);
 

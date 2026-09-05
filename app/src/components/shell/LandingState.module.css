@@ -22,6 +22,7 @@
    the eye sees finishing and when the actual query fires. */
 .upper {
   flex: 1 1 auto;
+  min-width: 0;
   min-height: 0;
   display: grid;
   grid-template-rows: 1fr auto 1fr;
@@ -32,10 +33,30 @@
   grid-template-rows: 1fr auto 0fr;
 }
 
+/* min-width: 0 is required here, not cosmetic: .group is a grid item of
+   .upper (display:grid), and a grid item's default min-width is `auto`
+   (its own content's min-content size) — same rule as flex items. The
+   suggestion Grid's minmax(210px, ...) tracks (3 cols = 662px minimum,
+   LandingState.tsx) set .group's own content-driven minimum to 662px,
+   which then stretches .upper's implicit column to fit, rather than
+   .upper constraining .group to the real available width. Confirmed live
+   via getBoundingClientRect: .upper measured a genuine 286px while
+   .group measured 662px inside it — .group was overflowing its own
+   parent, not just failing to shrink. width:100% alone (without this)
+   does nothing, since 100% of an as-yet-undetermined width is still
+   circular. .upper itself needs the matching min-width:0 override (see
+   its own rule above) since it is itself a flex item of .root. Same root-
+   cause CLASS already found and fixed this session in
+   EntityDiscoveryStrips, DiscoverAssetsSection, and
+   PageShell.module.css's .paneBody — a container measuring its own
+   intrinsic content width instead of its real available parent width —
+   though the specific mechanism there was flex, not grid-item, sizing. */
 .group {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  min-width: 0;
   gap: var(--space-24);
 }
 
@@ -62,9 +83,18 @@
    .fade child already sets min-height:0 and collapsed correctly, but
    Astryx's <Grid> (the cards wrap's direct child) does not, and sat at
    its full ~308px the whole time regardless of the 0fr track. This
-   override applies uniformly to whichever direct child is present. */
+   override applies uniformly to whichever direct child is present.
+   min-width:0 added (2026-08-21, mobile overflow fix — see .group's own
+   comment above for the full chain): same default-`auto`-sizing rule
+   applies to width, one level deeper — the suggestion Grid's own
+   minmax(210px,...) tracks (662px minimum) were stretching THIS
+   collapseWrap past .group's now-correctly-constrained 286px, even after
+   .upper/.group themselves were fixed. Confirmed live: without this, the
+   Grid still measured 662px/`210px 210px 210px` regardless of a
+   genuinely 286px-wide ancestor chain above it. */
 .collapseWrap > * {
   min-height: 0;
+  min-width: 0;
 }
 
 .collapsing .collapseWrap {

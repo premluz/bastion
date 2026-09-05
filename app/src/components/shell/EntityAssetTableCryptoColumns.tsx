@@ -1,7 +1,7 @@
 import { proportional, type TableColumn } from '@astryxdesign/core/Table';
 import { Text } from '@astryxdesign/core/Text';
-import { Sparkline } from '../nodes/Sparkline';
-import { TrendDelta } from './TrendDelta';
+import { AssetTrendGlyph } from '../nodes/AssetTrendGlyph';
+import { TrendDelta } from '../nodes/TrendDelta';
 import type { Row, SortableHeader } from './EntityAssetTableCells';
 
 // Crypto/Commodities: CMC-style columns — Price, 24h %, 7d % (with
@@ -35,7 +35,7 @@ export function buildCryptoColumns(category: string | undefined, sortableHeader:
       key: 'trend',
       header: 'Trend',
       width: proportional(9, { minWidth: 64 }),
-      renderCell: (asset: Row) => <Sparkline points={asset.sparklinePoints} />,
+      renderCell: (asset: Row) => <AssetTrendGlyph variant="inline" seed={asset.id} isUp={(asset.delta24hPercent ?? 0) >= 0} />,
     },
     {
       key: 'marketCap',

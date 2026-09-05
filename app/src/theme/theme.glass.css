@@ -44,6 +44,17 @@
   --delta-up: oklch(.78 .26 165);
   --delta-down: oklch(.72 .29 25);
 
+  /* Muted companions for large-AREA delta fills (2026-08-16 — see
+     theme.default.css's own comment for the full reasoning). */
+  --delta-up-bg: oklch(.78 .26 165 / .2);
+  --delta-down-bg: oklch(.72 .29 25 / .2);
+
+  /* Tint strength — see theme.default.css's own comment for the full
+     reasoning. Same values every theme uses (a structural opacity
+     relationship, not a color). */
+  --tint-subtle: var(--opacity-20);
+  --tint-strong: var(--opacity-40);
+
   /* Data-viz series palette — identical to ops-dark (same "themes differ in
      surface physics and light, not in color identity" logic as accents/ink),
      provisional starting values pending Prem's ◆ tuning */
@@ -74,6 +85,11 @@
      something off within one shared mechanism. */
   --shading-light: oklch(1 0 0 / .04);
   --shading-dark: oklch(0 0 0 / .10);
+
+  /* Pass-through of Astryx's own --shadow-low default (dark-scheme branch,
+     since this theme is scheme-locked dark) — added only because safe-one
+     needed a genuinely different, softer value (2026-08-15); unaffected here. */
+  --shadow-low: oklch(0 0 0 / .2);
 
   /* --edge-glow removed 2026-08-08: reported live against a real Linear
      screenshot that the sidebar/content boundary has NO visible seam at
@@ -121,6 +137,9 @@
   --motion-exit-ease: var(--ease-decel);
   --motion-assembly-stagger: 90ms;
   --motion-table-stagger: 45ms;
+  /* Chart line/area reveal — see theme.default.css's own comment for the
+     full rationale (Phase 21 follow-up, 2026-08-31). */
+  --motion-chart-reveal-duration: var(--duration-480);
 
   /* Type faces (Phase 8E typography audit) — identical across all three
      registered themes; typeface isn't a ◆ per-theme register. Not bridged
@@ -160,8 +179,26 @@
 /* panelProvisional RETIRED — see theme.default.css's own note for the full
    rationale (2026-08-08 direct order: every content block gets the same
    bordered treatment, no borderless tier). */
-.astryx-card.panelFlat {
+[data-theme='glass'] .astryx-card.panelFlat {
   background-color: transparent;
+  border: 1px solid var(--edge);
+  box-shadow: none;
+}
+
+/* panelFlatNoBorder — see theme.default.css's own comment for the full
+   rationale (Panel.tsx's `bordered={false}` opt-out, first consumer:
+   Peers on Entity Detail). */
+[data-theme='glass'] .astryx-card.panelFlatNoBorder {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* cardSurface1 — see theme.default.css's own comment for the full
+   rationale (Discover Assets grid card, --surface-1, subtle --edge
+   border). */
+[data-theme='glass'] .astryx-card.cardSurface1 {
+  background-color: var(--surface-1);
   border: 1px solid var(--edge);
   box-shadow: none;
 }
@@ -172,7 +209,7 @@
    this theme (the canvas shows through both nav and content equally,
    consistent with this theme's own design), so this rule keeps that
    parity rather than introducing a mismatch. */
-#astryx-app-shell-main {
+[data-theme='glass'] #astryx-app-shell-main {
   background-color: var(--surface-0);
 }
 
@@ -186,7 +223,7 @@
    tonal/alpha distance, so the plain semantic token works directly, same
    as ops-dark (default theme needs its own off-scale token instead —
    see theme.default.css's composer rule for why). */
-.astryx-chat-composer > div {
+[data-theme='glass'] .astryx-chat-composer > div {
   background-color: var(--surface-2);
 }
 
@@ -198,9 +235,23 @@
    used --surface-2 — three different-looking "elevated" fills on the
    same page. Matched to the composer's own value here, same reasoning as
    theme.ops-dark.css's equivalent rule. */
-.astryx-chat-message-bubble.filled,
-.astryx-token.default {
+[data-theme='glass'] .astryx-chat-message-bubble.filled,
+[data-theme='glass'] .astryx-token.default {
   background-color: var(--surface-2);
+}
+
+/* Same unbridged-overlay bug, TrendChart's own period selector (direct
+   feedback, 2026-08-23) — see theme.ops-dark.css's equivalent rule for
+   the full root-cause explanation, INCLUDING why both the selector shape
+   (matching Astryx's own :not(#\#) specificity-inflation trick) AND
+   !important are required — matched specificity alone was confirmed
+   live to still lose to Astryx's own @layer-wrapped rule. */
+[data-theme='glass'] .astryx-segmented-control:not(#\#):not(#\#):not(#\#) {
+  background-color: var(--surface-2) !important;
+}
+
+[data-theme='glass'] .astryx-segmented-control-item.selected:not(#\#):not(#\#):not(#\#) {
+  background-color: var(--surface-3) !important;
 }
 
 /* Tooltip legibility (direct feedback, 2026-08-07: "tooltip on dark mode text
@@ -212,6 +263,6 @@
    Same root cause as the sticky-column bug in this same change — a consumer
    that needed an opaque surface silently inheriting a translucent one. Pinned
    to --surface-1-solid so the chip's text is fully opaque in every theme. */
-.astryx-tooltip {
+[data-theme='glass'] .astryx-tooltip {
   color: var(--surface-1-solid);
 }

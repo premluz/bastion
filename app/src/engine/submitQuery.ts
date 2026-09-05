@@ -14,9 +14,9 @@ export async function submitQuery(query: string, resolver: IntentResolver): Prom
   const trimmed = query.trim();
   if (!trimmed) return;
 
-  const scene = await resolver.resolve(trimmed);
+  const resolved = await resolver.resolve(trimmed);
 
-  if (!scene) {
+  if (!resolved) {
     const threadId = useSessionStore.getState().addTurn({
       id: crypto.randomUUID(),
       utterance: trimmed,
@@ -43,5 +43,5 @@ export async function submitQuery(query: string, resolver: IntentResolver): Prom
     return;
   }
 
-  presentScene(trimmed, scene);
+  presentScene(trimmed, resolved.scene, resolved.mount);
 }

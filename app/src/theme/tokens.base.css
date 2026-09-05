@@ -72,6 +72,12 @@
   --opacity-04: .04;
   --opacity-08: .08;
   --opacity-12: .12;
+  /* .20 added 2026-08-17 — the scale jumped .12 -> .40 with no real
+     half-step, and the new --tint-subtle semantic token (theme files)
+     needed a genuine ~50% cut from --opacity-40, not a borrowed
+     neighbor. Direct feedback: "subtler red/green (chart gradient and
+     glow)... should be a token, strength alpha % of any color." */
+  --opacity-20: .20;
   --opacity-40: .40;
   --opacity-55: .55;
   --opacity-70: .70;

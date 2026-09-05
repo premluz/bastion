@@ -4,6 +4,20 @@ import styles from './PaneTitleBar.module.css';
 
 interface PaneTitleBarProps {
   title?: ReactNode;
+  /* Fully custom title block (2026-08-19, direct feedback: "title of
+     entity detail should be only the one pane title... move logo to the
+     left of pane title and under it move ticker") — `title` alone always
+     renders through .title's single-line/ellipsis Text wrapper, correct
+     for the plain-string case every existing consumer (Home, the generic
+     page bar, ArtifactStack) uses, but wrong for a caller that needs its
+     OWN two-line layout (name + a subline underneath, here a ticker
+     symbol) — wrapping that composed node in another Text plus forcing
+     white-space:nowrap on the whole block would clip or double-wrap it.
+     `titleContent`, when given, replaces `title` entirely and renders
+     raw, unwrapped, inside the same startGroup slot — the caller owns
+     its own typography and truncation. Mutually exclusive with `title`;
+     `titleContent` wins if both are somehow passed. */
+  titleContent?: ReactNode;
   startContent?: ReactNode;
   endContent?: ReactNode;
 }
@@ -26,21 +40,23 @@ interface PaneTitleBarProps {
 // rather than rendering an empty one. See WorkbenchTitleBar.tsx for the
 // icon-only composition, PageShell.tsx for the per-page title
 // composition, and ArtifactStack.tsx for the back-button composition.
-export function PaneTitleBar({ title, startContent, endContent }: PaneTitleBarProps) {
+export function PaneTitleBar({ title, titleContent, startContent, endContent }: PaneTitleBarProps) {
   return (
     <div className={styles.root}>
       <div className={styles.startGroup}>
         {startContent}
-        {title != null && (
-          // One step up from label/body's shared 14px tier (direct
-          // feedback, 2026-08-02: "1 scale larger than currently") —
-          // large is the next distinct size in Astryx's built-in Text
-          // scale, 17px. display:block + .title's own overflow rules are
-          // what make truncation possible; Text alone doesn't clip.
-          <Text type="large" weight="semibold" display="block" className={styles.title}>
-            {title}
-          </Text>
-        )}
+        {titleContent != null
+          ? titleContent
+          : title != null && (
+              // One step up from label/body's shared 14px tier (direct
+              // feedback, 2026-08-02: "1 scale larger than currently") —
+              // large is the next distinct size in Astryx's built-in Text
+              // scale, 17px. display:block + .title's own overflow rules are
+              // what make truncation possible; Text alone doesn't clip.
+              <Text type="large" weight="semibold" display="block" className={styles.title}>
+                {title}
+              </Text>
+            )}
       </div>
       {endContent && <div className={styles.endContent}>{endContent}</div>}
     </div>

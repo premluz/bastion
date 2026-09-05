@@ -1,0 +1,63 @@
+- generic [ref=f3e6]:
+  - link "Skip to content" [ref=f3e7] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=f3e10]:
+    - navigation "Side navigation" [ref=f3e12]:
+      - generic [ref=f3e13]: Merlin
+      - generic [ref=f3e18]:
+        - group "Places" [ref=f3e19]:
+          - generic [ref=f3e23]:
+            - button "New investigation" [ref=f3e25] [cursor=pointer]
+            - button "Discover" [ref=f3e30] [cursor=pointer]
+            - button "Watchlist" [ref=f3e35] [cursor=pointer]
+            - button "Holdings" [ref=f3e40] [cursor=pointer]
+            - button "Market Pulse" [ref=f3e45] [cursor=pointer]
+            - button "Portfolio" [ref=f3e50] [cursor=pointer]
+            - button "Risk" [ref=f3e55] [cursor=pointer]
+            - button "Data Sources" [ref=f3e60] [cursor=pointer]
+        - group "Recent" [ref=f3e64]:
+          - generic [ref=f3e65]:
+            - generic [ref=f3e66]: Recent
+            - button "Filter recent" [ref=f3e70] [cursor=pointer]:
+              - status
+          - generic [ref=f3e76]:
+            - button "FX & Derivatives — Portfolio Risk D… Thinking…" [ref=f3e78] [cursor=pointer]:
+              - generic [ref=f3e79]: FX & Derivatives — Portfolio Risk D…
+              - img "Thinking…" [ref=f3e81]
+            - button "View all" [ref=f3e84] [cursor=pointer]
+      - generic [ref=f3e87]:
+        - button "Collapse sidebar" [ref=f3e89] [cursor=pointer]:
+          - status
+        - generic [ref=f3e95]:
+          - button "Analyst Analyst" [ref=f3e96] [cursor=pointer]:
+            - generic [ref=f3e97]:
+              - img "Analyst" [ref=f3e99]:
+                - generic [ref=f3e100]: A
+              - generic [ref=f3e102]: Analyst
+            - status
+          - button "Notifications" [ref=f3e108] [cursor=pointer]:
+            - status
+    - main [ref=f3e115]:
+      - generic [ref=f3e120]:
+        - generic [ref=f3e121]:
+          - generic [ref=f3e122]: show me the network anomaly
+          - button "Artifacts" [disabled] [ref=f3e126]:
+            - status
+        - generic [ref=f3e134]:
+          - generic [ref=f3e139]:
+            - article "Message from user" [ref=f3e140]:
+              - generic [ref=f3e141]: show me the network anomaly
+            - article "Message from assistant" [ref=f3e144]:
+              - generic [ref=f3e147]:
+                - generic [ref=f3e148]:
+                  - generic [ref=f3e149]: 2 sources
+                  - generic [ref=f3e150]: 0.0s
+                - button "Thinking trail — click to skip" [ref=f3e151] [cursor=pointer]:
+                  - generic [ref=f3e152]: Thinking…
+                  - generic [ref=f3e153]: Assembling the aggregate FX & derivatives risk picture
+          - generic [ref=f3e165]:
+            - generic [ref=f3e167]:
+              - generic: Ask a question about the venue…
+              - textbox "Message input" [ref=f3e168]
+            - button "Send" [disabled] [ref=f3e171]:
+              - status

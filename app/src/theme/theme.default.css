@@ -33,7 +33,34 @@
   --ink-muted: var(--color-text-disabled);
 
   /* Accents */
-  --accent-signal: var(--color-accent);
+  /* --accent-signal authored, NOT pass-through (2026-08-30, direct order —
+     escalated after the third confirmed occurrence: ring-chart, TrendChart,
+     EarningsHistoryChart all read --accent-signal as illegible in this
+     theme). Root cause, confirmed live via getComputedStyle, not assumed
+     from astryx-bridge.md's own (stale) documented values: Astryx's
+     installed theme-neutral/theme-stone (0.1.4) both ship a genuinely
+     MONOCHROME --color-accent by design (near-black in light mode, near-
+     white in dark mode) — correct for Astryx's own UI chrome (buttons,
+     focus rings), where a neutral accent is the point, but illegible as a
+     chart-line hue against this theme's own dark-mode surfaces (measured:
+     well under a 2:1 ratio against --surface-1, nowhere near WCAG AA's
+     4.5:1 floor). astryx-bridge.md's own documented pass-through values are
+     themselves stale against the currently installed package — not what's
+     actually resolving, confirmed by reading the installed theme.css
+     directly rather than trusting the doc; full values logged there, not
+     repeated here (this file's own hex/rgb ban applies to comments too).
+     Fix reuses ops-dark's/glass's own already-proven --accent-signal value
+     verbatim (confirmed ~7.8:1 against this theme's own --surface-1 via
+     canvas-based sRGB resolution) rather than inventing a new hue — same
+     blue-accent family the rest of the app already establishes, not a
+     fourth ad-hoc color. --color-accent ITSELF is left untouched: Astryx's
+     own components (buttons, focus rings, etc.) keep using Astryx's own
+     neutral accent unmodified — only OUR components consuming the semantic
+     --accent-signal token gain a real, legible hue. This is the one
+     deliberate exception to this file's own "pure pass-through" rule
+     (file-header comment above) — every other semantic token here stays
+     Direction A. */
+  --accent-signal: oklch(.78 .14 225);
   --accent-alert: var(--color-error);
   --accent-warn: var(--color-warning);
   --accent-ok: var(--color-success);
@@ -41,6 +68,34 @@
   /* Delta indicators — price-table up/down (stronger saturation for small-text readability) */
   --delta-up: var(--color-icon-green);
   --delta-down: var(--color-background-error-inverted);
+
+  /* Muted companions for large-AREA delta fills (2026-08-16: AnalystConsensus's
+     bearish/bullish bar segments read "too strong contrast" at full --delta-up/
+     -down opacity — a small text/line color and a large opaque fill are
+     different jobs, same distinction Astryx's own Badge already draws between
+     --color-text-green (bright, for small text) and --color-background-green
+     (~20% alpha, for a tinted area) — confirmed by reading Badge's own source
+     before adding these). default is a pure pass-through theme, so these
+     reference Astryx's own already-tinted background tokens directly, same as
+     every other token in this file. */
+  --delta-up-bg: var(--color-background-green);
+  --delta-down-bg: var(--color-background-red);
+
+  /* Tint strength — how strongly ANY color washes over an area, decoupled
+     from which color (2026-08-17, direct feedback: "subtler red/green
+     [chart gradient and glow]... should be a token, strength alpha % of
+     any color that we use... could combine with any color in palette
+     green/red/theme accent"). Consumed as stopOpacity/opacity by
+     TrendChart's own area-fill gradient and glow.module.css's glow —
+     both jobs are "how much does this color tint the surface," the same
+     relationship regardless of which --accent-signal/--delta-up/-down
+     hue is plugged in. --tint-strong keeps the prior single hardcoded
+     value (--opacity-40, the gradient's own stopOpacity was a raw 0.35
+     before this token existed — a real magic-value fix along the way,
+     not just a rename); --tint-subtle is the genuine ~50% cut requested,
+     backed by the new --opacity-20 primitive step. */
+  --tint-subtle: var(--opacity-20);
+  --tint-strong: var(--opacity-40);
 
   /* Data-viz series palette — provisional starting values, pending Prem's ◆ tuning */
   --viz-1: var(--color-icon-blue);
@@ -62,6 +117,12 @@
      it's pure white at low alpha rather than the ink colour inverted. */
   --shading-light: oklch(1 0 0 / .5);
   --shading-dark: oklch(0 0 0 / .06);
+
+  /* Pass-through of Astryx's own --shadow-low default (SegmentedControlItem's
+     selected-state drop-shadow) — added only because safe-one needed a
+     genuinely different, softer value (2026-08-15); this theme's own
+     rendering is unaffected, same value it already inherited. */
+  --shadow-low: light-dark(oklch(0 0 0 / .1), oklch(0 0 0 / .2));
   --surface-blur: 0px;
   --surface-opacity: 1;
   --glow: none;
@@ -90,6 +151,16 @@
   --motion-exit-ease: var(--ease-standard);
   --motion-assembly-stagger: 60ms;
   --motion-table-stagger: 30ms;
+  /* Chart line/area reveal (2026-08-31 follow-up, direct feedback: charts
+     should draw themselves in left-to-right, not appear instantly) —
+     recharts' own native line-draw animation, re-enabled with token-driven
+     timing (TimeSeries.tsx's own chartReveal.ts reads this, plus
+     --motion-enter-ease, via getComputedStyle since recharts consumes
+     animationDuration/animationEasing as JS values, not live CSS). Named
+     exception to CLAUDE.md rule 15 ("no per-component mount animation") —
+     scoped to a chart's own line/area draw specifically, not the scene-
+     assembly stagger every other node type still uses unchanged. */
+  --motion-chart-reveal-duration: var(--duration-480);
 
   /* Type faces (Phase 8E typography audit) — identical across all three
      registered themes, since typeface choice isn't a ◆ per-theme register
@@ -198,6 +269,43 @@
   box-shadow: var(--shading-raised);
 }
 
+/* Collapsible trigger row: hoverable + padded, direct feedback (2026-08-15,
+   "accordion items should be hoverable ... that'd come with padding") —
+   Astryx's own trigger button ships with paddingBlock: 0 and no :hover
+   treatment (confirmed in Collapsible.tsx's own source), same "not every
+   row reads as interactive by default" gap ListItem/Item had above.
+   astryx-collapsible is the stable class Collapsible's own themeProps('collapsible')
+   call emits on its root (confirmed in source); the trigger itself is an
+   unstyled <button>, the only button as a direct child, addressed via a
+   plain child combinator rather than an unstable StyleX class. Padding
+   raised from --space-8/--space-4 to --space-12/--space-16 (2026-08-15
+   follow-up: "more left right padding and slightly more padding") — the
+   horizontal figure now matches KeyIssuesCard's own 16px content inset
+   for visual consistency between the trigger row and the panes it opens
+   onto, vertical bumped one step, still well short of a full Panel's
+   own height. */
+.astryx-collapsible > button {
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-8);
+}
+
+.astryx-collapsible > button:hover {
+  background-color: var(--color-overlay-hover);
+}
+
+/* Source/citation chips (Token, SourceChip's own wrapper) squared off, not
+   pill-rounded — direct feedback (2026-08-15: "tag should not be rounded
+   but square, still rounded though" — a follow-up on a prior attempt that
+   didn't fully land). Astryx's own Token base uses --radius-inner (4px),
+   but its small-size variant (SourceChip's own size="sm") overrides that to
+   6px, confirmed live via getComputedStyle before this rule — a plain
+   base-token override wouldn't have been enough on its own, hence
+   targeting the stable astryx-token class directly rather than a token
+   value only Token's OWN base rule reads. 0 = a true square corner. */
+.astryx-token {
+  border-radius: 0;
+}
+
 /* Composer shadow removed, direct feedback ("the composer should not have
    shadow") — confirmed live via computed styles before touching anything:
    ChatComposer's own root carries a 3-layer box-shadow unconditionally
@@ -272,6 +380,29 @@
   background-color: var(--color-background-gray);
 }
 
+/* Same unbridged-overlay bug, TrendChart's own period selector (direct
+   feedback, 2026-08-23) — see theme.ops-dark.css's equivalent rule for
+   the full root-cause explanation. Container matches the composer/token
+   convention here (--color-background-gray, this theme's own off-scale
+   fix — see that rule's own comment for why --surface-2 can't be used).
+   The selected pill is left WITHOUT a second background override here,
+   unlike the other 4 themes' --surface-3 step: --color-background-gray
+   is the one distinct off-scale neutral fill this theme exposes
+   (confirmed — every other "raised surface" level Astryx offers
+   collapses to the same white, astryx-bridge.md's own note on this
+   theme's composer fix) — no second, further-elevated value exists to
+   reach for honestly. Astryx's own selected-state affordance (border/
+   weight, not investigated further here since it isn't the reported bug)
+   is what distinguishes the selected pill in this theme instead.
+   Selector shape (:not(#\#) chained 3x) matches Astryx's own compiled
+   stylex specificity-inflation trick, AND !important is required on top
+   of it — matched specificity alone was confirmed live to still lose to
+   Astryx's own @layer-wrapped rule (see theme.ops-dark.css's equivalent
+   rule for the full investigation). */
+[data-theme='default'] .astryx-segmented-control:not(#\#):not(#\#):not(#\#) {
+  background-color: var(--color-background-gray) !important;
+}
+
 /* Panel treatment per node-vocabulary.md principle 2: facts (permanent
    register) and reasoning (provisional register) both render with zero
    elevation (outline only, no background). Visual distinction is typography
@@ -292,6 +423,39 @@
 
 .astryx-card.panelFlat {
   background-color: transparent;
+  border: 1px solid var(--edge);
+  box-shadow: none;
+}
+
+/* panelFlatNoBorder (2026-08-19, direct feedback: "should have config for
+   no border") — Panel.tsx's own opt-out `bordered={false}` prop, same
+   transparent background as panelFlat, border removed. First real
+   consumer: Peers on Entity Detail, nested inside its own pairRow next
+   to Stories & Analysis (a bordered card) — the two don't need matching
+   chrome, and Peers reads as a plain list rather than a second nested
+   card. Not a reversal of the 2026-08-08 "every content block gets the
+   identical bordered treatment" order (see panelFlat's own comment
+   above) — that order stands as the default; this is a per-instance
+   opt-out a caller reaches for deliberately, not a new default. */
+.astryx-card.panelFlatNoBorder {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* cardSurface1 (2026-08-30, direct feedback, latest round: outer card
+   should have a subtle border — reverses this class's own prior
+   "no border" choice from earlier the same day; --edge is the same
+   subtle-border token panelFlat's own outline already uses, one edge
+   language, not a second one invented for this card). The chart+price
+   pane nested inside stays genuinely borderless/full-bleed via its OWN
+   scoped class (chartPane, EntityAssetGrid.module.css), not panelFlat —
+   so this card's border and that pane's lack of one don't fight each
+   other, and removing a border from one never silently removes it from
+   every other panelFlat consumer app-wide. EntityAssetGrid.tsx's own
+   ClickableCard is the first consumer. */
+.astryx-card.cardSurface1 {
+  background-color: var(--surface-1);
   border: 1px solid var(--edge);
   box-shadow: none;
 }

@@ -26,6 +26,20 @@
   --delta-up: oklch(.78 .26 165);
   --delta-down: oklch(.72 .29 25);
 
+  /* Muted companions for large-AREA delta fills (2026-08-16 — see
+     theme.default.css's own comment for the full reasoning). Same
+     hue/chroma/lightness as --delta-up/-down, alpha dropped to .2 —
+     matching Astryx's own --color-background-green/-red pairing ratio
+     (their base hue at ~20% alpha) against their brighter text variant. */
+  --delta-up-bg: oklch(.78 .26 165 / .2);
+  --delta-down-bg: oklch(.72 .29 25 / .2);
+
+  /* Tint strength — see theme.default.css's own comment for the full
+     reasoning. Same values every theme uses (a structural opacity
+     relationship, not a color). */
+  --tint-subtle: var(--opacity-20);
+  --tint-strong: var(--opacity-40);
+
   /* Data-viz series palette — equal-weight band (L .75, C .14), provisional
      starting values pending Prem's ◆ tuning */
   --viz-1: oklch(.75 .14 225);
@@ -48,6 +62,11 @@
      relative to the theme's "nothing floats, nothing glows" register. */
   --shading-light: oklch(1 0 0 / .06);
   --shading-dark: oklch(1 0 0 / .02);
+
+  /* Pass-through of Astryx's own --shadow-low default (dark-scheme branch,
+     since this theme is scheme-locked dark) — added only because safe-one
+     needed a genuinely different, softer value (2026-08-15); unaffected here. */
+  --shadow-low: oklch(0 0 0 / .2);
   --surface-blur: 0px;
   --surface-opacity: 1;
 
@@ -87,6 +106,9 @@
   --motion-exit-ease: var(--ease-standard);
   --motion-assembly-stagger: 60ms;
   --motion-table-stagger: 30ms;
+  /* Chart line/area reveal — see theme.default.css's own comment for the
+     full rationale (Phase 21 follow-up, 2026-08-31). */
+  --motion-chart-reveal-duration: var(--duration-480);
 
   /* Type faces (Phase 8E typography audit) — identical across all three
      registered themes; typeface isn't a ◆ per-theme register. Not bridged
@@ -127,8 +149,26 @@
 /* panelProvisional RETIRED — see theme.default.css's own note for the full
    rationale (2026-08-08 direct order: every content block gets the same
    bordered treatment, no borderless tier). */
-.astryx-card.panelFlat {
+[data-theme='ops-dark'] .astryx-card.panelFlat {
   background-color: transparent;
+  border: 1px solid var(--edge);
+  box-shadow: none;
+}
+
+/* panelFlatNoBorder — see theme.default.css's own comment for the full
+   rationale (Panel.tsx's `bordered={false}` opt-out, first consumer:
+   Peers on Entity Detail). */
+[data-theme='ops-dark'] .astryx-card.panelFlatNoBorder {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* cardSurface1 — see theme.default.css's own comment for the full
+   rationale (Discover Assets grid card, --surface-1, subtle --edge
+   border). */
+[data-theme='ops-dark'] .astryx-card.cardSurface1 {
+  background-color: var(--surface-1);
   border: 1px solid var(--edge);
   box-shadow: none;
 }
@@ -138,7 +178,7 @@
    theme.default.css's equivalent entry. AppShell gives the sidenav
    --surface-0 but content --surface-1 by default; this brings content
    down to --surface-0 to match. */
-#astryx-app-shell-main {
+[data-theme='ops-dark'] #astryx-app-shell-main {
   background-color: var(--surface-0);
 }
 
@@ -155,7 +195,7 @@
    resolves this same element to --color-background-popover (--surface-3
    in this theme, astryx-bridge.md's mapping table) — two steps up, not
    one; this rule brings it down to match. */
-.astryx-chat-composer > div {
+[data-theme='ops-dark'] .astryx-chat-composer > div {
   background-color: var(--surface-2);
 }
 
@@ -168,9 +208,60 @@
    same page. Matched to the composer's own value here (theme.default.css
    mirrors this same intent with --color-background-gray instead — see
    that file's equivalent rule for why). */
-.astryx-chat-message-bubble.filled,
-.astryx-token.default {
+[data-theme='ops-dark'] .astryx-chat-message-bubble.filled,
+[data-theme='ops-dark'] .astryx-token.default {
   background-color: var(--surface-2);
+}
+
+/* Same unbridged-overlay bug, found in TrendChart's own period selector
+   (direct feedback, 2026-08-23: "bg... should be next surface, but seems
+   brighter" — confirmed live via getComputedStyle: the container painted
+   a flat white overlay at low alpha directly, which composites BRIGHTER
+   than this theme's own --surface-1 pane background instead of moving
+   with it). SegmentedControl's real, stable class names
+   (astryx-segmented-control / astryx-segmented-control-item.selected —
+   confirmed live, not guessed) let this be targeted, but getting the
+   override to actually WIN took real investigation, not a guess:
+   1. A plain class selector (the shape the pre-existing .astryx-token/
+      .astryx-chat-message-bubble rules above use) had zero effect —
+      Astryx's own compiled stylex CSS ships this rule behind
+      `.xNNNNNN:not(#\#):not(#\#):not(#\#)`, a specificity-inflation
+      technique (three chained :not(#\#) clauses, each worth one
+      ID-level specificity point) that plain classes can't match.
+   2. Matching that exact specificity (this selector's own :not(#\#)
+      chain) STILL had zero effect, confirmed via Chrome DevTools
+      Protocol's own CSS.getMatchedStylesForNode: both rules report
+      IDENTICAL specificity {a:3,b:1,c:0}, mine appears LATER in both DOM
+      order and the matched-rules list, yet Astryx's still won — Astryx's
+      rule lives inside `@layer astryx-base` (confirmed via
+      CSSLayerBlockRule inspection), and despite unlayered CSS normally
+      beating ANY layered rule regardless of specificity per spec, that
+      didn't resolve this in practice (most likely interaction with the
+      @scope blocks Astryx's own layers are nested in — not fully root-
+      caused, since Chrome exposes no direct "why did this rule lose" API
+      beyond matched-rules order).
+   3. !important is what actually wins, confirmed live — the one
+      mechanism that cuts through the ambiguity regardless of its exact
+      cause. Used deliberately here as a targeted, documented, single-
+      property override of one specific third-party rule (not a general
+      escape hatch) — same "package-scoped override for a vendor bug"
+      posture as every other .astryx-* rule in this file, just needing a
+      stronger tool this time.
+   Flagged, not applied elsewhere: the pre-existing .astryx-token/.astryx-
+   chat-message-bubble rules above are confirmed to have this SAME
+   defeated-by-specificity bug live (still unfixed even at matched
+   specificity, same as this rule was before !important) — reported
+   separately, not fixed in this change (different order's scope).
+   Container matches the composer/token convention (--surface-2, one step
+   up from the --surface-1 pane it sits in); the selected pill goes one
+   step further (--surface-3) so it reads as elevated ABOVE the container
+   it sits inside, not flush with it. */
+[data-theme='ops-dark'] .astryx-segmented-control:not(#\#):not(#\#):not(#\#) {
+  background-color: var(--surface-2) !important;
+}
+
+[data-theme='ops-dark'] .astryx-segmented-control-item.selected:not(#\#):not(#\#):not(#\#) {
+  background-color: var(--surface-3) !important;
 }
 
 /* Tooltip legibility (direct feedback, 2026-08-07: "tooltip on dark mode text
@@ -182,6 +273,6 @@
    Same root cause as the sticky-column bug in this same change — a consumer
    that needed an opaque surface silently inheriting a translucent one. Pinned
    to --surface-1-solid so the chip's text is fully opaque in every theme. */
-.astryx-tooltip {
+[data-theme='ops-dark'] .astryx-tooltip {
   color: var(--surface-1-solid);
 }

@@ -20,7 +20,15 @@ const INSET = 2;
 // points renders nothing rather than a placeholder — the enclosing
 // metric/cell still shows its own real value regardless.
 // Gradient styling matches TimeSeries node (signal hue fading to
-// transparent, same register and token reuse).
+// transparent, same register and token reuse). --tint-subtle (2026-08-18
+// sweep — direct feedback: "all gradients that we use in key issues,
+// bullish, bearish, and anywhere, basically, notable price movements
+// should be subtle, we added that scale" — extends the Entity Detail-only
+// scoping from the token's own introduction to every chart gradient app-
+// wide, confirmed via AskUserQuestion). SVG's stop-opacity presentation
+// attribute reads CSS custom properties via style, not the numeric
+// stopOpacity prop (same constraint TimeSeries.tsx's own bleed path
+// already worked around).
 export function Sparkline({ points }: SparklineProps) {
   const gradientId = useId();
 
@@ -47,7 +55,7 @@ export function Sparkline({ points }: SparklineProps) {
     <svg width={WIDTH} height={HEIGHT} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label="Trend sparkline">
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="var(--accent-signal)" stopOpacity={0.35} />
+          <stop offset="0%" stopColor="var(--accent-signal)" style={{ stopOpacity: 'var(--tint-subtle)' }} />
           <stop offset="100%" stopColor="var(--accent-signal)" stopOpacity={0} />
         </linearGradient>
       </defs>

@@ -1,0 +1,77 @@
+/* Kills the inline-element baseline gap an <svg> otherwise leaves below
+   itself — needed now that this chart sits as a direct, edge-to-edge
+   child of the pane Card (2026-08-30 follow-up), with no wrapping div to
+   absorb it. */
+.chart {
+  display: block;
+}
+
+/* Line/area reveal (2026-08-31 follow-up — same named rule-15 exception
+   TimeSeries.tsx's own chartReveal.ts documents, extended here to this
+   node's hand-drawn d3 path since it has no recharts isAnimationActive to
+   flip). --reveal-line-length is set inline per-instance (the path's own
+   real getTotalLength(), measured in the DOM — a fixed guess in viewBox
+   units would be wrong per-instance since every glyph's own wiggle has a
+   different real path length). stroke-dashoffset walks length→0, drawing
+   the line left-to-right; --reveal-progress (0→1, same animation, same
+   duration) drives the area's clip-path rect width in lockstep so the
+   gradient fill reveals at the same pace as the line above it, not
+   instantly. */
+@keyframes merlin-trend-glyph-line-reveal {
+  from {
+    stroke-dashoffset: var(--reveal-line-length, 0);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes merlin-trend-glyph-area-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Pre-reveal rest state (2026-08-31 second follow-up: viewport-triggered
+   reveal, not mount-triggered) — applied once the path's own length is
+   measured but BEFORE it has entered the viewport, so an off-screen glyph
+   sits fully hidden and ready rather than rendering solid-then-snapping-
+   back-to-hidden the instant it scrolls into view (that reset would read
+   as a flash/pop, not a reveal, confirmed by reasoning through the two
+   states before shipping either one). No animation here, just the static
+   `from`-keyframe values held in place. */
+.pendingLine {
+  stroke-dasharray: var(--reveal-line-length, 0);
+  stroke-dashoffset: var(--reveal-line-length, 0);
+}
+
+.pendingArea {
+  clip-path: inset(0 100% 0 0);
+}
+
+.revealLine {
+  stroke-dasharray: var(--reveal-line-length, 0);
+  animation: merlin-trend-glyph-line-reveal var(--motion-chart-reveal-duration) var(--motion-enter-ease) forwards;
+}
+
+.revealArea {
+  animation: merlin-trend-glyph-area-reveal var(--motion-chart-reveal-duration) var(--motion-enter-ease) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pendingLine,
+  .pendingArea {
+    stroke-dashoffset: 0;
+    clip-path: none;
+  }
+
+  .revealLine,
+  .revealArea {
+    animation: none;
+    stroke-dashoffset: 0;
+    clip-path: none;
+  }
+}

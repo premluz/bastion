@@ -15,6 +15,7 @@ import { dirname, join } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATASETS_PATH = join(__dirname, "..", "universe", "datasets.json");
+const FIXTURES_DIR = join(__dirname, "..", "universe", "fixtures");
 
 // mulberry32: small, fast, deterministic PRNG — no dependency needed for
 // a one-file seeded generator.
@@ -66,6 +67,107 @@ export function generateDailySeries(seed, startISO, endISO, startValue, endValue
     const correctedNoise = raw[i] - rawEnd * t;
     return { x, y: Math.round((drift + correctedNoise) * 100) / 100 };
   });
+}
+
+// Sub-day Brownian-bridge, same seeded/deterministic/pinned-endpoints
+// approach as generateDailySeries above, just at a configurable sub-day
+// interval over a short window instead of day resolution over the full
+// history (2026-08-22 order: "fix flat short-timeframe charts via real
+// data density, not render-time randomness" — TrendChart's 1H/24H periods
+// previously degenerated to 2 daily points; this gives them real,
+// disclosed, regeneratable intraday resolution instead). `startISO`/
+// `endISO` are full ISO datetimes, not dates. `intervalMs` (2026-08-22
+// follow-up, direct feedback: "even 1h we need more density... much more
+// touchpoints" — hourly resolution genuinely can't give a 1-hour VIEW
+// more than a couple of real points, so this generates the SAME window
+// at a finer interval instead of pretending hourly data is denser than
+// it is) defaults to one hour, matching the original 24H behavior
+// unchanged; a smaller value (e.g. 5 minutes) is what TrendChart now
+// requests for its own dedicated 1H-resolution array. `clampRange`, when
+// given, hard-clamps every generated value into an already-authored real
+// fact (priceHeader.dayRange) so the noise can never contradict it —
+// pinned facts win over generated noise, same posture as every other
+// pinned-value block in this file.
+function subDayRangeExclusiveEnd(startISO, endISO, intervalMs) {
+  const timestamps = [];
+  let cursor = new Date(startISO);
+  const end = new Date(endISO);
+  while (cursor < end) {
+    timestamps.push(cursor.toISOString());
+    cursor = new Date(cursor.getTime() + intervalMs);
+  }
+  timestamps.push(end.toISOString());
+  return timestamps;
+}
+
+export function generateIntradaySeries(seed, startISO, endISO, startValue, endValue, noiseScale, clampRange, intervalMs = 3600000) {
+  const rng = mulberry32(hashSeed(seed));
+  const timestamps = subDayRangeExclusiveEnd(startISO, endISO, intervalMs);
+  const count = timestamps.length;
+  const raw = [0];
+  for (let i = 1; i < count; i += 1) {
+    raw.push(raw[i - 1] + (rng() - 0.5) * noiseScale);
+  }
+  const rawEnd = raw[count - 1];
+  return timestamps.map((t, i) => {
+    const frac = i / (count - 1);
+    const drift = startValue + (endValue - startValue) * frac;
+    const correctedNoise = raw[i] - rawEnd * frac;
+    let y = Math.round((drift + correctedNoise) * 100) / 100;
+    if (clampRange) y = Math.min(clampRange[1], Math.max(clampRange[0], y));
+    return { t, price: y };
+  });
+}
+
+// Multi-day sub-day series (2026-08-22 follow-up, direct feedback: "even
+// though we showing 1h scale selected we can show days, not hours...
+// like in reference so we could show larger period of a week but hourly
+// movements" — TradingView's own period buttons are candle-INTERVAL
+// selectors, not "only the last N hours" window selectors: the visible
+// range stays wide, only point resolution changes). A single Brownian
+// bridge across a multi-day window (what generateIntradaySeries above
+// does) would smooth straight through the REAL, already-authored daily
+// closes in dailyPoints, disagreeing with the daily series at every day
+// boundary except the very first/last. This chains one bridge PER DAY
+// instead, each one bridging from that day's own real close to the
+// next day's own real close (generateIntradaySeries called once per
+// consecutive pair, intervalMs unchanged) — so the sub-day zigzag is
+// anchored to, and never contradicts, the real daily series it's
+// replacing at every point where the two would otherwise overlap.
+// `dailyPoints` must be sorted ascending, each carrying a real
+// {t, price}, and its LAST entry must be `asOf`'s own day (the most
+// recent real daily point). One extra, FINAL segment is generated past
+// that last daily point — from asOf's own day to asOf's own end-of-day
+// (23:59:59.999), bridging to `finalValue` (a quoted fact, e.g.
+// priceHeader.lastPrice) — because the daily series has no "next day"
+// close to bridge toward for the CURRENT day; without this, the chain
+// stopped at asOf's own midnight and asOf's own real intraday movement
+// (the whole point of a "today" view) was silently missing entirely
+// (caught live before shipping: the resulting array's last point was
+// asOf's midnight, hours before the actual current moment).
+export function chainIntradaySeries(seed, dailyPoints, finalValue, noiseScale, clampRange, intervalMs) {
+  const chained = [];
+  for (let i = 0; i < dailyPoints.length - 1; i += 1) {
+    const day = dailyPoints[i];
+    const nextDay = dailyPoints[i + 1];
+    const startISO = `${day.t}T00:00:00.000Z`;
+    const endISO = `${nextDay.t}T00:00:00.000Z`;
+    const segment = generateIntradaySeries(`${seed}:${day.t}`, startISO, endISO, day.price, nextDay.price, noiseScale, clampRange, intervalMs);
+    // Drop every segment's own last point — it's identical (same
+    // timestamp/value) to the NEXT segment's own first point, avoiding a
+    // duplicate x-value two segments would otherwise both contribute.
+    // The very final point of the whole chain is added separately below
+    // (the extra asOf-day segment), never from this loop.
+    chained.push(...segment.slice(0, -1));
+  }
+  const lastDay = dailyPoints[dailyPoints.length - 1];
+  if (lastDay) {
+    const startISO = `${lastDay.t}T00:00:00.000Z`;
+    const endISO = `${lastDay.t}T23:59:59.999Z`;
+    const finalSegment = generateIntradaySeries(`${seed}:${lastDay.t}:final`, startISO, endISO, lastDay.price, finalValue, noiseScale, clampRange, intervalMs);
+    chained.push(...finalSegment);
+  }
+  return chained.map((point) => ({ t: point.t, price: point.price }));
 }
 
 // Every value in this series is narratively significant — the specific
@@ -176,6 +278,28 @@ const SOUTH_BOW_SPIKE = {
   "2026-06-25": [41.5, 1.1],
 };
 
+// intraday fixtures (2026-08-22 order, extended twice by follow-up
+// feedback) — one entry per TradableAsset fixture that offers 1H/24H
+// periods. Both arrays are now WIDE-WINDOW, resolution-only views
+// (2026-08-22 second follow-up: "even though we showing 1h scale
+// selected we can show days, not hours... like in reference so we could
+// show larger period of a week but hourly movements" — TradingView's own
+// period buttons pick candle INTERVAL, not a short time WINDOW), chained
+// day-by-day via chainIntradaySeries so every hour/5-min point stays
+// anchored to the real daily series it's replacing, never contradicting
+// it at a day boundary. `intraday`: hourly resolution over
+// intradayDaysBack real days (7 — a real trading week, matching the
+// reference's own week-scale intraday view). `intradayFine`: 5-minute
+// resolution over intradayFineDaysBack real days (2 — dense enough to
+// read as genuinely granular without ballooning fixture size:
+// 2 days * 24h * 12 five-min points/h ≈ 576 points). Both windows end
+// exactly at priceHeader.asOf; noiseScaleFine stays smaller than
+// noiseScale (a 5-minute step genuinely moves less than an hourly step).
+const INTRADAY_FIXTURES = [
+  { file: "equity-example.json", noiseScale: 0.12, noiseScaleFine: 0.03, intradayDaysBack: 7, intradayFineDaysBack: 2 },
+  { file: "crypto-example.json", noiseScale: 0.1, noiseScaleFine: 0.025, intradayDaysBack: 7, intradayFineDaysBack: 2 },
+];
+
 function main() {
   const datasets = JSON.parse(readFileSync(DATASETS_PATH, "utf-8"));
 
@@ -232,8 +356,51 @@ function main() {
   };
 
   writeFileSync(DATASETS_PATH, `${JSON.stringify(datasets, null, 2)}\n`);
+
+  for (const { file, noiseScale, noiseScaleFine, intradayDaysBack, intradayFineDaysBack } of INTRADAY_FIXTURES) {
+    const fixturePath = join(FIXTURES_DIR, file);
+    const fixture = JSON.parse(readFileSync(fixturePath, "utf-8"));
+    const { priceHeader } = fixture;
+    const dailySeries = fixture.trendChart.series;
+
+    // Chained day-by-day (see chainIntradaySeries's own comment for why
+    // — one Brownian bridge per day, not one across the whole window, so
+    // the hourly/5-min zigzag stays anchored to the real daily series it
+    // replaces at every day boundary). `dailyWindow` takes the last
+    // (daysBack + 1) real daily points: N segments need N+1 boundary
+    // points. clampRange stays priceHeader.dayRange throughout — still
+    // the correct real bound for the FINAL day (asOf's own day); earlier
+    // days in the window aren't literally described by that range, but
+    // using it as a soft ceiling/floor across the whole chain keeps every
+    // generated value inside a real, already-quoted fact rather than an
+    // unconstrained walk, and the chain's own per-day endpoints (the real
+    // daily closes) are what actually anchors each day's shape.
+    const intradayWindow = dailySeries.slice(-(intradayDaysBack + 1));
+    fixture.trendChart.intraday = chainIntradaySeries(
+      `${file}:intraday`,
+      intradayWindow,
+      priceHeader.lastPrice,
+      noiseScale,
+      priceHeader.dayRange,
+      3600000,
+    );
+
+    const fineWindow = dailySeries.slice(-(intradayFineDaysBack + 1));
+    fixture.trendChart.intradayFine = chainIntradaySeries(
+      `${file}:intradayFine`,
+      fineWindow,
+      priceHeader.lastPrice,
+      noiseScaleFine,
+      priceHeader.dayRange,
+      300000,
+    );
+
+    writeFileSync(fixturePath, `${JSON.stringify(fixture, null, 2)}\n`);
+    console.log(`  ${file}: intraday ${fixture.trendChart.intraday.length} pts, intradayFine ${fixture.trendChart.intradayFine.length} pts`);
+  }
+
   console.log(
-    `Regenerated ${YIELD_VOLATILITY_SERIES.length} daily yield/volatility series + confirmed the pinned volume series + wrote ${key} + wrote south-bow-corp-price-volume-90d.`,
+    `Regenerated ${YIELD_VOLATILITY_SERIES.length} daily yield/volatility series + confirmed the pinned volume series + wrote ${key} + wrote south-bow-corp-price-volume-90d + wrote intraday/intradayFine for ${INTRADAY_FIXTURES.length} TradableAsset fixtures.`,
   );
 }
 

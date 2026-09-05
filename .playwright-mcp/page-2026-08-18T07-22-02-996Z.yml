@@ -1,0 +1,236 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e6]:
+    - link "Skip to content" [ref=f3e7] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f3e10]:
+      - navigation "Side navigation" [ref=f3e12]:
+        - generic [ref=f3e13]: M
+        - generic [ref=f3e18]:
+          - group "Places" [ref=f3e19]:
+            - generic [ref=f3e23]:
+              - button "New investigation" [ref=f3e25] [cursor=pointer]
+              - button "Discover" [ref=f3e30] [cursor=pointer]
+              - button "Watchlist" [ref=f3e35] [cursor=pointer]
+              - button "Holdings" [ref=f3e40] [cursor=pointer]
+              - button "Market Pulse" [ref=f3e45] [cursor=pointer]
+              - button "Portfolio" [ref=f3e50] [cursor=pointer]
+              - button "Risk" [ref=f3e55] [cursor=pointer]
+              - button "Data Sources" [ref=f3e60] [cursor=pointer]
+          - button "Recent" [ref=f3e179] [cursor=pointer]
+        - generic [ref=f3e87]:
+          - button "Expand sidebar" [ref=f3e183] [cursor=pointer]:
+            - status
+          - generic [ref=f3e95]:
+            - button "Analyst" [ref=f3e184] [cursor=pointer]:
+              - img "Analyst" [ref=f3e99]:
+                - generic [ref=f3e100]: A
+              - status
+            - button "Notifications" [ref=f3e108] [cursor=pointer]:
+              - status
+      - main [ref=f3e115]:
+        - generic [ref=f3e120]:
+          - generic [ref=f3e121]:
+            - generic [ref=f3e122]: FX & Derivatives — Portfolio Risk Dashboard
+            - generic [ref=f3e125]:
+              - button "Artifacts" [ref=f3e126] [cursor=pointer]:
+                - status
+              - generic: "1"
+          - generic [ref=f3e133]:
+            - generic [ref=f3e134]:
+              - generic [ref=f3e139]:
+                - article "Message from user" [ref=f3e140]:
+                  - generic [ref=f3e141]: show me the network anomaly
+                - article "Message from assistant" [ref=f3e144]:
+                  - generic [ref=f3e147]:
+                    - generic [ref=f3e148]:
+                      - generic [ref=f3e149]: 2 sources
+                      - generic [ref=f3e150]: 7.1s
+                    - generic [ref=f3e185]:
+                      - button "6 reasoning steps · 7.1s" [expanded] [ref=f3e186] [cursor=pointer]
+                      - generic [ref=f3e197]:
+                        - generic [ref=f3e205]:
+                          - generic [ref=f3e206]: Assembling the aggregate FX & derivatives risk picture
+                          - generic [ref=f3e207]: 0.8s
+                        - generic [ref=f3e214]:
+                          - generic [ref=f3e215]:
+                            - generic [ref=f3e216]: Pulling open derivative positions from PortfolioAtlas
+                            - generic [ref=f3e217]: 1.1s
+                          - generic [ref=f3e218]: PortfolioAtlas
+                          - generic [ref=f3e221]:
+                            - generic [ref=f3e222]: 5 results
+                            - list [ref=f3e224]:
+                              - listitem [ref=f3e225]:
+                                - img "investopedia.com" [ref=f3e227]:
+                                  - generic [ref=f3e228]: I
+                                - generic [ref=f3e230]: Understanding Yield Thresholds in Fixed Income Markets
+                                - generic [ref=f3e232]: investopedia.com
+                              - listitem [ref=f3e234]:
+                                - img "sec.gov" [ref=f3e236]:
+                                  - generic [ref=f3e237]: S
+                                - generic [ref=f3e239]: SEC Filing Database — Public Company Search
+                                - generic [ref=f3e241]: sec.gov
+                              - listitem [ref=f3e243]:
+                                - img "bloomberg.com" [ref=f3e245]:
+                                  - generic [ref=f3e246]: B
+                                - generic [ref=f3e248]: Bond Yield Calculator and Screener
+                                - generic [ref=f3e250]: bloomberg.com
+                              - listitem [ref=f3e252]:
+                                - img "moodys.com" [ref=f3e254]:
+                                  - generic [ref=f3e255]: M
+                                - generic [ref=f3e257]: Credit Rating Methodology Overview
+                                - generic [ref=f3e259]: moodys.com
+                              - listitem [ref=f3e261]:
+                                - img "marketwatch.com" [ref=f3e263]:
+                                  - generic [ref=f3e264]: M
+                                - generic [ref=f3e266]: Market Data & Historical Pricing
+                                - generic [ref=f3e268]: marketwatch.com
+                        - generic [ref=f3e276]:
+                          - generic [ref=f3e277]:
+                            - generic [ref=f3e278]: Retrieving counterparty and exposure scores from RiskLens
+                            - generic [ref=f3e279]: 1.3s
+                          - generic [ref=f3e280]: RiskLens
+                        - generic [ref=f3e290]:
+                          - generic [ref=f3e291]: Cross-referencing Kestrel Holdings' derivatives exposure against its existing NordBond flag
+                          - generic [ref=f3e292]: 1.5s
+                        - generic [ref=f3e299]:
+                          - generic [ref=f3e300]:
+                            - generic [ref=f3e301]: Weighing aggregate exposure against the desk's risk limit
+                            - generic [ref=f3e302]: 1.4s
+                          - generic [ref=f3e303]: 0.79 · moderate
+                        - generic [ref=f3e310]:
+                          - generic [ref=f3e311]:
+                            - generic [ref=f3e312]: Confirming no limit breach despite the Kestrel-linked concentration
+                            - generic [ref=f3e313]: 1.0s
+                          - generic [ref=f3e314]: 0.71 · moderate
+                        - generic [ref=f3e321]:
+                          - generic [ref=f3e322]: Done
+                          - generic [ref=f3e323]: 0.0s
+                    - generic [ref=f3e324] [cursor=pointer]:
+                      - button "Open FX & Derivatives — Portfolio Risk Dashboard" [ref=f3e325]
+                      - generic [ref=f3e326]:
+                        - generic [ref=f3e332]:
+                          - generic [ref=f3e333]: FX & Derivatives — Portfolio Risk Dashboard
+                          - generic [ref=f3e334]: portfolio
+                        - generic [ref=f3e335]: Ready
+              - generic [ref=f3e165]:
+                - generic [ref=f3e167]:
+                  - generic: Ask a question about the venue…
+                  - textbox "Message input" [ref=f3e168]
+                - button "Send" [disabled] [ref=f3e171]:
+                  - status
+            - generic [ref=f3e342]:
+              - generic [ref=f3e343]:
+                - generic [ref=f3e344]:
+                  - button "Back to list" [ref=f3e345] [cursor=pointer]:
+                    - status
+                  - generic [ref=f3e351]: FX & Derivatives — Portfolio Risk Dashboard
+                - generic [ref=f3e352]:
+                  - button "Maximize" [ref=f3e353] [cursor=pointer]:
+                    - status
+                  - button "Close artifacts" [ref=f3e359] [cursor=pointer]:
+                    - status
+              - generic [ref=f3e368]:
+                - generic [ref=f3e371]:
+                  - generic [ref=f3e372]:
+                    - generic [ref=f3e373]: Aggregate risk confidence
+                    - generic [ref=f3e375]:
+                      - generic [ref=f3e376]:
+                        - generic [ref=f3e377]:
+                          - 'img "Aggregate risk confidence: 0.71, moderate" [ref=f3e379]':
+                            - generic [ref=f3e383]: 71%
+                          - generic [ref=f3e384]: Moderate
+                        - generic [ref=f3e385]:
+                          - generic [ref=f3e386]:
+                            - generic [ref=f3e387]: Sources
+                            - generic [ref=f3e388]: "2"
+                          - generic [ref=f3e390]:
+                            - generic [ref=f3e391]: Unknowns
+                            - generic [ref=f3e392]: "0"
+                          - generic [ref=f3e394]:
+                            - generic [ref=f3e395]: Assumptions
+                            - generic [ref=f3e396]: "0"
+                      - generic [ref=f3e398]: Kestrel Holdings is already flagged elsewhere on the venue for NordBond float accumulation — treat this counterparty's derivatives exposure as compounding risk, not an isolated flag.
+                      - generic [ref=f3e399]:
+                        - generic [ref=f3e400]: PortfolioAtlas
+                        - generic [ref=f3e402]: RiskLens
+                  - generic [ref=f3e405]:
+                    - generic [ref=f3e406]: Recommended
+                    - generic [ref=f3e408]: Aggregate derivatives exposure sits at €21M against a €25M risk limit (84% utilized) — no breach, but the Kestrel-linked EUR/USD risk reversal concentrates nearly a third of that exposure with an unrated counterparty and warrants review.
+                - generic [ref=f3e412]:
+                  - generic [ref=f3e413]: Book summary
+                  - generic [ref=f3e417]:
+                    - generic [ref=f3e419]:
+                      - generic [ref=f3e420]: Aggregate exposure
+                      - heading "€21M" [level=2] [ref=f3e422]
+                      - generic [ref=f3e423]: 84% of €25M limit
+                    - generic [ref=f3e425]:
+                      - generic [ref=f3e426]: Total notional
+                      - heading "€170M" [level=2] [ref=f3e428]
+                    - generic [ref=f3e430]:
+                      - generic [ref=f3e431]: Open positions
+                      - heading "4" [level=2] [ref=f3e433]
+                    - generic [ref=f3e435]:
+                      - generic [ref=f3e436]: Flagged positions
+                      - heading "2" [level=2] [ref=f3e438]
+                - generic [ref=f3e441]:
+                  - generic [ref=f3e442]: Risk limit
+                  - generic [ref=f3e446]:
+                    - 'img "Risk limit utilization: 21€M of 25€M, 84%" [ref=f3e447]':
+                      - generic [ref=f3e451]: 84%
+                    - generic [ref=f3e452]:
+                      - generic [ref=f3e453]: Risk limit utilization
+                      - generic [ref=f3e454]: 21€M of 25€M
+                - generic [ref=f3e457]:
+                  - generic [ref=f3e458]: Position status
+                  - generic [ref=f3e463]:
+                    - generic [ref=f3e464]:
+                      - img "EUR/USD 3M Risk Reversal" [ref=f3e465]
+                      - generic [ref=f3e466]: EUR/USD 3M Risk Reversal
+                    - generic [ref=f3e467]:
+                      - img "5Y EUR Interest Rate Swap" [ref=f3e468]
+                      - generic [ref=f3e469]: 5Y EUR Interest Rate Swap
+                    - generic [ref=f3e470]:
+                      - img "GBP/EUR 6M FX Forward" [ref=f3e471]
+                      - generic [ref=f3e472]: GBP/EUR 6M FX Forward
+                    - generic [ref=f3e473]:
+                      - img "10Y USD Interest Rate Swap" [ref=f3e474]
+                      - generic [ref=f3e475]: 10Y USD Interest Rate Swap
+                - generic [ref=f3e478]:
+                  - generic [ref=f3e479]: Exposure by counterparty
+                  - generic [ref=f3e484]:
+                    - img "Allocation breakdown" [ref=f3e485]:
+                      - generic [ref=f3e486]:
+                        - 'generic "Fjellbank: 9M" [ref=f3e487]'
+                        - 'generic "Kestrel Holdings: 6M" [ref=f3e488]'
+                        - 'generic "Solent Markets Prime: 6M" [ref=f3e489]'
+                    - generic [ref=f3e490]:
+                      - generic [ref=f3e491]: Fjellbank · 9M
+                      - generic [ref=f3e495]: Kestrel Holdings · 6M
+                      - generic [ref=f3e499]: Solent Markets Prime · 6M
+                - generic [ref=f3e505]:
+                  - generic [ref=f3e506]: Top contributors by exposure
+                  - application [ref=f3e513]:
+                    - generic [ref=f3e540]:
+                      - generic [ref=f3e541]:
+                        - generic [ref=f3e542]: 5Y EUR IRS
+                        - generic [ref=f3e544]: GBP/EUR 6M Fwd
+                      - generic [ref=f3e546]:
+                        - generic [ref=f3e547]: "0"
+                        - generic [ref=f3e549]: "3"
+                        - generic [ref=f3e551]: "6"
+                        - generic [ref=f3e553]: "9"
+                        - generic [ref=f3e555]: "12"
+                - generic [ref=f3e559]:
+                  - generic [ref=f3e560]: Flagged positions
+                  - generic [ref=f3e564]:
+                    - generic [ref=f3e565]:
+                      - generic [ref=f3e566]:
+                        - generic [ref=f3e567]: EUR/USD 3M Risk Reversal
+                        - generic [ref=f3e568]: Counterparty Kestrel Holdings unrated — largest single exposure at 29% of aggregate
+                      - time [ref=f3e571]: Jul 16, 2026
+                    - generic [ref=f3e572]:
+                      - generic [ref=f3e573]:
+                        - generic [ref=f3e574]: 10Y USD Interest Rate Swap
+                        - generic [ref=f3e575]: Long-dated tenor (10Y) carries elevated rate-sensitivity
+                      - time [ref=f3e578]: Jul 16, 2026
+  - generic [ref=f3e579]: 5Y EUR IRS

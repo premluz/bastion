@@ -13,39 +13,53 @@
   }
 }
 
-/* TextReveal (Option B, architect-ordered) — a clip-path wipe driven by
-   the --reveal custom property, keyed to the SAME durationMs already on
-   ThinkingStep/StepRow (set per-instance by useTextReveal.ts, never a
-   token — reusing the fixture's own pacing data verbatim). @property
-   registers --reveal as an interpolatable <number> so the transition
-   below can animate it at all; without this a custom property change is
-   a discrete jump, not a tween, regardless of the transition rule.
-   --ease-standard is the only token involved — duration is real step
-   data by design, per the order. Applied only to StepRow's active label
-   for now (node-vocabulary.md's ThinkingTrail law: "the active step is
-   the only animated thing on screen") — do not reuse on text-block/
-   recommendation without a separate design call; those registers
-   (permanent/provisional) may not want this treatment. */
-@property --reveal {
-  syntax: "<number>";
-  inherits: true;
-  initial-value: 1;
+/* TextChunkReveal (2026-08-21) — chunk-based text reveal, imitating an
+   architect-supplied GSAP reference on this project's own closed motion
+   architecture (plain CSS keyframes + animation-delay, the SAME
+   per-index stagger mechanism AnimatedListItem.module.css already
+   establishes, not a requestAnimationFrame render loop and not an
+   animation library — none is on the closed dependency list, CLAUDE.md
+   §5). --chunk-stagger is set per-instance by TextChunkReveal.tsx,
+   DERIVED from the step's own real durationMs (never invented) — not a
+   token, since the value is genuinely per-instance data, not a design
+   constant.
+
+   Pure opacity fade now (2026-08-23 follow-up, direct feedback: "no blur
+   just fade in, and not slide up") — reverses the prior blur+translateY
+   settle (this file's own history: the reference's 8px blur/4px offset
+   originally matched --blur-8/--space-4 exactly). animation-duration
+   dropped to --duration-120 (was --duration-320) to match chunking now
+   being always one word (2026-08-23, "always 1 and faster") against a
+   much tighter --chunk-stagger (TextChunkReveal.tsx's own 15–40ms clamp,
+   down from 30–80ms) — a 320ms fade at that stagger would leave many
+   words mid-fade simultaneously, reading as a blur/wash rather than a
+   crisp word-by-word reveal. */
+.merlin-chunk-reveal-root {
+  white-space: pre-wrap;
 }
 
-.merlin-text-reveal {
-  --reveal: 1;
-  --reveal-duration: 0ms;
-  clip-path: inset(0 calc((1 - var(--reveal)) * 100%) 0 0);
-  transition: --reveal var(--reveal-duration) var(--ease-standard);
+.merlin-chunk {
+  display: inline-block;
+  opacity: 0;
+  animation-name: merlin-chunk-in;
+  animation-duration: var(--duration-120);
+  animation-timing-function: var(--ease-decel);
+  animation-fill-mode: forwards;
+  animation-delay: calc(var(--chunk-index, 0) * var(--chunk-stagger, 80ms));
+  will-change: opacity;
 }
 
-/* Motion indicates progress, and progress-indicating motion is
-   skippable (node-vocabulary.md principle 5 — same logic already
-   governing the trail's own click-to-skip). No JS branch needed: the
-   transition simply doesn't run, so useTextReveal's 0→1 write lands
-   instantly instead of animating. */
+@keyframes merlin-chunk-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Same skippability rule the prior clip-path wipe used — reduced motion
+   shows every chunk immediately rather than running the stagger. */
 @media (prefers-reduced-motion: reduce) {
-  .merlin-text-reveal {
-    transition: none;
+  .merlin-chunk {
+    animation: none;
+    opacity: 1;
   }
 }

@@ -1,0 +1,13 @@
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-8);
+  margin-bottom: var(--space-12);
+}
+
+.content {
+  display: grid;
+  gap: var(--space-16);
+  min-width: 0;
+}

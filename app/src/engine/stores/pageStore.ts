@@ -39,14 +39,39 @@ interface PageState {
   // honest "nothing selected" empty state rather than a crash; deep
   // linking to a specific entity isn't in this order's scope.
   selectedEntityId: string | null;
+  // Transient, one-shot (Phase 20 WO-1) — same pattern as focusModule:
+  // which Entity Detail tab (and optionally which item within it) an
+  // Overview preview card deep-links into. EntityDetailPage clears it
+  // after reading it, so it never re-triggers on an unrelated re-render.
+  // Not hash-encoded, same limitation as selectedEntityId itself.
+  entityDetailTarget: { tab: string; itemId?: string } | null;
+  // Per-page UI state that must survive a navigate-away/navigate-back
+  // round trip (direct feedback, 2026-08-30: "back browser button from
+  // entity to portfolio should remember scroll position and tab selected
+  // of discover") — a page component fully UNMOUNTS on navigation
+  // (Frame.tsx's renderPage switch renders exactly one page at a time),
+  // discarding any local useState with it, so this has to live somewhere
+  // that outlives the component. Keyed by an arbitrary string the page
+  // itself chooses (PageShell's own scrollRestoreKey prop uses the same
+  // key for scroll position) rather than one field per page, so a future
+  // page can opt in without a new store field. Scroll position and
+  // filter/view selections share one record per key since they're both
+  // "this page's own remembered UI state," not because they're
+  // conceptually the same thing.
+  pageUiState: Record<string, { scrollTop?: number; [key: string]: unknown }>;
+  setPageUiState: (key: string, patch: Record<string, unknown>) => void;
   setPage: (page: Page) => void;
   navigateToModule: (module: string) => void;
   clearFocusModule: () => void;
   // Click-through from Asset Discovery's grid (Phase 16): browse the
   // entity first, investigate second — this is the one action that sets
   // both page and selectedEntityId together, so no call site can set one
-  // without the other.
-  openEntityDetail: (entityId: string) => void;
+  // without the other. Optional `target` (Phase 20 WO-1): an Overview
+  // preview card deep-linking into its own tab with a specific item
+  // pre-selected — additive, every existing single-arg call site
+  // (EntitiesPage, HoldingsPage, DashboardPage) stays unaffected.
+  openEntityDetail: (entityId: string, target?: { tab: string; itemId?: string }) => void;
+  clearEntityDetailTarget: () => void;
 }
 
 // No router dependency (CLAUDE.md §5's closed list has none) — a plain
@@ -59,6 +84,10 @@ export const usePageStore = create<PageState>((set) => ({
   page: readHashPage(),
   focusModule: null,
   selectedEntityId: null,
+  entityDetailTarget: null,
+  pageUiState: {},
+  setPageUiState: (key, patch) =>
+    set((state) => ({ pageUiState: { ...state.pageUiState, [key]: { ...state.pageUiState[key], ...patch } } })),
   // Home is the only "investigation" place (it's where a turn's own
   // transcript/trail actually lives) — every other place is a browsable
   // index (routing law: "pages never host scene renders"), so an artifact
@@ -78,11 +107,12 @@ export const usePageStore = create<PageState>((set) => ({
     set({ page: "investigations", focusModule: module });
   },
   clearFocusModule: () => set({ focusModule: null }),
-  openEntityDetail: (entityId) => {
+  openEntityDetail: (entityId, target) => {
     window.location.hash = "entity-detail";
     useArtifactStore.getState().closeStack();
-    set({ page: "entity-detail", selectedEntityId: entityId });
+    set({ page: "entity-detail", selectedEntityId: entityId, entityDetailTarget: target ?? null });
   },
+  clearEntityDetailTarget: () => set({ entityDetailTarget: null }),
 }));
 
 // Browser back/forward support: the hash-writing above already creates a

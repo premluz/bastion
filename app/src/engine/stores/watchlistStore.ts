@@ -21,6 +21,7 @@ interface SeedRecord {
 interface WatchlistState {
   items: Record<string, WatchlistItem>;
   watch: (entityId: string, label: string, source: Exclude<WatchSource, "seeded">) => void;
+  unwatch: (entityId: string) => void;
 }
 
 // Seeded items (universe/watchlist.json, fictional statuses authored
@@ -48,5 +49,18 @@ export const useWatchlistStore = create<WatchlistState>((set) => ({
           [entityId]: { entityId, label, status, source, watchedAt: new Date().toISOString() },
         },
       };
+    }),
+  // 2026-09-02, direct feedback: "when clicked should indeed remove" — the
+  // bookmark toggle's own click handler now branches on isWatched instead
+  // of always calling watch() (a no-op once already present). Removes the
+  // record outright rather than marking it removed — the watchlist's own
+  // session-scoped model has no undo/tombstone concept elsewhere, so a
+  // removed item behaves exactly like one never watched, consistent with
+  // the store's existing "nothing persists after a reset" posture.
+  unwatch: (entityId) =>
+    set((state) => {
+      if (!state.items[entityId]) return state;
+      const { [entityId]: _removed, ...rest } = state.items;
+      return { items: rest };
     }),
 }));

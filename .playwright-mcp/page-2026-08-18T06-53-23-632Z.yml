@@ -1,0 +1,237 @@
+- generic [active] [ref=f6e1]:
+  - generic [ref=f6e7]:
+    - generic [ref=f6e8]:
+      - generic [ref=f6e9]: South Bow Corp
+      - button "Watch South Bow Corp" [ref=f6e12] [cursor=pointer]:
+        - status
+    - generic [ref=f6e19]:
+      - navigation "Tabs" [ref=f6e20]:
+        - button "Overview" [ref=f6e21] [cursor=pointer]
+        - button "Financials" [ref=f6e24] [cursor=pointer]
+        - button "Analysis" [ref=f6e27] [cursor=pointer]
+        - button "Earnings" [ref=f6e30] [cursor=pointer]
+        - button "News" [ref=f6e33] [cursor=pointer]
+        - button "Historical Data" [ref=f6e36] [cursor=pointer]
+      - generic [ref=f6e40]:
+        - generic [ref=f6e41]:
+          - generic [ref=f6e45]:
+            - generic [ref=f6e46]: South Bow Corp
+            - text: SBOW
+          - generic [ref=f6e47]:
+            - generic [ref=f6e48]:
+              - generic [ref=f6e49]:
+                - generic [ref=f6e50]: $40.33
+                - generic [ref=f6e51]: +0.07 (+0.17%)
+              - generic [ref=f6e52]:
+                - generic [ref=f6e53]:
+                  - text: As of
+                  - time [ref=f6e55]: Jul 2, 2026
+                - generic [ref=f6e56]: Day range $40.11 – $40.42
+              - generic [ref=f6e57]:
+                - generic [ref=f6e58]: After hours
+                - generic [ref=f6e59]: $40.29
+                - generic [ref=f6e60]: "-0.04 (-0.10%)"
+            - generic [ref=f6e62]:
+              - radiogroup "Period" [ref=f6e64]:
+                - radio "1H" [ref=f6e65] [cursor=pointer]
+                - radio "24H" [ref=f6e67] [cursor=pointer]
+                - radio "7D" [ref=f6e69] [cursor=pointer]
+                - radio "1M" [ref=f6e71] [cursor=pointer]
+                - radio "YTD" [ref=f6e73] [cursor=pointer]
+                - radio "1Y" [ref=f6e75] [cursor=pointer]
+                - radio "MAX" [checked] [ref=f6e77] [cursor=pointer]
+              - application [ref=f6e83]:
+                - generic [ref=f6e93]:
+                  - generic [ref=f6e94]:
+                    - generic [ref=f6e95]: 2026-04-17
+                    - generic [ref=f6e97]: 2026-04-26
+                    - generic [ref=f6e99]: 2026-05-05
+                    - generic [ref=f6e101]: 2026-05-14
+                    - generic [ref=f6e103]: 2026-05-23
+                    - generic [ref=f6e105]: 2026-06-01
+                    - generic [ref=f6e107]: 2026-06-10
+                    - generic [ref=f6e109]: 2026-06-19
+                    - generic [ref=f6e111]: 2026-07-02
+                  - generic [ref=f6e113]:
+                    - generic [ref=f6e114]: "0"
+                    - generic [ref=f6e116]: "15"
+                    - generic [ref=f6e118]: "30"
+                    - generic [ref=f6e120]: "45"
+                    - generic [ref=f6e122]: "60"
+          - generic [ref=f6e125]:
+            - generic [ref=f6e126]: Key statistics
+            - generic [ref=f6e129]:
+              - generic [ref=f6e130]:
+                - generic [ref=f6e131]: Forward P/E
+                - generic [ref=f6e132]: "14.2"
+              - generic [ref=f6e134]:
+                - generic [ref=f6e135]: Trailing P/E
+                - generic [ref=f6e136]: "15.6"
+              - generic [ref=f6e138]:
+                - generic [ref=f6e139]: Market Cap
+                - generic [ref=f6e140]: $8.6B
+              - generic [ref=f6e142]:
+                - generic [ref=f6e143]: Open
+                - generic [ref=f6e144]: $40.26
+              - generic [ref=f6e146]:
+                - generic [ref=f6e147]: Day Range
+                - generic [ref=f6e148]: $40.11 – $40.42
+              - generic [ref=f6e150]:
+                - generic [ref=f6e151]: Dividend Yield
+                - generic [ref=f6e152]: 3.1%
+              - generic [ref=f6e154]:
+                - generic [ref=f6e155]: 90-Day Range
+                - generic [ref=f6e156]: $36.32 – $42.93
+              - generic [ref=f6e158]:
+                - generic [ref=f6e159]: EPS
+                - generic [ref=f6e160]: $2.58
+              - generic [ref=f6e162]:
+                - generic [ref=f6e163]: Volume
+                - generic [ref=f6e164]: 0.9M
+          - generic [ref=f6e167]:
+            - generic [ref=f6e168]: Key issues
+            - generic [ref=f6e171]:
+              - generic [ref=f6e172]:
+                - button "Capacity expansion filing and regulatory review outcome" [expanded] [ref=f6e173] [cursor=pointer]
+                - generic [ref=f6e179]:
+                  - generic [ref=f6e181]:
+                    - generic [ref=f6e182]: Bullish
+                    - generic [ref=f6e186]: The cross-border capacity expansion filing is backed by real, elevated trading volume (3.3M shares, triple the recent average) rather than speculative chatter, and RiskLens's own low-moderate 27/100 score reflects infrastructure cash flows that stay stable through the review period regardless of the outcome. Take-or-pay contracts already underpin the bulk of revenue, so the filing is upside optionality on top of an already-durable base.
+                    - generic [ref=f6e187]:
+                      - generic [ref=f6e188]: MeridianFeed
+                      - generic [ref=f6e190]: RiskLens
+                  - generic [ref=f6e193]:
+                    - generic [ref=f6e194]: Bearish
+                    - generic [ref=f6e198]: The regulatory review for the export-terminal capacity increase is not yet decided, and the market has already given back roughly half its filing-day gain in the week since — shares eased from 42.93 back into the low 40s as the initial reaction cooled. Treating the filing as priced in ahead of an actual decision risks a second reversal if the review drags or comes back unfavorable.
+                    - generic [ref=f6e199]: MeridianFeed
+              - button "Dividend durability amid expansion capex" [ref=f6e203] [cursor=pointer]
+          - generic [ref=f6e209]:
+            - generic [ref=f6e210]: Stories & Analysis
+            - generic [ref=f6e213]:
+              - generic [ref=f6e216]:
+                - generic [ref=f6e217]: South Bow Corp jumps on cross-border capacity expansion filing
+                - generic [ref=f6e218]: MeridianFeed
+              - generic [ref=f6e221]:
+                - generic [ref=f6e222]: Volume triples as South Bow Corp's expansion filing draws analyst attention
+                - generic [ref=f6e223]: MeridianFeed
+              - generic [ref=f6e226]:
+                - generic [ref=f6e227]: RiskLens reads South Bow Corp's risk profile as low-moderate despite the expansion filing
+                - generic [ref=f6e228]: RiskLens
+              - generic [ref=f6e231]:
+                - generic [ref=f6e232]: South Bow Corp gives back half its filing-day gain over the following week
+                - generic [ref=f6e233]: MeridianFeed
+          - generic [ref=f6e235]:
+            - generic [ref=f6e236]:
+              - generic [ref=f6e237]: Notable price movement
+              - button "See all" [ref=f6e238] [cursor=pointer]:
+                - status
+            - generic [ref=f6e247]:
+              - generic [ref=f6e252]:
+                - time [ref=f6e255]: Jun 24, 2026
+                - generic [ref=f6e256]:
+                  - generic [ref=f6e257]: $41.70
+                  - generic [ref=f6e258]: "-0.71%"
+                - generic [ref=f6e263]: RiskLens reads South Bow Corp's risk profile as low-moderate despite the expansion filing
+                - generic [ref=f6e264]: Score of 27/100 reflects stable infrastructure cash flows even amid the regulatory review ahead.
+                - generic [ref=f6e265]: RiskLens
+              - generic [ref=f6e272]:
+                - time [ref=f6e275]: Jun 21, 2026
+                - generic [ref=f6e276]:
+                  - generic [ref=f6e277]: $42.93
+                  - generic [ref=f6e278]: +4.48%
+                - generic [ref=f6e283]: South Bow Corp jumps on cross-border capacity expansion filing
+                - generic [ref=f6e284]: Shares gain nearly 5% intraday as the pipeline operator files for additional export-terminal throughput.
+                - generic [ref=f6e285]: MeridianFeed
+              - generic [ref=f6e291]:
+                - time [ref=f6e294]: Jun 21, 2026
+                - generic [ref=f6e295]:
+                  - generic [ref=f6e296]: $42.93
+                  - generic [ref=f6e297]: +4.48%
+                - generic [ref=f6e302]: Volume triples as South Bow Corp's expansion filing draws analyst attention
+                - generic [ref=f6e303]: Trading volume peaks above 3.3M shares the day of the filing before settling into a steadier range.
+                - generic [ref=f6e304]: MeridianFeed
+        - generic [ref=f6e307]:
+          - generic [ref=f6e309]:
+            - generic [ref=f6e310]:
+              - generic [ref=f6e311]: Analyst consensus
+              - button "See all" [ref=f6e312] [cursor=pointer]:
+                - status
+            - generic [ref=f6e320]:
+              - generic [ref=f6e321]:
+                - generic [ref=f6e322]:
+                  - generic [ref=f6e323]: Analyst consensus
+                  - generic [ref=f6e324]: 12 analysts
+                - img "1 bearish, 4 neutral, 7 bullish" [ref=f6e325]
+                - generic [ref=f6e329]:
+                  - generic [ref=f6e330]: 1 bearish
+                  - generic [ref=f6e331]: 4 neutral
+                  - generic [ref=f6e332]: 7 bullish
+              - generic [ref=f6e333]:
+                - img "Low 34.5, average 44.8, high 52, current 40.34" [ref=f6e334]
+                - generic [ref=f6e339]:
+                  - generic [ref=f6e340]:
+                    - generic [ref=f6e341]: Low
+                    - generic [ref=f6e342]: $34.50
+                  - generic [ref=f6e343]:
+                    - generic [ref=f6e344]: Average
+                    - generic [ref=f6e345]: $44.80
+                  - generic [ref=f6e346]:
+                    - generic [ref=f6e347]: High
+                    - generic [ref=f6e348]: $52.00
+                  - generic [ref=f6e349]:
+                    - generic [ref=f6e350]: Current
+                    - generic [ref=f6e351]: $40.34
+          - generic [ref=f6e353]:
+            - generic [ref=f6e354]:
+              - generic [ref=f6e355]: Earnings
+              - button "See all" [ref=f6e356] [cursor=pointer]:
+                - status
+            - application [ref=f6e368]:
+              - generic [ref=f6e410]:
+                - generic [ref=f6e411]:
+                  - generic [ref=f6e412]: Q3 2025
+                  - generic [ref=f6e414]: Q4 2025
+                  - generic [ref=f6e416]: Q1 2026
+                  - generic [ref=f6e418]: Q2 2026
+                - generic [ref=f6e420]:
+                  - generic [ref=f6e421]: "0"
+                  - generic [ref=f6e423]: "0.2"
+                  - generic [ref=f6e425]: "0.4"
+                  - generic [ref=f6e427]: "0.6"
+                  - generic [ref=f6e429]: "0.8"
+          - generic [ref=f6e432]:
+            - generic [ref=f6e433]:
+              - generic [ref=f6e434]: Why is this moving?
+              - button "See all" [ref=f6e435] [cursor=pointer]:
+                - status
+            - generic [ref=f6e443]:
+              - generic [ref=f6e444]: Why is this moving?
+              - generic [ref=f6e445]: South Bow Corp's rally is backed by real volume and a concrete capacity-expansion filing, not speculative froth — but the position has already given back roughly half its filing-day gain, and RiskLens's 27/100 reads the move as low-moderate risk pending the regulatory review outcome. The dividend mandate is unaffected, and the underlying infrastructure cash flows remain stable through the review period.
+              - generic [ref=f6e446]:
+                - generic [ref=f6e447]: MeridianFeed
+                - generic [ref=f6e449]: RiskLens
+                - generic [ref=f6e451]: PortfolioAtlas
+              - generic [ref=f6e453]:
+                - text: As of
+                - time [ref=f6e455]: Jul 2, 2026
+          - generic [ref=f6e457]:
+            - generic [ref=f6e458]: Peers
+            - generic [ref=f6e461]:
+              - generic [ref=f6e462]: Related
+              - generic [ref=f6e463]:
+                - generic [ref=f6e464] [cursor=pointer]:
+                  - button "Open Halberg Materials AG" [ref=f6e465]
+                  - generic [ref=f6e468]:
+                    - generic [ref=f6e469]: Halberg Materials AG
+                    - text: Equity
+                - generic [ref=f6e470] [cursor=pointer]:
+                  - button "Open Meridian Logistics" [ref=f6e471]
+                  - generic [ref=f6e474]:
+                    - generic [ref=f6e475]: Meridian Logistics
+                    - text: Equity
+                - generic [ref=f6e476] [cursor=pointer]:
+                  - button "Open Kynthia Renewables" [ref=f6e477]
+                  - generic [ref=f6e480]:
+                    - generic [ref=f6e481]: Kynthia Renewables
+                    - text: Equity
+  - generic [ref=f6e482]: Q3 2025

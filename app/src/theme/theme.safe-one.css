@@ -1,0 +1,249 @@
+/* safe-one ◆ — near-black cybersecurity-risk register, faint purple
+   undertone, sparse indigo accent, glass-panel cards. Registered per
+   Phase 20 WO-2, derived from the supplied SAFE ONE reference screenshots
+   (a cybersecurity-risk dashboard) — not a retune of ops-dark, not
+   applied to any existing theme (2026-08-15 ruling). */
+[data-theme='safe-one'] {
+  /* Scheme-locked, same reasoning as ops-dark/glass. */
+  color-scheme: dark;
+
+  /* Surfaces — same L-ramp SHAPE as ops-dark (near-black → lighter card
+     steps), hue shifted 250→285 (this codebase's own existing "purple"
+     anchor, already --viz-4's hue) for the reference's faint purple
+     undertone, chroma raised slightly (.015→.02) so the tint actually
+     registers against near-black rather than reading as neutral gray. */
+  --surface-0: oklch(.13 .02 285);
+  --surface-1: oklch(.17 .02 285);
+  --surface-2: oklch(.21 .02 285);
+  --surface-3: oklch(.25 .02 285);
+
+  /* Ink — same trio as every other dark theme, legibility constant across
+     themes (node-vocabulary.md's own cross-cutting rule). */
+  --ink-primary: oklch(84.17% 0.01249 286.023);
+  --ink-secondary: oklch(.70 .01 285);
+  --ink-muted: oklch(.50 .01 285);
+
+  /* Accent — purple/indigo (reference's own sparse interactive-element
+     hue), hue 285 matching the surface undertone rather than the other
+     themes' blue-225, so accent and surface read as one coherent family
+     instead of two competing hues. --accent-alert/warn/ok stay on the
+     SAME hues as every other theme (principle 8: alert/warn/ok are
+     semantic-tone tokens, not a per-theme taste dial — only the
+     interactive-accent hue is this theme's own register). */
+  --accent-signal: oklch(.72 .17 285);
+  --accent-alert: oklch(.68 .19 25);
+  --accent-warn: oklch(.78 .16 75);
+  --accent-ok: oklch(.76 .15 165);
+
+  /* Delta indicators — unchanged from every other theme (principle 8: no
+     red/green performance-direction reinterpretation per-theme). */
+  --delta-up: oklch(.78 .26 165);
+  --delta-down: oklch(.72 .29 25);
+
+  /* Muted companions for large-AREA delta fills (2026-08-16 — see
+     theme.default.css's own comment for the full reasoning). */
+  --delta-up-bg: oklch(.78 .26 165 / .2);
+  --delta-down-bg: oklch(.72 .29 25 / .2);
+
+  /* Tint strength — see theme.default.css's own comment for the full
+     reasoning. Same values every theme uses (a structural opacity
+     relationship, not a color). */
+  --tint-subtle: var(--opacity-20);
+  --tint-strong: var(--opacity-40);
+
+  /* Data-viz series palette — SAME order as every other registered theme
+     (--viz-1 blue-225, --viz-2 green-165, ...). A "promote green to
+     --viz-1" swap was tried and reverted in this same change: --viz-1 is
+     read by exactly one consumer in the whole component tree
+     (AnalystConsensus.tsx's "bearish" segment) — swapping it would have
+     painted bearish sentiment green, backwards from every other theme's
+     blue-for-bearish/green-for-bullish ordering, for zero actual benefit
+     (every chart node's real PRIMARY series color is --accent-signal,
+     not --viz-1 — confirmed by reading TimeSeries.tsx/BarSeries.tsx/
+     RingChart.tsx directly, none of them start their own color array at
+     --viz-1). The reference's green-primary-trend-chart look is not
+     achievable through this token alone; see astryx-bridge.md's own SAFE
+     ONE section for the full reasoning and the 2026-08-15 ruling to ship
+     --accent-signal purple everywhere, including chart primaries, rather
+     than add a new --chart-primary-class token this phase. */
+  --viz-1: oklch(.75 .14 225);
+  --viz-2: oklch(.75 .14 165);
+  --viz-3: oklch(.75 .14 75);
+  --viz-4: oklch(.75 .14 285);
+  --viz-5: oklch(.75 .14 25);
+  --viz-6: oklch(.75 .14 115);
+
+  /* Structure — glass's own thin-border mechanics (reference's
+     glass-panel cards read as a hairline edge + subtle elevation, not a
+     flat fill), but this theme's own hue (285, not glass's 250/0-hue
+     white). */
+  --edge: oklch(1 0 0 / .09);
+  --edge-highlight: oklch(1 0 0 / .18);
+
+  /* Opaque twin of --surface-1, same purpose as every other theme
+     (EntityAssetTable-class consumers that must occlude, not tint). */
+  --surface-1-solid: oklch(.17 .02 285);
+
+  /* Page-pane fill — glass's own "raise alpha for a full-height pane"
+     mechanic, this theme's hue. */
+  --pane-surface: oklch(.17 .02 285 / .68);
+
+  --glow: 0 0 12px oklch(from var(--accent-signal) l c h / .35);
+  --scrim: oklch(.11 .02 285 / .35);
+
+  /* Neumorphic shading — near-zero, same restraint ruling as glass's own
+     "stacking a second soft-light cue on an already-soft surface reads
+     as mud" finding; this theme's cards are thin-bordered + subtly
+     blurred, not neumorphic. */
+  --shading-light: oklch(1 0 0 / .04);
+  --shading-dark: oklch(0 0 0 / .12);
+
+  /* Astryx's own --shadow-low (SegmentedControlItem's selected-state
+     drop-shadow, no per-theme override anywhere until now) defaults to
+     black at 20% alpha — tuned for a light/neutral base palette, reads as a
+     hard, heavy outer shadow against this theme's near-black surfaces,
+     confirmed too strong live ("doesn't feel like neo-morphism, too
+     strong shadow" — 2026-08-15). Same restraint as --shading-light/-dark
+     above: a soft, barely-there lift rather than a cast shadow. */
+  --shadow-low: 0px 1px 1px oklch(0 0 0 / .12), 0px 1px 4px oklch(0 0 0 / .12);
+
+  /* Glass material — subtle, not glass theme's full frosted-panel
+     treatment: the reference's cards read as barely-blurred dark panels
+     with a crisp hairline edge, closer to ops-dark's flat precision than
+     glass's own diffusion. Blur present (thin glass-panel read) but
+     shallow, no saturate boost (reference shows no color-shifted
+     backdrop-through-blur effect), minimal specular sweep. */
+  --surface-blur: 12px;
+  --surface-material: blur(var(--surface-blur));
+  --spec-alpha: .05;
+  --spec-radius: var(--spec-radius-lg);
+  /* Surfaces here are opaque oklch (no alpha channel) — genuinely
+     translucent surfaces are glass.css's own register (that theme's
+     documented --surface-opacity exception); this theme achieves its
+     "thin glass-panel" READ through blur/edge/spec alone, same posture
+     as glass-light's own --surface-opacity: 1. */
+  --surface-opacity: 1;
+
+  /* No canvas-backdrop gradient pools — the reference's near-black field
+     is flat, not a colored glow field like glass's own Linear-derived
+     backdrop; --surface-0 alone carries the purple undertone. */
+  --canvas-backdrop: none;
+
+  /* Motion binding — ops-dark's own matte-precision timing (this theme
+     is dense/precise like ops-dark, not float-paced like glass). */
+  --motion-enter-duration: var(--duration-200);
+  --motion-enter-ease: var(--ease-standard);
+  --motion-exit-duration: var(--duration-120);
+  --motion-exit-ease: var(--ease-standard);
+  --motion-assembly-stagger: 60ms;
+  --motion-table-stagger: 30ms;
+  /* Chart line/area reveal — see theme.default.css's own comment for the
+     full rationale (Phase 21 follow-up, 2026-08-31). */
+  --motion-chart-reveal-duration: var(--duration-480);
+
+  /* Type faces — identical across every registered theme, not a per-theme
+     register (node-vocabulary.md's cross-cutting rule, restated in every
+     other theme file). */
+  --face-ui: var(--font-ui);
+  --face-data: var(--font-data);
+  --face-voice: var(--font-voice);
+
+  /* Astryx cascade bridge — same target set as every other theme; full
+     mapping log in astryx-bridge.md. */
+  --color-background-body: var(--surface-0);
+  --color-background-surface: var(--surface-1);
+  --color-background-card: var(--surface-2);
+  --color-background-popover: var(--surface-3);
+  --color-text-primary: var(--ink-primary);
+  --color-text-secondary: var(--ink-secondary);
+  --color-text-disabled: var(--ink-muted);
+  --color-icon-primary: var(--ink-primary);
+  --color-icon-secondary: var(--ink-secondary);
+  --color-icon-disabled: var(--ink-muted);
+  --color-accent: var(--accent-signal);
+  --color-text-accent: var(--accent-signal);
+  --color-icon-accent: var(--accent-signal);
+  --color-error: var(--accent-alert);
+  --color-icon-red: var(--accent-alert);
+  --color-warning: var(--accent-warn);
+  --color-success: var(--accent-ok);
+  --color-border: var(--edge);
+  --color-shadow: oklch(0 0 0 / .5);
+}
+
+/* Panel treatment — same law as every other theme (node-vocabulary.md
+   principle 2): facts/reasoning render with zero elevation, outline
+   only. */
+[data-theme='safe-one'] .astryx-card.panelFlat {
+  background-color: var(--surface-2);
+  border: none solid var(--edge);
+  box-shadow: none;
+}
+
+/* panelFlatNoBorder — see theme.default.css's own comment for the full
+   rationale (Panel.tsx's `bordered={false}` opt-out, first consumer:
+   Peers on Entity Detail). Background matches this theme's own
+   panelFlat (--surface-1, not transparent — safe-one's own established
+   choice), border removed. */
+[data-theme='safe-one'] .astryx-card.panelFlatNoBorder {
+  background-color: var(--surface-1);
+  border: none;
+  box-shadow: none;
+}
+
+/* cardSurface1 — see theme.default.css's own comment for the full
+   rationale (Discover Assets grid card, --surface-1, subtle --edge
+   border). */
+[data-theme='safe-one'] .astryx-card.cardSurface1 {
+  background-color: var(--surface-1);
+  border: 1px solid var(--edge);
+  box-shadow: none;
+}
+
+/* Content area matches the sidenav's own background — same rule as
+   every other theme file's equivalent entry. */
+[data-theme='safe-one'] #astryx-app-shell-main {
+  background-color: var(--surface-0);
+}
+
+/* Composer surface separation — same rule as ops-dark/glass's own
+   entries: AppShell's elevated content sits on --surface-1, one step up
+   is --surface-2. */
+[data-theme='safe-one'] .astryx-chat-composer > div {
+  background-color: var(--surface-2);
+}
+
+/* Surface consistency — same rule as ops-dark/glass's own entries. */
+[data-theme='safe-one'] .astryx-chat-message-bubble.filled,
+[data-theme='safe-one'] .astryx-token.default {
+  background-color: var(--surface-2);
+}
+
+/* Same unbridged-overlay bug, TrendChart's own period selector (direct
+   feedback, 2026-08-23) — see theme.ops-dark.css's equivalent rule for
+   the full root-cause explanation, INCLUDING why both the selector shape
+   (matching Astryx's own :not(#\#) specificity-inflation trick) AND
+   !important are required — matched specificity alone was confirmed
+   live to still lose to Astryx's own @layer-wrapped rule. */
+[data-theme='safe-one'] .astryx-segmented-control:not(#\#):not(#\#):not(#\#) {
+  background-color: var(--surface-2) !important;
+}
+
+[data-theme='safe-one'] .astryx-segmented-control-item.selected:not(#\#):not(#\#):not(#\#) {
+  background-color: var(--surface-3) !important;
+}
+
+/* Tooltip legibility — same fix as every other theme file (Astryx's own
+   Tooltip inverts, needs an opaque surface for its chip text). */
+[data-theme='safe-one'] .astryx-tooltip {
+  color: var(--surface-1-solid);
+}
+
+/* Ring-gauge (Phase 20 WO-2 order, item 3): no new rule needed here —
+   RingGauge.tsx's fill always resolves through --accent-ok/-warn/-alert
+   (its `tone` prop, TONE_TO_TOKEN) and its track through --edge, both
+   already defined above with this theme's own values. Confirmed by
+   reading RingGauge.tsx directly rather than assuming a component-level
+   change was required — this theme achieves the reference's purple-arc
+   read purely through the token cascade, the "token-only adjustment, no
+   component change" the order itself asked for. */

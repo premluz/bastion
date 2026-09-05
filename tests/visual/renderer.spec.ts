@@ -17,7 +17,7 @@ const RENDERER_STORIES = [
   'renderer-fixtures--stress-test-dense-broken',
 ] as const;
 
-const THEMES = ['default', 'ops-dark', 'glass', 'glass-light'] as const;
+const THEMES = ['default', 'ops-dark', 'glass', 'glass-light', 'safe-one'] as const;
 
 for (const storyId of RENDERER_STORIES) {
   for (const theme of THEMES) {

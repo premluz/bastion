@@ -1,0 +1,113 @@
+/* Glow — a reusable pane-edge radial-light primitive (Phase 21), NOT a
+   registry node and NOT a new Panel prop (2026-08-15 ruling): a
+   presentation-only style hook, applied via className to any existing
+   Panel/Card, same escape-hatch posture as panelFlat. Position (bottom /
+   top-left / top-right) and clip (contained / overflowing) are separate,
+   composable classes — combine one position class with the clip
+   modifier. Color is NOT baked in here — every consumer sets --glow-color
+   inline (defaults to --accent-signal if unset). --delta-up/--delta-down
+   are the sanctioned principle-8 exception colors here, now used by two
+   named consumers: TrendChart's own line/glow (node-vocabulary.md's
+   Phase 21 section) and KeyIssuesCard's per-side bullish/bearish glow
+   (2026-08-15 follow-up) — confirms this primitive's own gate
+   requirement that it be genuinely reusable outside its first consumer.
+   .bottom lives on ::after, not ::before (2026-08-16 follow-up) — a pane
+   can now combine .topLeft/.topRight (::before) WITH .bottom (::after)
+   at once, e.g. KeyIssuesCard's own bullish/bearish panes getting a
+   corner glow AND a bottom glow together, same --glow-color for both.
+   Strength is now ALSO decoupled from color the same way (2026-08-17,
+   direct feedback: "subtler... should be a token, strength alpha % of
+   any color... could combine with any color in palette") — --glow-
+   strength, defaulting to --tint-strong (today's unchanged behavior for
+   every existing consumer), settable per-instance exactly like
+   --glow-color already is. TrendChart opts into --tint-subtle. */
+
+.root {
+  position: relative;
+  --glow-color: var(--accent-signal);
+  --glow-strength: var(--tint-strong);
+}
+
+.clipped {
+  overflow: hidden;
+}
+
+.unclipped {
+  overflow: visible;
+}
+
+.root::before,
+.root::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  /* Width and height are set independently per position variant below,
+     not scaled together — direct feedback (2026-08-15): "block the
+     scaling ratio," widen horizontally without inflating the shape
+     uniformly, so it flattens into an ellipse hugging the pane edge
+     rather than reading as a bigger circle. */
+  background: var(--glow-color);
+  filter: blur(var(--blur-40));
+  opacity: var(--glow-strength);
+  pointer-events: none;
+}
+
+/* Wide and flat — "stretch across... both horizontally... lowers slightly
+   down... like an orb or ellipse from the bottom" (2026-08-15). 90%, not
+   100%: still reads as a soft shape tapering at both side edges rather
+   than a flat bar touching the pane's own left/right border. Height
+   unchanged from the prior round's 2x --blur-z4 (blocking the "scale
+   ratio" means width grows without height following it) — position sits
+   flush at the pane's own bottom edge (2026-08-16: "should not overflow,
+   go out the pane" — reverses the immediately prior round's own extra
+   --blur-z2 downward push, which combined with .unclipped bled the glow
+   past the panel's border). TrendChart's own consumer — KeyIssuesCard
+   uses .bottomWide instead (below), its own distinct sizing. */
+.bottom::after {
+  left: 5%;
+  width: 90%;
+  height: calc(var(--blur-z4) * 2);
+  bottom: calc(var(--blur-z4) * -1);
+}
+
+/* KeyIssuesCard's own bullish/bearish pane sizing (2026-08-16 follow-up,
+   values supplied directly against its live-inspected output) — wider
+   and pushed further down than .bottom's own TrendChart-tuned defaults.
+   A separate class, not a .bottom edit: .bottom is shared with
+   TrendChart, which stays on its own already-confirmed "flush, no
+   overflow" values; KeyIssuesCard's panes are a smaller, denser surface
+   that reads better with a bigger, lower-set glow. */
+.bottomWide::after {
+  left: 9%;
+  width: 80%;
+  height: calc(var(--blur-z4) * 2);
+  bottom: calc(var(--blur-z4) * -2);
+}
+
+/* .topLeft/.topRight: 80% width (2026-08-16, widened from 60%) — currently
+   KeyIssuesCard's only consumer, safe to size directly for its own panes
+   rather than needing a second variant class. */
+.topLeft::before {
+  left: 0;
+  width: 80%;
+  /* Pushed down from the pane's own top edge (2026-08-15: "if it's
+     radial move it down") rather than sitting flush at top:0 — reads as
+     the glow settling INTO the pane rather than escaping above it. */
+  height: calc(var(--blur-z4) * 2);
+  top: calc(var(--blur-z4) * -0.25);
+}
+
+.topRight::before {
+  right: 0;
+  width: 80%;
+  height: calc(var(--blur-z4) * 2);
+  top: calc(var(--blur-z4) * -0.25);
+}
+
+/* Content must sit above the glow layer — every direct child that should
+   read as foreground content needs position:relative + z-index:1 of its
+   own; this primitive doesn't reach into consumer markup to add it. */
+.content {
+  position: relative;
+  z-index: 1;
+}

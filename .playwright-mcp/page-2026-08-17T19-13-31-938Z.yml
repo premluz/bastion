@@ -1,0 +1,28 @@
+- generic [active] [ref=f5e1]:
+  - generic [ref=f5e7]:
+    - generic [ref=f5e8]:
+      - generic [ref=f5e9]: Price
+      - radiogroup "Period" [ref=f5e10]:
+        - radio "1H" [ref=f5e11] [cursor=pointer]
+        - radio "24H" [ref=f5e13] [cursor=pointer]
+        - radio "7D" [ref=f5e15] [cursor=pointer]
+        - radio "1M" [ref=f5e17] [cursor=pointer]
+        - radio "YTD" [ref=f5e19] [cursor=pointer]
+        - radio "1Y" [ref=f5e21] [cursor=pointer]
+        - radio "MAX" [checked] [ref=f5e23] [cursor=pointer]
+    - application [ref=f5e29]:
+      - generic [ref=f5e39]:
+        - generic [ref=f5e40]:
+          - generic [ref=f5e41]: 2026-04-19
+          - generic [ref=f5e43]: 2026-05-03
+          - generic [ref=f5e45]: 2026-05-17
+          - generic [ref=f5e47]: 2026-05-30
+          - generic [ref=f5e49]: 2026-06-12
+          - generic [ref=f5e51]: 2026-07-02
+        - generic [ref=f5e53]:
+          - generic [ref=f5e54]: "0"
+          - generic [ref=f5e56]: "15"
+          - generic [ref=f5e58]: "30"
+          - generic [ref=f5e60]: "45"
+          - generic [ref=f5e62]: "60"
+  - generic [ref=f5e64]: "0"

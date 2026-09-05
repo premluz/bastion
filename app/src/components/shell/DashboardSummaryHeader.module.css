@@ -8,3 +8,14 @@
   display: grid;
   gap: var(--space-4);
 }
+
+/* Was two inline style objects on DashboardSummaryHeader.tsx — moved here
+   per CLAUDE.md rule 4. */
+.summaryColumn {
+  display: grid;
+  gap: var(--space-12);
+}
+
+.voiceFace {
+  font-family: var(--face-voice);
+}

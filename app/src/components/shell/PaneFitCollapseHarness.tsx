@@ -6,20 +6,25 @@ import './ArtifactStackMount.css';
 
 const PANE_IDS = ['pane-a', 'pane-b'] as const;
 
-// Phase 18 gate substitute (Prem's ruling, 2026-07-26): the real 4th-pane
-// collapse scenario can't be produced today — the transcript and artifact
-// panes never coexist under pageStore's own navigation law (see
-// STATE.md). This harness exercises usePaneFitCollapse directly against
-// two arbitrary fake panes forced to overflow a fixed-width row, so the
-// mechanism itself is verified correct even though nothing in the live
-// app calls it into a real 2-candidate choice yet.
+// Phase 18 gate substitute (Prem's ruling, 2026-07-26): at the time, the
+// real 2-candidate collapse scenario couldn't be produced — transcript and
+// artifact never coexisted under pageStore's own navigation law. That
+// premise no longer holds (2026-08-28: transcript auto-shows on any
+// non-Home page once a thread has started, so a Discover-page artifact
+// pane + auto-shown transcript genuinely do coexist and can both need to
+// collapse — see usePaneFitCollapse.ts's own comment for the live bug this
+// surfaced). This harness still exercises usePaneFitCollapse directly
+// against two arbitrary fake panes forced to overflow a fixed-width row —
+// kept even though the live app can now produce the real case too, since
+// an isolated harness verifies the mechanism without depending on the full
+// shell's own state wiring.
 //
 // Reuses ArtifactStackMount's own slide-in/out keyframes and
 // isMounted/isExiting lifecycle (not a plain toggle) — the exact class of
 // bug this order fixed (transform-skewed overflow readings, animation-
 // cancel oscillation on restore) only reproduces under a real animated
 // mount/unmount, not a static div.
-function AnimatedPane({ show, label }: { show: boolean; label: string }) {
+function AnimatedPane({ show, label, paneId }: { show: boolean; label: string; paneId: string }) {
   const [isMounted, setIsMounted] = useState(show);
   const [isExiting, setIsExiting] = useState(false);
 
@@ -41,6 +46,7 @@ function AnimatedPane({ show, label }: { show: boolean; label: string }) {
 
   return (
     <div
+      data-pane={paneId}
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -64,7 +70,7 @@ function AnimatedPane({ show, label }: { show: boolean; label: string }) {
 
 export function PaneFitCollapseHarness() {
   const rowRef = useRef<HTMLDivElement>(null);
-  const collapsedPane = useArtifactStore((state) => state.collapsedPane);
+  const collapsedPanes = useArtifactStore((state) => state.collapsedPanes);
   const touchPaneActivity = useArtifactStore((state) => state.touchPaneActivity);
 
   // Pane A touched first, then B — A is the less-recently-active pane, so
@@ -95,10 +101,10 @@ export function PaneFitCollapseHarness() {
             trap additions-only was built to avoid, just reached by a
             different addition. React's "Maximum update depth exceeded"
             caught this immediately. */}
-        <AnimatedPane show={collapsedPane !== 'pane-a'} label="Pane A" />
-        {collapsedPane === 'pane-a' && <CollapsedPaneChip pane="pane-a" />}
-        <AnimatedPane show={collapsedPane !== 'pane-b'} label="Pane B" />
-        {collapsedPane === 'pane-b' && <CollapsedPaneChip pane="pane-b" />}
+        <AnimatedPane show={!collapsedPanes.includes('pane-a')} label="Pane A" paneId="pane-a" />
+        {collapsedPanes.includes('pane-a') && <CollapsedPaneChip pane="pane-a" />}
+        <AnimatedPane show={!collapsedPanes.includes('pane-b')} label="Pane B" paneId="pane-b" />
+        {collapsedPanes.includes('pane-b') && <CollapsedPaneChip pane="pane-b" />}
       </div>
     </div>
   );

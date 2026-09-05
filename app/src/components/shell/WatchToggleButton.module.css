@@ -1,0 +1,30 @@
+/* Hidden until a caller's own hover rule reveals it (EntityAssetGrid's
+   own .cardWrapper:hover, EntityAssetTable's own tr:hover — two
+   different DOM shapes, so each caller writes its own selector against
+   this component's stable [data-watch-trigger] attribute rather than a
+   CSS-module hashed class name, which can't be targeted from outside
+   this file). Touch/no-hover pointers always see it (order's own "on
+   mobile visible of course") — prefers-hover:none is the correct signal,
+   not a viewport-width guess: a touch laptop or a mouse-driven narrow
+   window shouldn't flip this, only the actual absence of a hover-capable
+   pointer should. */
+.trigger {
+  opacity: 0;
+  transition: opacity var(--motion-enter-duration) var(--motion-enter-ease);
+}
+
+.trigger:focus-visible {
+  opacity: 1;
+}
+
+@media (prefers-hover: none) {
+  .trigger {
+    opacity: 1;
+  }
+}
+
+/* Always visible once watched — a state the user set is a fact, not a
+   hover affordance that should vanish when the pointer leaves. */
+.watched {
+  opacity: 1;
+}

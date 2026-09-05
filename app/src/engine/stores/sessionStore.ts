@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { ThinkingStep } from "../../contracts/thinking";
+import type { HydratedScene } from "../../contracts/scene";
 import { sceneFamily } from "../sceneFamily";
 
 export type TurnStatus = "resolved" | "unresolved" | "interrupted";
@@ -16,6 +17,12 @@ export type TurnStatus = "resolved" | "unresolved" | "interrupted";
 // for unresolved turns, which have no scene to derive a family from.
 // threadId is computed by addTurn itself (see its own comment) — never
 // supplied by a caller, so there is exactly one place this logic lives.
+// artifactRef/inlineScene (Phase 21, 2026-08-30, CLAUDE.md §3's own
+// inline-mount law): mutually exclusive, mirroring the resolved scene's
+// own mount decision exactly — a settled turn carries whichever one its
+// scene was mounted as, never both, never neither. artifactRef was
+// required until this phase (see settleTurn's own type below); it stays
+// on every turn that promotes to the artifact stack, unchanged.
 export interface Turn {
   id: string;
   utterance: string;
@@ -26,6 +33,7 @@ export interface Turn {
   trail: ThinkingStep[];
   trailElapsedMs: number;
   artifactRef?: string | undefined;
+  inlineScene?: HydratedScene | undefined;
   timestamp: number;
 }
 
@@ -48,9 +56,14 @@ interface SessionState {
   // Returns the resolved threadId so the caller can decide whether/when
   // to make it active (presentScene.ts skips this for alerts).
   addTurn: (turn: Omit<Turn, "threadId">) => string;
+  // artifactRef/inlineScene are mutually exclusive (Phase 21) — the caller
+  // (presentScene.ts) passes exactly one, matching the resolved scene's
+  // own mount decision.
   settleTurn: (
     id: string,
-    settled: { trail: ThinkingStep[]; trailElapsedMs: number; artifactRef: string },
+    settled:
+      | { trail: ThinkingStep[]; trailElapsedMs: number; artifactRef: string }
+      | { trail: ThinkingStep[]; trailElapsedMs: number; inlineScene: HydratedScene },
   ) => void;
   setActiveThread: (threadId: string | null) => void;
   // "New investigation" — clears turns only, same as before threading.
@@ -94,8 +107,13 @@ export const useSessionStore = create<SessionState>((set, get) => ({
 
     set((state) => ({
       turns: [
+        // "Still in flight" now means neither settled slot is populated
+        // (Phase 21 — a turn that already settled inline has no
+        // artifactRef and must not be marked interrupted just because a
+        // new query started; inlineScene is the other honest "this one
+        // finished" signal, mirroring artifactRef exactly).
         ...state.turns.map((existing) =>
-          existing.status === "resolved" && !existing.artifactRef
+          existing.status === "resolved" && !existing.artifactRef && !existing.inlineScene
             ? { ...existing, status: "interrupted" as const }
             : existing,
         ),

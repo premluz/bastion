@@ -1,0 +1,67 @@
+/* Container query, not a media query (2026-08-28 direct feedback: "all
+   items in artifact pane should be responsive... portfolio artifact...
+   doesn't resize and smaller screens chat overlap" — traced to
+   dashboard-layout's own hardcoded columns=6 fixed Grid, config.ts's own
+   value, which never reflows at any width, unlike scene-grid (Aldergate's
+   own issuer-dossier scene, confirmed working) whose columns default to
+   1). Container queries key off the PANE's real width (this node renders
+   inside a resizable artifact panel independent of the viewport), same
+   established pattern as SceneSummary.module.css's own precedent.
+
+   .container (establishes container-type) and .grid (the element the
+   @container rules below actually style) are DELIBERATELY two different
+   elements, not one — confirmed live before shipping: a single element
+   cannot reliably container-query its OWN size to restyle itself (every
+   @container rule silently matched zero times when container-type and
+   the styled selector were the same element, reproduced across every
+   tested width, 168px through 918px). SceneSummary.module.css's own
+   precedent already does this correctly too — its @container rule styles
+   a CHILD (.summaryRecommendationRow), never the .root that carries
+   container-type — this file just makes that same requirement explicit
+   with its own wrapper since Grid renders as a single element with no
+   inner wrapper of its own to reuse.
+
+   grid-template-columns is overridden directly here rather than touching
+   config.ts's `columns`/`spans` — confirmed live via getBoundingClientRect
+   that CSS grid's own span-clamping already reflows correctly on its
+   own: a child authored as `grid-column: span 3` (out of 6 columns)
+   automatically re-wraps into a working layout under a narrower
+   grid-template-columns with no overflow or overlap, so the six real
+   spans in config.ts's own `spans` array need no parallel breakpoint-
+   specific values of their own — one override here handles every span
+   value at once. !important is required: Astryx's own compiled Grid
+   styles win over a plain override via the same specificity-inflation
+   technique documented in theme.ops-dark.css's own SegmentedControl fix
+   (chained :not(#\#) selectors) — confirmed live here too before adding
+   !important. */
+.container {
+  container-type: inline-size;
+}
+
+/* Non-overlapping ranges (min-width AND max-width on each block),
+   not three cascading max-width-only thresholds — confirmed live that
+   overlapping @container ranges (all matching simultaneously at a given
+   width) did NOT resolve by plain source order the way overlapping
+   @media ranges reliably do elsewhere in this app: the earlier
+   max-width-only version (900px/560px/340px, narrowest last) produced
+   the MIDDLE rule's value at a width where all three matched, not the
+   last one — reproduced consistently across repeated fresh page loads,
+   not a one-off flake. Disjoint ranges sidestep the ambiguity entirely:
+   exactly one block can ever match a given width. */
+@container (min-width: 561px) and (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@container (min-width: 341px) and (max-width: 560px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@container (max-width: 340px) {
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+}

@@ -35,6 +35,37 @@ export const TimeSeriesPropsSchema = z.object({
   // measures. Absent, behavior is unchanged (single shared axis, as
   // every existing fixture already renders).
   rightAxisSeriesId: z.string().min(1).optional(),
+  // Phase 21 addendum: additive prop only, no new node type. Every existing
+  // usage keeps the default chart margins and outside-axis tick placement
+  // (unchanged, default false) — TrendChart alone opts in for its full-bleed,
+  // inner-axis presentation inside its own Panel.
+  bleed: z.boolean().optional(),
+  // 2026-09-01 addendum: additive, default undefined (falls back to
+  // bleed's own hardcoded 320px) — overrides the bleed-mode chart height
+  // for a caller that needs a shorter bleed chart than Entity Detail's
+  // own 320px (AssetTrendCard.tsx's own peer-comparison tile, "30% less
+  // height of current"), without touching the 320px default every other
+  // bleed usage (Entity Detail's real price chart) still relies on.
+  // Meaningless when bleed is false/omitted — ResponsiveContainer's own
+  // non-bleed height stays the existing hardcoded 200px regardless.
+  bleedHeight: z.number().positive().optional(),
+  // 2026-08-17 follow-up: additive, default false — every existing scene
+  // usage of this node keeps its current plain rendering. time-series is
+  // a generic, scene-driven bind node with no inherent trend direction
+  // (unlike TrendChart, a TradableAsset-specific literal-prop node with a
+  // real single up/down to key its own glow off of), so this always uses
+  // the theme's own --accent-signal, never --delta-up/--delta-down.
+  glow: z.boolean().optional(),
+  // 2026-08-22 addendum: additive, default false — the Y-axis's bleed-mode
+  // domain (ChartBleedAxes) is hardcoded to [0, 'auto'], correct for a
+  // long daily history where the actual price band is a small fraction of
+  // the 0-baseline range, but wrong for a short/tight window (e.g.
+  // TrendChart's own intraday 1H/24H periods) where anchoring at 0
+  // visually compresses real movement into a flat-looking line near the
+  // axis top. true switches the domain to ['auto', 'auto'] (recharts'
+  // own real min/max of the plotted data) instead. Every existing usage
+  // keeps the current [0, 'auto'] behavior unchanged.
+  yAutoScale: z.boolean().optional(),
   data: SeriesDataSetSchema.refine((d) => d.series.length <= 3, {
     message: "time-series supports at most 3 series lines",
   }),

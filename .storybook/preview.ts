@@ -8,6 +8,7 @@ import '../app/src/theme/theme.default.css';
 import '../app/src/theme/theme.ops-dark.css';
 import '../app/src/theme/theme.glass.css';
 import '../app/src/theme/theme.glass-light.css';
+import '../app/src/theme/theme.safe-one.css';
 
 const preview: Preview = {
   parameters: {
@@ -24,6 +25,7 @@ const preview: Preview = {
           { value: 'ops-dark', title: 'ops-dark' },
           { value: 'glass', title: 'glass' },
           { value: 'glass-light', title: 'glass-light' },
+          { value: 'safe-one', title: 'safe-one' },
         ],
         dynamicTitle: true,
       },

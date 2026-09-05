@@ -1,6 +1,5 @@
-import { ClickableCard } from '@astryxdesign/core/ClickableCard';
-import { Text } from '@astryxdesign/core/Text';
-import { AssetLogo } from './AssetLogo';
+import { findMarketAsset } from '../../engine/assetDiscovery';
+import { DiscoveryItemRow } from './DiscoveryItemRow';
 
 interface RelatedEntity {
   id: string;
@@ -8,48 +7,54 @@ interface RelatedEntity {
   type: string;
 }
 
-// "Related/compare" strip (Phase 16 revision) — venue peers or sector
-// peers, small card row. Deliberately NOT entity-header itself (that
-// node's own vocabulary caps at 3-5 attributes for a full-width band; a
-// tiny card here needs less than that) — a lighter echo reusing the same
-// AssetLogo identity glyph the Discover grid and strips already
-// established, so a related entity reads as the same kind of object
-// wherever it appears. Click browses to that entity's own detail page
-// (same "browse first" law as the grid), never straight into an
-// investigation.
+// "Related/compare" strip (Phase 16 revision), Peers on Entity Detail —
+// venue peers or sector peers. Own "Related" label REMOVED 2026-08-19
+// (direct feedback: "related should not have title in comp, pane would
+// have as now duplicate") — this component's only real consumer,
+// AssetOverviewTab.tsx, already wraps it in `<Panel title="Peers">`,
+// which rendered its own title row above this one's identical-purpose
+// "Related" label, a genuine stacked duplicate.
+//
+// Now built from DiscoveryItemRow (2026-08-19, same round, direct
+// feedback: "actually in related use item comp that is used in notable
+// movers... each item has also sparkline and price and change, if we
+// have this as comp that item that's great lets have it in peers") —
+// the same row Notable Movers/Trending/Newly Added already use, not a
+// second bespoke card layout. Each related entity's own market data
+// (price, point-over-point delta, sparkline) is looked up live via
+// findMarketAsset (assetDiscovery.ts's own single-entity lookup, the
+// same helper EntityDetailPage.tsx already calls) — TradableAsset's own
+// `related` field only ever carried {id, name, assetClass} (no price
+// data authored there), so this is a real data join at render time, not
+// a passthrough. An entity outside MARKET_ENTITY_IDS (e.g. South Bow
+// Corp's own related "halberg-materials," which findMarketAsset can't
+// resolve) still renders — DiscoveryItemRow already handles an absent
+// sparklinePoints/deltaPercent honestly (no fabricated glyph or number),
+// same "never fabricate" posture as every other row on this page — it
+// just shows name/detail with a plain "—" value instead of a crash or a
+// silently-dropped row.
 export function RelatedEntitiesStrip({ entities, onOpen }: { entities: RelatedEntity[]; onOpen: (id: string) => void }) {
   if (entities.length === 0) return null;
   return (
-    <div style={{ display: 'grid', gap: 'var(--space-12)' }}>
-      <Text type="label">Related</Text>
-      {/* auto-fit, not a fixed repeat(entities.length, ...) — the fixed
-          version couldn't reflow at all (found live, Demo Flow #1 order):
-          3 columns × 160px minimum forced a ~500px floor regardless of
-          available width, overflowing once the artifact/transcript panes
-          narrow this page's own content column. */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 'var(--space-12)' }}>
-        {/* panelFlat (Panel.tsx's own class, theme files) — transparent
-            background + edge-only border, no elevation at rest. Reused
-            here rather than duplicated (direct feedback, 2026-08-02):
-            ClickableCard's built-in hover overlay still applies
-            regardless of className, so this reads as a plain outlined
-            surface until hover. */}
-        {entities.map((related) => (
-          <ClickableCard key={related.id} label={`Open ${related.name}`} variant="default" className="panelFlat" padding={3} onClick={() => onOpen(related.id)}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
-              <AssetLogo id={related.id} />
-              <div>
-                <Text type="body" weight="semibold" display="block">
-                  {related.name}
-                </Text>
-                <Text type="supporting" color="secondary">
-                  {related.type}
-                </Text>
-              </div>
-            </div>
-          </ClickableCard>
-        ))}
-      </div>
+    <div style={{ display: 'grid' }}>
+      {entities.map((related) => {
+        const asset = findMarketAsset(related.id);
+        const value = asset?.price !== undefined ? `$${asset.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—';
+        return (
+          <DiscoveryItemRow
+            key={related.id}
+            row={{
+              id: related.id,
+              name: related.name,
+              detail: related.type,
+              value,
+              ...(asset?.sparklinePoints && asset.sparklinePoints.length > 0 ? { sparklinePoints: asset.sparklinePoints } : {}),
+              ...(asset?.deltaRecent !== undefined ? { deltaPercent: asset.deltaRecent } : {}),
+            }}
+            onOpenDetail={onOpen}
+          />
+        );
+      })}
     </div>
   );
 }

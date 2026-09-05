@@ -1,0 +1,40 @@
+.root {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.priceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-12);
+  flex-wrap: wrap;
+}
+
+.priceRowStart {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-12);
+  flex-wrap: wrap;
+}
+
+.deltaOk {
+  color: var(--accent-ok);
+}
+
+.deltaAlert {
+  color: var(--accent-alert);
+}
+
+.metaRow {
+  display: flex;
+  gap: var(--space-16);
+  flex-wrap: wrap;
+}
+
+.afterHoursRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}

@@ -82,6 +82,20 @@
   --delta-up: oklch(.52 .19 165);
   --delta-down: oklch(.50 .22 25);
 
+  /* Muted companions for large-AREA delta fills (2026-08-16 — see
+     theme.default.css's own comment for the full reasoning). Alpha .2,
+     same ratio as every other theme — a light-scheme background still
+     needs the fill to read as tinted, not washed to invisibility, so the
+     same alpha (not a lighter one) is used here too. */
+  --delta-up-bg: oklch(.52 .19 165 / .2);
+  --delta-down-bg: oklch(.50 .22 25 / .2);
+
+  /* Tint strength — see theme.default.css's own comment for the full
+     reasoning. Same values every theme uses (a structural opacity
+     relationship, not a color). */
+  --tint-subtle: var(--opacity-20);
+  --tint-strong: var(--opacity-40);
+
   /* Data-viz series palette — same six hues as glass, darkened together so
      series stay mutually distinguishable AND legible on a light ground. */
   --viz-1: oklch(.55 .15 225);
@@ -115,6 +129,11 @@
      --color-shadow's own scheme-flip below). */
   --shading-light: oklch(1 0 0 / .10);
   --shading-dark: oklch(.24 .012 250 / .06);
+
+  /* Pass-through of Astryx's own --shadow-low default (light-scheme branch,
+     since this theme is scheme-locked light) — added only because safe-one
+     needed a genuinely different, softer value (2026-08-15); unaffected here. */
+  --shadow-low: oklch(0 0 0 / .1);
 
   /* --edge-glow removed 2026-08-08 — see theme.glass.css's own note. */
 
@@ -151,6 +170,9 @@
   --motion-exit-ease: var(--ease-decel);
   --motion-assembly-stagger: 90ms;
   --motion-table-stagger: 45ms;
+  /* Chart line/area reveal — see theme.default.css's own comment for the
+     full rationale (Phase 21 follow-up, 2026-08-31). */
+  --motion-chart-reveal-duration: var(--duration-480);
 
   /* Type faces — identical across every registered theme; typeface isn't a
      ◆ per-theme register. */
@@ -198,6 +220,24 @@
   box-shadow: none;
 }
 
+/* panelFlatNoBorder — see theme.default.css's own comment for the full
+   rationale (Panel.tsx's `bordered={false}` opt-out, first consumer:
+   Peers on Entity Detail). */
+[data-theme='glass-light'] .astryx-card.panelFlatNoBorder {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* cardSurface1 — see theme.default.css's own comment for the full
+   rationale (Discover Assets grid card, --surface-1, subtle --edge
+   border). */
+[data-theme='glass-light'] .astryx-card.cardSurface1 {
+  background-color: var(--surface-1);
+  border: 1px solid var(--edge);
+  box-shadow: none;
+}
+
 /* Content area matches the sidenav's own background — same rule and
    reasoning as theme.glass.css's equivalent entry. --surface-0 is
    transparent here too, so the canvas shows through both equally. */
@@ -218,6 +258,20 @@
 [data-theme='glass-light'] .astryx-chat-message-bubble.filled,
 [data-theme='glass-light'] .astryx-token.default {
   background-color: var(--surface-2);
+}
+
+/* Same unbridged-overlay bug, TrendChart's own period selector (direct
+   feedback, 2026-08-23) — see theme.ops-dark.css's equivalent rule for
+   the full root-cause explanation, INCLUDING why both the selector shape
+   (matching Astryx's own :not(#\#) specificity-inflation trick) AND
+   !important are required — matched specificity alone was confirmed
+   live to still lose to Astryx's own @layer-wrapped rule. */
+[data-theme='glass-light'] .astryx-segmented-control:not(#\#):not(#\#):not(#\#) {
+  background-color: var(--surface-2) !important;
+}
+
+[data-theme='glass-light'] .astryx-segmented-control-item.selected:not(#\#):not(#\#):not(#\#) {
+  background-color: var(--surface-3) !important;
 }
 
 /* Tooltip legibility (direct feedback, 2026-08-07: "tooltip on dark mode text

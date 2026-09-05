@@ -19,7 +19,7 @@
    tuned per-theme already), never Astryx's own unbridged border colour. */
 .artifactCard:global(.astryx-card)[data-variant='default'] {
   background-color: var(--surface-1);
-  border: 1px solid var(--edge);
+  border: 0 solid var(--edge);
   /* Overrides PaneTitleBar.module.css's own defaults (direct feedback,
      2026-08-04: "artifacts pane header should also have gradient like
      page panes... should be a comp") — same two overrides
@@ -103,4 +103,39 @@
    automatically, where an explicit `height:100%` would not. */
 .artifactCard {
   margin: 0 0 var(--space-32) 0;
+  /* min-width:0 (2026-08-28 direct feedback: content clipped at the
+     pane's own right edge at a real narrow-canvas width, e.g. Storybook's
+     own reduced iframe with its sidebar/addons panel open). Card is a
+     flex item of .artifactPane's own display:flex (comment above) and
+     defaults to min-width:auto like any flex item — refuses to shrink
+     below its content's intrinsic width, so at 1200x560 this card
+     measured 593px while its own pane was only 504px, spilling SceneSummary's
+     sources-chip row and other content past the pane's right edge with no
+     wrap and no visible scrollbar. Same bug/fix class as
+     DataTable.module.css/Comparison.module.css's own
+     .astryx-table-scroll-wrapper fix and assembly.module.css's own
+     .nodeWrapper fix earlier the same day — this is the one remaining
+     unshrinkable link in the chain, one level higher (the pane's own
+     direct child), not inside any scene node. */
+  min-width: 0;
+}
+
+/* Was three inline style objects on ArtifactStack.tsx — moved here per
+   CLAUDE.md rule 4. */
+.stackColumn {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.scrollRegion {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.cardMetaRow {
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
 }

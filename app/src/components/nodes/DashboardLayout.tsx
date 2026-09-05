@@ -1,9 +1,17 @@
 import { Children, type ReactNode } from 'react';
-import { Grid, GridSpan } from '@astryxdesign/core/Grid';
+import { Grid, GridSpan, type GridColumns } from '@astryxdesign/core/Grid';
 import { config } from '../../config';
+import styles from './DashboardLayout.module.css';
 
 interface DashboardLayoutProps {
-  columns?: number;
+  // GridColumns (Astryx's own union, 2026-08-30 follow-up: "panes should
+  // be responsive and fluid... on mobile or small space stack") widens
+  // this beyond a fixed number — additive, every existing numeric caller
+  // (config.ts default, most scene dashboards) is unaffected. A caller
+  // that wants true reflow-to-stacking passes the responsive object
+  // form instead (columns={{ minWidth, max, repeat: 'fit' }}) — see
+  // EntityAssetGrid.tsx/AssetCardGrid.tsx for the first real consumers.
+  columns?: GridColumns;
   spans?: readonly (number | 'full')[];
   children?: ReactNode;
 }
@@ -21,12 +29,14 @@ export function DashboardLayout({
 }: DashboardLayoutProps) {
   const items = Children.toArray(children);
   return (
-    <Grid columns={columns} gap={4}>
-      {items.map((child, index) => (
-        <GridSpan key={index} columns={spans[index] ?? 1}>
-          {child}
-        </GridSpan>
-      ))}
-    </Grid>
+    <div className={styles.container}>
+      <Grid columns={columns} gap={4} className={styles.grid}>
+        {items.map((child, index) => (
+          <GridSpan key={index} columns={spans[index] ?? 1}>
+            {child}
+          </GridSpan>
+        ))}
+      </Grid>
+    </div>
   );
 }

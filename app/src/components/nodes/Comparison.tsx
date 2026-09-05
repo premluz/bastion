@@ -2,6 +2,7 @@ import { Table, proportional } from '@astryxdesign/core/Table';
 import { Text } from '@astryxdesign/core/Text';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import type { ComparisonProps } from '../../contracts/props/comparison';
+import styles from './Comparison.module.css';
 
 // Widened to match TableCellSchema's Phase 8E sparkline and Phase 8F
 // entity-link variants — comparison itself never authors either, this is
@@ -41,7 +42,7 @@ export function Comparison({ title, data }: ComparisonProps) {
   }));
 
   return (
-    <div style={{ display: 'grid', gap: 'var(--space-8)' }}>
+    <div className={styles.root}>
       {title && <Text type="label">{title}</Text>}
       <Table<Row> data={data.rows} columns={columns} density="compact" dividers="grid" textOverflow="wrap" hasHover />
     </div>

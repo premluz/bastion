@@ -41,8 +41,19 @@ export function TranscriptPaneMount({ show }: TranscriptPaneMountProps) {
   return (
     <div
       className={layout.transcriptPane}
+      data-pane="transcript"
       style={{
-        animationName: isExiting ? 'merlin-panel-slide-out' : 'merlin-panel-slide-in',
+        // --merlin-pane-basis/--merlin-pane-min-width match
+        // .transcriptPane's own resting flex-basis/min-width
+        // (Frame.module.css) — the reflow keyframes (see
+        // ArtifactStackMount.css's own comment) animate both down to 0 on
+        // exit / up to these values on enter, since the class's own
+        // values would otherwise clamp the shrink before it completes.
+        // 480px (paneFloors.ts's CHAT_PANE_MAX, raised from 400 the same
+        // round .transcriptPane's own max-width was).
+        ['--merlin-pane-basis' as string]: '480px',
+        ['--merlin-pane-min-width' as string]: '320px',
+        animationName: isExiting ? 'merlin-panel-reflow-out-basis' : 'merlin-panel-reflow-in-basis',
         animationDuration: isExiting ? 'var(--motion-exit-duration)' : 'var(--motion-enter-duration)',
         animationTimingFunction: isExiting ? 'var(--motion-exit-ease)' : 'var(--motion-enter-ease)',
         animationFillMode: 'forwards',

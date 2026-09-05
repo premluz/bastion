@@ -59,4 +59,22 @@ export const config = {
     columns: 6,
     spans: ["full", "full", 2, 2, 2, 3, 3],
   },
+  assetCardGrid: {
+    // Entity card grid (Discover's own grid view + the inline asset-card-grid
+    // registry node, Phase 21 follow-up, 2026-08-30: "panes should be
+    // responsive and fluid... on mobile or small space stack") — a
+    // RESPONSIVE column count, not dashboard-layout's own fixed default:
+    // both consumers previously hardcoded columns={4}, which stayed 4-per-
+    // row even in a narrow transcript pane or on mobile, cramming the card's
+    // identity/chart/price content instead of reflowing. minWidth is the
+    // narrowest a card can get before its own content (logo+name, chart,
+    // price+delta) starts crowding — measured against the card's real
+    // rendered content, not guessed; `repeat: 'fit'` (not the default
+    // 'fill') is what lets tracks actually COLLAPSE to fewer columns
+    // instead of just shrinking every card equally, so a narrow-enough
+    // container genuinely stacks to a single column.
+    minWidth: 240,
+    max: 4,
+    repeat: "fit",
+  },
 } as const;

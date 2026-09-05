@@ -34,12 +34,30 @@ export const SceneNodeSchema: z.ZodType<SceneNode> = z.lazy(() =>
 export const SceneDataEntrySchema = z.union([DataSetSchema, UniverseRefSchema]);
 export type SceneDataEntry = z.infer<typeof SceneDataEntrySchema>;
 
+// A scene's own suggested next queries (2026-08-31, direct feedback: "a
+// good follow-up strategy... build chips as part of scenario, these
+// would be per scenario next suggested followups") — authored per scene,
+// not computed: the scene author (or, later, an LLM resolver) decides
+// what a reasonable next question is, same "order/content is authored,
+// never derived" discipline the rest of this contract already holds
+// (contribution-bars' own row order, ThinkingStep sequencing). `intent`
+// is resolved exactly like a typed query — through submitQuery/the same
+// IntentResolver every other query goes through — so a follow-up scene
+// needs no new resolution path, only a new entry in some scene's own
+// `intents` array to match against.
+export const SceneFollowUpSchema = z.object({
+  label: z.string().min(1),
+  intent: z.string().min(1),
+});
+export type SceneFollowUp = z.infer<typeof SceneFollowUpSchema>;
+
 const sceneShape = {
   id: z.string().min(1),
   title: z.string().min(1),
   intents: z.array(z.string().min(1)),
   thinking: z.array(ThinkingStepSchema),
   layout: SceneNodeSchema,
+  followUps: z.array(SceneFollowUpSchema).optional(),
 };
 
 // As authored in scenes/*.scene.json or pushed over MCP — data entries

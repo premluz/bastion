@@ -1,6 +1,6 @@
 import { proportional, type TableColumn } from '@astryxdesign/core/Table';
 import { Text } from '@astryxdesign/core/Text';
-import { Sparkline } from '../nodes/Sparkline';
+import { AssetTrendGlyph } from '../nodes/AssetTrendGlyph';
 import type { Row, SortableHeader } from './EntityAssetTableCells';
 
 // Category-specific column sets (EntityAssetTable.tsx's own comment):
@@ -11,6 +11,13 @@ import type { Row, SortableHeader } from './EntityAssetTableCells';
 // no state, same column shapes as before extraction. Widths use
 // `proportional(n)` (relative share), not raw percent strings — see
 // EntityAssetTableCells.tsx's own comment on why.
+//
+// Trend column passes `seed={asset.id}` (2026-08-31, direct feedback:
+// "sparklines in table Discover Assets should also be generated like
+// those in cards") — matching AssetCardVisual.tsx's own AssetTrendGlyph
+// call exactly, so table rows draw from the same generateWalk generator
+// as card rows rather than asset.sparklinePoints (a differently-shaped
+// mockSparkline series carried on the Row itself).
 
 // Bonds/Credit Funds: Yield, Credit Rating, Outstanding, Trend
 export function buildBondColumns(sortableHeader: SortableHeader): TableColumn<Row>[] {
@@ -48,7 +55,7 @@ export function buildBondColumns(sortableHeader: SortableHeader): TableColumn<Ro
       key: 'trend',
       header: 'Trend',
       width: proportional(14),
-      renderCell: (asset: Row) => <Sparkline points={asset.sparklinePoints} />,
+      renderCell: (asset: Row) => <AssetTrendGlyph variant="inline" seed={asset.id} isUp={asset.deltaRecent >= 0} />,
     },
   ];
 }
@@ -89,7 +96,7 @@ export function buildRealEstateColumns(sortableHeader: SortableHeader): TableCol
       key: 'trend',
       header: 'Trend',
       width: proportional(14),
-      renderCell: (asset: Row) => <Sparkline points={asset.sparklinePoints} />,
+      renderCell: (asset: Row) => <AssetTrendGlyph variant="inline" seed={asset.id} isUp={asset.deltaRecent >= 0} />,
     },
   ];
 }
@@ -113,7 +120,7 @@ export function buildDefaultColumns(sortableHeader: SortableHeader, deltaCell: T
       key: 'trend',
       header: 'Trend',
       width: proportional(16),
-      renderCell: (asset: Row) => <Sparkline points={asset.sparklinePoints} />,
+      renderCell: (asset: Row) => <AssetTrendGlyph variant="inline" seed={asset.id} isUp={asset.deltaRecent >= 0} />,
     },
   ];
 }

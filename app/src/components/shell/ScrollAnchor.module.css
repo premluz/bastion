@@ -1,0 +1,19 @@
+/* Scroll container + pinned-to-bottom inner content (ScrollAnchor.tsx).
+   margin-top: auto on .inner pins short content to the bottom without the
+   flexbox+overflow scrollTop-clamp trap that `justify-content: flex-end`
+   on the scroll container itself would hit once content overflows (see
+   ScrollAnchor.tsx's own comment for the full explanation). */
+.scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.inner {
+  display: grid;
+  gap: var(--space-24);
+  padding: var(--space-24);
+  margin-top: auto;
+}

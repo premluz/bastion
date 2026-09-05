@@ -1,0 +1,51 @@
+.root {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.subHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.legendDotEstimate {
+  background-color: var(--viz-2);
+}
+
+.legendDotActual {
+  background-color: var(--accent-signal);
+}
+
+.footerRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-16);
+}
+
+.footerColumn {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.deltaOk {
+  color: var(--accent-ok);
+}
+
+.deltaAlert {
+  color: var(--accent-alert);
+}

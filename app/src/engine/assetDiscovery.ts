@@ -60,23 +60,64 @@ function getYieldPoints(entityId: string): SeriesPoint[] {
   return dataset.series[0]?.points ?? [];
 }
 
+// Crypto/equity entities carry a PRICE series (`*-price-volume-90d`), not
+// a yield-volatility one — getYieldPoints() above only ever matched
+// bonds/real-estate/credit-funds (nordbond-2029, aldergate-estates,
+// helios-yield-fund), so every other market entity (South Bow Corp,
+// Zenith Protocol, Solent Stablecoin, Meridian Logistics, Kynthia
+// Renewables, Valiant Pharma, Nexus Tech, Beacon Retail, Forge Mining)
+// silently fell through to deltaRecent: 0 and no sparkline — confirmed by
+// checking datasets.json directly: no entity has both keys, so this is
+// the SECOND lookup to try, not a merge. vantara-metals (commodities) has
+// neither key and genuinely has no real series to compute from — stays
+// honestly deltaRecent: 0/no sparkline, this codebase's own established
+// "never fabricate" rule, not a gap this fix should paper over.
+function getPricePoints(entityId: string): SeriesPoint[] {
+  const dataset = datasets[`${entityId}-price-volume-90d`];
+  if (!dataset || dataset.kind !== "series") return [];
+  return dataset.series[0]?.points ?? [];
+}
+
 export function getMarketAssets(): MarketAsset[] {
   const assets: MarketAsset[] = [];
   for (const id of MARKET_ENTITY_IDS) {
     const record = entities[id];
     if (!record) continue;
-    const points = getYieldPoints(id);
-    const last = points[points.length - 1];
-    const prev = points[points.length - 2];
+    const yieldPoints = getYieldPoints(id);
+    if (yieldPoints.length > 0) {
+      const last = yieldPoints[yieldPoints.length - 1];
+      const prev = yieldPoints[yieldPoints.length - 2];
+      assets.push({
+        id,
+        name: record.entity.name,
+        type: record.entity.type,
+        category: record.entity.tags?.[0] ?? "asset",
+        ...(record.intent !== undefined ? { intent: record.intent } : {}),
+        yield: last?.y ?? 0,
+        deltaRecent: last && prev ? Math.round((last.y - prev.y) * 100) / 100 : 0,
+        sparklinePoints: yieldPoints.slice(-SPARKLINE_WINDOW),
+      });
+      continue;
+    }
+    // Price-style path — deltaRecent here is a POINT-OVER-POINT PERCENT
+    // change (matching the interface's own documented "24h price %" for
+    // crypto/stocks, distinct from the yield path's raw pp difference
+    // above), computed the same way EntityAssetTableCells.tsx's own
+    // default-category delta cell already reads this field regardless of
+    // which unit produced it.
+    const pricePoints = getPricePoints(id);
+    const lastPrice = pricePoints[pricePoints.length - 1];
+    const prevPrice = pricePoints[pricePoints.length - 2];
+    const deltaRecent = lastPrice && prevPrice && prevPrice.y !== 0 ? Math.round(((lastPrice.y - prevPrice.y) / prevPrice.y) * 10000) / 100 : 0;
     assets.push({
       id,
       name: record.entity.name,
       type: record.entity.type,
       category: record.entity.tags?.[0] ?? "asset",
       ...(record.intent !== undefined ? { intent: record.intent } : {}),
-      yield: last?.y ?? 0,
-      deltaRecent: last && prev ? Math.round((last.y - prev.y) * 100) / 100 : 0,
-      sparklinePoints: points.slice(-SPARKLINE_WINDOW),
+      ...(lastPrice ? { price: lastPrice.y } : {}),
+      deltaRecent,
+      sparklinePoints: pricePoints.slice(-SPARKLINE_WINDOW),
     });
   }
   return assets;

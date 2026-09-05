@@ -1,0 +1,28 @@
+/* min-width:0 lets this grid track shrink inside a narrowing artifact
+   pane; without it, the grid sizes to the Table's own intrinsic content
+   width (Astryx's .astryx-table-scroll-wrapper), overflowing the pane
+   instead of triggering the wrapper's own internal horizontal scroll.
+   Same bug class as assembly.module.css's .nodeWrapper fix (2026-08-28),
+   found one level deeper: that fix stopped at this node's own root, this
+   inline grid was the actual unshrinkable track underneath it. */
+.root {
+  display: grid;
+  gap: var(--space-8);
+  min-width: 0;
+}
+
+/* Astryx's own Table wrapper is a grid item here and defaults to
+   min-width:auto like any other grid item, refusing to shrink below its
+   content's intrinsic width. min-width:0 alone wasn't enough (confirmed
+   live: wrapper still rendered at 559px inside a 527px parent) — as a
+   block element with its own overflow-x:auto, it shrink-wraps its content
+   width by default; width:100% is needed to make it actually fill (then
+   shrink with) its grid track, at which point overflow-x:auto correctly
+   takes over scrolling the table itself. No existing Astryx stylesheet
+   rule sets width/min-width on this class (confirmed via direct
+   stylesheet inspection), so this is a plain override, no
+   specificity-inflation fight needed. */
+.root :global(.astryx-table-scroll-wrapper) {
+  min-width: 0;
+  width: 100%;
+}

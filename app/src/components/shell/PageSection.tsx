@@ -24,25 +24,52 @@ import { Text } from '@astryxdesign/core/Text';
 // components read as one system despite being architecturally separate.
 const contentStyle: CSSProperties = {
   display: 'grid',
-  gap: 'var(--space-2',
+  gap: 'var(--space-16)',
   minWidth: 0,
   ['--container-padding-block-start' as string]: '0px',
   ['--container-padding-block-end' as string]: '0px',
+  // Publishes this pane's own inset for bleed.module.css's sake (see that
+  // file's contract) — kept identical to Panel.tsx's own line, since this
+  // component's whole purpose is to be visually byte-identical to Panel
+  // (see the comment above); a bleeding child must behave the same inside
+  // either one.
+  ['--pane-inset' as string]: 'var(--space-16)',
 };
 
 interface PageSectionProps {
   title?: ReactNode;
   source?: ReactNode;
+  /* Arbitrary interactive content (e.g. a view-mode ToggleButtonGroup),
+     rendered raw in the title row's end slot — NOT wrapped in <Text>
+     like `source` (2026-08-18 addition, direct feedback: "grid list view
+     should be in same line/row as title, similarly like artifacts pane
+     has options there [close and expand]"). Kept as its own prop rather
+     than repurposing `source`: `source` is a text-only slot (every
+     existing caller passes a plain string/label, e.g. a citation),
+     wrapping a real component in Text would be wrong for both the new
+     and every existing use. Mutually exclusive with `source` in
+     practice (no current caller needs both), but not enforced — the
+     title row's flex layout has room for at most one end-aligned item
+     today. */
+  actions?: ReactNode;
+  /* Same opt-out as Panel.tsx's own `bordered` prop (2026-08-19, direct
+     feedback: "should have config for no border") — default true,
+     matching the 2026-08-08 order this file's own comment already cites.
+     `bordered={false}` switches to panelFlatNoBorder, kept in sync with
+     Panel.tsx so the two stay visually identical by construction, same
+     as every other class this component mirrors. */
+  bordered?: boolean;
   children?: ReactNode;
 }
 
-export function PageSection({ title, source, children }: PageSectionProps) {
+export function PageSection({ title, source, actions, bordered = true, children }: PageSectionProps) {
   return (
-    <Card variant="default" padding={4} className="panelFlat">
-      {(title ?? source) && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-12)' }}>
+    <Card variant="default" padding={4} className={bordered ? 'panelFlat' : 'panelFlatNoBorder'}>
+      {(title ?? source ?? actions) && (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-12)' }}>
           {title && <Text type="label">{title}</Text>}
           {source && <Text type="supporting">{source}</Text>}
+          {actions}
         </div>
       )}
       <div style={contentStyle}>{children}</div>

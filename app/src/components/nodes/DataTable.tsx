@@ -4,6 +4,7 @@ import { EmptyState } from '@astryxdesign/core/EmptyState';
 import type { DataTableProps } from '../../contracts/props/data-table';
 import { Sparkline } from './Sparkline';
 import { EntityLink } from './EntityLink';
+import styles from './DataTable.module.css';
 
 type SparklinePoints = { x: string; y: number }[];
 type EntityLinkCell = { entityId: string; label: string };
@@ -50,7 +51,7 @@ export function DataTable({ data }: DataTableProps) {
   }));
 
   return (
-    <div style={{ display: 'grid', gap: 'var(--space-8)' }}>
+    <div className={styles.root}>
       <Text type="supporting" color="secondary">
         {data.rows.length} result{data.rows.length === 1 ? '' : 's'}
       </Text>

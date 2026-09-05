@@ -1,0 +1,25 @@
+/* Was three inline style objects on InvestigationsPage.tsx — moved here
+   per CLAUDE.md rule 4, which bans inline style props even when every
+   value is token-sourced. */
+
+.controlsRow {
+  display: flex;
+  gap: var(--space-16);
+  align-items: center;
+  margin-bottom: var(--space-16);
+}
+
+/* Search field cap: a full-width search input reads as a form field
+   rather than a filter next to the segmented control. Authored as a
+   literal here for the same reason ChatViewport.module.css's own
+   max-width is — a layout dimension owned by one stylesheet, not a
+   themed value the token cascade should carry. */
+.searchField {
+  max-width: 320px;
+  flex: 1;
+}
+
+.moduleGroups {
+  display: grid;
+  gap: var(--space-16);
+}

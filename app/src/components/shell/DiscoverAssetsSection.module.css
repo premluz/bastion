@@ -1,0 +1,69 @@
+/* Horizontal scroll + edge fade for the category filter row (2026-08-18,
+   direct feedback: "discover assets should have scrollable tabs" — the
+   ToggleButtonGroup row overflowed off-canvas at narrow pane widths with
+   no way to reach the hidden categories, e.g. the "equity" category cut
+   off in the reported screenshot). Astryx's own useScrollOverflow hook
+   (installed, confirmed via its own .d.ts — returns overflowStart/
+   overflowEnd/hasOverflow + a scrollRef) is the sanctioned primitive for
+   this exact job (its own doc comment: "used by Carousel for fade-edge
+   and button state") — reused directly rather than hand-rolling a
+   second one. Fade mechanic mirrors PaneTitleBar.module.css's own
+   vertical fade (opaque through content, transparent over the last
+   ~16px) rotated to the horizontal axis; --surface-1 matches PageSection's
+   own Card background (panelFlat, --surface-1) so the fade blends into
+   its actual pane rather than hardcoding a different context's color.
+
+   .wrapper (non-scrolling, position:relative) and .scrollRow (the actual
+   overflow-x:auto element) are SEPARATE — confirmed live this same
+   session (both here and in the container-query work above) that one
+   element can't correctly serve two conflicting roles at once: an
+   absolutely-positioned fade as a CHILD of the scrolling element scrolls
+   away WITH the content instead of staying pinned to the visible edge
+   (measured live: .fadeStart's own left position went to -142px, fully
+   off-screen, once the row was scrolled). The fade overlays live on
+   .wrapper instead, sitting visually on top of .scrollRow but never
+   moving with its scroll position. */
+/* min-width: 0 overrides the flex/grid-item default of min-width:auto —
+   without it, .wrapper refuses to shrink below its own content's
+   intrinsic width (the ToggleButtonGroup's full unscrolled row),
+   defeating .scrollRow's own overflow-x:auto entirely — confirmed live,
+   same root-cause class as .paneBody's own grid-template-columns fix
+   above and Frame.module.css's documented .contentColumn precedent. */
+.wrapper {
+  position: relative;
+  min-width: 0;
+}
+
+.scrollRow {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.scrollRow::-webkit-scrollbar {
+  display: none;
+}
+
+/* Only rendered when useScrollOverflow reports the relevant edge
+   overflowing — a pointer-events:none fade sitting on top of the scroll
+   row's own edge, not a separate DOM child inside it (keeps the
+   ToggleButtonGroup's own children untouched). */
+.fadeStart,
+.fadeEnd {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.fadeStart {
+  left: 0;
+  background: linear-gradient(to right, var(--surface-1) 0%, transparent 100%);
+}
+
+.fadeEnd {
+  right: 0;
+  background: linear-gradient(to left, var(--surface-1) 0%, transparent 100%);
+}

@@ -1,0 +1,11 @@
+.root {
+  display: grid;
+  gap: var(--space-12);
+}
+
+.sourceRow {
+  display: flex;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+  align-items: center;
+}

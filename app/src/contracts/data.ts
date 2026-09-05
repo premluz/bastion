@@ -146,6 +146,53 @@ export const EntityDataSetSchema = z.object({
 });
 export type EntityDataSet = z.infer<typeof EntityDataSetSchema>;
 
+// entity-cards (Phase 21, 2026-08-30): N entities, each with a price/yield
+// read and a directional delta — the shape `asset-card-grid`'s registry
+// node needs to drive AssetCardVisual (shell/AssetCardVisual.tsx) from
+// Scene JSON. A NEW DataSet kind, not an extension of `table`: table's
+// cells are typed per-COLUMN (TableColumnSchema.type), but every row here
+// needs the SAME fixed set of fields (id/name/type/value/delta) rather
+// than an author-defined column set — forcing that through table's
+// column/row shape would mean one hardcoded column layout invented per
+// scene, which is exactly the coupling DataSet kinds exist to avoid.
+// `value` arrives PRE-FORMATTED (the scene author decides "$1,234.56" vs
+// "5.8%"), matching AssetCardVisual's own formattedValue prop — this
+// node has no opinion on currency/percent formatting, same reason
+// EntityAssetGrid's own MarketAsset→row mapping formats before handing
+// off (EntityAssetGrid.tsx's own assetToCardRow).
+const EntityCardRowSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  type: z.string().min(1),
+  value: z.string().min(1),
+  deltaPercent: z.number(),
+});
+
+export const EntityCardsDataSetSchema = z.object({
+  kind: z.literal("entity-cards"),
+  entities: z.array(EntityCardRowSchema).min(1),
+});
+export type EntityCardsDataSet = z.infer<typeof EntityCardsDataSetSchema>;
+
+// One point per entity on two genuinely numeric axes (2026-09-01,
+// risk-return-scatter — "7D Return" vs "Volume"). A separate kind, not a
+// widened SeriesPoint: every existing series consumer (BarSeries,
+// ContributionBars, GeoPanel, TimeSeries, TrendChart) treats x as a
+// category label, and this keeps that assumption untouched rather than
+// auditing five call sites for a shape none of them will ever receive.
+const ScatterPointSchema = z.object({
+  label: z.string().min(1),
+  x: z.number(),
+  y: z.number(),
+  entityId: z.string().min(1).optional(),
+});
+
+export const ScatterDataSetSchema = z.object({
+  kind: z.literal("scatter"),
+  points: z.array(ScatterPointSchema),
+});
+export type ScatterDataSet = z.infer<typeof ScatterDataSetSchema>;
+
 // Hydration target for a dangling $ref — the resolver never lets a
 // bare UniverseRef reach the renderer (CLAUDE.md §6).
 export const MissingDataSetSchema = z.object({
@@ -161,6 +208,8 @@ export const DataSetSchema = z.discriminatedUnion("kind", [
   GraphDataSetSchema,
   GeoDataSetSchema,
   EntityDataSetSchema,
+  EntityCardsDataSetSchema,
+  ScatterDataSetSchema,
   MissingDataSetSchema,
 ]);
 export type DataSet = z.infer<typeof DataSetSchema>;

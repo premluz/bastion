@@ -6,3 +6,16 @@
 .padded {
   padding: var(--space-32) var(--space-16);
 }
+
+/* Mobile: 32px top/bottom reads as too much dead space around a docked
+   composer on a ~390px-wide screen (direct feedback, 2026-08-22, on the
+   mobile chat Dialog's composer footer — MobilePaneModals.tsx) — same
+   768px breakpoint already established this session (Frame.module.css,
+   KeyIssuesCard.module.css). Scoped to this breakpoint only: desktop's
+   own composer dock and ArtifactStack's list padding (this class's other
+   consumer) are unaffected. */
+@media (max-width: 768px) {
+  .padded {
+    padding: var(--space-16);
+  }
+}

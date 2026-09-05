@@ -1,0 +1,13 @@
+.root {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.tooltip {
+  background: var(--surface-2);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-4);
+  padding: var(--space-8);
+  display: grid;
+  gap: var(--space-4);
+}

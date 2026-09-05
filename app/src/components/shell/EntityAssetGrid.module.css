@@ -1,0 +1,19 @@
+.cardWrapper {
+  position: relative;
+}
+
+.watchSlot {
+  position: absolute;
+  bottom: var(--space-12);
+  left: var(--space-12);
+}
+
+/* Reveals WatchToggleButton's own hidden [data-watch-trigger] state on
+   hover/keyboard-focus of the card (2026-09-02, direct feedback: "this
+   icon should be visible on hovered card") — prefers-hover:none
+   (WatchToggleButton.module.css's own media query) already keeps it
+   visible on touch regardless of this rule. */
+.cardWrapper:hover [data-watch-trigger],
+.cardWrapper:focus-within [data-watch-trigger] {
+  opacity: 1;
+}

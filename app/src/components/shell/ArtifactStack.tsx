@@ -13,6 +13,7 @@ import { PANE_FLOOR } from './paneFloors';
 import { StatusTag } from '../nodes/StatusTag';
 import { Canvas } from './Canvas';
 import { PaneTitleBar } from './PaneTitleBar';
+import { ArtifactStackControls } from './ArtifactStackControls';
 import pane from './PanePadding.module.css';
 import styles from './ArtifactStack.module.css';
 
@@ -57,7 +58,11 @@ function buildStackRows(artifacts: Record<string, Artifact>, turns: Turn[]): Sta
 // detail on that artifact (one effect below, keyed on openArtifactId);
 // "Back to list" only changes this component's own sub-view, never
 // openArtifactId — there is always a "current" artifact once one exists.
-export function ArtifactStack() {
+interface ArtifactStackProps {
+  isMobile?: boolean;
+}
+
+export function ArtifactStack({ isMobile = false }: ArtifactStackProps) {
   const artifacts = useArtifactStore((state) => state.artifacts);
   const openArtifactId = useArtifactStore((state) => state.openArtifactId);
   const stackWidth = useArtifactStore((state) => state.stackWidth);
@@ -119,7 +124,7 @@ export function ArtifactStack() {
     // width:'100%' still applies when maximized — that's a genuinely
     // different state, not this ratio system's concern.
     <Card variant="default" padding={0} {...(isMaximized ? { width: '100%' } : {})} className={styles.artifactCard ?? ''} data-glass-surface>
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div className={styles.stackColumn}>
         {/* Phase 18: overflowX contains a too-wide-for-the-pane child
             (e.g. a data-table with more columns than this pane's floor
             accounts for — data-table has no registered minWidth, since
@@ -137,7 +142,7 @@ export function ArtifactStack() {
             startContent carries the back button; PaneTitleBar's own
             .startGroup/.title CSS is what truncates a long scene title
             instead of wrapping it. */}
-        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'auto' }}>
+        <div className={styles.scrollRegion}>
           <PaneTitleBar
             title={view === 'detail' && activeArtifact ? activeArtifact.scene.title : 'Artifacts'}
             startContent={
@@ -152,24 +157,11 @@ export function ArtifactStack() {
               ) : undefined
             }
             endContent={
-              <>
-                <IconButton
-                  label={isMaximized ? 'Restore' : 'Maximize'}
-                  tooltip={isMaximized ? 'Restore' : 'Maximize'}
-                  icon={<Icon icon="arrowsUpDown" size="sm" style={{ transform: 'rotate(45deg)' }} />}
-                  variant={isMaximized ? 'primary' : 'ghost'}
-                  onClick={toggleMaximize}
-                />
-                {/* Close acts exactly like the top-bar Artifacts control
-                    (same action) — one on/off state, two entry points. */}
-                <IconButton
-                  label="Close artifacts"
-                  tooltip="Close"
-                  icon={<Icon icon="close" size="sm" />}
-                  variant="ghost"
-                  onClick={toggleStack}
-                />
-              </>
+              // Hidden on mobile (2026-08-22): redundant/conflicting with
+              // the fullscreen Dialog itself and its own close button.
+              isMobile ? undefined : (
+                <ArtifactStackControls isMaximized={isMaximized} toggleMaximize={toggleMaximize} toggleStack={toggleStack} />
+              )
             }
           />
           {view === 'detail' && activeArtifact ? (
@@ -189,7 +181,7 @@ export function ArtifactStack() {
                       isSelected={artifactId === openArtifactId}
                       onClick={() => setOpenArtifact(artifactId)}
                       endContent={
-                        <div style={{ display: 'flex', gap: 'var(--space-8)', alignItems: 'center' }}>
+                        <div className={styles.cardMetaRow}>
                           <Token label={`v${version}`} />
                           <StatusTag label={isMonitor ? 'Alert' : 'Ready'} tone={isMonitor ? 'alert' : 'ok'} />
                         </div>

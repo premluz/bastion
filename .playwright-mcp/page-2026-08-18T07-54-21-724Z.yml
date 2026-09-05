@@ -1,0 +1,54 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e6]:
+    - link "Skip to content" [ref=f4e7] [cursor=pointer]:
+      - /url: "#astryx-app-shell-main"
+    - generic [ref=f4e10]:
+      - navigation "Side navigation" [ref=f4e12]:
+        - generic [ref=f4e13]: M
+        - generic [ref=f4e17]:
+          - group "Places" [ref=f4e18]:
+            - generic [ref=f4e22]:
+              - button "New investigation" [ref=f4e24] [cursor=pointer]
+              - button "Discover" [ref=f4e28] [cursor=pointer]
+              - button "Watchlist" [ref=f4e32] [cursor=pointer]
+              - button "Holdings" [ref=f4e36] [cursor=pointer]
+              - button "Market Pulse" [ref=f4e40] [cursor=pointer]
+              - button "Portfolio" [ref=f4e44] [cursor=pointer]
+              - button "Risk" [ref=f4e48] [cursor=pointer]
+              - button "Data Sources" [ref=f4e52] [cursor=pointer]
+          - button "Recent" [ref=f4e56] [cursor=pointer]
+        - generic [ref=f4e61]:
+          - button "Expand sidebar" [ref=f4e63] [cursor=pointer]:
+            - status
+          - generic [ref=f4e69]:
+            - button "Analyst" [ref=f4e70] [cursor=pointer]:
+              - img "Analyst" [ref=f4e73]:
+                - generic [ref=f4e74]: A
+              - status
+            - button "Notifications" [ref=f4e77] [cursor=pointer]:
+              - status
+      - main [ref=f4e84]:
+        - generic [ref=f4e89]:
+          - generic [ref=f4e90]:
+            - generic [ref=f4e91]: show me the network anomaly
+            - button "Artifacts" [disabled] [ref=f4e95]:
+              - status
+          - generic [ref=f4e103]:
+            - generic [ref=f4e108]:
+              - article "Message from user" [ref=f4e109]:
+                - generic [ref=f4e110]: show me the network anomaly
+              - article "Message from assistant" [ref=f4e113]:
+                - generic [ref=f4e116]:
+                  - generic [ref=f4e117]:
+                    - generic [ref=f4e118]: 2 sources
+                    - generic [ref=f4e119]: 0.0s
+                  - button "Thinking trail — click to skip" [ref=f4e120] [cursor=pointer]:
+                    - generic [ref=f4e121]: Thinking…
+                    - generic [ref=f4e122]: Assembling the aggregate FX & derivatives risk picture
+            - generic [ref=f4e134]:
+              - generic [ref=f4e136]:
+                - generic: Ask a question about the venue…
+                - textbox "Message input" [ref=f4e137]
+              - button "Send" [disabled] [ref=f4e140]:
+                - status
+  - generic [ref=f4e145]: 2026-04-09

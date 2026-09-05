@@ -1,0 +1,21 @@
+.root {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  /* min-width:0 so the name still truncates rather than pushing the
+     title bar's own endContent (the Watch button) out — same reasoning
+     as PaneTitleBar.module.css's own .startGroup/.title rules, just
+     applied to this custom composition instead of the plain-string path. */
+  min-width: 0;
+}
+
+.textColumn {
+  display: grid;
+  min-width: 0;
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

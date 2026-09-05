@@ -1,0 +1,43 @@
+/* container-type on THIS wrapper, queried by .sparklineSlot below — two
+   different elements, per this app's own repeated finding (confirmed
+   live multiple times the same day this component was extracted) that a
+   container query never matches when the querying and containing
+   elements are the same one. */
+.container {
+  container-type: inline-size;
+}
+
+.endContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.valueColumn {
+  display: grid;
+  justify-items: end;
+  gap: var(--space-4);
+}
+
+/* 280px: below this, a row's own name/detail column has already given up
+   essentially all its own shrink room (Item's internal min-width:0 gap
+   documented in EntityDiscoveryStrips.module.css's own .grid comment),
+   so keeping the sparkline visible starts crowding the value/delta
+   column instead of the label — hiding it here is the point where
+   "everything stays legible" wins over "everything stays present."
+   Derived the same way this app's other container thresholds were
+   (measured against real row content, not eyeballed) — Peers' own
+   half-width pairRow column is the first real consumer narrow enough to
+   cross this threshold; the original three strips' 440px floor never
+   does. */
+@container (max-width: 280px) {
+  .sparklineSlot {
+    display: none;
+  }
+}
+
+/* Was an inline style prop on DiscoveryItemRow.tsx — moved here per
+   CLAUDE.md rule 4. The row is click-to-open (browse first, Phase 16). */
+.clickable {
+  cursor: pointer;
+}

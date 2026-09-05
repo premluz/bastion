@@ -10,6 +10,7 @@ import { buildThreads, type ThreadSummary } from '../../engine/threads';
 import { reopenThread } from '../../engine/openThread';
 import { PageShell } from './PageShell';
 import { ThreadRow } from './ThreadRow';
+import styles from './InvestigationsPage.module.css';
 
 const MODULE_ORDER = ['discover', 'research', 'investigate', 'monitor', 'portfolio'] as const;
 type Module = (typeof MODULE_ORDER)[number];
@@ -108,12 +109,12 @@ export function InvestigationsPage() {
 
   return (
     <PageShell title="Investigations">
-      <div style={{ display: 'flex', gap: 'var(--space-16)', alignItems: 'center', marginBottom: 'var(--space-16)' }}>
+      <div className={styles.controlsRow}>
         <SegmentedControl label="View" value={viewMode} onChange={(value) => setViewMode(value as 'module' | 'flat')}>
           <SegmentedControlItem value="module" label="By module" />
           <SegmentedControlItem value="flat" label="All" />
         </SegmentedControl>
-        <div style={{ maxWidth: 320, flex: 1 }}>
+        <div className={styles.searchField}>
           <TextInput
             label="Search investigations"
             isLabelHidden
@@ -133,7 +134,7 @@ export function InvestigationsPage() {
         // top-level sections the same way Discover's cards are, found
         // via merlin-layout-law's sweep (2026-08-13), not independently
         // re-derived.
-        <div style={{ display: 'grid', gap: 'var(--space-16)' }}>
+        <div className={styles.moduleGroups}>
           {MODULE_ORDER.map((module) => {
             const rows = rowsByModule.grouped[module];
             if (rows.length === 0) return null;

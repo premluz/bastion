@@ -33,7 +33,7 @@ export function CollapsedPaneChip({ pane }: { pane: string }) {
         icon={<Icon icon="chevronLeft" size="sm" />}
         variant="ghost"
         size="sm"
-        onClick={() => setCollapsedPane(null)}
+        onClick={() => setCollapsedPane(pane, false)}
       />
       <Text type="label" color="secondary" style={{ writingMode: 'vertical-rl' }}>
         {label}

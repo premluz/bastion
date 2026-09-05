@@ -31,9 +31,17 @@ const NODE_STORIES = [
   'nodes-ringchart--happy',
   'nodes-newsfeed--happy',
   'nodes-analystconsensus--happy',
+  'nodes-assetpriceheader--happy',
+  'nodes-earningshistorychart--happy',
+  'nodes-pricemovementtimeline--happy',
+  'nodes-airationalerail--happy',
+  'nodes-trendchart--happy',
+  'nodes-keyissuescard--happy',
+  'nodes-riskreturnscatter--happy',
+  'nodes-assettrendcard--happy',
 ] as const;
 
-const THEMES = ['default', 'ops-dark', 'glass', 'glass-light'] as const;
+const THEMES = ['default', 'ops-dark', 'glass', 'glass-light', 'safe-one'] as const;
 
 for (const storyId of NODE_STORIES) {
   for (const theme of THEMES) {

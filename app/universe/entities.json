@@ -579,6 +579,84 @@
       ]
     }
   },
+  "aurion-governance": {
+    "kind": "entity",
+    "entity": {
+      "id": "aurion-governance",
+      "name": "Aurion Governance",
+      "type": "DeFi Governance Token",
+      "attributes": [
+        {
+          "label": "Price",
+          "value": "$1.92"
+        },
+        {
+          "label": "Liquidity",
+          "value": "Thin"
+        },
+        {
+          "label": "Market Cap",
+          "value": "$96M"
+        },
+        {
+          "label": "Launch Date",
+          "value": "2025-09-03"
+        },
+        {
+          "label": "Circulating Supply",
+          "value": "50.1M tokens"
+        },
+        {
+          "label": "Use Case",
+          "value": "Staking & governance"
+        }
+      ],
+      "tags": [
+        "crypto",
+        "defi",
+        "governance-token"
+      ]
+    }
+  },
+  "brightlane-dao": {
+    "kind": "entity",
+    "entity": {
+      "id": "brightlane-dao",
+      "name": "Brightlane DAO",
+      "type": "DeFi Governance Token",
+      "attributes": [
+        {
+          "label": "Price",
+          "value": "$8.15"
+        },
+        {
+          "label": "Liquidity",
+          "value": "Deep"
+        },
+        {
+          "label": "Market Cap",
+          "value": "$412M"
+        },
+        {
+          "label": "Launch Date",
+          "value": "2024-11-20"
+        },
+        {
+          "label": "Circulating Supply",
+          "value": "50.6M tokens"
+        },
+        {
+          "label": "Use Case",
+          "value": "Staking & governance"
+        }
+      ],
+      "tags": [
+        "crypto",
+        "defi",
+        "governance-token"
+      ]
+    }
+  },
   "meridian-logistics": {
     "kind": "entity",
     "entity": {

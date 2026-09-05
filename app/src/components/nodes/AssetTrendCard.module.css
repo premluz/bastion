@@ -1,0 +1,23 @@
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.identityRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-width: 0;
+}
+
+.textColumn {
+  min-width: 0;
+  flex: 1;
+}
+
+.priceColumn {
+  text-align: right;
+  flex-shrink: 0;
+}

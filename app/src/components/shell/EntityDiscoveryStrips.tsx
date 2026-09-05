@@ -1,63 +1,56 @@
 import { Fragment } from 'react';
-import { Item } from '@astryxdesign/core/Item';
+import { Carousel } from '@astryxdesign/core/Carousel';
 import { Badge } from '@astryxdesign/core/Badge';
 import { Text } from '@astryxdesign/core/Text';
-import { Sparkline } from '../nodes/Sparkline';
-import { AssetLogo } from './AssetLogo';
 import { AnimatedListItem } from './AnimatedListItem';
-import { TrendDelta } from './TrendDelta';
 import { PageSection } from './PageSection';
+import { DiscoveryItemRow, type DiscoveryRow } from './DiscoveryItemRow';
+import styles from './EntityDiscoveryStrips.module.css';
 
-export interface DiscoveryRow {
-  id: string;
-  name: string;
-  detail: string;
-  value: string;
-  sparklinePoints?: { x: string; y: number }[];
-  intent?: string;
-  // Point-over-point delta (deltaRecent — see EntitiesPage.tsx's
-  // isMomentumCategory), rendered via TrendDelta as a percentage
-  // regardless of the underlying metric (direct feedback, 2026-08-01: one
-  // consistent "%" reading, no "pp" variant). Populated only for crypto/
-  // asset/commodities rows (mostly crypto and equity) — bonds/real-estate/
-  // credit-funds have no comparable momentum metric, so this stays unset
-  // there rather than showing a meaningless trend.
-  deltaPercent?: number;
-}
+export type { DiscoveryRow };
 
 interface EntityDiscoveryStripsProps {
   movers: DiscoveryRow[];
   trending: DiscoveryRow[];
   newlyAdded: DiscoveryRow[];
-  onInvestigate: (intent: string) => void;
+  onOpenDetail: (id: string) => void;
 }
 
 // Three top strips (Phase 14; unified-template + naming follow-up,
 // 2026-07-20), one shared row shape (DiscoveryRow) and one shared row
-// renderer — direct feedback asked for the same "item" template
-// everywhere rather than Notable movers alone having the rich treatment.
-// Row anatomy: AssetLogo (rounded-square color swatch — no real logos
-// exist, see that file's own comment) as startContent, name + detail as
-// label/description, Sparkline + value as endContent (moved to the
-// right per feedback; previously left). Each row wraps in AnimatedListItem
-// for staggered entrance. No divider between rows (removed 2026-08-08,
-// direct feedback) — rows are separated by spacing/hover alone now. Every
-// row hovers — even the ones with nothing to click (`.astryx-item:hover` in
-// theme.default.css, unconditional/all-themes, same "consumed as-is"
-// precedent as the list-item hover rule beside it) — a deliberate,
-// explicit exception to the earlier "no hover implying an action that
-// isn't there" rule (WatchlistPage.tsx): here hover is honestly just
-// "this row is legible/scannable," never framed as a click affordance via
-// cursor, so the two rules don't actually conflict.
+// renderer (DiscoveryItemRow.tsx, extracted out of this file 2026-08-19
+// — direct feedback: "actually in related use item comp that is used in
+// notable movers... if we have this as comp that item that's great lets
+// have it in peers" — RelatedEntitiesStrip.tsx/Peers is the second real
+// consumer of that extraction). No divider between rows (removed
+// 2026-08-08, direct feedback) — rows are separated by spacing/hover
+// alone now. Every row hovers, unconditionally (`.astryx-item:hover` in
+// theme.default.css, all-themes) — every row is now genuinely clickable
+// (see below), so this no longer needs the earlier "hover even on rows
+// with nothing to click" exception it once was.
+//
+// EVERY row browses to its own detail page, unconditionally (2026-08-19,
+// direct feedback: "ensure zenith is notable movers pane and that south
+// bow links to page, and all should link to details page not to trigger
+// investigation") — reverses the earlier "click submits an investigation,
+// gated on row.intent existing" behavior: rows with no `intent` simply
+// weren't clickable at all before this, which is the real reason South
+// Bow Corp had no click path from these strips. `onOpenDetail(row.id)`
+// (openEntityDetail, "browse first" — the same law DiscoverAssetsSection's
+// own grid/table already follow) replaces `onInvestigate(intent)`
+// entirely; `DiscoveryRow.intent` removed from the type since nothing
+// reads it anymore (EntitiesPage.tsx's separate "Other tracked entities"
+// list still has its own distinct, explicit Investigate button — a
+// different, already-correct pattern, untouched by this change).
 function DiscoveryStripList({
   rows,
   emptyLabel,
-  onInvestigate,
+  onOpenDetail,
   startIndex,
 }: {
   rows: DiscoveryRow[];
   emptyLabel: string;
-  onInvestigate: (intent: string) => void;
+  onOpenDetail: (id: string) => void;
   startIndex: number;
 }) {
   if (rows.length === 0) {
@@ -70,28 +63,11 @@ function DiscoveryStripList({
   return (
     <>
       {rows.map((row, index) => {
-        const intent = row.intent;
         const animationIndex = startIndex + index;
         return (
           <Fragment key={row.id}>
             <AnimatedListItem index={animationIndex}>
-              <Item
-                density="compact"
-                startContent={<AssetLogo id={row.id} />}
-                label={row.name}
-                description={row.detail}
-                endContent={
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-12)' }}>
-                    {row.sparklinePoints && <Sparkline points={row.sparklinePoints} />}
-                    <div style={{ display: 'grid', justifyItems: 'end', gap: 'var(--space-4)' }}>
-                      <Text hasTabularNumbers>{row.value}</Text>
-                      {row.deltaPercent !== undefined && <TrendDelta value={row.deltaPercent} />}
-                    </div>
-                  </div>
-                }
-                style={intent ? { cursor: 'pointer' } : undefined}
-                {...(intent ? { onClick: () => onInvestigate(intent) } : {})}
-              />
+              <DiscoveryItemRow row={row} onOpenDetail={onOpenDetail} />
             </AnimatedListItem>
           </Fragment>
         );
@@ -105,26 +81,66 @@ function DiscoveryStripList({
 // this is the only one of the three strips with a second element in its
 // header and doesn't warrant widening PageSection's API for one caller.
 const notableMoversTitle = (
-  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
+  <div className={styles.identityRow}>
     <Text type="label">Notable movers</Text>
     <Badge variant="neutral" label="24H" />
   </div>
 );
 
-export function EntityDiscoveryStrips({ movers, trending, newlyAdded, onInvestigate }: EntityDiscoveryStripsProps) {
+// Grid-first, Carousel as the overflow escape hatch (2026-08-18 follow-up
+// — reverses the immediately-prior "always Carousel" swap: direct
+// feedback "should always stretch across these panes to full width of
+// container, only when they reached their min width so can't shrink more
+// then reflow into carousel"). Both a CSS grid (.grid, 3 even
+// minmax(440px, 1fr) columns — fills the container's full width, per the
+// ask, never shrinking a strip below its own genuine minimum) and a
+// Carousel render into the DOM at once; a container query (@container,
+// EntityDiscoveryStrips.module.css) shows exactly one of the two based
+// on the container's real available width against that same 440px
+// minimum, never a JS remount — Carousel keeps its own internal scroll/
+// button state intact if the container crosses the threshold back and
+// forth, and the grid needs no measurement logic of its own since
+// @container already reads the real box. PageSection cards are authored
+// ONCE (stripPanels below) and referenced from both branches so the two
+// never drift out of sync with each other's content. Both branches stay
+// mounted simultaneously (CSS display toggle, not conditional render) —
+// a deliberate tradeoff: each strip's own AnimatedListItem rows exist
+// twice in the DOM (confirmed live, 18 .astryx-item nodes for 3 strips ×
+// 3 rows × 2 branches), but this is what lets Carousel's scroll position
+// survive a threshold crossing; the display:none branch never paints or
+// runs its entrance animation visibly, confirmed via live screenshot at
+// initial mount showing no doubling or flash. hasSnap (2026-08-18 same-
+// round addition, direct feedback: "should snap also") — each Carousel
+// item snaps to the scroll-start edge per Astryx's own prop.
+export function EntityDiscoveryStrips({ movers, trending, newlyAdded, onOpenDetail }: EntityDiscoveryStripsProps) {
+  const stripPanels = [
+    <PageSection key="movers" title={notableMoversTitle}>
+      <DiscoveryStripList rows={movers} emptyLabel="No market data this session." onOpenDetail={onOpenDetail} startIndex={0} />
+    </PageSection>,
+    <PageSection key="trending" title="Trending">
+      <DiscoveryStripList rows={trending} emptyLabel="Nothing cited yet this session." onOpenDetail={onOpenDetail} startIndex={movers.length} />
+    </PageSection>,
+    <PageSection key="newlyAdded" title="Newly Added">
+      <DiscoveryStripList rows={newlyAdded} emptyLabel="Nothing to show." onOpenDetail={onOpenDetail} startIndex={movers.length + trending.length} />
+    </PageSection>,
+  ];
+
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-16)' }}>
-      <PageSection title={notableMoversTitle}>
-        <DiscoveryStripList rows={movers} emptyLabel="No market data this session." onInvestigate={onInvestigate} startIndex={0} />
-      </PageSection>
-
-      <PageSection title="Trending">
-        <DiscoveryStripList rows={trending} emptyLabel="Nothing cited yet this session." onInvestigate={onInvestigate} startIndex={movers.length} />
-      </PageSection>
-
-      <PageSection title="Newly Added">
-        <DiscoveryStripList rows={newlyAdded} emptyLabel="Nothing to show." onInvestigate={onInvestigate} startIndex={movers.length + trending.length} />
-      </PageSection>
+    <div className={styles.container}>
+      <div className={styles.grid}>
+        {stripPanels.map((panel, index) => (
+          <div key={index}>{panel}</div>
+        ))}
+      </div>
+      <div className={styles.carouselWrap}>
+        <Carousel gap={2} hasSnap aria-label="Discovery strips">
+          {stripPanels.map((panel, index) => (
+            <div key={index} className={styles.stripItem}>
+              {panel}
+            </div>
+          ))}
+        </Carousel>
+      </div>
     </div>
   );
 }

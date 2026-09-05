@@ -23,9 +23,6 @@ interface UniverseEntityRecord {
 const entities = Object.values(entitiesJson as Record<string, UniverseEntityRecord>);
 const marketAssets = getMarketAssets();
 const marketAssetById = new Map(marketAssets.map((asset) => [asset.id, asset]));
-const intentById = new Map(
-  entities.filter((record): record is UniverseEntityRecord & { intent: string } => !!record.intent).map((record) => [record.entity.id, record.intent]),
-);
 const otherEntities = entities.filter(({ entity }) => !marketAssetById.has(entity.id));
 
 // "Trending" — session-fixed like "Newly added" below, not a live
@@ -164,7 +161,12 @@ function withMockFallback(
 // series behind it (marketAssetById first, falling back to
 // resolveEntityDetail's own broader chart lookup for entities outside
 // the four Solent bonds — Newly Added and Trending both do this now),
-// never fabricated for entities that don't have one. A filterable card
+// never fabricated for entities that don't have one. Every strip row now
+// browses to its own detail page on click, unconditionally (2026-08-19,
+// direct feedback: "all should link to details page not to trigger
+// investigation") — see EntityDiscoveryStrips.tsx's own comment for the
+// full reasoning; movers/trending/newlyAdded below no longer carry an
+// `intent` field at all since nothing reads it. A filterable card
 // grid follows: the 4 real,
 // universe-backed assets plus deterministic mocked filler rounding
 // every category to 12 cards (engine/assetDiscoveryMock.ts — fictional,
@@ -219,7 +221,6 @@ export function EntitiesPage() {
           value,
           ...(sparklinePoints ? { sparklinePoints } : {}),
           deltaPercent: asset.deltaRecent,
-          ...(asset.intent !== undefined ? { intent: asset.intent } : {}),
         };
       }),
     [],
@@ -241,7 +242,6 @@ export function EntitiesPage() {
         detail: detail.type,
         value,
         ...(sparklinePoints ? { sparklinePoints } : {}),
-        ...(detail.intent !== undefined ? { intent: detail.intent } : {}),
         ...(detail.deltaRecent !== undefined && isMomentumCategory(detail.category) ? { deltaPercent: detail.deltaRecent } : {}),
       });
     }
@@ -255,7 +255,6 @@ export function EntitiesPage() {
   const newlyAdded: DiscoveryRow[] = useMemo(
     () =>
       getNewlyAdded(STRIP_COUNT).map((entity) => {
-        const intent = intentById.get(entity.id);
         const asset = marketAssetById.get(entity.id);
         if (asset) {
           // Same empty-sparklinePoints gap as movers above — route through
@@ -269,7 +268,6 @@ export function EntitiesPage() {
             value,
             ...(sparklinePoints ? { sparklinePoints } : {}),
             ...(isMomentumCategory(asset.category) ? { deltaPercent: asset.deltaRecent } : {}),
-            ...(intent !== undefined ? { intent } : {}),
           };
         }
         // Not one of the four Solent bonds marketAssetById covers — check
@@ -288,7 +286,6 @@ export function EntitiesPage() {
           detail: entity.type,
           value,
           ...(sparklinePoints ? { sparklinePoints } : {}),
-          ...(intent !== undefined ? { intent } : {}),
           ...(detail?.deltaRecent !== undefined && isMomentumCategory(detail?.category) ? { deltaPercent: detail.deltaRecent } : {}),
         };
       }),
@@ -296,19 +293,15 @@ export function EntitiesPage() {
   );
 
   return (
-    <PageShell title="Discover">
+    <PageShell title="Discover" scrollRestoreKey="entities">
       <EntityDiscoveryStrips
         movers={movers}
         trending={trending}
         newlyAdded={newlyAdded}
-        onInvestigate={(intent) => void submitQuery(intent, resolver)}
-      />
-
-      <DiscoverAssetsSection
-        assets={gridAssets}
-        onWatch={(id, name) => watch(id, name, 'manual')}
         onOpenDetail={openEntityDetail}
       />
+
+      <DiscoverAssetsSection assets={gridAssets} onOpenDetail={openEntityDetail} />
 
       <PageSection title="Other tracked entities">
         <List hasDividers density="compact">

@@ -58,13 +58,18 @@ export function RecentSection({ isCollapsed, threads, page, activeThreadId, setP
   function renderThreadRow(thread: ThreadSummary) {
     const { latestTurn } = thread;
     const artifactRef = latestTurn.artifactRef;
-    const isThinking = latestTurn.status === 'resolved' && !artifactRef;
+    // Settled means EITHER slot is populated (Phase 21) — an inline-mounted
+    // turn has no artifactRef but is just as done as an artifact-mounted
+    // one; reading artifactRef alone as "is this settled" would show a
+    // permanently-stuck "Thinking…" for every inline result.
+    const isSettled = !!artifactRef || !!latestTurn.inlineScene;
+    const isThinking = latestTurn.status === 'resolved' && !isSettled;
     const status: { variant: StatusDotVariant; label: string } =
       latestTurn.status === 'unresolved'
         ? { variant: 'neutral', label: 'No match' }
         : latestTurn.status === 'interrupted'
           ? { variant: 'neutral', label: 'Interrupted' }
-          : artifactRef
+          : isSettled
             ? { variant: 'success', label: 'Answered' }
             : { variant: 'accent', label: 'Thinking…' };
     // Every thread is a real, viewable transcript now (even one whose

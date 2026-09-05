@@ -1,0 +1,67 @@
+/* Bleed — the reusable "cancel my pane's padding" primitive (2026-08-19).
+   Same posture as glow.module.css beside it: a presentation-only style
+   hook applied via className, not a registry node and not a new Panel
+   prop.
+
+   THE CONTRACT, in two halves:
+
+   1. A PANE publishes its own inset as --pane-inset on the element whose
+      padding a child would need to cancel (Panel.tsx and PageSection.tsx
+      set it on their own Card content wrapper; PageShell.module.css sets
+      it on .paneBody). Whatever that pane's padding actually is, it says
+      so — one value, one place.
+
+   2. A CHILD that wants to reach the pane's true edge applies .inline
+      (and/or .block) from this file. Those cancel --pane-inset generically
+      — they never name a spacing token themselves, so a pane can change
+      its own padding without every bleeding child needing an edit.
+
+   WHY THIS EXISTS (the bug it replaces): TrendChart.module.css's own
+   .chartBleed hardcoded `margin-inline: calc(-1 * var(--space-16))` — it
+   worked only because .paneBody's padding happened to be --space-16 at
+   the time, and it silently canceled nothing at all in an earlier
+   revision when the true ancestor was an Astryx Card (whose own
+   --container-padding-inline-start is Card-scoped and absent on a plain
+   div). A hardcoded guess about an ancestor is exactly the coupling this
+   primitive removes.
+
+   THE OTHER HALF OF THE FIX — clipping ancestors: negative margins are
+   necessary but NOT sufficient. Any ancestor between the bleeding child
+   and the pane edge that sets overflow: hidden/clip will clip the bleed
+   back, and the child cannot see or fix that from below. Confirmed live
+   for TrendChart: .chartBleed correctly extended to 58→823, but
+   glow.module.css's own .clipped (overflow: hidden) cut it to 74→807 —
+   the exact 16px per side that looked like "the bleed isn't working."
+   Hence .passthrough below: an intermediate wrapper that must not
+   clip its bleeding descendants opts out explicitly. Consumers that
+   genuinely need clipping (glow's own containment) and a bleeding child
+   at once must apply the clip on an element that is NOT between the two
+   — see TrendChart.tsx for that arrangement. */
+
+/* Cancel the pane's inline (left/right) inset. Falls back to 0px, so a
+   child that ends up somewhere with no --pane-inset published simply
+   doesn't bleed rather than jumping by a wrong amount. */
+.inline {
+  margin-inline: calc(-1 * var(--pane-inset, 0px));
+}
+
+/* Cancel the pane's block-end (bottom) inset — the common case for a
+   chart or table that should sit flush on the pane's bottom edge while
+   its own header stays inset. */
+.blockEnd {
+  margin-bottom: calc(-1 * var(--pane-inset, 0px));
+}
+
+/* Cancel the pane's block-start (top) inset. */
+.blockStart {
+  margin-top: calc(-1 * var(--pane-inset, 0px));
+}
+
+/* Opt an intermediate wrapper out of clipping so a bleeding descendant
+   can actually escape it. Apply to any element that sits BETWEEN a
+   .inline/.blockEnd child and the pane edge — without it, that wrapper's
+   own overflow silently clips the bleed back to its own box (the real
+   second cause of the TrendChart bug this file documents above). */
+.passthrough {
+  overflow: visible;
+}

@@ -1,0 +1,62 @@
+.root {
+  display: grid;
+  gap: var(--space-4);
+  container-type: inline-size;
+}
+
+.issueBody {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-16);
+  padding-top: var(--space-8);
+}
+
+/* Bull/bear side-by-side has no room to breathe once this node is
+   narrow — stack bullish over bearish instead of forcing two
+   illegibly-narrow columns.
+
+   Container query, not a media query (was @media max-width:768px,
+   keyed to Frame.tsx's own mobile breakpoint): this node renders inside
+   the resizable artifact pane, whose width is independent of the
+   viewport, so a viewport query stays 2-column on a wide monitor even
+   when the pane itself has been dragged far below the threshold. Same
+   reasoning SceneSummary.module.css documents at its own head, applied
+   here. Threshold restated as a container width — the pane, not the
+   window, is what has to fit these two columns. */
+@container (max-width: 560px) {
+  .issueBody {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Each side gets its own top-left glow (glow.module.css) matching its
+   badge color — padding here keeps content clear of the glow's own edge
+   treatment, matching Panel's own 16px padding exactly (Astryx Card's
+   padding={4} step = --spacing-4 = 16px, confirmed via Astryx's own
+   token source; --space-8 read as noticeably tighter than Panel's own
+   inset, direct feedback 2026-08-15). */
+/* min-width:0: .viewColumn is a direct grid item of .issueBody and so
+   defaults to min-width:auto, refusing to shrink below its own prose's
+   intrinsic width — above the container-query threshold that overflowed
+   the pane rather than wrapping. */
+.viewColumn {
+  border-radius: var(--radius-8);
+  padding: var(--space-16);
+  min-width: 0;
+}
+
+.viewColumn > * {
+  display: grid;
+  gap: var(--space-8);
+  align-content: start;
+  justify-items: start;
+}
+
+/* flex-wrap: source chips overflowed their column instead of wrapping
+   to a second line — same mitigation AiRationaleRail.module.css's own
+   .sourceRow already uses for the identical chip-row shape. */
+.sourceRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}

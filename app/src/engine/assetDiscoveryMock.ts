@@ -1,4 +1,5 @@
 import type { MarketAsset } from "./assetDiscovery";
+import { buildMockAsset, type MockSeed } from "./mockAssetBuilder";
 
 // Direct feedback (2026-07-20): the tracked-assets grid read as too thin
 // at 4 real cards — demo density needs a fuller browsing surface. These
@@ -18,19 +19,6 @@ export const CATEGORY_LABELS: Record<string, string> = {
   crypto: "Crypto",
   asset: "Other",
 };
-
-interface MockSeed {
-  name: string;
-  type: string;
-  yield?: number;
-  price?: number;
-  marketCap?: number;
-  volume?: number;
-  circulatingSupply?: number;
-  creditRating?: string;
-  distributionFrequency?: string;
-  outstanding?: string;
-}
 
 const MOCK_SEEDS: Record<string, MockSeed[]> = {
   "covered-bond": [
@@ -159,48 +147,7 @@ export function getMockFilledAssets(realAssets: MarketAsset[], perCategory: numb
       // generation; deltaRecent is derived from the same series.
       const baseValue = seed.price ?? seed.yield ?? 0;
       const points = mockSparkline(baseValue, index + category.length);
-      const last = points[points.length - 1];
-      const prev = points[points.length - 2];
-      const asset: any = {
-        id: `mock-${category}-${index}`,
-        name: seed.name,
-        type: seed.type,
-        category,
-        deltaRecent: last && prev ? Math.round((last.y - prev.y) * 100) / 100 : 0,
-        sparklinePoints: points,
-      };
-      // Yield-based categories: yield value + sparkline from yield series
-      if (seed.yield !== undefined) {
-        asset.yield = last?.y ?? seed.yield;
-      }
-      // Crypto/commodities: price value + sparkline from price series
-      if (seed.price !== undefined) {
-        asset.price = seed.price;
-        asset.volume = seed.volume;
-        asset.circulatingSupply = seed.circulatingSupply;
-        // Calculate percentage deltas from sparkline for crypto/commodities (CMC convention)
-        if (points.length >= 2) {
-          const firstPrice = points[0]?.y ?? seed.price;
-          const lastPrice = points[points.length - 1]?.y ?? seed.price;
-          const prevPrice = points[points.length - 2]?.y ?? firstPrice;
-          asset.delta24hPercent = firstPrice > 0 ? Math.round(((lastPrice - prevPrice) / prevPrice) * 10000) / 100 : 0;
-          asset.delta7dPercent = firstPrice > 0 ? Math.round(((lastPrice - firstPrice) / firstPrice) * 10000) / 100 : 0;
-        }
-      }
-      if (seed.marketCap !== undefined) {
-        asset.marketCap = seed.marketCap;
-      }
-      // Bond/RE attributes
-      if (seed.creditRating !== undefined) {
-        asset.creditRating = seed.creditRating;
-      }
-      if (seed.distributionFrequency !== undefined) {
-        asset.distributionFrequency = seed.distributionFrequency;
-      }
-      if (seed.outstanding !== undefined) {
-        asset.outstanding = seed.outstanding;
-      }
-      combined.push(asset);
+      combined.push(buildMockAsset(seed, category, index, points));
     }
   }
   return combined;

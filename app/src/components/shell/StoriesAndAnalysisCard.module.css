@@ -1,0 +1,48 @@
+.list {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Stacked rows (reverted from a card-grid, direct feedback 2026-08-15:
+   "layout was good like before stacked not grid") — small square image
+   sized to the text column's own height, not larger. Hover affordance
+   only (no navigation wired — this component has no onOpenTab-style prop
+   today; a click target would need one, out of scope for this pass). */
+.row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-12);
+  align-items: center;
+  padding: var(--space-8);
+  border-radius: var(--radius-8);
+}
+
+.row:hover {
+  background-color: var(--color-overlay-hover);
+  cursor: pointer;
+}
+
+.textColumn {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Token-colored placeholder block, not a real image (Phase 21 order: no
+   image-asset pipeline exists in this app — same honest-placeholder
+   posture as Data Sources' own public catalog). Sized to match the text
+   column's own height (square, not a wide 16:9 card image) — direct
+   feedback 2026-08-15: "smaller image that matches height of title +
+   underneath source, not larger." Color rotates through the existing
+   --viz palette per row, purely decorative, carries no meaning of its own.
+   --tint-subtle, not the raw --opacity-40 primitive (2026-08-18 sweep,
+   direct feedback: "all gradients... anywhere... should be subtle, we
+   added that scale") — this was a bare primitive reference bypassing the
+   semantic scale entirely, same "how strongly does a color wash over an
+   area" job the token exists for. */
+.placeholder {
+  width: var(--space-48);
+  height: var(--space-48);
+  border-radius: var(--radius-8);
+  background-color: var(--placeholder-color, var(--viz-1));
+  opacity: var(--tint-subtle);
+}

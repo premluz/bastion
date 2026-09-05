@@ -5,7 +5,7 @@ import { test, expect, type Page } from '@playwright/test';
 // intents and refine intents separable by the resolver, refine loading
 // the refine scene with its filter-summary — plus an honest "no scene
 // matched" state for unresolved input, never a crash.
-const THEMES = ['default', 'ops-dark', 'glass', 'glass-light'] as const;
+const THEMES = ['default', 'ops-dark', 'glass', 'glass-light', 'safe-one'] as const;
 
 async function ask(page: Page, query: string, settleMs: number) {
   const input = page.getByRole('textbox', { name: 'Message input' });

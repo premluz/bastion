@@ -1,6 +1,7 @@
 .root {
   display: grid;
   gap: var(--space-16);
+  container-type: inline-size;
 }
 
 .section {
@@ -8,9 +9,12 @@
   gap: var(--space-4);
 }
 
+/* min-width:0 lets the row shrink inside its grid track (same guard
+   Panel.module.css's own header row uses). */
 .headerRow {
   display: flex;
   justify-content: space-between;
+  min-width: 0;
 }
 
 .distributionBar {
@@ -32,9 +36,11 @@
   background-color: var(--segment-color);
 }
 
+/* min-width:0 lets the row shrink inside its grid track. */
 .legendRow {
   display: flex;
   justify-content: space-between;
+  min-width: 0;
 }
 
 .axisSection {
@@ -86,7 +92,22 @@
   gap: var(--space-8);
 }
 
+/* Four equal tracks of currency figures is the tightest ratio in the
+   node set and the least able to absorb a narrow artifact pane — drop
+   to two columns before the values collide. Container query, not media:
+   the pane's width is independent of the viewport (see
+   SceneSummary.module.css's own head comment). */
+@container (max-width: 420px) {
+  .targetGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Grid items default to min-width:auto and refuse to shrink below their
+   content's intrinsic width — without this the tabular price figures
+   pushed .targetGrid wider than its own track. */
 .targetCell {
   display: grid;
   gap: var(--space-2);
+  min-width: 0;
 }

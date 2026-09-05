@@ -39,9 +39,9 @@ interface DashboardSummaryHeaderProps {
 export function DashboardSummaryHeader({ recommendation, confidence, confidenceLabel, sourceRefs, assumptions, caveat }: DashboardSummaryHeaderProps) {
   return (
     <Card variant="default" padding={4} className="panelFlat">
-      <div style={{ display: 'grid', gap: 'var(--space-12)' }}>
+      <div className={styles.summaryColumn}>
         <Text type="label">Recommended</Text>
-        <Blockquote style={{ fontFamily: 'var(--face-voice)' }}>{recommendation}</Blockquote>
+        <Blockquote className={styles.voiceFace}>{recommendation}</Blockquote>
         <ConfidenceMeter label={confidenceLabel} value={confidence} />
         {assumptions && assumptions.length > 0 && (
           <div className={styles.assumptions}>

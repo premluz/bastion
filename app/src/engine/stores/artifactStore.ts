@@ -24,7 +24,7 @@ export interface Artifact {
 // there's exactly one pane now, tightly coupled to this store's own
 // openArtifactId, so it lives on the same object rather than a second
 // store kept in sync with this one. Pane-visibility fields (paneActivity/
-// collapsedPane/isChatForcedOpen) are still part of THIS SAME store —
+// collapsedPanes/isChatForcedOpen) are still part of THIS SAME store —
 // only their definitions moved to paneVisibilitySlice.ts (2026-07-29,
 // file budget) via Zustand's slice pattern, composed back in below.
 interface ArtifactState extends PaneVisibilityState {
@@ -145,7 +145,7 @@ export const useArtifactStore = create<ArtifactState>((set, get) => ({
       isMaximized: false,
       viewedArtifactIds: {},
       paneActivity: {},
-      collapsedPane: null,
+      collapsedPanes: [],
       isChatForcedOpen: false,
       isChatManuallyClosed: false,
     }),

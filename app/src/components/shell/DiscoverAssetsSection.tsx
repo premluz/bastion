@@ -1,56 +1,43 @@
-import { useMemo, useState, type SVGProps } from 'react';
+import { useMemo } from 'react';
 import { ToggleButton, ToggleButtonGroup } from '@astryxdesign/core/ToggleButton';
 import { Icon } from '@astryxdesign/core/Icon';
+import { useScrollOverflow } from '@astryxdesign/core/hooks';
+import { usePageStore } from '../../engine/stores/pageStore';
 import { EntityAssetGrid } from './EntityAssetGrid';
 import { EntityAssetTable } from './EntityAssetTable';
 import { PageSection } from './PageSection';
+import { GridViewIcon } from './GridViewIcon';
 import type { MarketAsset } from '../../engine/assetDiscovery';
 import { CATEGORY_LABELS } from '../../engine/assetDiscoveryMock';
+import styles from './DiscoverAssetsSection.module.css';
 
 interface DiscoverAssetsSectionProps {
   assets: MarketAsset[];
-  onWatch: (id: string, name: string) => void;
   onOpenDetail: (id: string) => void;
 }
 
 const ALL_CATEGORY = 'all';
 type View = 'table' | 'grid';
 
-// Astryx's semantic icon set (checked via `astryx docs icons`, the full
-// catalog — no grid/card-view name exists in it) has no fit for "grid
-// view"; its own docs sanction passing a custom SVG component directly
-// for exactly this case ("For icons not in the semantic list, pass an
-// SVG component directly"). Stroke-based, 1.5px, currentColor — matching
-// the semantic set's own default SVGs so it doesn't look like a foreign
-// icon style next to them.
-function GridViewIcon(props: SVGProps<SVGSVGElement>) {
+// Category filter and view mode (2026-08-18 follow-up: view toggle moved
+// into PageSection's own `source` slot — direct feedback: "grid list view
+// should be in same line/row as title, similarly like artifacts pane has
+// options there [close and expand]" — the same title-row action-slot
+// pattern PageSection already exposes (its own comment: "byte-identical
+// to Panel... every named page section wraps in this"), not a bespoke
+// second row). Category filter stays below the title row, now horizontally
+// scrollable with fade edges (useScrollOverflow, Astryx's own installed
+// hook for exactly this job — its own doc comment: "used by Carousel for
+// fade-edge and button state") since ToggleButtonGroup itself has no
+// overflow handling and the category list can genuinely exceed the
+// pane's width (confirmed live: "equity" cut off entirely at a
+// realistic pane width with no way to reach it before this fix).
+function CategoryFilterScroller({ categories, category, onChange }: { categories: string[]; category: string; onChange: (value: string) => void }) {
+  const { scrollRef, overflowStart, overflowEnd } = useScrollOverflow();
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} {...props}>
-      <rect x="3" y="3" width="8" height="8" rx="1.5" />
-      <rect x="13" y="3" width="8" height="8" rx="1.5" />
-      <rect x="3" y="13" width="8" height="8" rx="1.5" />
-      <rect x="13" y="13" width="8" height="8" rx="1.5" />
-    </svg>
-  );
-}
-
-// Category filter and view mode share one header row (direct feedback,
-// 2026-07-26: table view added, default view, switch on the right) —
-// filter (which assets show) and view (how they're displayed) are
-// orthogonal, so both live here rather than duplicated inside
-// EntityAssetGrid/EntityAssetTable, which now just render whatever
-// `assets` they're given.
-export function DiscoverAssetsSection({ assets, onWatch, onOpenDetail }: DiscoverAssetsSectionProps) {
-  const categories = useMemo(() => Array.from(new Set(assets.map((asset) => asset.category))), [assets]);
-  const [category, setCategory] = useState<string>(ALL_CATEGORY);
-  const [view, setView] = useState<View>('table');
-
-  const filtered = category === ALL_CATEGORY ? assets : assets.filter((asset) => asset.category === category);
-
-  return (
-    <PageSection title="Discover Assets">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 'var(--space-16)' }}>
-        <ToggleButtonGroup label="Filter assets by category" type="single" value={category} onChange={(value) => setCategory(value ?? ALL_CATEGORY)}>
+    <div className={styles.wrapper}>
+      <div className={styles.scrollRow} ref={scrollRef}>
+        <ToggleButtonGroup label="Filter assets by category" type="single" value={category} onChange={(value) => onChange(value ?? ALL_CATEGORY)}>
           <ToggleButton value={ALL_CATEGORY} label="All">
             All
           </ToggleButton>
@@ -60,16 +47,55 @@ export function DiscoverAssetsSection({ assets, onWatch, onOpenDetail }: Discove
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
-        <ToggleButtonGroup label="Switch view" type="single" value={view} onChange={(value) => setView(value === 'grid' ? 'grid' : 'table')}>
-          <ToggleButton value="table" label="Table view" isIconOnly icon={<Icon icon="viewColumns" size="sm" />} />
-          <ToggleButton value="grid" label="Grid view" isIconOnly icon={<Icon icon={GridViewIcon} size="sm" />} />
-        </ToggleButtonGroup>
       </div>
+      {overflowStart && <div className={styles.fadeStart} />}
+      {overflowEnd && <div className={styles.fadeEnd} />}
+    </div>
+  );
+}
+
+// Category filter + view mode lifted into pageStore's pageUiState (2026-08-30,
+// direct feedback: browser back to Discover should restore the selected
+// category/view, not just reset it) — was local useState, which is
+// discarded on unmount; EntitiesPage (this component's one caller) fully
+// unmounts on navigation (Frame.tsx's renderPage switch), so anything
+// meant to survive a navigate-away/back round trip has to live in the
+// store instead. Shares the "entities" key with PageShell's own
+// scrollRestoreKey (EntitiesPage.tsx) — same "this page's remembered UI
+// state" record, not a coincidence.
+const PAGE_UI_KEY = 'entities';
+
+function isView(value: unknown): value is View {
+  return value === 'table' || value === 'grid';
+}
+
+export function DiscoverAssetsSection({ assets, onOpenDetail }: DiscoverAssetsSectionProps) {
+  const categories = useMemo(() => Array.from(new Set(assets.map((asset) => asset.category))), [assets]);
+  const storedCategory = usePageStore((state) => state.pageUiState[PAGE_UI_KEY]?.category);
+  const storedView = usePageStore((state) => state.pageUiState[PAGE_UI_KEY]?.view);
+  const category = typeof storedCategory === 'string' ? storedCategory : ALL_CATEGORY;
+  const view = isView(storedView) ? storedView : 'table';
+  const setPageUiState = usePageStore((state) => state.setPageUiState);
+  const setCategory = (value: string) => setPageUiState(PAGE_UI_KEY, { category: value });
+  const setView = (value: View) => setPageUiState(PAGE_UI_KEY, { view: value });
+
+  const filtered = category === ALL_CATEGORY ? assets : assets.filter((asset) => asset.category === category);
+
+  const viewToggle = (
+    <ToggleButtonGroup label="Switch view" type="single" value={view} onChange={(value) => setView(value === 'grid' ? 'grid' : 'table')}>
+      <ToggleButton value="table" label="Table view" isIconOnly icon={<Icon icon="viewColumns" size="sm" />} />
+      <ToggleButton value="grid" label="Grid view" isIconOnly icon={<Icon icon={GridViewIcon} size="sm" />} />
+    </ToggleButtonGroup>
+  );
+
+  return (
+    <PageSection title="Discover Assets" actions={viewToggle}>
+      <CategoryFilterScroller categories={categories} category={category} onChange={setCategory} />
 
       {view === 'table' ? (
-        <EntityAssetTable assets={filtered} onWatch={onWatch} onOpenDetail={onOpenDetail} {...(category !== ALL_CATEGORY ? { category } : {})} />
+        <EntityAssetTable assets={filtered} onOpenDetail={onOpenDetail} {...(category !== ALL_CATEGORY ? { category } : {})} />
       ) : (
-        <EntityAssetGrid assets={filtered} onWatch={onWatch} onOpenDetail={onOpenDetail} />
+        <EntityAssetGrid assets={filtered} onOpenDetail={onOpenDetail} />
       )}
     </PageSection>
   );

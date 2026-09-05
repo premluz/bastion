@@ -7,7 +7,7 @@
     "build": "pnpm --filter app build",
     "test": "pnpm --filter app test",
     "test:visual": "playwright test",
-    "lint:tokens": "! grep -rInE \"#[0-9a-fA-F]{3,8}\\b|rgba?\\(|hsla?\\(\" app/src --exclude=astryx-bridge.md && node lint-theme-parity.mjs",
+    "lint:tokens": "! grep -rInE \"#[0-9a-fA-F]{3,8}\\b|rgba?\\(|hsla?\\(\" app/src --exclude=astryx-bridge.md && ! grep -rInE \"oklch\\(|oklab\\(|[^-a-z]lab\\(|[^-a-z]lch\\(\" app/src --exclude-dir=theme --exclude=astryx-bridge.md && node lint-theme-parity.mjs",
     "verify": "pnpm lint:tokens && pnpm test:visual",
     "storybook": "storybook dev -c .storybook -p 6006"
   },

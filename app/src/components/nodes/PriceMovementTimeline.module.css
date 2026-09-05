@@ -1,0 +1,118 @@
+.root {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Vertical timeline row (Phase 21 restyle — day marker + connecting
+   line, per the reference). Same git-log-style rail mechanic as
+   StepRow.module.css's own .rail: each row draws only the segment BELOW
+   its own dot, extended past its own bottom edge by exactly this list's
+   row gap (--space-16) so stacked segments concatenate into one
+   continuous line with no seam, no shared absolute-positioned overlay,
+   no JS height math. */
+.row {
+  display: flex;
+  gap: var(--space-12);
+  align-items: flex-start;
+  position: relative;
+  border-radius: var(--radius-8);
+  padding: var(--space-4);
+}
+
+/* Hoverable, direct feedback 2026-08-15 ("each item there should be
+   hoverable") — same convention as Stories & Analysis's own row hover.
+   z-index above .rail (which is z-index:0) so the background wash paints
+   over the connecting line, not under it. */
+.row:hover {
+  background-color: var(--color-overlay-hover);
+  cursor: pointer;
+  z-index: 1;
+}
+
+.dateColumn {
+  flex-shrink: 0;
+  width: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-1);
+  border: 2px solid var(--ink-muted);
+  position: relative;
+  z-index: 1;
+}
+
+/* left centers the 2px line on the 10px dot — computed from the SAME
+   layout values that position the dot (.row's own --space-4 padding +
+   half of .dateColumn's 72px width), not a standalone hardcoded pixel.
+   Fixed 2026-08-17: the prior hardcoded left:35px was tuned before
+   .row gained its own padding:var(--space-4) (added later for hover
+   affordance) and never updated — confirmed live via
+   getBoundingClientRect() that the dot's true center sat at 40px from
+   the row's own left edge while the rail's center sat at 36px, a real
+   4px miss (traced to the row padding it never accounted for). This
+   calc() can't silently drift the same way again since it shares the
+   same --space-4 term .row's own padding uses. Only rendered
+   (PriceMovementTimeline.tsx) when a row isn't last — same "no
+   zero-height variant" rule as StepRow's own .rail. */
+.rail {
+  position: absolute;
+  left: calc(var(--space-4) + 72px / 2 - 1px);
+  top: 10px;
+  bottom: calc(-1 * var(--space-16));
+  width: 2px;
+  background-color: var(--edge);
+  z-index: 0;
+}
+
+.contentBlock {
+  display: grid;
+  gap: var(--space-4);
+  flex: 1;
+  min-width: 0;
+  padding-bottom: var(--space-8);
+}
+
+.endContent {
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
+}
+
+/* Price + signed % change on their own line, above the headline (direct
+   feedback, 2026-08-15: "let's actually break line, so [the headline] is
+   in the next line underneath" — an earlier inline version crowded long
+   headlines onto the same row as the price). Only the arrow + percentage
+   carry the delta color; the price itself stays plain (2026-08-15: "no
+   color of the price itself") — same reading order AssetPriceHeader uses
+   for its own last-price/delta pairing, just stacked instead of inline
+   with the headline. --accent-ok/--accent-alert, not TrendChart's
+   --delta-up/--delta-down: this is a plain numeral read, not a chart
+   line, principle 2's own carve-out for a directional delta figure. */
+.priceRow {
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
+}
+
+.deltaOk,
+.deltaAlert {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.deltaOk {
+  color: var(--accent-ok);
+}
+
+.deltaAlert {
+  color: var(--accent-alert);
+}

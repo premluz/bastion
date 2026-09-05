@@ -4,7 +4,7 @@ import type { ThinkingStep } from '../../contracts/thinking';
 import { SourceChip } from './SourceChip';
 import { ConfidenceBadge } from './ConfidenceBadge';
 import { SearchResultsCard } from './SearchResultsCard';
-import { useTextReveal } from './useTextReveal';
+import { TextChunkReveal } from './TextChunkReveal';
 import './trail.css';
 import styles from './StepRow.module.css';
 
@@ -39,13 +39,6 @@ interface StepRowProps {
 // type. Duration shows only once a step settles, matching the template's
 // "duration on the trailing edge for completed calls."
 export function StepRow({ step, isActive, isLast = false }: StepRowProps) {
-  // Order-scoped to the active label only (node-vocabulary.md's
-  // ThinkingTrail law: the active step is the only animated thing on
-  // screen) — the settled branch below renders a different Text element
-  // entirely on isActive flipping false, so it never carries the reveal
-  // class and never needs a reset.
-  const revealRef = useTextReveal(step.durationMs, isActive);
-
   const iconName: IconName = isActive ? 'clock' : 'check';
   const iconBoxClasses = isActive ? `${styles.iconBox} ${styles.activeIndicator}` : styles.iconBox;
 
@@ -62,8 +55,8 @@ export function StepRow({ step, isActive, isLast = false }: StepRowProps) {
       <div className={styles.contentBlock}>
         <div className={styles.headerRow}>
           {isActive ? (
-            <Text ref={revealRef} type="body" weight="medium" color="primary" className="merlin-text-reveal">
-              {step.label}
+            <Text type="body" weight="medium" color="primary">
+              <TextChunkReveal text={step.label} durationMs={step.durationMs} />
             </Text>
           ) : (
             <Text type="body" color="secondary">

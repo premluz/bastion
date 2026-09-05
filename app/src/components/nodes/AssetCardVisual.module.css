@@ -1,0 +1,58 @@
+/* Discover Assets grid card (2026-08-30 restructure): identity row sits
+   directly on the outer cardSurface1 card; chart+price live in their own
+   sub-pane (.chartPane below) beneath it. */
+.cardContent {
+  display: grid;
+  gap: var(--space-12);
+  /* Publishes the OUTER ClickableCard's own inset (its padding={4} =
+     --space-16) so .chartPane below can cancel exactly that and reach the
+     card's true edge — bleed.module.css's own contract ("a pane publishes
+     its own inset; a child cancels it generically, never naming a spacing
+     token itself"). Declared here rather than inherited: the value seen on
+     this subtree before was .paneBody's, several levels up — coincidentally
+     the same 16px, which would have silently broken the moment either
+     padding changed independently. */
+  --pane-inset: var(--space-16);
+}
+
+/* Component-scoped, NOT Panel's shared panelFlat class — this pane is
+   deliberately borderless (transparent bg, reads as part of the outer
+   surface-1 card rather than a second nested card), and panelFlat is
+   reused by every bordered pane app-wide, so stripping its border here
+   would have silently removed it everywhere else too.
+
+   FULL BLEED (2026-08-30, fourth round — measured, not guessed): making
+   this pane padding={0} was necessary but NOT sufficient. The chart still
+   sat 16px in from the card's own edges because the OUTER ClickableCard's
+   padding={4} (--space-16) was never cancelled — measured live:
+   chart SVG 162→487 inside an outer card 145→504, exactly 16px per side.
+   Same root cause STATE.md records for Entity Detail's own chart-bleed
+   bug: the clip/inset boundary that matters is the ANCESTOR card, not the
+   immediate wrapper. Cancelled here via bleed.module.css's own contract
+   rather than a hardcoded negative margin — .cardContent (below) publishes
+   the outer card's REAL inset as --pane-inset, and this pane cancels
+   exactly that, so if the outer padding ever changes the two can't drift.
+   Block-end only on the chart itself (see .chartBleed): the price row
+   above keeps its own inset, and the card's bottom edge is where the
+   chart should land. */
+.chartPane {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  margin-inline: calc(-1 * var(--pane-inset, 0px));
+  margin-bottom: calc(-1 * var(--pane-inset, 0px));
+}
+
+/* Re-insets the price/delta block by exactly what .chartPane above bled
+   out, so price stays flush-left with the identity row while the chart
+   below it reaches the card's true edge — the same "bleed the whole
+   wrapper, re-inset only the header" arrangement TrendChart.module.css's
+   own .headerInset uses, and for the same reason (a bleeding child and a
+   clipping ancestor can't both sit between the chart and the edge).
+   padding-bottom stays 0: the chart follows immediately, no dead gap. */
+.priceInset {
+  display: grid;
+  gap: var(--space-4);
+  padding-inline: var(--pane-inset, 0px);
+  padding-top: var(--pane-inset, 0px);
+}

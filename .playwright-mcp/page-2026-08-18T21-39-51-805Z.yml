@@ -1,0 +1,62 @@
+- generic [ref=e4]:
+  - link "Skip to content" [ref=e5] [cursor=pointer]:
+    - /url: "#astryx-app-shell-main"
+  - generic [ref=e8]:
+    - navigation "Side navigation" [ref=e10]:
+      - generic [ref=e11]: Merlin
+      - generic [ref=e16]:
+        - group "Places" [ref=e17]:
+          - generic [ref=e21]:
+            - button "New investigation" [ref=e23] [cursor=pointer]
+            - button "Discover" [ref=e28] [cursor=pointer]
+            - button "Watchlist" [ref=e33] [cursor=pointer]
+            - button "Holdings" [ref=e38] [cursor=pointer]
+            - button "Market Pulse" [ref=e43] [cursor=pointer]
+            - button "Portfolio" [ref=e48] [cursor=pointer]
+            - button "Risk" [ref=e53] [cursor=pointer]
+            - button "Data Sources" [ref=e58] [cursor=pointer]
+        - group "Recent" [ref=e62]:
+          - generic [ref=e63]:
+            - generic [ref=e64]: Recent
+            - button "Filter recent" [ref=e68] [cursor=pointer]:
+              - status
+          - generic [ref=e74]:
+            - generic [ref=e75]: Nothing yet.
+            - button "View all" [ref=e78] [cursor=pointer]
+      - generic [ref=e81]:
+        - button "Collapse sidebar" [ref=e83] [cursor=pointer]:
+          - status
+        - generic [ref=e89]:
+          - button "Analyst Analyst" [ref=e90] [cursor=pointer]:
+            - generic [ref=e91]:
+              - img "Analyst" [ref=e93]:
+                - generic [ref=e94]: A
+              - generic [ref=e96]: Analyst
+            - status
+          - button "Notifications" [ref=e102] [cursor=pointer]:
+            - status
+    - main [ref=e109]:
+      - generic [ref=e120]:
+        - heading "Where should we start?" [level=1] [ref=e123]
+        - generic [ref=e126]:
+          - generic [ref=e128]:
+            - generic: Ask a question about the venue…
+            - textbox "Message input" [ref=e129]
+          - button "Send" [disabled] [ref=e132]:
+            - status
+        - generic [ref=e138]:
+          - generic [ref=e140] [cursor=pointer]:
+            - button "Three tokenized assets now clear the 6% yield floor, led by Helios Yield Fund at 9.1%." [ref=e141]
+            - generic [ref=e142]:
+              - generic [ref=e143]: Three tokenized assets now clear the 6% yield floor, led by Helios Yield Fund at 9.1%.
+              - generic [ref=e144]: The conservative screen's candidate pool has grown since the mandate was last run.
+          - generic [ref=e146] [cursor=pointer]:
+            - button "Aldergate Estates' audit renewal has lapsed — IssuerRegistry never received the filing." [ref=e147]
+            - generic [ref=e148]:
+              - generic [ref=e149]: Aldergate Estates' audit renewal has lapsed — IssuerRegistry never received the filing.
+              - generic [ref=e150]: It's the one open risk on an otherwise investment-grade profile.
+          - generic [ref=e152] [cursor=pointer]:
+            - button "Two NordBond 2029 settlements failed this week, both traced to Kestrel-linked wallets." [ref=e153]
+            - generic [ref=e154]:
+              - generic [ref=e155]: Two NordBond 2029 settlements failed this week, both traced to Kestrel-linked wallets.
+              - generic [ref=e156]: Kestrel has accumulated 11% of the float over six weeks.

@@ -1,202 +1,174 @@
-import { useMemo, useState } from 'react';
-import { List } from '@astryxdesign/core/List';
-import { Text } from '@astryxdesign/core/Text';
+import { useEffect, useState } from 'react';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
-import { TabList, Tab } from '@astryxdesign/core/TabList';
-import { Panel } from '../nodes/Panel';
-import { NewsFeed } from '../nodes/NewsFeed';
+import { ToggleButtonGroup, ToggleButton } from '@astryxdesign/core/ToggleButton';
 import { AnalystConsensus } from '../nodes/AnalystConsensus';
-import { resolveEntityDetail, findRelatedEntities } from '../../engine/entityDetail';
-import { sceneReferencesEntity } from '../../engine/assetDiscovery';
-import { buildThreads } from '../../engine/threads';
-import { reopenThread } from '../../engine/openThread';
-import { useSessionStore } from '../../engine/stores/sessionStore';
-import { useArtifactStore } from '../../engine/stores/artifactStore';
+import { EarningsHistoryChart } from '../nodes/EarningsHistoryChart';
+import { PriceMovementTimeline } from '../nodes/PriceMovementTimeline';
+import { AiRationaleRail } from '../nodes/AiRationaleRail';
+import { TrendChart } from '../nodes/TrendChart';
+import { Panel } from '../nodes/Panel';
+import { resolveTradableAsset } from '../../engine/tradableAsset';
 import { useWatchlistStore } from '../../engine/stores/watchlistStore';
 import { usePageStore } from '../../engine/stores/pageStore';
 import { PageShell } from './PageShell';
-import { ThreadRow } from './ThreadRow';
-import { RelatedEntitiesStrip } from './RelatedEntitiesStrip';
-import { EntityTrend } from './EntityTrend';
-import { EntityStatistics } from './EntityStatistics';
-import { EntityAbout } from './EntityAbout';
+import { EntityPaneTitle } from './EntityPaneTitle';
+import { AssetOverviewTab } from './AssetOverviewTab';
+import { AssetKeyStatsTable } from './AssetKeyStatsTable';
+import { AssetSnippetCard } from './AssetSnippetCard';
 import { AnimatedListItem } from './AnimatedListItem';
-import type { ThreadSummary } from '../../engine/threads';
 
-type EntityDetailTab = 'overview' | 'financials' | 'coverage' | 'historical-data';
+type AssetDetailTab = 'overview' | 'financials' | 'analysis' | 'earnings' | 'news' | 'historical-data';
 
-const RELATED_COUNT = 3;
-
-// Coverage summary (2026-07-25 order) — a template-generated sentence,
-// not live LLM generation, same discipline as scene-summary/
-// recommendation: real data (the same ThreadSummary[] the Investigations
-// list below already renders — one computation, not a second query),
-// scripted synthesis. Chosen rule, the simplest one that's still
-// correct: concatenate each thread's own title with its date, joined by
-// connectives — no attempt at deeper NLG (e.g. inferring a theme across
-// threads), since the titles themselves already carry that meaning.
-function joinWithAnd(items: string[]): string {
-  if (items.length <= 1) return items[0] ?? '';
-  if (items.length === 2) return `${items[0]} and ${items[1]}`;
-  return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
-}
-
-function formatShortDate(ms: number): string {
-  return new Date(ms).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
-
-function buildCoverageSummary(threads: ThreadSummary[]): string {
-  const parts = threads.map((thread) => `${thread.title} (${formatShortDate(thread.timestamp)})`);
-  const count = threads.length === 1 ? 'once' : threads.length === 2 ? 'twice' : `${threads.length} times`;
-  return `Investigated ${count} this session: ${joinWithAnd(parts)}.`;
-}
-
-// Page (Phase 16, revised scope 2026-07-23) — reached by clicking any
-// Discover grid card, real or mocked filler (EntityAssetGrid.tsx), or a
-// related-entity link: browse first, investigate second. No SceneRenderer
-// anywhere — chart/Statistics/About/News are built from the SAME facts a
-// scene would bind (universe attributes, the yield/price series, authored
-// news coverage), authored here as plain props exactly like DashboardPage's
-// own static pages (Phase 13's rule-1 shell exception: registry nodes
-// imported directly by shell code, flagged each time it happens, same as
-// here). No trade/buy-sell surface anywhere on this page — order's
-// explicit exclusion; this is the SeekingAlpha register (News/Stats/
-// Compare), not the Kraken one.
+// Page (Phase 20 WO-1) — replaces the EntityDetail-driven page (Phase 16/
+// 19). Overview is a set of PREVIEW cards (AssetOverviewTab.tsx), each
+// deep-linking into its own tab with the referenced item pre-selected —
+// Perplexity Finance/CoinGecko's own pattern, per the order's IA law:
+// nothing on Overview is a dead end. Only entities with a TradableAsset
+// fixture render here (engine/tradableAsset.ts, two golden fixtures at
+// this proof-of-concept stage) — every other entity shows an honest "not
+// yet available" empty state rather than a dead click or a silent
+// fallback to the retired EntityDetail shape (2026-08-15 ruling). No
+// SceneRenderer, no trail, no submitQuery — same static-page posture as
+// Holdings/DashboardPage. No trade/buy-sell surface anywhere.
 export function EntityDetailPage() {
   const selectedEntityId = usePageStore((state) => state.selectedEntityId);
-  const setPage = usePageStore((state) => state.setPage);
+  const entityDetailTarget = usePageStore((state) => state.entityDetailTarget);
+  const clearEntityDetailTarget = usePageStore((state) => state.clearEntityDetailTarget);
   const openEntityDetail = usePageStore((state) => state.openEntityDetail);
-  const turns = useSessionStore((state) => state.turns);
-  const activeThreadId = useSessionStore((state) => state.activeThreadId);
-  const artifacts = useArtifactStore((state) => state.artifacts);
   const watch = useWatchlistStore((state) => state.watch);
 
-  const entity = selectedEntityId ? resolveEntityDetail(selectedEntityId) : undefined;
+  const asset = selectedEntityId ? resolveTradableAsset(selectedEntityId) : undefined;
 
-  const relatedThreads = useMemo(() => {
-    if (!entity) return [];
-    return buildThreads(turns).filter((thread) => thread.turns.some((turn) => turn.sceneId && sceneReferencesEntity(turn.sceneId, entity.id)));
-  }, [turns, entity]);
+  const [activeTab, setActiveTab] = useState<AssetDetailTab>('overview');
 
-  const related = useMemo(() => (entity ? findRelatedEntities(entity, RELATED_COUNT) : []), [entity]);
+  // Deep-link consumption (Phase 20 WO-1): an Overview preview card sets
+  // entityDetailTarget via openEntityDetail's own target param; this page
+  // reads it once, switches to the named tab, then clears it — same
+  // one-shot pattern as focusModule (InvestigationsPage's own consumer).
+  useEffect(() => {
+    if (entityDetailTarget) {
+      setActiveTab(entityDetailTarget.tab as AssetDetailTab);
+      clearEntityDetailTarget();
+    }
+  }, [entityDetailTarget, clearEntityDetailTarget]);
 
-  const [activeTab, setActiveTab] = useState<EntityDetailTab>('overview');
-
-  if (!entity) {
+  if (!asset) {
     return (
-      <PageShell title="Entity">
-        <EmptyState title="No entity selected" description="Open an entity from the Discover grid to see its detail page here." />
+      <PageShell title="Asset">
+        <EmptyState
+          title="Not yet available in the new asset view"
+          description="This entity doesn't have a TradableAsset fixture yet — South Bow Corp and Zenith Protocol are the two proof-of-concept assets currently available."
+        />
       </PageShell>
     );
   }
 
   return (
     <PageShell
-      title={entity.name}
+      title={asset.name}
+      titleContent={<EntityPaneTitle id={asset.id} name={asset.name} symbol={asset.symbol} />}
       titleEndContent={
         <IconButton
-          label={`Watch ${entity.name}`}
+          label={`Watch ${asset.name}`}
           tooltip="Add to watchlist"
           icon={<Icon icon="checkDouble" size="sm" />}
           variant="ghost"
           size="sm"
-          onClick={() => watch(entity.id, entity.name, 'manual')}
+          onClick={() => watch(asset.id, asset.name, 'manual')}
         />
       }
     >
-      <TabList value={activeTab} onChange={(value) => setActiveTab(value as EntityDetailTab)}>
-        <Tab value="overview" label="Overview" />
-        <Tab value="financials" label="Financials" />
-        {entity.news && <Tab value="coverage" label="Coverage" />}
-        <Tab value="historical-data" label="Historical Data" />
-      </TabList>
+      {/* ToggleButtonGroup, not TabList (2026-08-23 direct feedback: "tabs
+          should be same style as the ones in discover asset (no
+          underline) selected is just bg") — matches
+          DiscoverAssetsSection.tsx's own category filter exactly: pill
+          buttons, no underline indicator, selected reads as a filled
+          background. Same controlled single-select API shape as TabList
+          (value/onChange), so activeTab state below is unchanged. */}
+      <ToggleButtonGroup
+        label="Asset detail sections"
+        type="single"
+        value={activeTab}
+        onChange={(value) => setActiveTab((value ?? 'overview') as AssetDetailTab)}
+      >
+        <ToggleButton value="overview" label="Overview">
+          Overview
+        </ToggleButton>
+        <ToggleButton value="financials" label="Financials">
+          Financials
+        </ToggleButton>
+        {asset.analystConsensus && (
+          <ToggleButton value="analysis" label="Analysis">
+            Analysis
+          </ToggleButton>
+        )}
+        {asset.earningsHistory && (
+          <ToggleButton value="earnings" label="Earnings">
+            Earnings
+          </ToggleButton>
+        )}
+        <ToggleButton value="news" label="News">
+          News
+        </ToggleButton>
+        <ToggleButton value="historical-data" label="Historical Data">
+          Historical Data
+        </ToggleButton>
+      </ToggleButtonGroup>
 
       {activeTab === 'overview' && (
+        <AssetOverviewTab asset={asset} onOpenTab={setActiveTab} onOpenRelated={openEntityDetail} />
+      )}
+
+      {activeTab === 'financials' && (
         <>
           <AnimatedListItem index={0}>
-            <EntityTrend entity={entity} />
+            <AssetKeyStatsTable title="Key statistics" stats={asset.keyStatsTable} />
           </AnimatedListItem>
-
-          {entity.analystConsensus && (
-            <AnimatedListItem index={1}>
-              <Panel title="Analyst consensus">
-                <AnalystConsensus consensus={entity.analystConsensus} />
-              </Panel>
-            </AnimatedListItem>
-          )}
-
-          <AnimatedListItem index={entity.analystConsensus ? 2 : 1}>
-            <RelatedEntitiesStrip entities={related} onOpen={openEntityDetail} />
-          </AnimatedListItem>
-
-          <AnimatedListItem index={entity.analystConsensus ? 3 : 2}>
-            <div style={{ display: 'grid', gap: 'var(--space-12)' }}>
-              <Text type="label">Investigations</Text>
-              {relatedThreads.length === 0 ? (
-                <EmptyState title="No investigations yet this session" description="No investigation this session has referenced this entity." />
-              ) : (
-                <>
-                  {/* Coverage summary: additive, above the list, never a
-                      replacement for it — analysts still want the raw
-                      citations (title/date/status) the list below provides. */}
-                  <Text type="body" style={{ fontFamily: 'var(--face-voice)' }}>
-                    {buildCoverageSummary(relatedThreads)}
-                  </Text>
-                  <List hasDividers density="compact">
-                    {relatedThreads.map((thread) => {
-                      const module = thread.latestTurn.artifactRef ? artifacts[thread.latestTurn.artifactRef]?.module : undefined;
-                      return (
-                        <ThreadRow
-                          key={thread.threadId}
-                          thread={thread}
-                          module={module}
-                          isSelected={activeThreadId === thread.threadId}
-                          onClick={() => {
-                            setPage('home');
-                            reopenThread(thread);
-                          }}
-                        />
-                      );
-                    })}
-                  </List>
-                </>
-              )}
-            </div>
+          <AnimatedListItem index={1}>
+            <AssetSnippetCard snippet={asset.snippet} />
           </AnimatedListItem>
         </>
       )}
 
-      {activeTab === 'financials' && (
-        // Statistics + About side by side (direct order, 2026-07-29):
-        // two flex columns in one row, each shrinkable (minWidth: 0) so
-        // neither forces the row wider than its container — wraps to
-        // stacked on a narrow content column rather than overflowing,
-        // same reasoning as every other flex-row split on this page.
+      {activeTab === 'analysis' && asset.analystConsensus && (
         <AnimatedListItem index={0}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-24)' }}>
-            <div style={{ flex: '1 1 320px', minWidth: 0 }}>
-              <EntityStatistics entity={entity} />
-            </div>
-            <div style={{ flex: '1 1 320px', minWidth: 0 }}>
-              <EntityAbout entity={entity} />
-            </div>
-          </div>
-        </AnimatedListItem>
-      )}
-
-      {activeTab === 'coverage' && entity.news && (
-        <AnimatedListItem index={0}>
-          <Panel title="Coverage">
-            <NewsFeed data={entity.news} />
+          <Panel title="Analyst consensus">
+            <AnalystConsensus consensus={asset.analystConsensus} />
           </Panel>
         </AnimatedListItem>
       )}
 
+      {activeTab === 'earnings' && asset.earningsHistory && (
+        <AnimatedListItem index={0}>
+          <EarningsHistoryChart title="Earnings history" points={asset.earningsHistory} />
+        </AnimatedListItem>
+      )}
+
+      {activeTab === 'news' && (
+        <>
+          <AnimatedListItem index={0}>
+            <Panel title="Why is this moving?">
+              <AiRationaleRail summary={asset.aiRationale.summary} sources={asset.aiRationale.sources} asOf={asset.aiRationale.asOf} />
+            </Panel>
+          </AnimatedListItem>
+          <AnimatedListItem index={1}>
+            <PriceMovementTimeline title="Notable price movement" entries={asset.priceMovementTimeline} />
+          </AnimatedListItem>
+        </>
+      )}
+
       {activeTab === 'historical-data' && (
         <AnimatedListItem index={0}>
-          <EntityTrend entity={entity} />
+          <TrendChart
+            title="Price"
+            series={asset.trendChart.series}
+            periods={asset.trendChart.periods}
+            {...(asset.trendChart.intraday ? { intraday: asset.trendChart.intraday } : {})}
+            {...(asset.trendChart.intradayFine ? { intradayFine: asset.trendChart.intradayFine } : {})}
+            {...(asset.trendChart.compareSeries ? { compareSeries: asset.trendChart.compareSeries } : {})}
+          />
         </AnimatedListItem>
       )}
     </PageShell>

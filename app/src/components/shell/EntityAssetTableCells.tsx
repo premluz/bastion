@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import { pixel, proportional, type TableColumn } from '@astryxdesign/core/Table';
-import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
-import { AssetIdentity } from './AssetIdentity';
+import { AssetIdentity } from '../nodes/AssetIdentity';
+import { WatchToggleButton } from './WatchToggleButton';
 import type { MarketAsset } from '../../engine/assetDiscovery';
 
 // Astryx's Table<T> constrains T to Record<string, unknown> — MarketAsset
@@ -100,15 +100,16 @@ export function buildDeltaCell(isCryptoOrStockOrCommodity: boolean): TableColumn
   };
 }
 
-// Watch cell (always present, every category)
-export function buildWatchCell(onWatch: (id: string, name: string) => void): TableColumn<Row> {
+// Watch cell (always present, every category) — WatchToggleButton reads
+// useWatchlistStore directly (no onWatch prop threaded through anymore,
+// same "shell component, free to touch stores" reasoning its own
+// comment documents).
+export function buildWatchCell(): TableColumn<Row> {
   return {
     key: 'watch',
     header: '',
     width: proportional(12),
     align: 'end',
-    renderCell: (asset: Row) => (
-      <IconButton label={`Watch ${asset.name}`} tooltip="Add to watchlist" icon={<Icon icon="checkDouble" size="sm" />} variant="ghost" size="sm" onClick={() => onWatch(asset.id, asset.name)} />
-    ),
+    renderCell: (asset: Row) => <WatchToggleButton entityId={asset.id} name={asset.name} />,
   };
 }

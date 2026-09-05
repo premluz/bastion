@@ -1,3 +1,76 @@
+/* Was an inline style object on EntityAssetTable.tsx (width/minWidth/
+   overflow/maxWidth) — moved here per CLAUDE.md rule 4, which bans inline
+   style props even when every value is token-sourced.
+
+   min-width:0 lets this wrapper shrink inside its own flex/grid parent
+   instead of being pinned to the table content's intrinsic width;
+   overflow:auto then correctly takes over scrolling the table itself.
+
+   padding-inline (2026-09-02 follow-up): the gutter the rounded row-hover
+   background below insets INTO — see that rule's own comment for why a
+   <tr> background can't be inset any other way. */
+.root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: auto;
+  padding-inline: var(--space-8);
+}
+
+/* Astryx's own Table wrapper shrink-wraps its content width and defaults
+   to min-width:auto as a flex/grid item — the same two-part override
+   DataTable.module.css and Comparison.module.css both document as
+   required in addition to the parent's own min-width:0. .animatedTable
+   sits between .root and this wrapper, so it needs the guard too. */
+.animatedTable {
+  min-width: 0;
+}
+
+.root :global(.astryx-table-scroll-wrapper) {
+  min-width: 0;
+  width: 100%;
+}
+
+/* Reveals WatchToggleButton's own hidden [data-watch-trigger] state on
+   row hover/keyboard-focus (2026-09-02, direct feedback: "this icon
+   should be visible on hovered card or row of table") — a native <tr>
+   is itself the hoverable element, so this needs no wrapper class the
+   way the card grid's own .cardWrapper does. prefers-hover:none
+   (WatchToggleButton.module.css's own media query) already keeps it
+   visible on touch regardless of this rule. */
+.root tbody tr:hover [data-watch-trigger],
+.root tbody tr:focus-within [data-watch-trigger] {
+  opacity: 1;
+}
+
+/* Rounded, inset row-hover shape matching Notable Movers/Trending's own
+   Item hover (2026-09-02, direct feedback: "table hover should have
+   rounding same as notable movers trending items there on hover,
+   rounded rectangle, but... the rounding sides are outside not exactly
+   as table row" — offset FROM the row's own left/right edges, not
+   flush). A <tr> background always fills edge-to-edge (no way to inset
+   a row's own background-box), so this repaints the highlight on each
+   <td> instead: Astryx's own row hover neutralized to transparent here,
+   .root's own horizontal padding creates the gutter each cell's
+   background respects (a background never paints past its own box), and
+   only the first/last cell in a row get the outer two corners rounded —
+   the middle cells stay square, reading as one continuous rounded bar
+   because they all share the identical highlight color with no visible
+   seam between them. */
+.root :global(.astryx-table-row):hover :global(.astryx-table-cell) {
+  background: var(--surface-2);
+}
+
+.root :global(.astryx-table-row):hover :global(.astryx-table-cell):first-child {
+  border-top-left-radius: var(--radius-8);
+  border-bottom-left-radius: var(--radius-8);
+}
+
+.root :global(.astryx-table-row):hover :global(.astryx-table-cell):last-child {
+  border-top-right-radius: var(--radius-8);
+  border-bottom-right-radius: var(--radius-8);
+}
+
 /* Table rows entrance animation: each row fades in and slides up with
    staggered delay based on its position. Uses nth-child selector to apply
    sequential animation-delay to each row. Table stagger (--motion-table-stagger)

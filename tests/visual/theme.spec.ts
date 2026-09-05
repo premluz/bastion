@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 const ASTRYX_THEMES = ['neutral', 'stone'] as const;
 const ASTRYX_SCHEMES = ['dark', 'light'] as const;
-const SCHEME_LOCKED_THEMES = ['ops-dark', 'glass', 'glass-light'] as const;
+const SCHEME_LOCKED_THEMES = ['ops-dark', 'glass', 'glass-light', 'safe-one'] as const;
 
 // theme=default is where astryxTheme/astryxScheme are genuinely meaningful —
 // it's a pass-through to Astryx's own light-dark() behavior.

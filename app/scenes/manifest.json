@@ -100,6 +100,49 @@
         "explain south bow corp's rally",
         "south bow corp volume spike"
       ]
+    },
+    {
+      "id": "hottest-crypto-week",
+      "file": "hottest-crypto-week.scene.json",
+      "module": "discover",
+      "mount": "inline",
+      "intents": [
+        "hottest crypto this week",
+        "what are the hottest crypto this week",
+        "what's hot in crypto right now",
+        "which crypto assets are moving this week",
+        "biggest crypto movers this week",
+        "top crypto assets right now",
+        "show me trending crypto"
+      ]
+    },
+    {
+      "id": "hottest-crypto-week-refine",
+      "file": "hottest-crypto-week-refine.scene.json",
+      "module": "investigate",
+      "mount": "inline",
+      "intents": [
+        "41% weekly move",
+        "what drove zenith's 41% weekly move",
+        "why did zenith protocol move 41% this week",
+        "zenith protocol 41 percent move",
+        "break down zenith's weekly move",
+        "what's behind zenith's move this week",
+        "zenith weekly move breakdown"
+      ]
+    },
+    {
+      "id": "hottest-crypto-week-refine-refine",
+      "file": "hottest-crypto-week-refine-refine.scene.json",
+      "module": "investigate",
+      "intents": [
+        "compare zenith with peers",
+        "compare zenith protocol with peers",
+        "how does zenith compare to other governance tokens",
+        "zenith protocol peer comparison",
+        "compare zenith to similar defi tokens",
+        "zenith vs other governance tokens"
+      ]
     }
   ]
 }

@@ -29,7 +29,7 @@ A theme file uses one direction or the other, never both for the same variable.
 | `--ink-primary` | `--color-text-primary` | `#0A1317` / `#DFE2E5` |
 | `--ink-secondary` | `--color-text-secondary` | `#4E606F` / `#AAAFB5` |
 | `--ink-muted` | `--color-text-disabled` | `#A4B0BC` / `#6F747C` |
-| `--accent-signal` | `--color-accent` | `#0064E0` / `#2694FE` |
+| `--accent-signal` | ~~`--color-accent`~~ **overridden, see below** | `#0064E0` / `#2694FE` (stale — see note) |
 | `--accent-alert` | `--color-error` | `#E3193B` / `#F5394F` |
 | `--accent-warn` | `--color-warning` | `#E9AF08` / `#F2C00B` |
 | `--accent-ok` | `--color-success` | `#0D8626` / `#0D8626` |
@@ -67,6 +67,26 @@ confirmed visually via test:visual (`default × neutral × light` renders
 Astryx's actual dark-gray/red/olive/green palette, nothing like ops-dark's
 saturated blue/red/orange/green).
 
+`--accent-signal` override (2026-08-30, direct order — third confirmed
+illegible-chart-line occurrence: ring-chart, TrendChart, EarningsHistoryChart).
+This row's own `#0064E0`/`#2694FE` values, pulled from `astryx docs tokens`
+on 2026-07-08, are STALE against the currently installed
+`@astryxdesign/theme-neutral@0.1.4`/`theme-stone@0.1.4` — confirmed by
+reading each package's own `dist/theme.css` directly rather than trusting
+this doc: both stock themes' real base `--color-accent` is monochrome
+(`light-dark(#262626, #ebebeb)` neutral, `light-dark(#25252a, #f3f3f5)`
+stone), not blue. Correct for Astryx's own UI chrome (a neutral accent is
+the intended read for their buttons/focus rings); illegible as a chart-line
+color, which several of our own components use `--accent-signal` for.
+`theme.default.css`'s `--accent-signal` is now the one deliberate exception
+to this file's own pass-through (Direction A) for every other token — it
+reuses ops-dark's/glass's own already-proven authored value verbatim
+(`oklch(.78 .14 225)`, confirmed 7.8:1 against this theme's own `--surface-1`
+via canvas-based sRGB resolution, comfortably past WCAG AA's 4.5:1 floor)
+rather than inventing a new hue. `--color-accent` itself is untouched —
+Astryx's own components keep their own neutral accent unmodified; only the
+semantic `--accent-signal` token our own components read is overridden.
+
 ## theme.ops-dark.css / theme.glass.css (override, direction B)
 
 Same target Astryx variables as the table above, reversed direction — see
@@ -74,6 +94,51 @@ each file directly for its ◆ OKLCH values (ops-dark's are the original
 tokens-spec.md ops-dark ◆ spec; glass's are tokens-spec.md's glass ◆ spec).
 Both set `color-scheme: dark` and are scheme-locked (see below) — neither
 is affected by the `astryxScheme` toggle.
+
+## theme.safe-one.css (override, direction B)
+
+Registered Phase 20 WO-2 (2026-08-15), a genuinely new 4th theme — not a
+retune of ops-dark, not applied to any existing theme. Same target Astryx
+variables as the table above, reversed direction (same posture as ops-
+dark/glass); see the file directly for its own ◆ OKLCH values. Derived
+from the supplied SAFE ONE reference screenshots (a cybersecurity-risk
+dashboard), not from tokens-spec.md — no spec entry exists for this
+theme yet; tokens-spec.md should gain one if this theme is promoted past
+its current WO-2 scope. Scheme-locked (`color-scheme: dark`), unaffected
+by `astryxScheme`, same as ops-dark/glass.
+
+Structural notes for a future reader diffing this against ops-dark/glass:
+surfaces/ink/accent-signal all share hue 285 (this codebase's existing
+"purple" anchor, already `--viz-4`'s hue) rather than the other three
+themes' hue 250 — a deliberate per-theme hue choice, not a typo.
+`--accent-alert/-warn/-ok` and `--delta-up/-down` stay on their existing
+hues across every theme (principle 8: tone/direction semantics are not a
+per-theme taste dial). `--viz-1`…`--viz-6` also stay on their existing
+hues/order — a "promote green to --viz-1" swap was tried and reverted in
+this same change after confirming `--viz-1` is read by exactly ONE
+consumer in the whole component tree (`AnalystConsensus.tsx`'s "bearish"
+segment); swapping it would have painted bearish sentiment green,
+backwards from every other theme's blue-for-bearish ordering, for zero
+real benefit toward the reference's own look. The reason it's zero
+benefit: every chart node's actual PRIMARY series color is
+`--accent-signal`, not `--viz-1` — confirmed by reading `TimeSeries.tsx`/
+`BarSeries.tsx`/`RingChart.tsx` directly, none of their own color arrays
+start at `--viz-1`. `TimeSeries.tsx`'s primary trend line/area fill is
+hardcoded to `--accent-signal` at 3 call sites (stroke + gradient stops),
+consistent with every other registered theme — a real token-architecture
+finding, not an oversight: the SAFE ONE reference shows a purple
+interactive accent alongside green primary trend charts (two different
+colors on one shared token), which the current architecture can't
+express without a new `--chart-primary`-class token and a TimeSeries.tsx
+component change. Ruled 2026-08-15: ship WO-2 with `--accent-signal`
+purple everywhere including TrendChart/TimeSeries' primary line —
+architecturally consistent with every other theme over matching the
+reference's own green trend-line exactly; flagged as a known, accepted
+deviation, not silently resolved either direction.
+Surfaces are opaque oklch (no alpha channel, `--surface-opacity:
+1`) — the reference's "glass-panel" read comes from `--surface-blur`/
+`--edge`/`--spec-alpha` alone, not from true translucency the way
+`theme.glass.css`'s own surfaces work.
 
 ## tokens.base.css (primitive bridge)
 
@@ -226,7 +291,7 @@ Fix, scoped to this one Card instance only (not a global theme rule, since
 other default-variant Cards elsewhere in the app are correctly using the
 card-level surface, not the workbench level) — `ArtifactStack.module.css`:
 `.artifactCard:global(.astryx-card)[data-variant='default'] { background-
-color: var(--surface-0); border: 1px solid var(--edge); }`. Specificity
+color: var(--surface-2); border: 0 solid var(--edge); }`. Specificity
 deliberately matches Astryx's own `.astryx-card[data-variant="default"]` rule
 exactly (class+class+attribute vs. class+attribute) so it reliably wins
 regardless of import order, no `!important` needed.
@@ -466,3 +531,106 @@ inspecting the compiled stylesheet: the selector had been rewritten to
 `._astryx-side-nav_HASH`). Fixed with `:global(...)`. Worth remembering:
 any global/Astryx class referenced from inside a `.module.css` file needs
 `:global()` explicitly, or the module loader silently defeats it.
+
+## `--shadow-low` (SegmentedControlItem selected-state drop-shadow) — 2026-08-15
+
+Direct feedback: safe-one's period-selector (`SegmentedControlItem`'s
+selected pill) reads with "too strong a shadow, doesn't feel like
+neo-morphism." `SegmentedControlItem.tsx` applies `box-shadow:
+shadowVars['--shadow-low']` unconditionally on its selected state; Astryx's
+own default (`tokens.stylex.ts`) is `light-dark(rgba(0,0,0,.1),
+rgba(0,0,0,.2))` — a real cast-shadow weight, not a neo-morphic lift, and no
+theme file had ever overridden it before this entry (confirmed via grep).
+
+Only safe-one was flagged (the other 4 themes' own screenshots were never
+raised as an issue), but `lint-theme-parity.mjs` requires any token defined
+in one theme to be defined in all five — so `--shadow-low` is now defined
+everywhere: `default`/`ops-dark`/`glass`/`glass-light` each get Astryx's own
+literal default value for their own color-scheme branch (a pass-through,
+zero visual change), while `safe-one` gets a genuinely softer value (`0px 1px
+1px oklch(0 0 0 / .12), 0px 1px 4px oklch(0 0 0 / .12)` vs. Astryx's `0px 1px
+1px .1, 0px 2px 8px .1/.2`) — same restraint register as safe-one's own
+already-existing `--shading-light`/`--shading-dark` comment ("this theme's
+cards are thin-bordered + subtly blurred, not neumorphic").
+
+## `--delta-up-bg`/`--delta-down-bg` (new semantic tokens, muted large-area delta fills) — 2026-08-16
+
+Direct feedback: `AnalystConsensus`'s bearish/bullish bar segments, colored
+`--delta-up`/`--delta-down` per the prior day's own ruling, read as "too
+strong contrast" — the architect asked whether they were using tokens at
+all (yes) and suggested matching the same background shade already used by
+the Bullish/Bearish tag chips (`KeyIssuesCard`'s `Badge` components).
+
+Root cause: `--delta-up`/`--delta-down` are tuned for small text/line
+legibility (price-table deltas, `TrendChart`'s own line stroke) — full
+saturation, opaque. `Badge`'s own `variant="green"`/`variant="red"` instead
+read from Astryx's `--color-background-green`/`--color-background-red`
+(`tokens.stylex.ts`: `light-dark(#24BB5E33, #24BB5E33)` /
+`light-dark(#E3193B33, #E3193B33)` — the base hue at ~20% alpha) paired with
+a separate, brighter `--color-text-green`/`--color-text-red` for the label
+text — a genuine two-tier system, confirmed by reading `Badge.tsx`'s source
+before adding anything.
+
+New tokens added to close the same gap for this app's own components (not
+every large fill should reach into Astryx's own background variable
+directly — `default` theme does, since it's the pure-pass-through theme,
+but the other 4 author their own oklch `--delta-up`/`--delta-down` and need
+their own muted companion, not Astryx's fixed hex):
+
+- `default`: `--delta-up-bg: var(--color-background-green)`,
+  `--delta-down-bg: var(--color-background-red)` — direct pass-through,
+  same posture as every other token in that file.
+- `ops-dark`/`glass`/`safe-one`: `--delta-up-bg: oklch(.78 .26 165 / .2)`,
+  `--delta-down-bg: oklch(.72 .29 25 / .2)` — same hue/chroma/lightness as
+  each theme's own `--delta-up`/`--delta-down`, alpha dropped to `.2`
+  (matching Astryx's own ~20% ratio).
+- `glass-light`: `--delta-up-bg: oklch(.52 .19 165 / .2)`,
+  `--delta-down-bg: oklch(.50 .22 25 / .2)` — same darkened light-scheme
+  hue as that theme's own `--delta-up`/`--delta-down`, same `.2` alpha.
+
+`AnalystConsensus.tsx`'s `SEGMENT_TOKENS` updated to consume `-bg` variants
+for its bearish/bullish segments; neutral stays `--viz-2`, unchanged.
+
+## `--tint-subtle`/`--tint-strong` (new semantic tokens, color-agnostic strength scale) — 2026-08-17
+
+Direct feedback on `TrendChart`'s own area-fill gradient and glow (both
+already `--delta-up`/`--delta-down`-colored per earlier entries above):
+"subtler red/green (chart gradient and glow), this should be a token
+value... strength alpha % of any color that we use for glow... should be
+a token subtle/neutral/strong... could combine with any color in palette
+green/red/theme accent."
+
+Root gap: `glow.module.css`'s own glow had `opacity: var(--opacity-40)`
+hardcoded directly on `.root::before, .root::after` — no per-instance
+override existed the way `--glow-color` already had one. `TimeSeries.tsx`'s
+own area-fill gradient had an even more literal problem: `stopOpacity={0.35}`,
+a raw magic-value number with no token backing it at all (found while
+implementing this, fixed along the way — not a separate, unrelated cleanup).
+
+New primitive step: `--opacity-20` (`tokens.base.css`) — the existing scale
+jumped `.12 → .40` with no real half-step; a genuine ~50% cut from `.40`
+needed a value that didn't already exist.
+
+New semantic pair, identical across all 5 theme files (a structural
+opacity relationship, not a color — same posture as `--shadow-low`'s own
+"all three panes get the same floor" precedent, just for tint strength
+instead of a pixel value):
+- `--tint-strong: var(--opacity-40)` — today's unchanged glow/gradient
+  weight, the default for every existing consumer.
+- `--tint-subtle: var(--opacity-20)` — the new ~50%-cut option.
+
+Wiring: `glow.module.css`'s `.root` gained `--glow-strength: var(--tint-strong)`
+as its own default (settable per-instance exactly like `--glow-color`
+already is — no existing consumer's rendering changes unless it opts in).
+`TrendChart.tsx` sets `--glow-strength: var(--tint-subtle)` alongside its
+existing `--glow-color` override. `TimeSeries.tsx`'s gradient stop reads
+`var(--tint-subtle)` via `style={{ stopOpacity: ... }}` (SVG's
+`stop-opacity` presentation attribute accepts CSS custom properties
+through `style`, not through the numeric `stopOpacity` JSX prop) — scoped
+to `bleed` mode only; every other `time-series` usage keeps its original
+literal `0.35`, untouched, since only the Entity Detail chart was asked
+to change.
+
+`KeyIssuesCard`'s own bullish/bearish glow is UNCHANGED — still
+`--tint-strong` (the new default), since only the chart's own glow/
+gradient was reported as too strong, not that pane.

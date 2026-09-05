@@ -1,4 +1,5 @@
 import type { HydratedScene } from "../contracts/scene";
+import type { SceneMount } from "./resolver/types";
 import { useSessionStore } from "./stores/sessionStore";
 import { useArtifactStore } from "./stores/artifactStore";
 import { useTrailStore } from "./stores/trailStore";
@@ -12,10 +13,19 @@ import { mockSearchResultsFor } from "./mockSearchResults";
 // Shared by submitQuery.ts (typed queries, after the resolver succeeds)
 // and liveChannel.ts (Phase 9 MCP push — a scene that arrives already
 // hydrated, no resolver step at all): add the turn, play its trail, then
-// register + settle the artifact exactly the same way regardless of how
-// the scene got here. Phase 8B WO-1's turn/artifact model + WO-3's
-// autoOpen config apply identically to both entry points.
-export function presentScene(utterance: string, scene: HydratedScene): void {
+// either promote to the artifact stack or mount inline in the turn's own
+// transcript entry, depending on `mount` (Phase 21, 2026-08-30 — CLAUDE.md
+// §3's own inline-mount law). Phase 8B WO-1's turn/artifact model + WO-3's
+// autoOpen config apply unchanged to the artifact path.
+//
+// mount defaults to "artifact" (the original, only path before this
+// phase) — liveChannel.ts's MCP push never passes it: a pushed scene has
+// no manifest entry to read a mount decision from (mount lives on the
+// scene's manifest entry, not the Scene contract itself — see
+// resolver/types.ts's own comment), so it always promotes to the
+// artifact stack, exactly as before this phase. Giving push_scene its own
+// inline path is real, unscoped future work if ordered, not assumed here.
+export function presentScene(utterance: string, scene: HydratedScene, mount: SceneMount = "artifact"): void {
   const turnId = crypto.randomUUID();
   const isAlert = getModuleForScene(scene.id) === "monitor";
 
@@ -52,6 +62,22 @@ export function presentScene(utterance: string, scene: HydratedScene): void {
   );
 
   playTrail(thinkingWithMocks, () => {
+    // INLINE (Phase 21): settle directly with the hydrated scene, never
+    // touching the artifact store at all — no registerArtifact, no
+    // setOpenArtifact, no watchlist auto-append (an inline result is a
+    // single-entity-facet or browse-shaped answer, never a Monitor alert
+    // by construction — see CLAUDE.md §3's own three-way routing split).
+    // Transcript.tsx reads turn.inlineScene and mounts SceneRenderer
+    // directly at that point.
+    if (mount === "inline") {
+      useSessionStore.getState().settleTurn(turnId, {
+        trail: thinkingWithMocks,
+        trailElapsedMs: useTrailStore.getState().elapsedMs,
+        inlineScene: scene,
+      });
+      return;
+    }
+
     const artifactId = crypto.randomUUID();
     useArtifactStore.getState().registerArtifact(artifactId, { scene, module: getModuleForScene(scene.id) });
     useSessionStore.getState().settleTurn(turnId, {

@@ -1,14 +1,11 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { AppShell } from '@astryxdesign/core/AppShell';
 import { Layout } from '@astryxdesign/core/Layout';
+import { useMediaQuery } from '@astryxdesign/core/hooks';
 import { type Theme } from '../ThemeSwitch/ThemeSwitch';
-import { LandingState } from './LandingState';
 import { WorkbenchTitleBar } from './WorkbenchTitleBar';
-import { TranscriptAndComposer } from './TranscriptAndComposer';
-import { TranscriptPaneMount } from './TranscriptPaneMount';
-import { ArtifactStackMount } from './ArtifactStackMount';
-import { CollapsedPaneChip } from './CollapsedPaneChip';
-import { DesktopOnlyNotice } from './DesktopOnlyNotice';
+import { WorkbenchRow } from './WorkbenchRow';
+import { MobileTopNav } from './MobileTopNav';
 import { InvestigationsPage } from './InvestigationsPage';
 import { EntitiesPage } from './EntitiesPage';
 import { WatchlistPage } from './WatchlistPage';
@@ -23,21 +20,28 @@ import { useSessionStore } from '../../engine/stores/sessionStore';
 import { useArtifactStore } from '../../engine/stores/artifactStore';
 import { usePageStore, connectPageHistory, type Page } from '../../engine/stores/pageStore';
 import { connectLiveChannel } from '../../engine/liveChannel';
-import { useViewportWidth } from './useViewportWidth';
 import { usePaneVisibility } from './usePaneVisibility';
 import { useSpecularPointer } from './useSpecularPointer';
 import layout from './Frame.module.css';
 
-// Phase 18, tier 3's fence: below this, the whole app shell gives way to
-// DesktopOnlyNotice — nothing multi-pane mounts underneath.
-const DESKTOP_MIN_WIDTH = 768;
+// Mobile breakpoint (Phase 20, direct order overriding Phase 18 item 1's
+// own closed "<768px permanently out of scope" decision — see CLAUDE.md's
+// own Phase 20 entry for the full citation). Matches AppShell's own
+// default `mobileNav.breakpoint: 'md'` (BREAKPOINT_VALUES.md === 768,
+// read directly from AppShell.js rather than guessed) — useMediaQuery is
+// the SAME hook AppShell uses internally for this exact check, reused
+// rather than a second hand-rolled viewportWidth listener. See
+// MobileTopNav.tsx's own comment for why this file gates the mobile
+// topNav composition itself, rather than leaving AppShell to do it.
+const MOBILE_BREAKPOINT_QUERY = '(max-width: 768px)';
 
 // Landing surface is the question, never a workspace (node-vocabulary.md
 // Shell law) — LandingState (centered greeting + composer + suggestion
 // cards) shows before the first turn; once a turn exists, Home switches
-// to the transcript + bottom-docked composer layout below. ScrollAnchor
-// and HomeTopBar extracted to their own files (this file was over the
-// 200-line budget) during the panel-layout restructure order below.
+// to the transcript + bottom-docked composer layout, now inside
+// WorkbenchRow.tsx (extracted the same round MobilePaneModals/
+// MobileTopNav were, once mobile modal support pushed this file back
+// over the 200-line budget).
 
 function renderPage(page: Page): ReactNode {
   switch (page) {
@@ -70,8 +74,10 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
   const artifactCount = useArtifactStore((state) => Object.keys(state.artifacts).length);
   const isStackOpen = useArtifactStore((state) => state.isStackOpen);
   const isMaximized = useArtifactStore((state) => state.isMaximized);
+  const closeStack = useArtifactStore((state) => state.closeStack);
+  const toggleChatPane = useArtifactStore((state) => state.toggleChatPane);
   const page = usePageStore((state) => state.page);
-  const viewportWidth = useViewportWidth();
+  const isMobile = useMediaQuery(MOBILE_BREAKPOINT_QUERY);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -118,22 +124,13 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
   const isChatManuallyClosed = useArtifactStore((state) => state.isChatManuallyClosed);
   const naturalShowTranscript = page !== 'home' && (hasStarted || isChatForcedOpen) && !isChatManuallyClosed && !isMaximizedStack;
   const naturalShowStack = showStack;
-  const { rowRef, showTranscript, showArtifact, collapsedPane } = usePaneVisibility({
+  const { rowRef, showTranscript, showArtifact, collapsedPanes } = usePaneVisibility({
     naturalShowTranscript,
     naturalShowStack,
   });
 
-  // Tier 3 (Phase 18): below this width, nothing multi-pane mounts at
-  // all — checked after every hook above has already run (Rules of
-  // Hooks), not before. viewportWidth starts >0 in any real browser
-  // (useViewportWidth's own initial state reads window.innerWidth
-  // synchronously), so there's no first-paint flash to guard against.
-  if (viewportWidth > 0 && viewportWidth < DESKTOP_MIN_WIDTH) {
-    return <DesktopOnlyNotice />;
-  }
-
   return (
-    <div style={{ height: '100dvh' }}>
+    <div className={layout.viewport}>
       {/* Phase 8C: AppShell is the outermost frame per its own docs ("Don't
           nest one AppShell inside another; it's the outermost layout
           frame") — the existing Layout (header+content) moves inside it
@@ -141,17 +138,26 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
           Sidebar's SideNavHeading, per Astryx's own guidance against
           duplicating branding between a TopNav-equivalent and a
           SideNavHeading. */}
-      <AppShell height="fill" contentPadding={0} sideNav={<Sidebar />}>
+      <AppShell
+        height="fill"
+        contentPadding={0}
+        sideNav={<Sidebar />}
+        {...(isMobile
+          ? {
+              topNav: <MobileTopNav />,
+            }
+          : {})}
+      >
         <Layout /*
           header={
             <LayoutHeader hasDivider>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+              <div className={layout.topBarActions}>
                 <ThemeSwitch theme={theme} onThemeChange={setTheme} />
               </div>
             </LayoutHeader>
           } */
           content={
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
+            <div className={layout.paneColumn}>
               {/* Top bar runs the full row width (architect order,
                   generalized 2026-07-29 past Home to every page) — a
                   sibling of the row below, not nested inside its narrower
@@ -162,52 +168,19 @@ export function Frame({ initialTheme = 'default' }: { initialTheme?: Theme }) {
                   hasStarted (LandingState has no title bar, unchanged);
                   every other page shows its bar unconditionally. */}
               {!isMaximizedStack && (page !== 'home' || hasStarted) && <WorkbenchTitleBar page={page} />}
-              <div
-                className={layout.row}
-                ref={rowRef}
-                // Lets PageShell's own outer padding (its right side only)
-                // fall back to 0 when a side pane sits next to it — the
-                // row's own gap (below) already separates them at that
-                // point, so PageShell's page-margin padding would only
-                // double up with it. 1/0 rather than a boolean so the CSS
-                // side can consume it directly in a calc() (see
-                // PageShell.module.css's own comment on this variable).
-                style={{ '--content-has-sibling-pane': showArtifact || showTranscript ? 1 : 0 } as React.CSSProperties}
-              >
-                {/* Maximize (Phase 8H): the stack takes the full row
-                    width and this column hides — display:none, not
-                    unmounted, so an in-progress composer draft survives a
-                    maximize/restore round trip. Best-practice "maximize a
-                    panel" pattern (VS Code, most IDE-style workbenches):
-                    one pane goes full-width, its sibling steps aside
-                    entirely rather than sharing a now-meaningless split. */}
-                <div
-                  className={layout.contentColumn}
-                  style={{ display: isMaximizedStack ? 'none' : 'flex' }}
-                >
-                  {page === 'home' ? (
-                    hasStarted ? <TranscriptAndComposer /> : <LandingState />
-                  ) : (
-                    renderPage(page)
-                  )}
-                </div>
-                {/* Right side: Artifacts is the ONLY pane, global across
-                    every page per the routing law ("pages never host
-                    scene renders") — investigating an entity from a page
-                    still lands its result here without leaving that
-                    page. Slides in/out (ArtifactStackMount), not a plain
-                    mount toggle — see its own file for why. */}
-                <ArtifactStackMount show={showArtifact} />
-                {collapsedPane === 'artifact' && <CollapsedPaneChip pane="artifact" />}
-                {/* Chat pane on the right (2026-07-30): moved from leftmost
-                    position to trailing edge, rendering last in the row.
-                    Hidden on Home (which already shows the transcript as its
-                    own content column below) and while maximized. Phase 18:
-                    `showTranscript` already folds in the collapse trigger —
-                    collapsed reuses this mount's own slide-out. */}
-                <TranscriptPaneMount show={showTranscript} />
-                {collapsedPane === 'transcript' && <CollapsedPaneChip pane="transcript" />}
-              </div>
+              <WorkbenchRow
+                rowRef={rowRef}
+                page={page}
+                hasStarted={hasStarted}
+                isMaximizedStack={isMaximizedStack}
+                isMobile={isMobile}
+                showTranscript={showTranscript}
+                showArtifact={showArtifact}
+                collapsedPanes={collapsedPanes}
+                closeStack={closeStack}
+                toggleChatPane={toggleChatPane}
+                renderPage={renderPage}
+              />
             </div>
           }
         />

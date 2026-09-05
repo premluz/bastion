@@ -14,7 +14,10 @@ function statusDot(thread: ThreadSummary, module: string | undefined): { variant
   const { latestTurn } = thread;
   if (latestTurn.status === 'unresolved') return { variant: 'neutral', label: 'No match' };
   if (latestTurn.status === 'interrupted') return { variant: 'neutral', label: 'Interrupted' };
-  if (!latestTurn.artifactRef) return { variant: 'accent', label: 'Thinking…' };
+  // "Settled" is artifactRef OR inlineScene (Phase 21) — see
+  // RecentSection.tsx's own comment for why artifactRef alone would leave
+  // every inline-mounted turn stuck reading "Thinking…" forever.
+  if (!latestTurn.artifactRef && !latestTurn.inlineScene) return { variant: 'accent', label: 'Thinking…' };
   return module === 'monitor' ? { variant: 'error', label: 'Alert' } : { variant: 'success', label: 'Answered' };
 }
 

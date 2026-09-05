@@ -107,7 +107,7 @@
      so the pane doesn't carry two competing "softness" cues (blur +
      neumorphism) at once — the outline still applies there, at --edge's
      own already-tuned glass alpha. */
-  border: 1px solid var(--edge);
+  border: 0 solid var(--edge);
   box-shadow: var(--shading-pop-raised);
 }
 
@@ -156,7 +156,30 @@
 
 .paneBody {
   padding: var(--space-16);
+  /* Publishes this pane's own inset for bleed.module.css's sake (see that
+     file's contract) — a child applying bleed's .inline/.blockEnd cancels
+     exactly this padding without hardcoding the token itself, so the two
+     can never drift apart. Kept adjacent to the padding it mirrors, on
+     purpose: changing one without the other is the bug this prevents. */
+  --pane-inset: var(--space-16);
   display: grid;
+  /* grid-template-columns: minmax(0, 1fr) (2026-08-18 fix — same-day
+     report: "cant see reflow of 3 panes on discover"). With no
+     grid-template-columns at all, this container's one implicit auto
+     column sizes to the MAX-CONTENT width of its widest child (CSS
+     Grid's own default min-width:auto-on-items behavior, the Grid
+     equivalent of flexbox's well-known min-width:0 trap) — confirmed
+     live: .paneBody's own resolved grid-template-columns computed to
+     734px on a box whose real available width was 418px, meaning every
+     child (including EntityDiscoveryStrips' own new container-query
+     wrapper) was silently handed a WIDTH WIDER than the pane itself
+     could ever actually be, so no @container breakpoint below that
+     phantom width could ever fire. minmax(0, 1fr) forces the track to
+     genuinely fill (and never exceed) the container's real available
+     space, letting a wide child (Discover Assets' own table, min-width
+     900px) overflow into its own horizontal scroll instead of inflating
+     this shared track for every sibling section on the page. */
+  grid-template-columns: minmax(0, 1fr);
   /* Page-section gap, standardized to --space-16 (direct feedback,
      2026-08-10: "gap between pains [sections]... needs to be the same
      as... Portfolio... global system wide gap size which needs to be
@@ -168,4 +191,66 @@
      section) — DashboardLayout's Grid already matches it by construction,
      nothing to change there. */
   gap: var(--space-16);
+}
+
+/* Mobile: drop the nested-pane pattern entirely (direct feedback,
+   2026-08-22 — see Frame.module.css's .contentColumn mobile query for
+   the matching other half of this fix, which is where scroll ownership
+   moves to). Only one page-content column is ever visible on mobile
+   (transcript/artifact are fullscreen Dialogs, not row siblings), so the
+   card-surface-with-its-own-scrollbar treatment that exists to visually
+   separate this pane from sibling panes in the desktop row has no
+   sibling to separate from — .pane's card chrome (background/border/
+   radius/shadow/glass material) is removed and .paneScroll stops being
+   an overflow boundary, becoming plain block flow; .contentColumn (one
+   level up) is the new scroll container instead. PaneTitleBar stays
+   sticky (unchanged) — position:sticky just resolves against
+   .contentColumn's scroll box now instead of .paneScroll's. */
+@media (max-width: 768px) {
+  .pane {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    /* No longer needed for corner-clipping (radius is gone) and must not
+       clip content now that .paneScroll below stops being the scroll
+       boundary — .contentColumn (Frame.module.css) is, and content taller
+       than .pane's own flex-computed height must be free to grow past it
+       rather than being cut off. */
+    overflow: visible;
+  }
+
+  .pane::before {
+    display: none;
+  }
+
+  .paneScroll {
+    overflow-y: visible;
+  }
+
+  /* Single root padding (2026-08-22 — see Frame.module.css's own
+     .contentColumn mobile query for the matching other half, which is
+     now the ONE mobile padding source page panes rely on). Without this,
+     .margin's own padding (0 / conditional 24px right / 32px bottom) and
+     .paneBody's own 16px-all-around stacked on top of .contentColumn's
+     new padding, and on top of .row's own margin-left before that —
+     three independently-applying insets summing into visibly excessive
+     left padding, confirmed live. */
+  .margin {
+    padding: 0;
+  }
+
+  .paneBody {
+    padding: 0;
+    /* --pane-inset MUST track this pane's real padding (bleed.module.css's
+       own contract: "whatever that pane's padding actually is, it says
+       so") — left at --space-16 here, a bleeding child (TrendChart's
+       .chartBleed etc.) would cancel a padding that no longer exists on
+       this element, pulling it 16px past the pane's TRUE edge, which is
+       now .contentColumn's own padding one level up, not this element's.
+       0px is correct: this element itself contributes no inset anymore. */
+    --pane-inset: 0px;
+  }
 }

@@ -1,0 +1,50 @@
+.root {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  /* Gap between selector and chart (2026-08-22 direct feedback, second
+     round: selector visibility reverted, this margin kept/relocated onto
+     the row that actually holds the selector — the period toggle sat
+     flush against the chart below it with no breathing room once the
+     grid's own top line (right below the selector) was hidden. */
+  margin-bottom: var(--space-16);
+}
+
+/* Re-insets the header row by exactly what this component's own root bled
+   out (bleed.module.css's .inline/.blockEnd on TrendChart.tsx's root) —
+   the inverse of the old .chartBleed, which this replaces.
+
+   WHY THE DIRECTION FLIPPED (2026-08-19): .chartBleed bled the CHART
+   alone, which meant glow.module.css's own .clipped — required to keep
+   the bottom glow inside the pane — sat on an ancestor BETWEEN the chart
+   and the pane edge and clipped the bleed straight back. Measured live:
+   the chart correctly reached 58→823 while .clipped cut it to 74→807,
+   the exact 16px per side that presented as "full bleed doesn't work."
+   Bleeding the WHOLE component instead and re-insetting only the header
+   removes that conflict entirely: the clipping box and the pane-edge box
+   become the same box, so nothing sits between the chart and the edge.
+
+   Reads --pane-inset (published by whichever pane encloses this — Panel,
+   PageSection, or PageShell's .paneBody), never a hardcoded token, so a
+   pane changing its own padding carries this along automatically. That
+   coupling is exactly what the old hardcoded calc(-1 * var(--space-16))
+   got wrong. */
+.headerInset {
+  padding-inline: var(--pane-inset, 0px);
+}
+
+/* CartesianGrid's horizontal lines render in tick order inside one <g>;
+   first/last correspond to the Y-axis's own extreme ticks (the
+   "top"/"bottom" lines) — targeted via :global since recharts' own
+   className, not a CSS module class. */
+.root :global(.recharts-cartesian-grid-horizontal) line:first-child,
+.root :global(.recharts-cartesian-grid-horizontal) line:last-child {
+  display: none;
+}

@@ -27,6 +27,16 @@ import { StatusGridPropsSchema } from '../contracts/props/status-grid';
 import { RingChartPropsSchema } from '../contracts/props/ring-chart';
 import { NewsFeedPropsSchema } from '../contracts/props/news-feed';
 import { AnalystConsensusPropsSchema } from '../contracts/props/analyst-consensus';
+import { AssetPriceHeaderPropsSchema } from '../contracts/props/asset-price-header';
+import { EarningsHistoryChartPropsSchema } from '../contracts/props/earnings-history-chart';
+import { PriceMovementTimelinePropsSchema } from '../contracts/props/price-movement-timeline';
+import { AiRationaleRailPropsSchema } from '../contracts/props/ai-rationale-rail';
+import { TrendChartPropsSchema } from '../contracts/props/trend-chart';
+import { KeyIssuesCardPropsSchema } from '../contracts/props/key-issues-card';
+import { AssetCardGridPropsSchema } from '../contracts/props/asset-card-grid';
+import { ContributionBarsPropsSchema } from '../contracts/props/contribution-bars';
+import { RiskReturnScatterPropsSchema } from '../contracts/props/risk-return-scatter';
+import { AssetTrendCardPropsSchema } from '../contracts/props/asset-trend-card';
 
 interface RegistryEntry {
   component: ComponentType<never>;
@@ -137,5 +147,45 @@ export const registry: Record<string, RegistryEntry> = {
   'analyst-consensus': {
     component: lazy(() => import('../components/nodes/AnalystConsensus').then((m) => ({ default: m.AnalystConsensus }))),
     propSchema: AnalystConsensusPropsSchema,
+  },
+  'asset-price-header': {
+    component: lazy(() => import('../components/nodes/AssetPriceHeader').then((m) => ({ default: m.AssetPriceHeader }))),
+    propSchema: AssetPriceHeaderPropsSchema,
+  },
+  'earnings-history-chart': {
+    component: lazy(() => import('../components/nodes/EarningsHistoryChart').then((m) => ({ default: m.EarningsHistoryChart }))),
+    propSchema: EarningsHistoryChartPropsSchema,
+  },
+  'price-movement-timeline': {
+    component: lazy(() => import('../components/nodes/PriceMovementTimeline').then((m) => ({ default: m.PriceMovementTimeline }))),
+    propSchema: PriceMovementTimelinePropsSchema,
+  },
+  'ai-rationale-rail': {
+    component: lazy(() => import('../components/nodes/AiRationaleRail').then((m) => ({ default: m.AiRationaleRail }))),
+    propSchema: AiRationaleRailPropsSchema,
+  },
+  'trend-chart': {
+    component: lazy(() => import('../components/nodes/TrendChart').then((m) => ({ default: m.TrendChart }))),
+    propSchema: TrendChartPropsSchema,
+  },
+  'key-issues-card': {
+    component: lazy(() => import('../components/nodes/KeyIssuesCard').then((m) => ({ default: m.KeyIssuesCard }))),
+    propSchema: KeyIssuesCardPropsSchema,
+  },
+  'asset-card-grid': {
+    component: lazy(() => import('../components/nodes/AssetCardGrid').then((m) => ({ default: m.AssetCardGrid }))),
+    propSchema: AssetCardGridPropsSchema,
+  },
+  'contribution-bars': {
+    component: lazy(() => import('../components/nodes/ContributionBars').then((m) => ({ default: m.ContributionBars }))),
+    propSchema: ContributionBarsPropsSchema,
+  },
+  'risk-return-scatter': {
+    component: lazy(() => import('../components/nodes/RiskReturnScatter').then((m) => ({ default: m.RiskReturnScatter }))),
+    propSchema: RiskReturnScatterPropsSchema,
+  },
+  'asset-trend-card': {
+    component: lazy(() => import('../components/nodes/AssetTrendCard').then((m) => ({ default: m.AssetTrendCard }))),
+    propSchema: AssetTrendCardPropsSchema,
   },
 };

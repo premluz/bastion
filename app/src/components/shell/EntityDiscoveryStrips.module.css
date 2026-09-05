@@ -1,0 +1,98 @@
+/* container-type on a SEPARATE outer wrapper, not .grid/.carouselWrap
+   themselves — confirmed live earlier this same day (AssetOverviewTab's
+   own responsive work) that a container query targeting the exact
+   element that establishes container-type never matches in this app's
+   actual rendering; querying and containing element must be different.
+   min-width: 0 + width: 100% (also confirmed live, same day): a plain
+   block div given container-type with no explicit width sizes to its
+   own intrinsic content rather than its parent's real available width —
+   .paneBody (PageShell.module.css) is a CSS grid parent, and without
+   this the container silently claimed more than its actual track. */
+.container {
+  container-type: inline-size;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Grid-first, full container width, per direct feedback (2026-08-18):
+   "should always stretch across these panes to full width of container."
+   3 even minmax(440px, 1fr) columns — each strip fills its own third of
+   the row (the 1fr), but never shrinks below its own genuine minimum
+   (matching .stripItem's own Carousel-mode width below, so content lays
+   out identically in both modes). Plain `repeat(3, 1fr)` would NOT have
+   enforced this floor — a bare 1fr track still shrinks past a child's
+   own min-width unless the TRACK itself carries a minmax() floor, the
+   grid-track version of the same "min-width:auto default" trap already
+   hit twice this same day on .paneBody and .wrapper
+   (DiscoverAssetsSection). 440px, not 340px — corrected same-day
+   follow-up (direct feedback + screenshot: "should not allow content to
+   cut off," showing Trending's own value column truncated mid-digit,
+   e.g. "40.3" instead of "40.33," "+0.07" with the trailing "%" clipped
+   entirely). Root cause: Astryx's own `Item` component doesn't propagate
+   min-width:0 through its internal startContent/label/endContent flex
+   row, so its OWN content can exceed its parent Card's boundary even
+   though the Item element itself never scrolls (confirmed live:
+   `.astryx-item`'s own `scrollWidth`/`clientWidth` never disagreed —
+   the overflow was silently clipped by the CARD's `overflow:hidden`,
+   one level up, not caught by the item-level check the 340px value was
+   originally derived from). No stable selector exists to reach into
+   Item's internal atomic StyleX classes from outside (this codebase's
+   own established rule against anchoring to unstable hashed classnames),
+   so the fix is a wider floor instead: measured live via item-right vs.
+   card-right (not item's own scrollWidth) across all three strips'
+   real data, overflow hit exactly 0px at a 440px per-strip minimum with
+   a small safety margin (zero-overflow point measured at ~427px).
+   Visible above the @container threshold below; hidden under it. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(440px, 1fr));
+  gap: var(--space-16);
+}
+
+/* Carousel is the OVERFLOW ESCAPE HATCH, not the default (2026-08-18
+   follow-up, direct feedback: "only when they reached their min width so
+   cant shrink more then reflow into carousel") — hidden above the
+   threshold, shown below it; the inverse of .grid above. Both render
+   into the DOM simultaneously (display:none on whichever isn't active,
+   not a JS-driven remount) so Carousel's own internal scroll position
+   and useScrollOverflow state survive the container crossing the
+   threshold back and forth, rather than resetting every time. */
+.carouselWrap {
+  display: none;
+}
+
+/* 1352px: three strips at their own genuine 440px minimum (matching
+   .stripItem's Carousel-mode width below) plus two 16px gaps
+   (3 × 440 + 2 × 16 = 1352) — the exact point below which the grid can
+   no longer give each strip its real minimum without clipping content,
+   re-measured item-right-vs-card-right (not item's own scrollWidth,
+   which missed the clip entirely — see .grid's own comment above), not
+   an eyeballed number. Below it, Carousel takes over; each strip keeps
+   the SAME 440px width there via .stripItem, so content never
+   re-lays-out between the two modes, only the container behavior (grid
+   vs. scroll) changes. */
+@container (max-width: 1352px) {
+  .grid {
+    display: none;
+  }
+  .carouselWrap {
+    display: block;
+  }
+}
+
+/* Matches .grid's own minmax(440px, ...) track floor above — the SAME
+   440px in both modes so switching between grid and Carousel never
+   changes how a strip's own content is laid out, only whether the three
+   share one row via grid tracks or scroll horizontally. */
+.stripItem {
+  width: 440px;
+  flex-shrink: 0;
+}
+
+/* Was an inline style object on EntityDiscoveryStrips.tsx — moved here
+   per CLAUDE.md rule 4. */
+.identityRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}

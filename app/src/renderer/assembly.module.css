@@ -31,4 +31,25 @@
   animation-timing-function: var(--motion-enter-ease);
   animation-delay: calc(var(--motion-assembly-stagger) * var(--reveal-index));
   animation-fill-mode: backwards;
+  /* min-width: 0 (2026-08-28 direct feedback: "portfolio artifact...
+     doesn't resize... smaller screens chat overlap," traced to a
+     DIFFERENT scene: asset-discovery's own "90-day yield vs volatility"
+     panel — 4 stacked time-series charts). Every scene node renders
+     inside THIS wrapper as a direct grid item of Panel.tsx's own
+     contentStyle grid (that grid already sets min-width:0 on ITSELF, per
+     its own comment — but a grid item's default min-width is `auto`,
+     its own content's intrinsic minimum, independent of what the PARENT
+     grid's min-width is set to). Confirmed live: recharts'
+     ResponsiveContainer (width="100%") refused to shrink below its own
+     chart's intrinsic content width inside this unconstrained wrapper,
+     genuinely overflowing the artifact pane's real 420px box by ~170px
+     (measured via scrollWidth vs offsetWidth) — the pane's own
+     overflow-x:auto contained it from inflating the ROW's width (so the
+     three-pane collapse mechanism itself was never the bug, confirmed by
+     testing it in isolation first), but the chart content itself still
+     visually spilled past the pane's own right edge. This is the exact
+     same bug class already fixed once in Panel.tsx's own contentStyle,
+     applied here at the one shared per-node wrapper so it covers every
+     registry node inside any scene grid/panel, not just time-series. */
+  min-width: 0;
 }

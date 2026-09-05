@@ -1,0 +1,95 @@
+/* Astryx's own GridSpan hardcodes height:100% on itself ("make span fill
+   grid cell and stretch children", its own doc comment) — independent of
+   the outer Grid's align-items, since a 2-column layout with genuinely
+   different content heights per column has both cells' ROW height driven
+   by the taller one regardless, and GridSpan's own height:100% then
+   stretches the shorter cell to match, leaving visible empty space below
+   its own last child (reported live, 2026-08-15). GridSpan can't be
+   configured out of this — it's baked into a closed Astryx component —
+   so this layout uses plain CSS Grid instead, sized only by its own
+   content. */
+/* container-type: inline-size on the OUTER wrapper (.layoutContainer),
+   not .layout itself — confirmed live that a container query targeting
+   the exact element that establishes container-type never matched in
+   this app's actual rendering (tested even a trivially-always-true
+   max-width: 9999px condition, still didn't apply), so querying and
+   containing must be different elements regardless of spec nuance. The
+   PANE's own available width (which the workbench's resizable panes can
+   shrink independently of the browser viewport), not the window, is what
+   determines when the narrow column gets cramped. Direct feedback
+   (2026-08-18): "comps in asset detail should be responsive, reflow into
+   1 col." */
+.layoutContainer {
+  container-type: inline-size;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-16);
+  align-items: start;
+}
+
+/* 860px: below this, the 1fr narrow column (Analyst consensus, Earnings,
+   Why is this moving, Peers) drops under ~280px at the 2fr/1fr split —
+   too cramped for its own chart/table content to stay legible. No
+   breakpoint primitive exists yet in tokens.base.css, and CSS container
+   queries don't accept var() in their condition (custom properties aren't
+   valid container-query lengths per spec) — flagged as a raw-value
+   exception, same posture as glow.module.css's own 2px rail width. */
+@container (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.column {
+  display: grid;
+  gap: var(--space-16);
+}
+
+/* Local paired row (2026-08-19, direct feedback: "Peers should move to
+   left pane 2 column together with Stories & Analysis... general rule if
+   layout panes in 2 cols both should have same height so smaller should
+   stretch to taller") — scoped to THIS pair only, not the outer
+   left/right split above: that outer split was deliberately kept
+   independent-height (see .layout's own comment, 2026-08-15) because
+   stacks of many cards with genuinely different total heights would
+   otherwise leave a large empty gap under the shorter column's last
+   card. A two-card row meant to visually pair up is a different case —
+   stretching is exactly the point here, not a side effect to avoid.
+   Grid's own default align-items: stretch (unlike flex, which defaults
+   to stretch too but the outer .layout explicitly opts OUT via
+   align-items: start) is what makes each Panel's Card fill the row's
+   full height automatically — no min-height guess, no JS measurement,
+   the shorter card's Card element just grows to match. Single column
+   below 860px, alongside .layout's own reflow, so a stacked pair never
+   fights the same-content-different-context breakpoint that already
+   governs everything else on this page. */
+.pairRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-16);
+}
+
+/* .pairRow's own direct children are AnimatedListItem's plain block divs
+   (AnimatedListItem.module.css), not the Panel/Card underneath them —
+   grid's default align-items: stretch only fills THAT immediate child's
+   box, so a block div doesn't automatically pass the extra height down
+   to ITS OWN child (Card) the way a grid/flex container would. Two
+   explicit steps close that gap without touching AnimatedListItem.tsx
+   itself (shared by every other page on the site): stretch the
+   animated-item wrapper to the row's full height, then give it display:
+   grid so its own single Card child stretches to fill it in turn — the
+   same "grid's stretch is per-level, not automatically inherited"
+   mechanic, applied twice. */
+.pairRow > * {
+  display: grid;
+  height: 100%;
+}
+
+@container (max-width: 860px) {
+  .pairRow {
+    grid-template-columns: 1fr;
+  }
+}

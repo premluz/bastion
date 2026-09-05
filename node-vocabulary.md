@@ -173,6 +173,31 @@ continuous timeline. Its job in issuer-dossier is the distribution
 record: eight discrete quarters read as bars, not a line implying
 continuous motion between them.
 
+**contribution-bars** — node-addition test (merlin-new-node skill §0),
+cited before any code: "what drove this one outcome, ranked by
+contribution?" Why can't an existing node answer it? `bar-series`
+compares bar HEIGHTS across categories/periods on a shared vertical axis
+— a distribution, not a ranked breakdown of what caused a single result.
+`analyst-consensus`'s segmented bar is one bar split into PROPORTIONAL
+segments summing to a whole (a composition); this node's rows are
+independent, ranked magnitudes, not fractions of one total. `concentration-
+map` is share-of-whole via area, wrong shape for a ranked list read
+top-to-bottom. No existing node combines "several named rows, each a bar
+proportional to its own contribution, sorted by size." Why is prose
+insufficient? A ranked list of magnitudes reads faster as bar lengths
+than as a sentence enumerating percentages — the same reasoning already
+established for `ring-gauge`/`concentration-map`/`analyst-consensus`.
+Reuses bar-series's own SeriesDataSet shape (Phase 21 follow-up,
+2026-08-31) — one series only, x is the driver's name, y its own
+contribution magnitude — and the same recharts craft (token colors,
+tabular-numeral ticks, TokenTooltip), just `layout="vertical"` (recharts'
+own name for horizontal bars: axes swap, YAxis carries the category
+labels). Row order is authored, never sorted client-side — same
+"order preserved, not computed" discipline `concentration-map`'s own
+entry established. First real usage: a follow-up query in the same
+crypto-movers thread ("41% weekly move") breaks Zenith Protocol's move
+into its named drivers.
+
 **sparkline** — "what's the trend, in passing?" A bare glyph, not a
 chart: no axes, no tooltip, no grid, one hue (`--accent-signal` only).
 Custom SVG via d3-scale/d3-shape, not recharts — meant to sit inline
@@ -444,6 +469,247 @@ and commodities don't carry analyst buy/hold/sell consensus in the same
 sense, and this node is never forced onto an entity type it doesn't
 genuinely apply to.
 
+## Phase 20 — TradableAsset Unification (WO-1)
+
+Explicit non-goal, restated per this section's own register law: every node
+here displays facts (a price, a filing, a sourced explanation) or reused
+third-party opinion (analyst-consensus, unchanged from Phase 19) — never
+Merlin's own recommendation, and never a Buy/Sell/Trade/Send/Receive CTA,
+consistent with every prior discovery/analysis surface in this app.
+
+Scope correction, logged here not just in STATE.md: two of the six
+components CLAUDE.md's Phase 20 block named — `AssetKeyStatsTable` and
+`AssetSnippetCard` — are NOT registry nodes. Both are label/value fact
+grids (`KeyStat[]`, `{label, value}` pairs); `EntityAbout.tsx`/
+`EntityStatistics.tsx` already establish the reuse pattern for this exact
+shape (`MetricGrid`+`Metric`, Merlin's own existing registry nodes, per
+`Metric`'s own `{label, value, size}` props). Building a second, competing
+label/value primitive would violate "search before you create" — these
+ship as shell-level components (`components/shell/`), not through the
+registry, same architectural status as `EntityAbout`/`EntityStatistics`
+themselves.
+
+**asset-price-header** — node-addition test (merlin-new-node skill §0),
+cited before any code: What single question does it answer? "What is this
+asset worth right now, and how has that changed?" — last price, absolute
+and percent change, an optional after-hours read, and today's range, read
+together as one glance-able unit. Why can't an existing node answer it?
+`metric`/`metric-grid` render individual label/value facts but have no
+built-in delta/direction affordance or a two-tier (regular-hours +
+after-hours) price read — forcing this into a metric-grid would mean four
+or five separate Metric cards where the reference pattern (and every real
+finance surface) treats price+delta as one cohesive unit, not a scattered
+grid. `ring-gauge` is fullness-against-a-ceiling, wrong shape for a signed
+delta. Checked Astryx directly (no `Stat`/`Delta`/`PriceHeader` primitive
+exists — confirmed via source, not assumed) before building custom. Why is
+prose insufficient? "$40.33, up $0.07 (0.17%)" as bare text loses the
+instant positive/negative read a numeral+arrow/color pairing gives — same
+family of reasoning `ring-gauge`/`analyst-consensus`'s own tests already
+established. Literal-prop node (authored/computed per asset, same standing
+as `metric`), facts register, permanent. A plain directional indicator
+(color/arrow on the delta) is not itself a violation of the no-CTA law
+(principle 2 restated above) — it's still a fact, not an action; the line
+stays where node-vocabulary.md's Holdings entry already drew it: a fact's
+own color is not a Buy/Sell button sitting beside it.
+
+**earnings-history-chart** — node-addition test: What single question does
+it answer? "How has this company's actual performance tracked what
+analysts expected, quarter over quarter?" — paired actual-vs-estimate EPS
+bars (or lines) across recent quarters. Why can't an existing node answer
+it? `bar-series` compares bar heights across categories but has no
+built-in "two related values per category, one a target" pairing —
+forcing actual+estimate into `bar-series` would need two full series with
+no visual pairing between a quarter's own two values, losing the
+beat/miss read entirely. `time-series` is continuous-trend shaped, wrong
+register for discrete quarterly events. Why is prose insufficient? "Q2
+2026: $0.67 actual vs $0.64 estimate" repeated four times as text loses
+the beat/miss pattern a paired-bar read gives instantly. equity-token
+only (schema-level, `TradableAssetSchema`'s own `earningsHistory?`) —
+absent for crypto-native/tokenized-rwa, never a forced empty state.
+Deep-links from Overview's Earnings preview card to the Earnings tab, per
+the order's own "nothing on Overview is a dead end" IA law.
+
+**price-movement-timeline** — node-addition test against signal-feed AND
+news-feed (this node sits close to both, requires an explicit test against
+each, not just one): What single question does it answer? "What
+individually notable things has this asset's price/situation done, in
+order, each explained?" Why can't signal-feed answer it? signal-feed
+answers "what just happened, operationally" (a settlement failure, an
+audit lapse) — a Monitor-module change-detection feed, table-bound, no
+per-row narrative depth. price-movement-timeline entries carry a
+headline+detail pair explaining a SPECIFIC price move or situational
+event, closer to a dossier than an operational log. Why can't news-feed
+answer it? news-feed is Entity Detail's own existing "what's the story
+being told" surface (SeekingAlpha register) — genuinely the closest
+match, and price-movement-timeline reuses its visual grammar deliberately
+(headline weight, dek/detail in supporting text, SourceChip provenance)
+rather than inventing a new one. The real distinction: news-feed is
+general editorial coverage (dividend policy, risk-profile reads, whatever
+the entity has coverage about); price-movement-timeline is scoped
+specifically to price-relevant events and is REUSABLE ACROSS ALL THREE
+ASSET CLASSES including yield-register assets — for a bond/RE/credit-fund
+entity (once/if TradableAsset extends that far), entries describe yield/
+audit/settlement EVENTS, not price ticks, reusing the existing NordBond/
+Aldergate event pattern already in `universe/news.json`, never forcing
+price-movement language onto a fixed-income asset (schema-level rule,
+`TradableAssetSchema`'s own `TimelineEntrySchema` doc comment). Two
+distinct nodes, not a duplicate, because they answer different questions
+even where their rendering looks similar — same "distinct question,
+distinct register" standard news-feed's own test held against signal-feed.
+Deep-links from Overview's "Notable Price Movement" preview card to the
+News/Analysis tab, per the order's IA law.
+
+**ai-rationale-rail** — node-addition test: What single question does it
+answer? "Why is this asset moving, in the agent's own words, backed by
+named sources?" — the CoinGecko "Why BTC is moving" right-rail pattern: one
+scripted summary paragraph plus its own source list and timestamp. Why
+can't an existing node answer it? `recommendation` carries a confidence
+score and sits in the PROVISIONAL register (principle 2) — this is
+explicitly NOT that; explaining a move is reasoning/facts, never a
+recommendation to act. `news-feed`/`price-movement-timeline` are lists of
+discrete dated entries; this is one synthesized paragraph reading across
+several of them, a different shape entirely (prose summary vs. itemized
+feed). Why is prose insufficient? The prose IS the node's own content —
+the test here is why it needs its OWN dedicated rail rather than living
+inside an existing panel: it's a genuinely separate reading surface (right
+rail, per the reference pattern), not a variant of an existing one.
+Sources render as the same SourceChip token every other provenance
+citation in this app already uses (Merlin's own existing component, per
+node-vocabulary.md's own cross-cutting rule) — NOT Astryx's `Citation`
+component, which is an inline numbered-footnote marker, wrong shape for a
+list of named, timestamped sources. Scripted/template-generated text, same
+discipline as scene-summary/recommendation's own synthesis (not live LLM
+generation, per this project's standing rule).
+
+**trend-chart** (extends `time-series`, does not replace it) — node-
+addition test: What does the extension answer that the existing node
+doesn't? "What did this asset do over a period the viewer picks, optionally
+against a comparison line?" — period toggle (1H/24H/7D/1M/YTD/1Y/MAX) and
+an optional `compareSeries` overlay (the NordBond-vs-related pattern from
+the SAFE ONE-adjacent reference). Why not a new node? `time-series`
+already renders a line/area series with reference lines and annotations
+(Phase 8E craft pass) — period-toggle is additive UI state around the same
+underlying series data (a client-side slice, per `TradableAssetSchema`'s
+own `trendChart.series` being one flat array, not per-period stored data),
+and `compareSeries` is structurally identical to `time-series`'s existing
+multi-line support (Phase 12 WO-2's own multi-series overlay, `--viz`
+token dash/color differentiation) — genuinely additive props, not a new
+visual grammar, per Phase 12 WO-2's own "extend before duplicating"
+precedent for this exact node. If the period-toggle's own local UI state
+turns out to need a wrapper component around `time-series` rather than
+fitting as passthrough props, that's a build-time implementation detail,
+not a new registered node.
+
+## Phase 21 — Entity Detail Overview Redesign
+
+Restyles Overview only; Financials/Analysis/Earnings/News/Historical Data
+tabs are unchanged. The WO-1 deep-link law stays in force here — every
+card in the new two-column Overview still deep-links to its own tab,
+nothing is a dead end.
+
+**Principle 8 exception, named and scoped (2026-08-15 ruling)**: the
+standing "no red/green performance-direction coloring" ban gains ONE
+named exception — `trend-chart`'s own primary line/area-fill, and only
+when embedded in Overview's compact form, may render in `--delta-up`/
+`--delta-down` (chosen by the trend's own sign) instead of
+`--accent-signal`. This does NOT extend to `time-series` (the bind node,
+reused by scene-driven surfaces — stays `--accent-signal`, unchanged),
+does NOT extend to any other chart node (`bar-series`, `ring-chart`,
+`earnings-history-chart`, etc. — all stay accent/viz-only), and does NOT
+license a general "price charts may use red/green" reading elsewhere in
+this app. One named node, one named context, logged here so it is never
+read as an implicit precedent for anything else.
+
+**glow (CSS-module primitive, not a registry node)** — position variants
+(bottom / top-left / top-right / bottomWide) × clip variants (clipped to
+the pane / unclipped, overflow visible), color via a custom property
+(defaults to `--accent-signal`; the trend-chart's own compact form passes
+`--delta-up`/`--delta-down` per the exception above). Applied via
+className to any existing Panel/Card, same escape-hatch posture as
+`panelFlat` — a presentation-only style hook, not data, so it carries no
+Zod contract and is not registry-scoped. Confirmed reusable outside
+TradableAsset context before shipping (the phase's own gate requirement),
+not accidentally coupled to one page.
+
+**glow as a per-node toggle (2026-08-17 follow-up) — SUPERSEDED 2026-08-19,
+moved to the pane** — `time-series`, `price-movement-timeline`, and
+`earnings-history-chart` originally each gained their own additive,
+optional `glow` boolean prop that wrapped the component's own content in
+the glow primitive above. Direct feedback reversed this for the two
+nodes with a real-world consumer: "the bottom gradient should be applied
+to pane (card) rather than component of timeline itself, cards should
+easily also have gradient glow system as we have it defined." Root
+problem — a node applying glow to its OWN inner content, nested inside a
+`Panel`/`PanelWithAction` Card, put the glow against the content's own
+padded edge, not the card's true edge; visually indistinguishable from
+"the glow isn't reaching the pane" the way `TrendChart`'s bleed bug read
+before it was fixed the same way (see that entry above).
+`price-movement-timeline`'s and `earnings-history-chart`'s own `glow`
+prop is REMOVED (Zod schema and component both) — `glow`/`glowColor` now
+live on `Panel` and `PanelWithAction` (nodes/Panel.tsx, shell/
+PanelWithAction.tsx) instead, applying the SAME glow primitive to the
+Card itself; content renders inside unchanged. `AssetOverviewTab.tsx`
+opts the `PanelWithAction` wrapping each of these two INTO the glow at
+its real call site, not the node inside it. `time-series` keeps its own
+`glow` prop unchanged (still zero live TradableAsset consumers as of this
+writing — `TrendChart` is Overview's own chart, a separate component with
+its own data-driven `--delta-up`/`--delta-down` glow color, a legitimate
+exception since it isn't wrapped by `Panel`/`PanelWithAction` at all);
+revisit `time-series`'s own prop the same way if a real consumer
+eventually needs it. This does NOT reopen the principle-8 exception
+above — `earnings-history-chart`'s own bars stay on their existing
+per-quarter `--delta-up`/`--delta-down` beat/miss coloring (a prior,
+separately-ratified exception), unaffected by where the glow chrome now
+lives. **General rule, stated for reuse**: any card wrapper (`Panel`,
+`PanelWithAction`) can take `glow`/`glowColor` directly — a content
+component should not wrap itself in glow when something will always
+enclose it in a pane.
+
+**key-issues-card** — node-addition test (merlin-new-node skill §0),
+cited before any code: What single question does it answer? "What are
+the live, contested arguments for and against this asset right now, and
+who's making them?" — a named topic with a bullish case and a bearish
+case read side by side, sourced independently on each side. Why can't an
+existing node answer it? `analyst-consensus` aggregates a DISTRIBUTION
+(counts across a bearish/neutral/bullish spectrum) — it has no mechanism
+for two opposing PROSE arguments on a specific topic, and collapses many
+analysts into one number rather than presenting a case. `ai-rationale-rail`
+is a single synthesized paragraph explaining a past move, not two
+opposing live arguments on an open question. `comparison` is entity-vs-
+entity across shared dimensions, not one entity's own internal bull-vs-
+bear tension. No existing node holds "two named, independently-sourced,
+opposing prose arguments on one topic" as a shape. Why is prose
+insufficient? A single paragraph blending both sides loses the
+adversarial structure that makes a genuinely contested question legible
+at a glance — the split itself (bull left, bear right, equal visual
+weight) IS the fact being communicated, same "shape reads faster than a
+sentence" reasoning `analyst-consensus`/`ring-gauge` already established.
+Facts/reasoning register (third-party bull/bear framing, cited per side),
+never Merlin's own recommendation — same boundary `analyst-consensus`
+holds for third-party sentiment. Optional at the TradableAsset level:
+absent means genuinely none authored, never a forced empty card.
+
+**Notable Price Movement — rename + visual restyle, not a new node.**
+The existing `price-movement-timeline` node/schema (`TimelineEntry`,
+unchanged) is renamed in IA/label terms only ("Notable Price Movement"
+replaces its earlier plain "notable price movement" card title — the
+underlying registry key `price-movement-timeline` is unchanged, only its
+rendered visual treatment gains a vertical day-marker-and-connecting-line
+layout). Decided at build time per the order's own explicit escape hatch:
+a restyle, not a fresh node-addition test, because the question it
+answers and the data it binds are both unchanged — only the layout
+(horizontal list → vertical timeline) differs. If a future need arises
+for a genuinely different timeline shape (e.g. a horizontal scrubber),
+that would warrant its own test; this one doesn't.
+
+**Stories & Analysis — renamed section, placeholder images, no new data
+shape.** What Overview's price-movement preview card was informally
+called is retitled "Stories & Analysis" and gains a token-colored
+placeholder image block per entry (no real image pipeline — same honest-
+placeholder posture as Data Sources' own public catalog). No schema
+change: still `TimelineEntry`, the image is a presentation-only
+placeholder, not authored data.
+
 ## Shell (Phase 5 — frame components, NOT registry nodes; intent only, design at
 Phase 5; v2 model — Phase 8B WO-2/WO-3, architect-ratified via STATE.md;
 sidebar — Phase 8C, architect-ratified via STATE.md)
@@ -616,6 +882,16 @@ artifact has never been opened; hidden at zero; click jumps to
 Investigations, module-grouped view, scrolled to Monitor). A Workflows
 nav entry is deliberately absent until Phase 11 ships it — no nav entry
 points at nothing.
+
+Nav auto-collapses (2026-08-17, direct feedback) on either of two
+triggers: navigating to any non-Home page pane, or the artifact pane
+opening. Rising-edge only — it collapses on the TRANSITION into either
+condition, not continuously while true, so a manual re-expand via the
+existing collapse button sticks until the next distinct trigger (a new
+page navigation, or the artifact pane opening again after being closed).
+This does not reopen or change the underlying manual-toggle mechanism
+(`Sidebar.tsx`'s own local `isCollapsed` state, still user-controlled) —
+it only forces one additional transition at each of those two moments.
 
 Home is the investigation surface — transcript (oldest first, user right
 / agent left, unchanged from the v2 model) plus the composer, plus its

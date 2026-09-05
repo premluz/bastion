@@ -1,0 +1,10 @@
+/* Mobile-only wrapper (2026-08-22): inside MobilePaneModals.tsx's
+   fullscreen Dialog, ArtifactStack has no row/pane-width concern to
+   share and no competing slide animation to run (the Dialog itself
+   already handles its own entrance) — just a plain full-height flex box
+   so ArtifactStack's own internal flex-column layout fills the Dialog's
+   content slot. */
+.mobileWrap {
+  display: flex;
+  height: 100%;
+}

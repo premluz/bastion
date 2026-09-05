@@ -25,6 +25,86 @@
   }
 }
 
+/* Reflow variants (2026-08-29, direct feedback: artifact-close read as
+   smooth — content widening in sync with the pane leaving — while
+   chat-close read as a gap: content snapped to its final width instantly,
+   the chat pane kept sliding past the now-vacated space for another
+   ~150ms). Root cause, confirmed live via getBoundingClientRect sampling
+   at 8ms resolution: BOTH panes actually used the exact same mechanism
+   (translateX-only, content stays flex-fixed for the pane's own full
+   exit duration, then snaps the instant the pane unmounts) — no
+   measurable difference between them. translateX moves a pane visually
+   without ever changing its LAYOUT footprint, so content's own flex-grow
+   share can't shift until the exiting pane's DOM node is actually gone;
+   the "smooth" read on artifact vs "gap" read on chat was the same snap,
+   just less noticeable on the pane with less distance to travel.
+   Real fix: shrink the exiting pane's actual flex sizing toward 0 in step
+   with its own fade, instead of only translating it — the row then
+   reflows LIVE across the same --motion-exit-duration/-ease window,
+   content growing into the space as it's vacated rather than snapping
+   once vacated. Two variants, not one, because the two panes drive their
+   width through DIFFERENT flex properties (Frame.module.css): .artifactPane
+   is `flex: 1 1 0%` — flex-basis is always 0%, flex-GROW (1→0) is what
+   actually claims space, so that's what animates. .transcriptPane is
+   `flex: 0 1 480px` — flex-grow is always 0, flex-BASIS (480px→0) is what
+   claims space, so that's what animates there instead. min-width is
+   animated alongside either, since both panes' own classes set a floor
+   (min-width: 420px/320px) that would otherwise clamp the shrink before
+   it reaches 0 — animated via the mount component's own inline animation,
+   not the class, so it wins only for the animation's own duration without
+   touching either class's resting-state floor. */
+@keyframes merlin-panel-reflow-in-grow {
+  from {
+    flex-grow: 0;
+    min-width: 0;
+    opacity: 0;
+  }
+  to {
+    flex-grow: 1;
+    min-width: var(--merlin-pane-min-width, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes merlin-panel-reflow-out-grow {
+  from {
+    flex-grow: 1;
+    min-width: var(--merlin-pane-min-width, 0);
+    opacity: 1;
+  }
+  to {
+    flex-grow: 0;
+    min-width: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes merlin-panel-reflow-in-basis {
+  from {
+    flex-basis: 0;
+    min-width: 0;
+    opacity: 0;
+  }
+  to {
+    flex-basis: var(--merlin-pane-basis, 480px);
+    min-width: var(--merlin-pane-min-width, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes merlin-panel-reflow-out-basis {
+  from {
+    flex-basis: var(--merlin-pane-basis, 480px);
+    min-width: var(--merlin-pane-min-width, 0);
+    opacity: 1;
+  }
+  to {
+    flex-basis: 0;
+    min-width: 0;
+    opacity: 0;
+  }
+}
+
 /* Leading-edge variants (deprecated, 2026-07-30) — chat pane moved to
    rightmost position per Frame.tsx's new render order, now using the
    trailing-edge animations above. Keeping these keyframes for reference

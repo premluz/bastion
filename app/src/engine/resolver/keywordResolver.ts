@@ -1,4 +1,4 @@
-import type { IntentResolver } from "./types";
+import type { IntentResolver, SceneMount } from "./types";
 import { SceneSchema } from "../../contracts/scene";
 import { hydrateScene, loadUniverse } from "../../contracts/hydrate";
 import manifestJson from "../../../scenes/manifest.json";
@@ -8,6 +8,9 @@ interface ManifestEntry {
   file: string;
   module: string;
   intents: string[];
+  // mount (Phase 21, 2026-08-30): optional, defaults to "artifact" when
+  // omitted — every scene authored before this phase is unaffected.
+  mount?: SceneMount;
 }
 
 const sceneModules = import.meta.glob<unknown>("../../../scenes/*.scene.json", {
@@ -65,7 +68,7 @@ export function createKeywordResolver(): IntentResolver {
 
       const raw = sceneRawByFile.get(best.entry.file);
       const scene = SceneSchema.parse(raw);
-      return hydrateScene(scene, universe);
+      return { scene: hydrateScene(scene, universe), mount: best.entry.mount ?? "artifact" };
     },
   };
 }

@@ -9,7 +9,6 @@ import { buildBondColumns, buildRealEstateColumns, buildDefaultColumns } from '.
 
 interface EntityAssetTableProps {
   assets: MarketAsset[];
-  onWatch: (id: string, name: string) => void;
   onOpenDetail: (id: string) => void;
   category?: string;
 }
@@ -35,7 +34,7 @@ interface EntityAssetTableProps {
 // Delta/Watch cells) and EntityAssetTableColumns.tsx (category-specific
 // sets) — split out to stay under the file budget; this file owns only
 // sort state and assembly.
-export function EntityAssetTable({ assets, onWatch, onOpenDetail, category }: EntityAssetTableProps) {
+export function EntityAssetTable({ assets, onOpenDetail, category }: EntityAssetTableProps) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
 
@@ -72,7 +71,7 @@ export function EntityAssetTable({ assets, onWatch, onOpenDetail, category }: En
 
   const sortableHeader = buildSortableHeader(sortKey, sortDir, handleHeaderClick);
   const assetCell = buildAssetCell(onOpenDetail, sortableHeader);
-  const watchCell = buildWatchCell(onWatch);
+  const watchCell = buildWatchCell();
 
   const categoryColumns = isCryptoOrStockOrCommodity
     ? buildCryptoColumns(category, sortableHeader)
@@ -86,7 +85,7 @@ export function EntityAssetTable({ assets, onWatch, onOpenDetail, category }: En
   const rows: Row[] = sortedAssets.map((asset) => ({ ...asset }));
 
   return (
-    <div style={{ width: '100%', minWidth: 0, overflow: 'auto', maxWidth: '100%' }}>
+    <div className={styles.root}>
       <div className={styles.animatedTable}>
         <Table<Row> data={rows} columns={columns} density="compact" dividers="rows" hasHover textOverflow="wrap" />
       </div>

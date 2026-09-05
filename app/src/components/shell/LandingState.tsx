@@ -26,9 +26,9 @@ interface MarketPulseCard {
 // card.
 const SUGGESTIONS = Object.values(marketPulseJson as Record<string, MarketPulseCard>).filter((card) => card.featured);
 
-// Reads the real, live theme value rather than guessing a duration —
-// same discipline as useTextReveal.ts's own duration priming. ms only;
-// every motion token in this codebase is authored in ms (tokens.base.css).
+// Reads the real, live theme value rather than guessing a duration. ms
+// only; every motion token in this codebase is authored in ms
+// (tokens.base.css).
 function readMs(varName: string): number {
   const raw = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
   return parseFloat(raw) || 0;
@@ -78,9 +78,9 @@ export function LandingState() {
     const cardsTailMs = exitMs + staggerMs * Math.max(0, SUGGESTIONS.length - 1);
     const totalMs = Math.max(cardsTailMs, exitMs);
 
-    // Imperative custom-property priming (useTextReveal.ts's own
-    // precedent), not a JSX style object — the value must land on the
-    // DOM node before the .collapsing class is added in the same tick.
+    // Imperative custom-property priming, not a JSX style object — the
+    // value must land on the DOM node before the .collapsing class is
+    // added in the same tick.
     const upper = upperRef.current;
     upper?.style.setProperty('--collapse-duration', `${totalMs}ms`);
     setIsCollapsing(true);
