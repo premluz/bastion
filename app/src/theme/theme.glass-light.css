@@ -93,7 +93,8 @@
   /* Tint strength — see theme.default.css's own comment for the full
      reasoning. Same values every theme uses (a structural opacity
      relationship, not a color). */
-  --tint-subtle: var(--opacity-20);
+  --tint-subtle: var(--opacity-12);
+  --tint-medium: var(--opacity-18);
   --tint-strong: var(--opacity-40);
 
   /* Data-viz series palette — same six hues as glass, darkened together so

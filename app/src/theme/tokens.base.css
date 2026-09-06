@@ -78,6 +78,12 @@
      neighbor. Direct feedback: "subtler red/green (chart gradient and
      glow)... should be a token, strength alpha % of any color." */
   --opacity-20: .20;
+  /* .18 added 2026-09-05 — a three-step tint scale (subtle/medium/strong)
+     replaced the two-step one: --tint-subtle moved to the existing
+     --opacity-12 step (was --opacity-20) and the new --tint-medium
+     needed its own real value between .12 and .40, not a borrowed
+     neighbor — same reasoning --opacity-20 itself was added under. */
+  --opacity-18: .18;
   --opacity-40: .40;
   --opacity-55: .55;
   --opacity-70: .70;

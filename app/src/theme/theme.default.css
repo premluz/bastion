@@ -92,9 +92,20 @@
      hue is plugged in. --tint-strong keeps the prior single hardcoded
      value (--opacity-40, the gradient's own stopOpacity was a raw 0.35
      before this token existed — a real magic-value fix along the way,
-     not just a rename); --tint-subtle is the genuine ~50% cut requested,
-     backed by the new --opacity-20 primitive step. */
-  --tint-subtle: var(--opacity-20);
+     not just a rename).
+     Three-step scale (2026-09-05, direct order: "subtle should be 12
+     and make new one regular... 18") — --tint-subtle moved from the
+     original --opacity-20 to --opacity-12 (a genuinely lighter wash than
+     the 2026-08-17 round's own "~50% cut," since that round's --tint-
+     subtle is now this round's --tint-medium instead); --tint-medium is
+     the new middle step, backed by the new --opacity-18 primitive. Every
+     existing --tint-subtle consumer (TrendChart's area-fill/glow,
+     KeyIssuesCard's bullish/bearish panes, Sparkline, AssetTrendGlyph,
+     Panel/PanelWithAction) reads lighter as a result — reviewed live
+     against this file's own token-sheet story before shipping, not
+     assumed safe from the number alone. */
+  --tint-subtle: var(--opacity-12);
+  --tint-medium: var(--opacity-18);
   --tint-strong: var(--opacity-40);
 
   /* Data-viz series palette — provisional starting values, pending Prem's ◆ tuning */
