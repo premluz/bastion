@@ -33,35 +33,42 @@ interface AssetsHomeHeaderProps {
   changePercent: number;
 }
 
-// Balance glow (2026-09-12, visual-identity choice pending CLAUDE.md §10):
-// reuses theme/glow.module.css's existing .topLeft + .topRight primitive
-// combination rather than a new glow shape, colored via --accent-signal —
-// the app has no dedicated "wallet home" accent decided yet, so this
-// deliberately reads as a neutral placeholder, not a real brand color
-// call. Flagged in the phase report, not decided silently here.
+// Balance glow (2026-09-12): reuses theme/glow.module.css's existing
+// .topLeft + .topRight primitive combination rather than a new glow shape.
+// Colour tracks the portfolio's own direction — --delta-up when the
+// balance is up, --delta-down when it's down — so the screen's ambient
+// light says which way the day went before any number is read. These are
+// the same two tokens TrendDelta already uses, defined in all five
+// registered themes, so no theme falls back silently.
 export function AssetsHomeHeader({ totalValue, changeAbs, changePercent }: AssetsHomeHeaderProps) {
+  const isUp = changeAbs >= 0;
   return (
     <div
       className={`${styles.root} ${glowStyles.root} ${glowStyles.topLeft} ${glowStyles.topRight} ${glowStyles.clipped}`}
-      style={{ '--glow-color': 'var(--accent-signal)', '--glow-strength': 'var(--tint-subtle)' } as React.CSSProperties}
+      style={{
+        '--glow-color': isUp ? 'var(--delta-up)' : 'var(--delta-down)',
+        '--glow-strength': 'var(--tint-subtle)',
+      } as React.CSSProperties}
     >
       <div className={glowStyles.content}>
         <div className={styles.identityRow}>
           <Avatar name="Wallet" size="small" />
           <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />
         </div>
-        <Text type="label" color="secondary">
-          All mainnets
-        </Text>
-        <Heading level={1} type="display-1" className={styles.balance}>
-          ${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-        </Heading>
-        <div className={styles.changeRow}>
-          <Text type="supporting" hasTabularNumbers className={changeAbs >= 0 ? styles.deltaUp : styles.deltaDown}>
-            {changeAbs >= 0 ? '+' : ''}
-            {changeAbs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        <div className={styles.portfolio}>
+          <Text type="label" color="secondary">
+            All mainnets
           </Text>
-          <TrendDelta value={changePercent} />
+          <Heading level={1} type="display-1" className={styles.balance}>
+            ${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </Heading>
+          <div className={styles.changeRow}>
+            <Text type="supporting" hasTabularNumbers className={isUp ? styles.deltaUp : styles.deltaDown}>
+              {isUp ? '+' : ''}
+              {changeAbs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </Text>
+            <TrendDelta value={changePercent} />
+          </div>
         </div>
         <div className={styles.actionRow}>
           {ACTIONS.map(({ id, label, icon }) => (

@@ -1,43 +1,44 @@
-import { List, ListItem } from '@astryxdesign/core/List';
+import { Card } from '@astryxdesign/core/Card';
 import { Text } from '@astryxdesign/core/Text';
 import { CoinLogo } from './CoinLogo';
 import { TrendDelta } from '../nodes/TrendDelta';
 import type { AssetHomeRow } from '../../engine/assetsHome';
 import styles from './AssetsHomeList.module.css';
 
-// Coin logo + symbol + delta badge start slot, fiat value + quantity end
-// slot — ListItem's own start/end content slots (same primitive
-// HoldingsPage's "Connect a wallet" list already uses), not a bespoke row
-// component, since ListItem already provides the hover/press/divider
-// treatment this page wants for free.
+// Each holding is its own pane rather than a divider-separated list row
+// (2026-09-12, direct feedback: "assets cards are panes we have styling
+// for page so lets use it... no line separator"). Reuses the existing
+// panelFlat treatment Panel.tsx already puts on Astryx Card — the app's
+// established pane surface — instead of a bespoke card style, so these
+// rows pick up every theme's own border/background automatically.
+//
+// Ticker only, no entity name: the symbol identifies the holding, and the
+// name was redundant against a real brand mark. Delta sits under the
+// ticker, quantity under the value, so each side reads as a stack.
 export function AssetsHomeList({ rows }: { rows: AssetHomeRow[] }) {
   return (
-    <List hasDividers density="compact">
+    <div className={styles.list}>
       {rows.map((row) => (
-        <ListItem
-          key={row.entityId}
-          startContent={<CoinLogo entityId={row.entityId} label={row.symbol} />}
-          label={
-            <span className={styles.symbolRow}>
+        <Card key={row.entityId} className="panelFlat" padding={4}>
+          <div className={styles.row}>
+            <CoinLogo entityId={row.entityId} label={row.symbol} />
+            <div className={styles.identity}>
               <Text type="body" weight="medium">
                 {row.symbol}
               </Text>
               <TrendDelta value={row.deltaPercent} />
-            </span>
-          }
-          description={row.name}
-          endContent={
-            <span className={styles.valueColumn}>
+            </div>
+            <div className={styles.valueColumn}>
               <Text type="body" weight="medium" hasTabularNumbers>
                 ${row.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </Text>
               <Text type="supporting" color="secondary" hasTabularNumbers>
                 {row.quantity} {row.symbol}
               </Text>
-            </span>
-          }
-        />
+            </div>
+          </div>
+        </Card>
       ))}
-    </List>
+    </div>
   );
 }
