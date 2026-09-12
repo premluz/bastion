@@ -102,20 +102,56 @@
     opacity var(--shell-mode-duration) var(--shell-mode-ease);
 }
 
-.phone[data-mode='composer'] .page,
-.phone[data-mode='composer'] .content {
-  transform: scale(var(--shell-recede-scale));
-  filter: blur(var(--shell-recede-blur));
-  opacity: var(--shell-recede-opacity);
-  overflow-y: hidden;
-}
-
-.phone[data-mode='conversation'] .page,
-.phone[data-mode='conversation'] .content {
+/* Composer and conversation recede identically (2026-09-13, direct
+   feedback: in composer "this blurred receded background should actually
+   completely proceed"). Composer previously stopped at a partial recede
+   (--shell-recede-scale/-blur, 0.4 opacity), leaving the blurred page
+   visible behind the composer; it now goes all the way to the same fully
+   faded state conversation already used, so both assistant modes present
+   the same empty surface for the transcript to sit on. */
+.phone:not([data-mode='idle']) .page,
+.phone:not([data-mode='idle']) .content {
   transform: scale(var(--shell-recede-scale-far));
   filter: blur(var(--shell-recede-blur-far));
   opacity: 0;
   overflow-y: hidden;
+}
+
+/* Messages over the receded page in composer mode. Lives in normal flow
+   between the page and the dock rather than absolutely positioned: an
+   absolute layer anchored to .phone's own bottom put flex-end BEHIND the
+   dock, stacking bubbles on top of the composer's mic/send buttons
+   (caught in a screenshot — the message count assertion passed while the
+   picture was wrong). In flow it ends where the dock begins, so bubbles
+   stack up from just above the composer the way a chat does. Masked with
+   the same --shell-transcript-mask the conversation overlay's transcript
+   uses, so both modes read alike as messages pass the top edge. */
+.composerTranscript {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--shell-gap);
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  mask-image: var(--shell-transcript-mask);
+  opacity: 0;
+  pointer-events: none;
+  /* Collapsed to nothing outside composer mode: .chrome is a flex column,
+     so a zero-basis, non-growing row takes no space and leaves the page/
+     dock layout in idle and conversation exactly as it was. */
+  flex: 0 0 0;
+  min-height: 0;
+  padding: 0 var(--shell-inset);
+  transition: opacity var(--shell-mode-duration) var(--shell-mode-ease);
+}
+
+/* Takes the free space between the receded page and the dock in composer
+   mode, so flex-end sits just above the composer rather than behind it. */
+.phone[data-mode='composer'] .composerTranscript {
+  opacity: 1;
+  pointer-events: auto;
+  flex: 1 1 auto;
+  padding-block: var(--shell-inset);
 }
 
 .dock { position: relative; }
@@ -136,14 +172,17 @@
     transform var(--motion-enter-duration) var(--motion-enter-ease);
 }
 
-.phone[data-mode='conversation'] .header {
+/* Header hides in composer too, not just conversation (2026-09-13, direct
+   feedback: "in this mode with composer, we should also hide the header as
+   we do in the voice mode") — both assistant modes clear the chrome so the
+   transcript and orb own the surface. */
+.phone:not([data-mode='idle']) .header {
   opacity: 0;
+  transform: translateY(var(--shell-inset));
   transition-duration: var(--motion-exit-duration);
   transition-timing-function: var(--motion-exit-ease);
 }
 
-.phone[data-mode='conversation'] .header { transform: translateY(var(--shell-inset)); }
-
 @media (prefers-reduced-motion: reduce) {
-  .header, .composer, .phone::before, .page, .content { transition: none; }
+  .header, .composer, .phone::before, .page, .content, .composerTranscript { transition: none; }
 }

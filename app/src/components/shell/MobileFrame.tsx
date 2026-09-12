@@ -54,6 +54,18 @@ export function MobileFrame(props: MobileFrameProps) {
           ) : (
             <main className={styles.content} aria-label="Preview transcript" tabIndex={0}>{transcript}</main>
           )}
+          {/* Composer-mode transcript (2026-09-13): the same messages the
+              conversation overlay renders, shown over the fully receded
+              page so typing in the composer has somewhere to land — until
+              now a submitted message only appeared after entering voice
+              mode. Its own foreground layer, not .content: that element IS
+              one of the receded background layers, so putting the
+              transcript there would blur and fade the very thing this is
+              meant to surface. */}
+          <div className={styles.composerTranscript} role="log" aria-label="Assistant transcript"
+            inert={state.mode !== 'composer'} aria-hidden={state.mode !== 'composer'}>
+            {transcript}
+          </div>
           <footer className={styles.dock}>
             <TabBar activeTab={state.activeTab} onTabChange={state.selectTab} isComposerOpen={state.mode !== 'idle'}
               isConversation={state.mode === 'conversation'} onAssistantPress={state.toggleComposer}
