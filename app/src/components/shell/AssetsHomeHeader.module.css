@@ -1,5 +1,7 @@
+/* Matches MobileFrame's own .header padding so the avatar/search row lands
+   on the same baseline whichever view is active. */
 .root {
-  padding: var(--space-16);
+  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--shell-inset);
 }
 
 .identityRow {

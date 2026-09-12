@@ -36,7 +36,7 @@ export function MobileFrame(props: MobileFrameProps) {
       <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode}>
         <div className={styles.chrome} inert={state.mode === 'conversation'} aria-hidden={state.mode === 'conversation'}>
           {isHome ? (
-            <main className={styles.content} aria-label="Home" tabIndex={0}>
+            <main className={styles.page} aria-label="Home" tabIndex={0}>
               <AssetsHomePage />
             </main>
           ) : (

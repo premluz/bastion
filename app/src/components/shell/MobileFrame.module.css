@@ -70,6 +70,16 @@
   padding: var(--shell-fade-height) var(--shell-inset);
 }
 
+/* Pages own their full-bleed chrome (header, glow, edge-to-edge rows), so
+   they scroll in a bare container — .content's transcript padding would
+   inset a page header that must sit flush at the top edge, which is what
+   made Home's search row sit lower than the assistant view's. */
+.page {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .dock { position: relative; }
 .composer {
   display: grid;
