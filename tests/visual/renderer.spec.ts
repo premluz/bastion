@@ -1,17 +1,10 @@
 import { test, expect } from '@playwright/test';
 
-// One baseline per renderer story (4 real fixtures + the deliberately
-// broken scene) across the 3 registered Meridian themes — same pattern as
-// nodes.spec.ts. Reviewed once at creation, diff-only from here.
+// Bastion fork note: Merlin's eight real-fixture renderer stories were
+// deleted along with their scene JSON (universe/scene prune, CLAUDE.md
+// §10) — only the synthetic Broken/StressTest stories survive, per
+// Fixtures.stories.tsx.
 const RENDERER_STORIES = [
-  'renderer-fixtures--asset-discovery',
-  'renderer-fixtures--asset-discovery-refine',
-  'renderer-fixtures--issuer-dossier',
-  'renderer-fixtures--settlement-anomaly',
-  'renderer-fixtures--audit-status-alert',
-  'renderer-fixtures--risk-desk-dashboard',
-  'renderer-fixtures--eurusd-risk-reversal-detail',
-  'renderer-fixtures--south-bow-capacity-filing',
   'renderer-fixtures--broken',
   'renderer-fixtures--stress-test-dense',
   'renderer-fixtures--stress-test-dense-broken',

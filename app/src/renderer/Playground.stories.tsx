@@ -3,9 +3,26 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SceneRenderer } from './SceneRenderer';
 import { SceneSchema } from '../contracts/scene';
 import { hydrateScene, loadUniverse } from '../contracts/hydrate';
-import assetDiscovery from '../../scenes/asset-discovery.scene.json';
 
 const universe = loadUniverse();
+
+// Bastion fork note: Merlin's own asset-discovery.scene.json seeded this
+// textarea; deleted per the universe/scene prune (CLAUDE.md §10). A
+// minimal inline scene keeps the playground usable without depending on
+// Bastion's own fixtures, which don't exist yet.
+const seedScene = {
+  id: 'playground-seed',
+  title: 'Playground seed scene',
+  intents: ['playground'],
+  thinking: [],
+  data: {},
+  layout: {
+    id: 'root',
+    type: 'scene-grid',
+    reveal: 0,
+    children: [{ id: 'seed-metric', type: 'metric', reveal: 1, props: { label: 'Edit me', value: 1 } }],
+  },
+};
 
 function parseAndHydrate(text: string) {
   let raw: unknown;
@@ -25,7 +42,7 @@ function parseAndHydrate(text: string) {
 }
 
 function Playground() {
-  const [text, setText] = useState(() => JSON.stringify(assetDiscovery, null, 2));
+  const [text, setText] = useState(() => JSON.stringify(seedScene, null, 2));
   const result = useMemo(() => parseAndHydrate(text), [text]);
 
   return (

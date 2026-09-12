@@ -12,8 +12,6 @@ import { WatchlistPage } from './WatchlistPage';
 import { HoldingsPage } from './HoldingsPage';
 import { DataSourcesPage } from './DataSourcesPage';
 import { MarketPulsePage } from './MarketPulsePage';
-import { PortfolioDashboardPage } from './PortfolioDashboardPage';
-import { RiskDashboardPage } from './RiskDashboardPage';
 import { EntityDetailPage } from './EntityDetailPage';
 import { Sidebar } from './Sidebar';
 import { useSessionStore } from '../../engine/stores/sessionStore';
@@ -57,10 +55,6 @@ function renderPage(page: Page): ReactNode {
       return <DataSourcesPage />;
     case 'market-pulse':
       return <MarketPulsePage />;
-    case 'portfolio-dashboard':
-      return <PortfolioDashboardPage />;
-    case 'risk-dashboard':
-      return <RiskDashboardPage />;
     case 'entity-detail':
       return <EntityDetailPage />;
     case 'home':

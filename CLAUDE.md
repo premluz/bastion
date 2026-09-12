@@ -1,36 +1,43 @@
-# MERLIN — Generative Intelligence Interface Prototype
+# BASTION — Simulated Crypto Wallet Prototype
 ## Master prompt & guardrails. This file is law. Read fully before any session.
 
 ---
 
 ## 1. Mission
 
-Naming: **Meridian** = the reusable canvas repo (Phase 1, project-agnostic). **Merlin** = this project, duplicated from Meridian at Phase 2.
+Bastion is forked from Merlin (a desktop enterprise "generative intelligence interface" prototype) at the point Merlin's history ends. This file supersedes Merlin's CLAUDE.md entirely for this repository; Merlin's own file is preserved only in git history for reference. Conflicts resolve in this order: this file → tokens-spec.md → STATE.md → ask Prem. The architecture below is not open for redesign. You write code inside these constraints. If a constraint blocks a task, stop and report the conflict — do not improvise around it.
 
-You are the executor. The architect is Prem: all reports, approvals, and escalations go to him. Conflicts resolve in this order: this file → tokens-spec.md → STATE.md → ask Prem. The architecture below is not open for redesign. You write code inside these constraints. If a constraint blocks a task, stop and report the conflict — do not improvise around it.
+The product: a high-fidelity, mobile-only prototype of a simulated crypto wallet app, in which a user explores assets, views their own (simulated) holdings, connects a (mock) wallet, and asks an AI trading assistant questions about the market and their portfolio. Interfaces are not hardcoded pages — they are JSON scenes rendered dynamically through a component registry, exactly as in Merlin. This is Bastion's own inheritance from Merlin, not a rebuild: the engine (scene contracts, registry, renderer, trail player, token cascade) is proven infrastructure, reused as-is. What Bastion drops is Merlin's desktop shell and its enterprise/risk-desk domain content.
 
-The product: a high-fidelity prototype of an AI intelligence platform (Palantir register) in which an agent appears to reason through a query and assemble the answering interface on the fly. Interfaces are not hardcoded pages — they are JSON scenes rendered dynamically through a component registry. Built on Meta's Astryx design system to prove agent-native fluency with their stack.
+Demo beats the code must serve (same spirit as Merlin's, adapted to a single-column mobile shell):
+1. User types or speaks a query → agent thinking trail streams → interface assembles piece by piece, in a single-column mobile layout (no multi-pane assembly — Merlin's workbench/artifact-stack model does not carry over).
+2. Theme switches live between registered themes — same components, token cascade only. Merlin's `ops-dark`/`glass`/`safe-one` themes are inherited as a starting visual language (see the open question in §10 on whether Bastion keeps them or gets its own identity); the architecture must make adding a new one a zero-component-change event, exactly as it did for Merlin.
+3. An external agent pushes a new scene over MCP and the interface materializes without a reload — same mechanism, unchanged.
 
-Three demo beats the code must serve:
-1. User types a query → agent thinking trail streams → interface assembles piece by piece.
-2. Theme switches live between Astryx stock themes — same components, token cascade only. Custom themes (`ops-dark`, `glass` — specced in tokens-spec.md) are deferred drop-ins; the architecture must make adding one a zero-component-change event.
-3. An external agent pushes a new scene over MCP and the interface materializes without a reload.
+**Explicit non-goals, stated honestly rather than silently omitted (Merlin's own recurring discipline, carried forward):**
+- No real trading execution, no real funds movement, no real wallet integration. Every balance, price feed, and transaction in this prototype is simulated. This is stated as plainly as Merlin's "no order-book node, no buy/sell ticket, ever."
+- No desktop layout. This is a mobile-only shell; there is no multi-pane/resizable-pane story to build or preserve.
+- No enterprise/risk-desk vocabulary. `RiskLens`, `PortfolioAtlas`, derivatives, counterparty exposure, and every other Merlin-fictional-world proper noun stay in Merlin's history; Bastion authors its own crypto-native universe fresh (out of scope for this fork — see §10).
+
+**Open question, not decided here (see §10 for the full list):** does "AI trading assistant" imply Bastion needs a simulated buy/sell action, not just a viewing/analysis surface? Merlin's whole design register (facts are permanent, recommendations are prose, never buttons, never executes) assumes an advisory-only posture. Bastion's own thesis may differ — this is not assumed either way here.
 
 ## 2. Non-negotiable rules
 
-1. **The scene contract is law.** All rendered UI derives from Scene JSON validated by Zod schemas in `src/contracts/`. No component is ever mounted from application code outside the renderer, except the app shell (chat bar, theme switch, frame).
+Inherited from Merlin verbatim in substance — these are engine/process laws, domain-agnostic, and not something a mobile wallet app gives any reason to relax:
+
+1. **The scene contract is law.** All rendered UI derives from Scene JSON validated by Zod schemas in `src/contracts/`. No component is ever mounted from application code outside the renderer, except the app shell (composer/ask bar, theme switch, mobile frame).
 2. **The registry is the only door.** JSON meets React in exactly one place: `src/registry/registry.ts` → `src/renderer/SceneRenderer.tsx`. Never import a scene into a component. Never import a component anywhere except the registry and its own story/test.
 3. **Dependency direction is one-way:** `contracts ← registry ← renderer ← engine ← app`. Lower layers never import from higher layers. Components import only contracts (for prop types) and design-system primitives.
 4. **Tokens only.** No raw hex, rgb, px shadows, or blur values inside components. Every visual value resolves through the token cascade (`src/theme/`). If a token doesn't exist, propose it in the phase report — don't inline the value. No inline style props/objects even when values are all var() references — positioning/layout is a stylesheet concern; a fully token-sourced inline style still violates this rule.
-5. **Astryx first.** Before writing any UI element, check whether Astryx provides it (use the Astryx MCP server / CLI docs). Wrap Astryx components; build custom only for what Astryx lacks (thinking trail, scene canvas, glass surfaces). Never fork Astryx internals.
+5. **Astryx first.** Before writing any UI element, check whether Astryx provides it (use the Astryx MCP server / CLI docs). Wrap Astryx components; build custom only for what Astryx lacks. Never fork Astryx internals.
 6. **Components are pure and dumb.** Props in, UI out. No fetching, no store access, no scene awareness inside registry components. Data reaches them through the renderer's binding resolution.
-7. **Outbound interaction from registry components: data attributes + shell-level delegated listeners only — never callbacks, never engine/app imports.** `EntityLink` (Phase 8F) is the reference implementation. That's the sanctioned escape hatch for a registry component that needs to trigger something outside itself — written down so the next interactive need doesn't relitigate it.
+7. **Outbound interaction from registry components: data attributes + shell-level delegated listeners only — never callbacks, never engine/app imports.** `EntityLink` is the reference implementation, inherited from Merlin unchanged. That's the sanctioned escape hatch for a registry component that needs to trigger something outside itself.
 8. **Unknown never crashes.** Unknown node type → `<FallbackNode/>` error card. Invalid props → Zod error surfaced in the card. The renderer must survive any malformed scene.
 9. **One phase at a time.** Complete the current phase, run its gate, write the phase report, stop. Do not begin the next phase in the same session. Do not refactor files outside the current phase's scope.
 10. **No new dependencies without approval.** The dependency list in §5 is closed. If you believe a package is needed, stop and state the case in one paragraph.
 11. **TypeScript strict. No `any`, no `@ts-ignore`, no `as unknown as`.** If typing is hard, the design is wrong — report it.
 12. **File budget:** no file over 200 lines except fixture JSON. If a file grows past that, split it and say so.
-13. **Naming:** components `PascalCase`, one component per file, named exports. Scene node types are `kebab-case` strings (`"metric-grid"`, `"entity-graph"`) mapped in the registry.
+13. **Naming:** components `PascalCase`, one component per file, named exports. Scene node types are `kebab-case` strings mapped in the registry.
 14. **Every registry component ships with three artifacts in the same PR-equivalent:** the component, its Zod prop schema (registered in contracts), and its Storybook story. A component without all three does not exist.
 15. **Motion is data, not decoration.** All animation timing/easing comes from motion tokens. The "interface assembling" effect is driven by node order in the scene tree, not per-component hacks.
 
@@ -38,7 +45,8 @@ Three demo beats the code must serve:
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│ APP SHELL   chat bar · theme switch · frame · canvas    │
+│ APP SHELL   mobile frame · bottom tab bar · ask bar ·   │
+│             theme switch · screen stack                │
 ├────────────────────────────────────────────────────────┤
 │ ENGINE                                                  │
 │  intent resolver (keyword index → scene id)             │
@@ -56,38 +64,33 @@ Three demo beats the code must serve:
 ├────────────────────────────────────────────────────────┤
 │ CONTRACTS   Zod: Scene, Node, ThinkingStep, DataSet     │
 ├────────────────────────────────────────────────────────┤
-│ THEME       token cascade · ops-dark · glass            │
+│ THEME       token cascade · inherited Merlin themes     │
 └────────────────────────────────────────────────────────┘
           ▲ runtime MCP server (separate package)
             tools: list_scenes · get_scene · push_scene · query_data
 ```
 
-The intent resolver is a strategy interface: `resolve(query: string): Promise<Scene>`. Implementation #1 is a keyword index built from scene manifests. Implementation #2 (later, out of scope until Phase 9) calls the Anthropic API to generate a Scene conforming to the same schema. Nothing above the resolver may know which implementation is active.
+ENGINE / RENDERER / REGISTRY / COMPONENTS / CONTRACTS / THEME are unchanged in shape from Merlin — this is the proven part of the fork. APP SHELL is entirely new: Merlin's `Frame`/`WorkbenchRow`/`Sidebar`/pane-collapse/resize/`ArtifactStackMount`/`TranscriptPaneMount` machinery is **not carried over**. There is no multi-pane workbench in a single-column mobile app. What replaces it:
 
-**Entity data has two coexisting models — intentional, ratified, not migration debt (Phase 20 WO-1, 2026-08-15).** `engine/entityDetail.ts` (`EntityDetail`/`resolveEntityDetail`) is the universe-wide model: it serves every entity Discover's grid can surface (real universe entities and mock-filled filler alike) and Holdings' live price computation. `engine/tradableAsset.ts` (`TradableAsset`/`resolveTradableAsset`) is the Entity Detail page's own model — a denser, unified equity/crypto/tokenized-RWA shape, scoped for now to the two golden fixtures that proved the schema (`universe/fixtures/*.json`). An entity with no `TradableAsset` fixture shows an honest "not yet available" empty state on Entity Detail rather than a silent fallback to the older shape. Migrating the rest of the universe onto `TradableAsset` (or retiring `entityDetail.ts` entirely) is real, explicit future-phase work if and when it's ordered — until then, both models are correct simultaneously, each serving the surfaces it actually owns. Do not "clean this up" as an unapproved refactor; report drift, don't merge the two models unprompted.
+- A **bottom tab bar** (`components/shell/TabBar.tsx`) for the app's primary destinations (Explore, Holdings, Assistant, and whatever else Phase 3 scopes — see the open question in §10 on final tab set).
+- A **screen stack** (`components/shell/ScreenStack.tsx`), a simple push/pop navigation model — one screen visible at a time, no side-by-side panes, no resizable panels. This is Bastion's equivalent of Merlin's `pageStore`-driven page switch, without the artifact-pane overlay concept: an investigation result renders as its own screen (or inline in a conversation view), not as a panel that opens beside other content.
+- The **ask/composer bar** is a persistent bottom affordance (see the LandingState open question in §10), not Merlin's centered-greeting-before-first-turn pattern, since a mobile app has no equivalent of desktop's generous idle canvas.
 
-**A resolved query's output can mount in one of two places — same Scene contract, same registry, same renderer, only the mount point differs (Phase 21, legislated 2026-08-30).** ARTIFACT (the original, still-default path): the scene is promoted to the artifact stack, unchanged. INLINE (new): the scene renders directly inside the turn's own transcript entry via `SceneRenderer`, never touching the artifact store. Nothing about `SceneRenderer`, the registry, or the Scene/Zod contracts changes to support this — it was already decoupled from where it gets mounted; only `engine/presentScene.ts` (branches on the resolved mount) and `Turn` (gains an `inlineScene` slot, mutually exclusive with `artifactRef`) had to change. Routing is a three-way split, decided per-scene, never per-query-string-pattern:
-- Browse-shaped, points at existing/discoverable entities → INLINE, reusing the Discover grid's own card composition exactly — the `asset-card-grid` registry node wraps the same `AssetCardVisual` `EntityAssetGrid.tsx` renders, so one card system serves both human browsing and assistant generation.
-- A single-entity facet of whatever is already open (e.g. "earnings last 5 years" while an entity's detail page is open) → INLINE, a single-node scene scoped to that entity, rendered in the transcript beside the still-open detail pane.
-- Multi-entity synthesis or comparison → ARTIFACT, unchanged, the original path.
-
-The mount decision lives on the scene's `manifest.json` entry (`mount?: 'inline' | 'artifact'`, default `'artifact'` — every scene authored before this phase is unaffected), the same place `module` already lives as per-scene metadata that isn't part of the Scene contract itself, not on the Scene/Zod shape — an inline scene pushed live via MCP `push_scene` has no manifest entry to read `mount` from and always promotes to the artifact stack; giving `push_scene` its own inline path is real, unscoped future work if ordered, not assumed here. A registry component still may never take a callback prop or import from `engine/` (rule 3/7 hold exactly as written) — a card grid driven by Scene JSON reaches the registry as a real node (`asset-card-grid`, its own Zod prop schema, its own story, per rule 14) bound to a new `entity-cards` `DataSet` kind, using `data-entity-id` + a transcript-level delegated click listener (the same mechanism `Canvas.tsx` already uses for the artifact stack, duplicated at the transcript's own mount point since `SceneRenderer` carries no click delegation of its own); `EntityAssetGrid.tsx` (the pre-existing Discover-page shell component, still not a registry node, still callback-driven) shares the same presentational `AssetCardVisual` so the two consumers render byte-identical cards without one importing the other.
+The intent resolver is a strategy interface: `resolve(query: string): Promise<Scene>`. Implementation #1 is a keyword index built from scene manifests, inherited unchanged. Whether/when Bastion needs implementation #2 (an LLM-backed resolver) is not scoped by this fork pass.
 
 ## 4. Locked file structure
 
-Canvas boundary: everything marked ◇ originates in Meridian (the reusable canvas repo) and stays project-agnostic there; Merlin-specific improvements to ◇ areas are back-ported to Meridian deliberately, never automatically.
-
 ```
-Merlin/                          ← duplicated from Meridian (the canvas repo)
+Bastion/
 ├── CLAUDE.md                      ← this file
-├── tokens-spec.md                 ← Phase 0 color/type/motion values, authoritative
+├── tokens-spec.md                 ← color/type/motion values (see §10: inherited starting point or fresh — open question)
 ├── STATE.md                       ← session memory: read first, append last
 ├── app/                           ← Vite + React + TS
 │   ├── src/
 │   │   ├── contracts/
 │   │   │   ├── scene.ts           ← Scene, SceneNode, DataBinding
 │   │   │   ├── thinking.ts        ← ThinkingStep, StepKind, Confidence
-│   │   │   ├── data.ts            ← DataSet shapes (table, series, graph, geo, entity)
+│   │   │   ├── data.ts            ← DataSet shapes — trimmed, see §6
 │   │   │   └── props/             ← one Zod prop schema per registry component
 │   │   ├── registry/
 │   │   │   └── registry.ts        ← THE map. Lazy imports. Nothing else lives here.
@@ -100,22 +103,21 @@ Merlin/                          ← duplicated from Meridian (the canvas repo)
 │   │   │   │   ├── types.ts       ← IntentResolver interface
 │   │   │   │   └── keywordResolver.ts
 │   │   │   ├── trailPlayer.ts
-│   │   │   ├── stores/            ← Zustand: session, scene, trail
+│   │   │   ├── stores/            ← Zustand: session, scene, trail, wallet connection, watchlist
 │   │   │   └── liveChannel.ts     ← SSE client for MCP push
 │   │   ├── components/
-│   │   │   ├── shell/             ← ChatBar, Frame, ThemeSwitch, Canvas
-│   │   │   ├── trail/             ← ThinkingTrail, StepRow, ConfidenceBadge, SourceChip
+│   │   │   ├── shell/             ← TabBar, ScreenStack, ThemeSwitch, mobile Frame, ConnectWalletDialog
+│   │   │   ├── trail/             ← ThinkingTrail, StepRow, ConfidenceBadge, SourceChip (unchanged from Merlin)
 │   │   │   └── nodes/             ← registry components only
-│   │   ├── theme/                 ◇ canvas
+│   │   ├── theme/
 │   │   │   ├── tokens.base.css    ← primitives: scales, type, motion, z-depth
 │   │   │   ├── theme.default.css  ← semantic tokens → active Astryx stock theme
 │   │   │   └── astryx-bridge.md   ← semantic token ↔ Astryx variable mapping log
 │   │   └── main.tsx
-│   ├── scenes/                    ← fixture Scene JSON, one file per scene
-│   │   ├── manifest.json          ← id → intents/keywords index
-│   │   └── *.scene.json
-│   └── universe/                  ← shared world: entities, sources, datasets, globally keyed
-│       └── *.json                 ← flat keyed JSON; no query language, no relations engine
+│   ├── scenes/                    ← fixture Scene JSON, one file per scene — starts empty, see §10
+│   │   ├── manifest.json          ← id → intents/keywords index — near-empty skeleton
+│   │   └── *.scene.json           ← none yet; Bastion's own universe is fresh content, first Phase 1 task
+│   └── universe/                  ← shared world: entities, sources, datasets, globally keyed — starts empty
 ├── mcp-server/                    ← Node + @modelcontextprotocol/sdk
 │   └── src/
 │       ├── server.ts              ← tools: list_scenes, get_scene, push_scene, query_data
@@ -127,21 +129,25 @@ Do not add top-level directories. Do not relocate files between layers.
 
 ## 5. Stack (closed list)
 
+Same closed list Merlin used, inherited unchanged — no mobile-wallet-specific reason has been identified yet that Bastion needs something Merlin didn't:
+
 - React 19, Vite, TypeScript strict
 - `@astryxdesign/core`, `@astryxdesign/theme-neutral` (base to override), `@astryxdesign/cli` (dev)
 - zod, zustand
-- recharts (charts wrapped as registry nodes — Astryx's vega package is not on npm yet)
-- `d3-scale`, `d3-shape`, `d3-hierarchy`, `d3-array` (+ their `@types/d3-*`) — math only, for custom-SVG registry nodes (`concentration-map`'s treemap layout, `bar-series`/`sparkline`'s scales); never canvas, never a rendering library — approved 2026-07-11, see STATE.md, Phase 8E
-- `@heroicons/react` (2.2.0, exact pin) — extends Astryx's closed `IconName` set: import individual outline glyphs from `@heroicons/react/24/outline` as real `IconType` components, matching Astryx's own `defaultIcons.tsx` convention (24x24, currentColor, 1.5 stroke), same role the hand-copied `DocumentIcon.tsx`/`ChatIcon.tsx`/`BellIcon.tsx` precedent filled — approved 2026-08-05, see STATE.md
+- recharts (charts wrapped as registry nodes)
+- `d3-scale`, `d3-shape`, `d3-hierarchy`, `d3-array` (+ their `@types/d3-*`) — math only, for custom-SVG registry nodes; never canvas, never a rendering library. **Open question (§10): with `concentration-map`/`entity-graph`/`geo-panel` pruned, is `d3-hierarchy` still needed?** `d3-scale`/`d3-shape` remain load-bearing for `sparkline`, which is kept.
+- `@heroicons/react` (2.2.0, exact pin) — extends Astryx's closed `IconName` set
 - storybook (react-vite)
 - `@modelcontextprotocol/sdk` (mcp-server package only)
-- `@types/node` (mcp-server package only, types-only, zero runtime — required to type `node:*` builtins in a plain Node process; approved 2026-07-11, see STATE.md)
+- `@types/node` (mcp-server package only, types-only)
 - vitest (contracts + bindings + resolver tests)
-- @playwright/test + @storybook/test-runner (visual regression only — baselines on disk, diff results as text; Playwright MCP usage governed by the visual-verification guardrails)
+- @playwright/test + @storybook/test-runner (visual regression only)
 
-Nothing else. No animation library — motion via CSS transitions/keyframes driven by motion tokens and mount order. No CSS framework — Astryx cascade + theme files.
+Nothing else. No animation library. No CSS framework.
 
-## 6. Contracts (authoritative sketch — refine in Phase 1, don't reinvent)
+## 6. Contracts (authoritative sketch)
+
+`Scene`/`SceneNode`/`ThinkingStep`/data-binding rules are kept verbatim from Merlin — domain-agnostic, proven:
 
 ```ts
 // scene.ts
@@ -167,7 +173,7 @@ SceneNode = {
 ThinkingStep = {
   id: string
   kind: "plan" | "search" | "retrieve" | "correlate" | "synthesize" | "verify"
-  label: string                     // "Querying signals intelligence index…"
+  label: string
   detail?: string
   durationMs: number                // playback pacing
   sources?: { name: string; ref: string }[]
@@ -177,255 +183,35 @@ ThinkingStep = {
 
 Data binding rule: nodes carry `bind`, never inline datasets. Renderer resolves `bind` against `scene.data` before validating props. A dangling bind is a FallbackNode, not a crash.
 
-Universe layer: `universe/*.json` is the shared world — entities, sources, datasets under global keys. Scene `data` entries may be `{ "$ref": "<universe key>" }`; the RESOLVER hydrates refs at resolve-time, so renderer and registry never see refs — only hydrated scenes. A dangling $ref hydrates to a marked-missing DataSet → FallbackNode. Universe stays flat keyed JSON: no query language, no relations engine, no cross-file refs.
+Universe layer: `universe/*.json` is the shared world — entities, sources, datasets under global keys. Scene `data` entries may be `{ "$ref": "<universe key>" }`; the RESOLVER hydrates refs at resolve-time. Universe stays flat keyed JSON: no query language, no relations engine, no cross-file refs.
+
+**`DataSet` shapes — reviewed per kind, since Merlin's `data.ts` had grown to eight kinds by the time of this fork:**
+- `table`, `series`, `entity`, `entity-cards`, `scatter`, `missing` — **kept.** All are domain-agnostic and back registry nodes Bastion is keeping (§8). `entity`'s optional `derivative` sub-shape (`EntityDerivativeSchema`: counterparty/notional/exposure/tenor/tradeDate) is risk-desk-specific and is **dropped** from the schema — nothing in the kept node set reads it.
+- `graph`, `geo` — **dropped.** These existed solely to back `entity-graph` and `geo-panel`, both pruned per §8 (no plausible reuse identified for a wallet app; flagged as an open question in §10 in case that judgment is wrong).
 
 ## 7. Token & theme rules
 
+Inherited from Merlin unchanged — this mechanism is exactly why the fork keeps `src/theme/`:
+
 Three tiers, strictly cascading:
-1. **Primitives** (`tokens.base.css`): raw scales — spacing, radii, type ramp, durations, easings, z-depth levels 0–4, blur scale, opacity scale. Theme-agnostic. Never referenced by components directly.
-2. **Semantic** (per theme file): `--surface-0..3`, `--ink-primary/-secondary/-muted`, `--accent-signal`, `--accent-alert`, `--edge`, `--edge-highlight`, `--surface-blur`, `--surface-opacity`, `--glow`, `--scrim`, plus overrides of Astryx's cascade variables (document each in `astryx-bridge.md`).
+1. **Primitives** (`tokens.base.css`): raw scales — spacing, radii, type ramp, durations, easings, z-depth levels, blur scale, opacity scale. Theme-agnostic. Never referenced by components directly.
+2. **Semantic** (per theme file): `--surface-0..3`, `--ink-primary/-secondary/-muted`, `--accent-signal`, `--accent-alert`, `--edge`, `--edge-highlight`, `--surface-blur`, `--surface-opacity`, `--glow`, `--scrim`, plus overrides of Astryx's cascade variables (documented in `astryx-bridge.md`).
 3. **Component tokens** only when a component needs a themed value no semantic token expresses — added to both theme files in the same change.
 
 Theme switching: `data-theme` attribute on the root, live, no remount.
 
-**Launch model:** ship on Astryx stock themes. `theme.default.css` maps every semantic token to the active Astryx cascade variable — components consume semantic tokens ONLY, never Astryx variables directly. This indirection is the customization-ready guarantee: a future custom theme (`ops-dark`, `glass` — full value specs in tokens-spec.md) is a new mapping file registered next to `theme.default.css`, nothing else. If any component would need to change to support a new theme, that is an architecture defect — report it.
+**Launch model:** ship on Astryx stock themes. `theme.default.css` maps every semantic token to the active Astryx cascade variable — components consume semantic tokens ONLY, never Astryx variables directly. This indirection is the customization-ready guarantee: a new theme is a new mapping file registered next to `theme.default.css`, nothing else. If any component would need to change to support a new theme, that is an architecture defect — report it.
 
-## 8. Phase plan — each phase ends at its gate, then STOP
+## 8. Registry — surviving nodes (post-prune)
 
-**Phases S–1 — complete in Meridian.** Environment setup and the canvas foundation live in the Meridian repo under its own CLAUDE.md. Merlin exists only as a duplicate of a gate-passed Meridian. Never modify the Meridian repo from a Merlin session; canvas improvements are proposed as back-ports in the phase report.
+Merlin's registry had grown to 32 node types by the time of this fork, spanning a Phase-3 "core eight" through Phase 21's TradableAsset-detail system. Bastion keeps the domain-agnostic and asset/price-shaped subset; enterprise/risk-desk-only nodes are pruned. See STATE.md's fork entry and the report accompanying this rewrite for the full per-file accounting. Kept nodes, by category:
 
-**Phase 2 — Merlin instantiation + contracts.** Duplicate Meridian → Merlin repo; add the `mcp-server/` workspace stub. Then: all Zod schemas in `contracts/` (including UniverseRef + hydration), the shared `universe/` files (one connected fictional world: common source systems, entities recurring across scenes), three fixture scenes in `scenes/` (suggested: `network-anomaly`, `entity-dossier`, `regional-signals`) with realistic fictional intelligence data, `manifest.json`, contract tests: fixtures parse, every $ref resolves against the universe, hydrated scenes validate standalone, a corpus of malformed scenes (including dangling $refs) fails with useful errors.
-*Checkpoint:* after drafting `contracts/data.ts`, STOP and present the DataSet shapes for approval before writing any fixture.
-*Gate:* `vitest run` green; fixtures cover every planned node type at least once; Meridian repo untouched.
+- **Structural/trust architecture (Phase 3, Phase-adjacent):** `scene-grid`, `panel`, `metric`, `metric-grid`, `data-table`, `time-series`, `text-block`, `recommendation`, `entity-header`, `filter-summary`, `status-tag`, `confidence-meter`, `scene-summary`.
+- **Charts, domain-agnostic (Phase 8E/21):** `bar-series`, `sparkline`, `contribution-bars`, `risk-return-scatter` — **flagged as an open question in §10**, since Merlin's own spec-writer didn't anticipate these when scoping this fork; they are mechanically generic (no enterprise content) but their retention wasn't pre-approved.
+- **Asset/price detail system (Phase 19–21, "TradableAsset"):** `analyst-consensus`, `asset-price-header`, `earnings-history-chart`, `price-movement-timeline`, `ai-rationale-rail`, `trend-chart`, `key-issues-card`, `asset-card-grid`, `asset-trend-card`, `news-feed`. **Flagged as an open question in §10** — this entire subsystem is a much closer match to Bastion's "explore assets" screen than the original fork spec anticipated (built for a CoinGecko/Perplexity-Finance-style asset detail page), but keeping all ten nodes wholesale is a bigger call than a routine prune and is not decided silently here.
+- **Layout primitive:** `dashboard-layout` — kept (generic grid/span mechanism, no domain content), but the risk-desk-specific *pages* built from it (`RiskDashboardPage`, `PortfolioDashboardPage`) are pruned.
 
-**Phase 3 — Registry + core nodes.** `registry.ts`; nodes: `scene-grid`, `panel`, `metric`, `metric-grid`, `data-table`, `time-series`, `text-block`, `status-tag`, `recommendation`, `entity-header`, `filter-summary` (eleven — vocabulary is authoritative on each node's intent). At this phase's gate, fixture scenes swap their terminal text-blocks to `recommendation`, the dossier gains its `entity-header`, and the refine scene gains its `filter-summary` (small authored-prop additions, no data changes). Astryx-wrapped where possible. Prop schema + story per node, stories verified in every registered theme.
-*Gate:* Storybook renders all eleven in every registered theme; every node registered with a schema; `test:visual` baselines committed.
-
-**Phase 4 — Renderer.** `SceneRenderer` (recursive, registry lookup, prop validation, bind resolution), `FallbackNode`, staggered assembly mount using `reveal` order and motion tokens. Playground story: paste arbitrary Scene JSON → render.
-*Gate:* all three fixtures render from raw JSON; a deliberately broken scene shows FallbackNodes and never white-screens.
-
-**Phase 5 — Intent engine + shell.** `IntentResolver` interface + `keywordResolver` (manifest index, alias matching, fuzzy-lite: lowercase, trim, token overlap), Zustand stores, ChatBar + Frame + Canvas. Query → resolve → scene swap with exit/enter assembly.
-*Gate:* typing "show me the network anomaly" (and reasonable variants) loads the right scene; unresolved input returns an honest "no scene matched" state in the chat log.
-
-**Phase 6 — Thinking trail.** `trailPlayer` streams steps on `durationMs` pacing into the trail store; `ThinkingTrail` UI (kind icon, label, animated active state, SourceChips, ConfidenceBadge). Sequence: trail plays → scene assembles as the final synthesize step completes. Skippable (click to fast-forward).
-*Gate:* full loop — query → trail streams → interface assembles — feels like an agent working. Timing readable, not sluggish.
-
-**Phase 7 — Extended nodes.** `entity-graph` (positions precomputed and authored in the scene data payload — no force simulation, no new deps), `geo-panel` (stylized abstract map, no tile service), `signal-feed`, `comparison`, `confidence-meter`. Same three-artifact rule.
-*Gate:* fixture scenes updated to use them; Storybook and `test:visual` complete in every registered theme.
-
-**Phase 8 — Visual polish.** Density, hierarchy, and motion pass across every node and fixture scene in the stock themes; contrast audit; empty/partial-data states reviewed. Custom themes (`ops-dark`, `glass` — tokens-spec.md) remain deferred drop-ins; if one is attempted, it is a new mapping file only.
-*Gate:* theme flip on every fixture scene holds at demo fidelity; no component file was edited to achieve any visual fix (tokens/theme files only — a required component edit is a token-architecture bug to report).
-
-**Phase 8B — Shell v2.** Architect-ordered revision, inserted after Phase 8's tokens-only pass opened. Engine invariant: contracts, resolver, renderer, registry, nodes — zero changes. Any work-order step requiring an engine change stops and reports. Three work orders, each gated, STOP between — do not begin the next in the same session.
-
-*WO-1 — Turn & artifact architecture (no new visuals).* `sessionStore` reworked to a turn model: `{id, utterance, status, settled trail, artifactRef?}`. Every completed investigation registers an artifact (scene instance bound to its turn). `artifactStore`: which artifact is open. Canvas temporarily renders the open artifact unchanged. The bug — a second-query failure — is this WO's acceptance test: base query → trail → artifact, then refine query → new trail → new artifact, then a third repeat — three turns alive in the log, generation counter honored, no stale state. Diagnose the current failure and record root cause in STATE.md (confirm, don't assume).
-*Gate:* multi-turn sequence verified live + all existing tests green.
-
-*WO-2 — Template adoption, verbatim.* Scaffold `ai-chat-landing` + `ai-chat` to scratch; read fully; every adoption cites file+lines. (a) Landing state: centered greeting + composer + suggestion chips wired to real fixture intents — appears only before the first turn. (b) Conversation layout: user turns right, agent activity left, per template. (c) `ArtifactCard`: the template's document-card primitive exactly, filled with scene title + module + status — appears in the transcript when a trail completes. (d) `ArtifactPanel`: right-side panel per the template's artifact preview; opens on card click; scene renders inside it with the existing assembly stagger. Trail law holds: no agent bubbles. Composer affordances: adopt the template's attach/@ controls only if wired to something real (suggestion insertion); dead controls stay out, as ruled in the last work order.
-*Gate:* full loop on all four fixtures in all three themes; `test:visual` regenerated once; before/after screenshots.
-
-*WO-3 — Config + polish.* `app/src/config.ts` — typed module, the pattern for all future switches: `export const config = { artifacts: { autoOpen: true } } as const`. Panel auto-opens on trail completion when true; card-click always works. Amend node-vocabulary.md's Shell section to the v2 model (transcript + artifact panel, session-scoped, law lines preserved) — architect-ratified via a STATE.md entry citing this order. Baselines final, learnings delta in report.
-*Gate:* flip `autoOpen` once each way, verified live. STOP — Phase 8's tokens-only punch-list pass remains open and follows.
-
-**Phase 8C — Shell side-nav.** Single work order, architect-ordered, inserted after Phase 8B — log in STATE.md whether it ran before or after Phase 9 (both orderings are valid; only the log entry is required). Engine invariant unchanged: stores are READ by the sidebar, never restructured; one new action only (session reset).
-
-Scaffold `shell-side-nav` to scratch, read fully, cite every adoption by file+lines. Adopt the sidebar primitive exactly; REJECT the template's grouping semantics — groups are Merlin's modules (Discover, Research, Investigate, Monitor, Portfolio — render only groups with turns, except Monitor which renders once any alert exists), never projects/workspaces. Rows: turn question (truncated), status dot via tokens (answered / no match / alert). Row click = open that turn's artifact (existing action). "New investigation" = store reset to landing state, confirmed-safe (no persistence to lose by design — say so in the empty state, not a modal). Search: client-side filter over current-session turns, or omitted — no dead controls. Library: out. Sidebar default state in `config.ts` (`expanded: true`). Amend node-vocabulary.md's Shell section: sidebar = investigation navigation, module-grouped, law line preserved verbatim.
-*Gate:* full loop with sidebar in all three themes; if Phase 9 has landed, the pushed alert appearing under Monitor with its dot is part of the gate; `test:visual` regenerated once; report, stop.
-
-**Phase 8D — Concentration map.** Single work order, `merlin-new-node` skill governs. Node-addition test satisfied by architect ruling (logged in STATE.md citing this order): question = "what dominates this whole?"; no existing node encodes proportion perceptually; dominance is spatial, not prose.
-
-1. New registry node `concentration-map` — weighted treemap (squarified or slice-and-dice, authored data order preserved), binding the EXISTING table DataSet: rows = holder/share, one designated numeric column drives area. Labels + values inside cells where they fit, legibility floor respected. Muted single-hue scale; `--accent-signal` only for a cell the scene explicitly flags via props — NO red/green market coloring: this node encodes SHARE, not performance (principle 8). Facts register, permanent. Custom SVG expected (verify via `astryx search` first per skill §0; no treemap primitive is anticipated — if found, wrap it). Add the vocabulary entry to node-vocabulary.md verbatim from this order's description.
-2. `entity-graph`: optional per-node `weight` prop → radius scaling, decorative-only (same status as edge weight — renderer logic never reads it).
-3. Fixtures: issuer-dossier's relationship map is REMOVED — its holders payload rebinds to `concentration-map`; residual auditor/custodian relationships live as entity-header facts. `entity-graph` remains Scene 3's signature only. settlement-anomaly's wallet cluster gains authored weights reflecting accumulation size (values extrapolated consistently with the 11%/14-wallet narrative; log extrapolations).
-
-*Gate:* three-state stories all themes · both fixtures verified live · vitest/tsc/lint:tokens clean · `test:visual` regenerated once · report with learnings delta · STOP.
-
-**Phase 8E — Chart craft & data density.** One work order.
-
-1. Deps (closed-list additions, architect-approved, pin exact): `d3-scale`, `d3-shape`, `d3-hierarchy`, `d3-array` — MATH ONLY, all rendering stays our SVG + tokens; no canvas anywhere.
-2. `concentration-map` re-laid on `d3-hierarchy` squarify; label fit rules (hide value before name, ellipsize with title attr); all-rows invariant asserted in its test.
-3. Recharts craft pass on `time-series`: token-gradient area fill, reference lines, event annotations, tabular tick formatting, tooltip restyled through tokens; combo variant (volume bars under line).
-4. New nodes per `merlin-new-node` + vocabulary entries to add (architect-ratified, cite this order): `bar-series` ("how is it distributed over categories/periods?"), `sparkline` ("what's the trend, in passing?" — inline in metric and data-table cells, no axes, one hue).
-5. Fixture density: deterministic seeded generator script (committed, not ad-hoc) regenerates all series at daily resolution, endpoints and named narrative values pinned; Scene 2 distributions → `bar-series` + sparklines; Scene 3 → combo chart with spike annotations at the two failure dates. Log every generated range as extrapolation.
-
-*Gate:* all-rows treemap test · stories 3-state all themes · fixtures live · `test:visual` regenerated once · report, STOP.
-
-**Phase 8F — Entity linking.** One small work order, after 8E. Universe entities carry an investigation intent; scenes render known entity names as links (facts register, underline on hover only — emphasis is earned); click submits that investigation via existing `submitQuery`.
-*Gate:* both journeys (Screen→Diligence→Decide, Alert→Investigate→Act) walked live end-to-end.
-
-**Phase 8G — Workbench (VS Code-model shell).** Runs after 8F (depends on entity→intent). Engine invariant absolute: stores read, one `watchlistStore` added, one `workbenchStore` added; Canvas, renderer, registry untouched. Two work orders.
-
-*WO-1 — Layout architecture (no new content).* `workbenchStore`: ordered panes `[{kind, open, width}]`, actions `togglePane(kind)`/`setWidth(kind)`. Regions: icon rail (fixed) · transcript (always open, protected min-width) · panes (each resizable via the generalized handle extracted from today's `ArtifactPanel` — one component, reused). `ArtifactPanel` migrates INTO the workbench as pane kind `'artifact'`; behavior byte-identical (`autoOpen` config honored, card-click opens). Rail toggle semantics exactly: open↔collapse per kind, others unaffected. Default layout in `config.ts`. Check Astryx for a rail/workbench primitive first (`astryx search`), cite or justify custom.
-*Gate:* full existing loop (query→trail→artifact, push→Monitor) runs byte-identical inside the workbench; panes resize and toggle independently; `test:visual` regenerated once.
-
-*WO-2 — Section content + routing.* Entities / Sources / Watchlist / History panes per the section specs above (universe-driven; fictional statuses authored in universe, logged as extrapolation; Sources' citation counter computed live from turns). ROUTING LAW (add to node-vocabulary.md Shell section verbatim): "Content homes by kind: investigations always land in the artifact pane, replacing in place; index panes are stable and never replaced by clicks within them; the transcript never closes." Watch actions on entity-header and index rows → `watchlistStore`. Empty states designed, session-scoped stated in-line (principle 6).
-*Gate:* entity clicked in a chart → investigation lands in artifact pane while the originating pane stays open · rail toggles verified all panes · three themes · report, STOP.
-
-**Phase 8H — Pages architecture (Shell v3).** Supersedes Phase 8G WO-2's pane-based nav — the pane CONTENT built there (Entities, Sources, Watchlist, History) is reused as page content, nothing thrown away, everything rehomed. Two work orders.
-
-*WO-1 — Nav, pages, artifact stack.*
-1. `pageStore` (no router dependency — a page enum in the store, optional `location.hash` sync). Left sidebar becomes main nav per mockup: New investigation · Investigations · Entities · Watchlist · Data Sources; Recent list below (last N turns, view-all → Investigations page, filter control); bottom: identity chip (static) + notifications bell (badge = unseen alert turns, click focuses Monitor; hidden at zero).
-2. Pages reuse 8G pane content 1:1: Investigations (module-grouped + flat toggle, absorbing History), Entities, Watchlist. Data Sources page ships as the current Sources content (WO-2 upgrades it). Workflows nav entry does NOT ship until Phase 11 does — no dead nav.
-3. Home = the investigation surface (transcript + composer). Top bar: current investigation name, left; artifact control, right.
-4. Right side: Artifacts is the ONLY pane. Control = icon + count, hidden until the first artifact. Stack: list (title · one-line description · version chip · status; current marked active) → select → artifact detail with Back-to-list → resizable as today. Versions: session lineage — refine turns version their parent (lineage key = scene family; display grouping only, no persistence). All opens still flow through the artifactStore→openPane subscription.
-5. Routing law amended in node-vocabulary.md: "Left nav = places; the artifact pane = the one overlay; investigations always land there; pages never host scene renders."
-*Gate:* every nav destination live in 3 themes · multi-turn run shows correct lineage grouping · alert flow end-to-end (push → bell badge → Monitor focus → artifact) · `test:visual` once · report, STOP.
-
-*WO-2 — Data Sources page.* Runs after WO-1's gate. Connected sources (the seven, status/last-sync/cited-in-N) + a public catalog section (5–6 plausible fictional public feeds, authored in universe, logged) + a mock connect flow (select → permissions summary → confirm → appears as connected, session-scoped) — enterprise-integration design surface, UI-complete, wired to nothing real, stated honestly in its empty state.
-*Gate:* connect flow walked live, three themes, report, STOP.
-
-**Phase 8I — Market Pulse (surfaced vs investigated split).** Single work order, architect-ordered, small and self-contained.
-1. New nav page, Market Pulse, positioned after Data Sources, before Investigations — a persistent, browsable section, not the landing state. LandingState's suggestion chips become a 2-3 card echo of Market Pulse's same data source (single JSON, two renderings) rather than separately authored content.
-   Consider-not-build note for a later phase: an alert not yet opened is also "surfaced, not investigated" — Market Pulse could unify with the Monitor push (alert appears here first, badge/Investigation only on open). Flagged in STATE.md as a Phase 9-adjacent architecture note; the alert path itself is hardened and out of scope for this WO.
-2. Content: authored per-session (`universe/marketPulse.json`, 4-6 cards spanning modules — the existing 3 landing suggestions promote here plus 1-2 new ones), NOT live-generated. Landing state's suggestion chips are a slice of this same data, not separately authored content.
-3. Click → existing `submitQuery` path, unchanged. Once acted on, the card gets a subtle "Investigated" mark and links to its artifact — still lives in Market Pulse (it's a record of what was surfaced), the resulting turn also appears in Investigations as normal.
-4. node-vocabulary.md Shell section gains the register law verbatim: "Surfaced (Market Pulse: agent-authored, no evidence, no trail) vs Investigated (has run the reasoning loop, has confidence) are different registers and never share a row style."
-*Gate:* card click → full loop → card marks itself investigated → turn appears correctly in both Market Pulse and Investigations · empty state designed · three themes · `test:visual` once · report, STOP.
-
-**Phase 9 — MCP server.** `mcp-server` package: `list_scenes`, `get_scene(id)`, `query_data(sceneId, key)`, `push_scene(scene)` (Zod-validated, broadcast over SSE); app `liveChannel` subscribes, pushed scene triggers trail + assembly as if typed.
-*Gate:* Claude connected to the MCP server pushes a novel valid scene and it materializes in the running app; invalid push returns a structured error and the app is untouched.
-
-**Phase 10 — Demo hardening.** Demo script scene sequence, keyboard shortcuts for the presenter, empty/error states, README with run instructions, optional: `llmResolver` stub implementing `IntentResolver` against the Anthropic API (flag-gated, off by default).
-*Gate:* cold clone → `pnpm i && pnpm dev` → full demo in under 2 minutes of setup.
-
-**Phase 11 — Workflow composer.** Block added now, executed after Phase 10. Workflows as data (`{steps: intents/scene refs}`), runner = sequential `presentScene` with pacing, builder surface = block palette + ordered lane, run lands as consecutive turns. No branching, no persistence beyond session. Detailed work order issued when reached.
-
-**Phase 12 — Risk & Derivatives Module.** CLOSED as of 2026-07-18 (see STATE.md) — gate condition lifted mid-phase by legislation update, both work orders complete and ratified. Originally gated: fires only after Phase 10's freeze/recording is complete AND Prem's Phase 8 sitting has closed — superseded, see STATE.md's legislation-update entry. Backlog trigger, for the record: a Bank of America/trading contract lead (2026-07-17) plus the long-standing unbuilt Portfolio module. New persona: FX/derivatives risk officer. Journey: Monitor portfolio → drill into a flagged position → escalate/hedge recommendation. Two work orders.
-
-*WO-1 — Portfolio dashboard scene.*
-1. Universe: 3-4 derivative positions (FX options/rate swaps) as new entities, notional/counterparty/exposure facts, at least one linked to Kestrel (reuse, don't invent a new villain). New source system only if `RiskLens` genuinely can't extend to cover it — extend before duplicating.
-2. New `ring-gauge` node — reuses confidence-meter's arc math, new registry entry, full vocabulary node-addition test citation (merlin-new-node skill §0) before any code.
-3. One dashboard-grid fixture: exposure metric-grid, ring-gauge row, top-contributors bar-series, flagged-positions signal-feed. Leads with scene-summary per existing law (aggregate risk verdict, not a single-scene recommendation).
-*Gate:* renders in 3 themes, all data traces to universe, no new architecture beyond ring-gauge, report, stop.
-
-*WO-2 — Entity view + chart craft.*
-1. Entity DataSet gains an optional derivative-shaped attribute set (documented, not a new DataSet kind — extend, per the reuse precedent). entity-header renders it same as any other entity.
-2. time-series: multi-series overlay (2-3 lines, distinct dash/color via `--viz` tokens) + optional stat-strip metric-grid header. Existing node, additive props only — no new node type.
-3. One entity + one investigation fixture using both.
-*Gate:* entity view + enhanced chart live, 3 themes, existing time-series usages unaffected (regression-checked), report, stop.
-
-Explicit non-goals, restated in the vocabulary entry when built: no order-book node, no buy/sell ticket, ever. Portfolio view recommends; it never executes.
-
-**Phase 13 — Static dashboard pages.** New page type, `DashboardPage`, distinct from investigation pages: renders `dashboard-layout` + registry nodes directly from an authored data object — no `SceneRenderer`, no trail, no `submitQuery` involvement. Reuses the SAME nodes (`metric-grid`, `ring-gauge`, `status-grid`, `ring-chart`, `bar-series`, `signal-feed`) and the same header pattern as `scene-summary` (recommendation + confidence + sources) for trust-architecture consistency — but as a static header component, not the `scene-summary` registry node (it's not in a scene). Two work orders.
-
-*WO-1 — Portfolio dashboard page.* New nav entry "Portfolio," pinned, always available (no artifact-stack lifecycle). Content = the existing `risk-desk-dashboard` fixture's data, re-rendered through `DashboardPage` instead of via investigation. Confirms the reuse works before building the second page.
-
-*WO-2 — Risk dashboard page.* Second nav entry "Risk," similarly static, distinct content focus (if book-level exposure lives in Portfolio, Risk can focus on limit/breach/escalation posture specifically — Prem to confirm the split makes sense once WO-1 is visible, don't over-design the distinction blind).
-
-*Gate:* both pages open instantly (no trail delay) from nav, render identically to their scene equivalents minus the assembly/trail animation, 3 themes, no `SceneRenderer`/`artifactStore`/`submitQuery` touched, report, stop.
-
-**Phase 14 — Asset discovery view (Entities page upgrade).** Not gated behind the sitting — small, additive, same reuse posture as Phase 12. One work order.
-
-1. Entities page gains three top strips (reusing `signal-feed`'s row craft): "Notable movers," "Recently cited" (real — count from turns/citations, like Sources' honest counter), "Newly added to universe" (session-fixed, not really "new" but styled the same).
-2. Grid view: `sparkline` (existing node, already built) + price/yield + 24h delta per entity card — a genuine multi-column card grid using Phase 12's `dashboard-layout` primitive, filterable by module/type (reuse Market Pulse's persona-tag pattern).
-3. Card click → EXISTING entity-link → `submitQuery` path. No new interaction pattern.
-4. EXPLICITLY EXCLUDED, restated in the vocabulary entry: no Buy/Sell/Trade CTA, no wallet connect, no price-action framing as an invitation to transact. Deltas are informational (principle 2: facts register), never a call to action — that's what distinguishes this from every screenshot in this genre.
-5. Nav: add "Discover" entry.
-
-*Gate:* grid renders from real universe data, filters work, card click resolves correctly, 3 themes, report, stop.
-
-**Phase 16 — Entity Detail page.** SUPERSEDED 2026-07-23 by the revised-scope order immediately below — same page, denser content. Original scope, for the record: chart/About/Statistics/scoped-Investigations, click-through from Asset Discovery's grid, no trade/buy-sell surface. Closed under the revision, not separately.
-
-**Phase 16 (REVISED SCOPE, 2026-07-23) — Entity Detail page, denser.** Supersedes the Phase 16 order above — same page, denser content.
-
-1. EntityDetailPage gains: Trend/Stats metric-grid (denser — 5-6 metrics not 2), price+yield dual-axis time-series (per last order), About block (existing attributes, fuller display, page has room, no cap).
-2. NEW: news-feed node/section — headline, one-line dek, source attribution (SourceChip), timestamp. Content: 4-5 authored fictional headlines per entity with real narrative texture (not filler — tie to existing facts: Aldergate's audit lapse, Kestrel's accumulation, etc. become "headlines" for entities that have them; new entities get headlines that establish their character, SeekingAlpha-style).
-3. NEW: related/compare entity strip — small card row, reuses entity-header-lite treatment, links to other entities (venue peers or sector peers).
-4. Investigations panel scoped to entity (as previously ordered).
-5. NEW UNIVERSE CONTENT: one equity entity (e.g. "South Bow Corp" or similar, pipeline/infra sector — real texture, not generic), tagged to the Phase 15-style second venue, with its own price series, News content, and ONE investigation scene reusing existing nodes (no new node types required to prove the concept). This is the single test case for asset-class generality — build ONE well before deciding whether to build more.
-
-Explicitly still no trade/buy-sell — News/Stats/Compare is the SeekingAlpha register, not the Kraken register, and that distinction is the whole point.
-
-*Gate:* entity page dense and complete for both a Solent bond AND the new equity entity, news feed populated with real texture (not lorem-ipsum), investigation panel scoped correctly, 3 themes, report, stop.
-
-**Phase 17 — Responsive tiers.** SUPERSEDED 2026-07-25 by Phase 18 immediately below — same responsive-tiers work, now detailed and fired as a real phase order. Original backlog block, for the record: three tiers, tier 3 a standing decision not to build rather than a future phase. Closed under Phase 18, not separately.
-
-1. **≥1024px** — current multi-pane behavior, unchanged. No work.
-2. **768–1024px** — panes shrink proportionally to fit; genuinely new architecture, not a tweak, confirmed against the current codebase before scoping: the transcript pane is hard-fixed at 480px today (`flex: 0 0 480px`, not proportional), the content column has no protected minimum (`min-width: 0`), and per-node-type min-width is a new registry-level concept (`registry.ts` today only carries `{component, propSchema}`). Reuses the `comparison`-at-480px finding (Phase 8B WO-2, parked) as the first real breakpoint-driven minimum. If shrinking still isn't enough for a new pane to open, the least-recently-active existing pane collapses (label + one-click restore) — never a 4th forced column. This reintroduces "which pane is least active" tracking that Phase 8H's workbenchStore→artifactStore fold deliberately removed (only one pane existed then); bringing it back must cite this history explicitly in the work order, not silently re-add a mechanism that was removed on purpose. Detailed work order issued when reached.
-3. **<768px** — CONFIRMED PERMANENTLY OUT OF SCOPE, not a future phase. Desktop-first is a legitimate, honestly-declared design decision for this category of tool (enterprise risk-desk tooling, per the Trading Advantage brief's own developer-handoff/design-systems register — no mobile signal), not an omission to eventually fix. The product's own demo thesis (assembling a sophisticated interface live) depends on multi-pane richness that a phone-width layout can't showcase, only undersell. Consistent with this project's own repeated pattern of stating a limitation honestly rather than building a fuller version nobody asked for (session-scoped storage, Watchlist, Data Sources' mock catalog). Substitute, approved, ships alongside tier 2's own phase (not a separate order): a minimal "designed for larger screens" notice below 768px — near-zero cost, converts a silently-cramped layout into an honestly-stated fence, same register as every other session-scoped/desktop-only disclosure already in this app.
-
-*Gate (tier 2 + notice, when this phase is reached):* proportional shrink verified at 768/1024px boundaries, least-recently-active collapse verified with 3+ panes contending, the <768px notice verified as the only thing rendered below that width, 3 themes, report, stop.
-
-**Phase 18 — Fully responsive, including mobile.** Supersedes Phase 17's Scoped as a real phase, not a small order, per the sizing correction Sonnet gave when this was still draft law.
-
-1. **Desktop-only notice, ships first, own gate, closes independently.** One width-based conditional (<768px) replaces app content with a plain, honest "Merlin is designed for larger screens" message — no multi-pane machinery mounts underneath it.
-2. **Tier 2 mechanics.** Transcript pane: hard-fixed 480px → proportional/shrinkable with a real floor. Content column: `min-width: 0` → an actual protected minimum. Per-node-type min-width: a new, additive registry-level concept (`{component, propSchema}` extended, existing registrations unaffected). Least-recently-active pane tracking: reintroduced deliberately — state in the report why it's coming back after Phase 8H's workbenchStore→artifactStore fold removed it (only one pane existed then, now there are three), and confirm the new tracking does not re-fragment pane state the way that consolidation was fixing (i.e., "is this pane open" stays exactly where it already lives — pageStore/sessionStore/artifactStore — this only adds "when was it last active," a genuinely new concept, not a duplicate one).
-3. **Collapse trigger.** When a new pane can't fit even at every pane's floor width, the least-recently-active existing pane collapses — via the existing collapse mechanism if one already fits, or a minimal new one scoped here. Labeled return point, one-click restore.
-
-*Gate:* notice fires correctly at <768px (own checkpoint, can close independently of the rest); at 768–1024px, panes shrink to floor before anything collapses, verified with a real 3-pane-open scenario forcing a 4th; `comparison`/`concentration-map` render legibly at their floor widths; 3 themes; report, stop.
-
-**Phase 20 — Mobile responsiveness, overriding Phase 18 item 1's own closed decision (2026-08-21).** Direct order: "we need to make the platform fully responsive, including mobile. I know we have an order that prevents it, so this order now overrides it." This is a real, deliberate reversal of a previously CLOSED, "permanently out of scope" decision (Phase 17/18 item 1's own DesktopOnlyNotice fence) — logged here explicitly, per this document's own practice of marking a superseding order rather than silently rewriting the prior text (see Phase 17's own SUPERSEDED note for the precedent). The original reasoning (desktop-first is legitimate for this tool category, the demo thesis depends on multi-pane richness) is NOT wrong on its own terms — it is simply overridden by a direct, later instruction, the same way Phase 12's original gate condition was superseded by a legislation update (see STATE.md).
-
-Scope, sequenced across rounds (Discover and Entity Detail already confirmed responsive under Phase 18's tier-2 work and don't need re-doing):
-1. **Shell chrome — DONE, this order's first round.** `DesktopOnlyNotice`'s hard `<768px` early-return in `Frame.tsx` removed. Astryx's own `AppShell` already auto-generates a mobile drawer from the existing `sideNav` content below its own `md` (768px) breakpoint (`useMediaQuery`-driven, not a hand-rolled `viewportWidth` check) — confirmed by reading `AppShell.js` directly before using it: `showSideNavInline = hasSideNav && !isBelowBreakpoint`, so the desktop rail and the mobile drawer never both render. A `topNav` (Astryx `TopNav`, `heading={<BrandMark isCollapsed />}` + `MobileNavToggle` as the hamburger) was added, visible only below breakpoint — this is what gives the "sticky hamburger + logo" minimized top bar. `Sidebar.tsx`'s existing `SideNavSection`/`SideNavItem` tree is reused verbatim as the drawer's own content (AppShell's own context wiring, no second nav tree authored).
-2. **New Investigation page responsiveness — remaining work, next round.** Remove the transcript/composer's own min-width; composer follows mobile chat-composer patterns; the three panes (transcript/content/artifact) resize down together rather than stacking, staying three-in-a-row at every width down to mobile.
-3. **Chat and artifact panes as mobile modals — remaining work, next round.** Both currently slide in as desktop side panes (`TranscriptPaneMount`/`ArtifactStackMount`) — on mobile they should open as an Astryx modal/sheet instead (Astryx's own `Dialog`/mobile-appropriate primitive, not a hand-rolled overlay).
-
-*Gate (per round, not one combined gate):* shell chrome round — hamburger toggle appears only below 768px, opens the drawer with the SAME nav items/order as desktop, drawer closes on item click/backdrop/escape (native `<dialog>` behavior, confirmed not overridden), logo mark renders correctly in the mobile top bar, desktop layout (≥768px) confirmed byte-unchanged; 3+ themes; `test:visual` baselines checked for anything now exercising `DesktopOnlyNotice`'s removed code path; report, stop. Later rounds gate independently as each lands.
-
-**Phase 19 — Entity Detail tabs + Analyst Consensus.** Depends on Phase 15 (My Portfolio, multi-wallet mock-connect) landing first for full credibility — Entity Detail's third-party-opinion surface reads strongest once the portfolio/holdings context it sits alongside is real, not still queued. Phase 15 remains queued/unfired as of this writing; this phase may be scoped/built in parallel if Phase 15 is still pending when reached, per the order's own escape hatch — not a hard block.
-
-1. Entity Detail gains tab navigation (Overview / Financials / Coverage / Historical Data — names adapted to Merlin's actual data, not a literal copy of any reference UI's labels, since Merlin's entities aren't all equities). Overview = today's default view; other tabs house content that currently over-crowds the single scroll (news-feed moves to Coverage, deeper historical series to Historical Data).
-2. New node: `analyst-consensus` (or similar name — cite the node-addition test per `merlin-new-node`) — buy/hold/sell distribution bar + low/average/high/current price positions. FACTS register (permanent, per principle 2) — this displays third-party opinion, not Merlin's own recommendation, so it is explicitly NOT provisional. Bind to a new consensus data field on relevant entities (crypto/stocks only — bonds don't have analyst consensus in the same sense; commodities likely N/A too — scope to where it's genuinely applicable, don't force it everywhere).
-3. Data: author or extrapolate 1–2 real-feeling analyst-consensus datasets for South Bow Corp and one crypto/equity entity, consistent with whatever real/authored price data already exists there.
-
-*Gate:* tabs work on Entity Detail without breaking existing content; `analyst-consensus` renders correctly where scoped; register-correct (facts, not reasoning); 3 themes; report, stop.
-
-**Phase 15 — My Portfolio, multi-wallet mock-connect.** New nav page "Holdings" (name distinct from the existing "Portfolio" nav entry, which stays Phase 12/13's derivatives/risk-desk dashboard unchanged — no collision, two different registers: risk-desk exposure vs. personal multi-wallet holdings). Two work orders.
-
-*WO-1 — Wallet connect flow + holdings data.*
-1. New universe file `universe/wallets.json`: two mock wallets, matching the two asset classes already given full entity-detail treatment (Phase 16/19) — a crypto wallet holding Zenith Protocol/Solent Stablecoin-style positions, and a brokerage-style account holding South Bow Corp/Halberg Materials-style equity positions. Each with holdings rows (entity id, quantity, cost basis, current value — value computed from each entity's own already-authored current price, per the internal-consistency rule). No new entities invented; holdings reference existing `entities.json` ids only.
-2. New `walletConnectionStore` (Zustand), same keyed-Record idempotency shape as `dataSourceConnectionStore.ts` (`connectedWalletIds: Record<string, true>`, one `connect(id)` action, in-memory only, session-scoped, never persisted — identical precedent, not a new pattern).
-3. New `ConnectWalletDialog`, built the same way `ConnectSourceDialog.tsx` was: Astryx `Dialog` (`purpose="form"`), permissions/scope summary specific to a wallet ("read balances and transaction history," fictional), confirm/cancel footer, same explicit session-scoped honesty copy in both the page body and the dialog itself ("wired to nothing real... nothing persists after a session reset") — the exact disclosure pattern already ratified for Data Sources, reused verbatim in register, not reinvented.
-4. Holdings page (WO-2) is empty/EmptyState until at least one wallet is connected — connecting is the only way holdings appear, same "session state gates content" discipline as Watchlist's own empty state.
-
-*WO-2 — Holdings page content.*
-1. New nav entry "Holdings," positioned immediately after "Watchlist" — groups the two personal/session-tracked pages together, ahead of the market-wide pages (Market Pulse, Portfolio, Risk, Data Sources).
-2. Static page (Phase 13's `DashboardPage` pattern — no `SceneRenderer`, no trail, no `submitQuery` involvement; same reuse posture as the existing Portfolio dashboard and Phase 14's Discover grid).
-3. Content per connected wallet: a card/section per wallet (name, type, connected-this-session marker) listing its holdings via existing nodes only — `data-table` or a card-grid reusing `dashboard-layout` (per Phase 14's precedent), `sparkline` per holding (existing node, already built), aggregate `metric-grid` header (total value across connected wallets, computed live, not authored). No new registry node required to prove this — if real gaps appear only at build time (e.g. a genuine "allocation by asset class" visual need), report and cite the node-addition test before adding one; don't pre-authorize a node in this order.
-4. Entity click-through uses the existing entity-link → `submitQuery`/`openEntityDetail` path (Phase 8F/14 precedent), no new interaction pattern.
-5. EXPLICITLY EXCLUDED, restated in the vocabulary entry: no Buy/Sell/Trade/Send/Receive CTA anywhere — this is a holdings *view*, not a wallet *app*. Same "informational, never a call to action" line already drawn for Phase 14's Discover grid and Phase 12's Portfolio dashboard.
-6. node-vocabulary.md gains a Holdings section (register: facts, permanent, per principle 2 — a holding's quantity/value is a fact, not reasoning) and the mock-connect disclosure pattern is cited as reused from Data Sources, not re-authored.
-
-*Gate:* connect flow walked live end-to-end (empty state → connect wallet → holdings appear) for at least 2 wallets across different asset classes; disconnected wallets' catalog stays separate from connected ones (mirroring Data Sources' "public catalog vs. connected this session" split); aggregate metric-grid value matches the sum of its own holdings (internal-consistency check, verified by hand at authoring time); no Buy/Sell surface anywhere; 3 themes; `test:visual` regenerated once; report, stop.
-
-**Phase 20 — TradableAsset unification + SAFE ONE visual register.** Two independent concerns bundled by the architect's own prompt — treated as two work orders so either can gate/report separately if scope diverges mid-build. Depends on nothing queued; supersedes Phase 16/19's `EntityDetail` interface and `EntityDetailPage.tsx` tab wiring, retired in WO-1 rather than run in parallel — two entity-detail data models would drift immediately. `analyst-consensus` (Phase 19) and `time-series` (Phase 7) registry nodes are reused, re-skinned, not rebuilt, per the order's own "check existing library first" instruction. Bonds explicitly out of scope — NordBond stays on the current `EntityDetail` shape until a later phase gives it its own contract, per the order's own reasoning (field overlap too thin to force a shared schema now). No Buy/Sell/Trade CTA anywhere, consistent with every prior discovery/analysis surface in this app (Discover, Holdings, Portfolio).
-
-*WO-1 — TradableAsset contract + fixtures + components (no theming).*
-1. `contracts/tradableAsset.ts` — Zod schema per the architect's sketch (`priceHeader`, `trendChart`, `keyStatsTable`, `snippet`, `analystConsensus?`, `earningsHistory?`, `priceMovementTimeline`, `aiRationale`, `related`), `assetClass` discriminated union (`equity-token` | `crypto-native` | `tokenized-rwa`), `keyStatsTable` shape varies by class per the architect's three column sets. Checkpoint: STOP after this file and present it for approval before any fixture or component work — same discipline as Phase 2's original DataSet checkpoint, warranted here because this schema is a bigger commitment than any prop schema shipped so far (it replaces a whole existing interface).
-2. Two golden fixtures at real density, per the order: `universe/fixtures/equity-example.json` (South Bow Corp migrated onto the new shape — reuse its already-authored price series/analyst-consensus/news rather than inventing a second equity) and `universe/fixtures/crypto-example.json` (Zenith Protocol, same reuse rule). If either fixture feels cramped, the schema is wrong — fix the schema, not the fixture, before moving to components.
-3. `EntityDetail`/`entityDetail.ts`/`EntityDetailPage.tsx`'s existing tab wiring retired, replaced by a `TradableAsset`-driven page. Overview tab becomes preview cards that deep-link into their own tab with the referenced item pre-selected (Analyst Consensus preview → Analysis tab scrolled/highlighted to it; Earnings snippet → Earnings tab; Notable Price Movement entry → News/Analysis tab) — nothing on Overview is a dead end, matching Perplexity Finance/CoinGecko's pattern exactly, per the order.
-4. New components, each through the full `merlin-new-node` build order (node-addition test first, since none of these exist yet): `AssetPriceHeader`, `AssetKeyStatsTable`, `AssetSnippetCard`, `EarningsHistoryChart`, `PriceMovementTimeline`, `AiRationaleRail`. `TrendChart` extends the existing `time-series` node with period-toggle + optional compare-series overlay — additive props, not a new node, per Phase 12 WO-2's own precedent for extending `time-series` rather than duplicating it (confirm at build time whether the extension is additive enough to stay one node or whether period-toggle's own state genuinely needs a wrapper component around `time-series`; report if so, don't force it).
-5. Both South Bow Corp and Zenith Protocol's `EntityDetail`-era data (news, analyst consensus, price series) carries over via the fixture migration in step 2 — no data re-authored from scratch, no second analyst-consensus dataset.
-
-*Gate:* both fixtures render every WO-1 component with zero empty/placeholder states; Overview-tab preview cards deep-link correctly (Analyst Consensus/Earnings/Notable Price Movement each land on their target tab with the referenced item pre-selected); `EntityDetail`/old `EntityDetailPage.tsx` tab code fully removed, not left dead; `tsc`/`vitest`/`lint:tokens` clean; existing 3 themes (default/ops-dark/glass) only — SAFE ONE's palette is WO-2's concern, not this one's; report, stop.
-
-*WO-2 — SAFE ONE visual register, new theme file.*
-1. New 4th registered theme, `theme.safe-one.css` — a new mapping file per CLAUDE.md §7's own customization-ready architecture ("a future custom theme is a new mapping file registered next to theme.default.css, nothing else"), not a retune of ops-dark and not applied to existing themes. Zero component changes; every visual difference expressed through tokens.
-2. Palette derived from the supplied reference screenshots (SAFE ONE cybersecurity-risk dashboard): near-black surface with a faint purple undertone, glass-panel cards (thin low-opacity border, subtle blur/elevation rather than a flat fill), purple/indigo accent (`--accent-signal`-equivalent) used sparingly for interactive/active elements, green as this theme's own primary chart-line/area-fill hue (gradient area-fill under trend lines) — adopted as a `--viz` palette choice, NOT as red/green performance-direction coloring; principle 8's existing ban stays intact, unchanged, confirmed explicitly rather than silently relaxed for this theme.
-3. Ring-gauge styling pass: SAFE ONE's partial-arc gauge (e.g. "Breach Likelihood 52%") maps directly onto the existing `ring-gauge` node — token-only adjustment (arc color/track color/label treatment), no component change, confirming the reuse the order asked for.
-4. Explicitly NOT built this phase (flagged, not silently dropped): the reference's tick/block-scale indicator ("Monthly Income" style) and sized-bubble risk-scatter chart have no equivalent in Merlin's registry today. Logged as a backlog note in STATE.md for a possible future node — zero new components in this work order.
-5. Theme-file mechanics this addition touches, cited so none are silently skipped: `nodes.spec.ts`'s `THEMES` array, `shell.spec.ts`'s `THEMES` array, `theme.spec.ts`'s token-sheet story gain a `safe-one` entry each (baseline count grows accordingly — sized and reported, not treated as a side effect); `lint-theme-parity.mjs` checks it automatically once the file exists (no script change needed); `astryx-bridge.md` gets its own SAFE ONE section documenting every Astryx cascade-variable override, same as every other theme file.
-
-*Gate:* `theme.safe-one.css` registered and selectable; WO-1's new components (`AssetPriceHeader` through `AiRationaleRail`, `TrendChart`) and the reused `analyst-consensus`/`ring-gauge` nodes all legible and on-brand in SAFE ONE; existing 3 themes' baselines unaffected (regression-checked, zero drift); `test:visual` regenerated once across all 4 themes now registered; `lint:tokens` clean; report, stop.
-
-**Phase 21 — Entity Detail Overview redesign: two-column layout, directional trend chart, glow primitive, Key Issues.** Restyles and restructures Overview only (Phase 20's other five tabs — Financials/Analysis/Earnings/News/Historical Data — untouched); the deep-link contract from Phase 20 WO-1 ("nothing on Overview is a dead end") stays intact, just re-laid into the new two-column shape. Three architect rulings, cited so they aren't re-litigated: (1) principle 8 gains a named, scoped exception for TradableAsset's own price trend chart only — chart line + glow may render in `--delta-up`/`--delta-down` instead of `--accent-signal`; every other chart node keeps the existing accent-only rule; (2) the glow effect is a token/CSS-module primitive (position + clip variants, configurable color), not a new registry node or a new Panel prop; (3) Key Issues is a real schema extension with authored content for both fixtures, not placeholder text.
-
-1. **Layout.** Overview becomes a 2-column grid (Astryx `Grid columns={3}` + `GridSpan`, 2:1 split — no true fractional-width primitive exists, confirmed via Astryx source before choosing this). Left column (wide): identity header (`AssetLogo.tsx`, sized up — reused, not replaced, per the architect's own call) + symbol sub-line, price + trend chart (with the new glow), Key Statistics, Key Issues, Stories & Analysis, Notable Price Movement (new timeline component). Right column (narrow): Analysis preview (Analyst Consensus, deep-links to Analysis tab), Why Is This Moving (AiRationaleRail, deep-links to News tab), Peers (RelatedEntitiesStrip, wrapped in a Panel — a wrapping change only, component itself untouched).
-
-2. **Glow primitive.** New CSS module (`theme/glow.module.css` or equivalent — exact location decided at build time, sits in the theme layer per the architect's ruling) exposing position variants (bottom, top-left, top-right) × clip variants (clipped to the pane / unclipped, overflow visible) as composable classNames, plus a CSS custom property for color (defaults to `--accent-signal`, callers pass `--delta-up`/`--delta-down`/anything else). Applied via className to existing Panel/Card usages — no new registry node, no new Panel prop, confirmed reusable by any pane that wants it, not TradableAsset-specific.
-
-3. **`TrendChart` amendment.** Primary line stroke + gradient fill switch from hardcoded `--accent-signal` to `--delta-up`/`--delta-down` chosen by the trend's own sign (matching `AssetPriceHeader`'s existing delta-color logic, not re-derived) — scoped to `TrendChart`/its Overview-embedded compact form only; `TimeSeries.tsx` itself (the bind node, reused by scene-driven surfaces) stays on `--accent-signal`, unchanged, per principle 8's default holding everywhere except this one named exception.
-
-4. **`TradableAssetSchema` extension — `keyIssues`.** New optional field: array of `{topic, bullishView: {text, sources}, bearishView: {text, sources}}` (sources reuse `ThinkingStepSource`, same as every other citation in this schema). Authored for both South Bow Corp and Zenith Protocol using real/extrapolated facts already established in their fixtures (the capacity-expansion filing, RiskLens score, dividend mandate for South Bow; the ZIP-14 buyback, consolidation range for Zenith) — new invented facts flagged as extrapolation in the report, same discipline as WO-1.
-
-5. **New component — `KeyIssuesCard`.** 50/50 split-view per topic (bullish view left, bearish view right), source-count chips, collapsed/expanded per topic (reference shows one expanded, others collapsed) — through the full `merlin-new-node` build order (node-addition test first). Facts/reasoning register (third-party bull/bear framing, not Merlin's own recommendation — same register discipline as analyst-consensus).
-
-6. **Rename + new component — `PriceMovementTimeline` → vertical-timeline visual, "Notable Price Movement."** "Stories & Analysis" becomes the new name for what Overview currently calls the price-movement preview card (headline list) — gains a placeholder image per entry (solid-color/gradient block, token-driven, no real image pipeline, same honest-placeholder posture as Data Sources' own catalog). The EXISTING `price-movement-timeline` registry node is renamed in register/IA terms to "Notable Price Movement" and gets a new vertical-timeline visual treatment (day markers + connecting line, per the reference) — the underlying `TimelineEntry` schema is unchanged, this is a visual/IA change, not a data-shape change. Confirm at build time whether this is a restyle of the existing node or warrants its own node-addition test against the now-differently-scoped `price-movement-timeline` (report either way, don't silently pick).
-
-*Non-goals, restated so they aren't assumed later:* no real per-asset logo artwork (AssetLogo.tsx's existing generic glyph, sized up); no real story thumbnail images (token-colored placeholder blocks only); Financials/Analysis/Earnings/News/Historical Data tabs untouched; no new asset classes; no Buy/Sell/Trade CTA anywhere, consistent with every prior surface.
-
-*Gate:* both fixtures render the new Overview with zero empty/placeholder-data states (placeholder IMAGES are expected and fine; placeholder DATA is not); glow primitive verified reusable on at least one pane outside TradableAsset context (proving it's genuinely generic, not accidentally coupled); TrendChart's directional coloring verified both up (South Bow Corp) and down (author or pick a down-day slice to prove the alert-color path isn't dead code); deep-links from the new right-column cards still land on Analysis/News tabs correctly; existing Financials/Analysis/Earnings/News/Historical Data tabs regression-checked unchanged; `tsc`/`vitest`/`lint:tokens` clean; 3 themes (default/ops-dark/glass) plus a spot-check in safe-one given the glow primitive's own visual weight there; `test:visual` regenerated once; report, stop.
+Pruned: `concentration-map`, `entity-graph`, `geo-panel`, `comparison`, `ring-gauge`, `ring-chart`, `signal-feed`, `status-grid`. See §10 for the specific open question on `signal-feed`/`status-grid`, which are domain-agnostic mechanically but had no clear Bastion use identified in this pass.
 
 ## 9. Session protocol
 
@@ -434,9 +220,39 @@ Every session:
 1. State which phase you are in. If unclear from STATE.md + repo state, inspect and report before writing code.
 2. List the files you will create/modify. Only those files.
 3. Build. Consult the Astryx MCP/CLI docs before writing any UI element (rule 5).
-4. Run the gate. Show the evidence (test output, story list, behavior description). UI phases: gate evidence = `pnpm test:visual` output; agent screenshots only for new-baseline approval or failure diagnosis, element-scoped, one look per case.
+4. Run the gate. Show the evidence (test output, story list, behavior description).
 5. Write a phase report: what shipped, deviations (should be none), proposed tokens/deps awaiting approval, open risks.
-6. Append to STATE.md: date, phase + gate status, decisions approved this session, open items, and one-line raw learnings (surprises, friction, would-have-prevented-rework). Never rewrite history — append only. Raw learnings are cleared at each phase gate by Prem's promotion review; do not act on them as rules until promoted.
+6. Append to STATE.md: date, phase + gate status, decisions approved this session, open items, and one-line raw learnings. Never rewrite history — append only.
 7. Stop.
 
 If you find yourself about to: add a dependency, exceed the file budget, put a hex value in a component, let a component read a store, or "quickly refactor" a neighboring layer — that is the signal to stop and report, not proceed.
+
+## Phase plan (fresh — Merlin's 21-phase history does not apply)
+
+Small, gated phases, matching Merlin's own discipline: one phase at a time, each ends at a gate, stop and report. This is a plan, not a commitment — later phases will be detailed/adjusted when reached, same as Merlin's own practice of issuing detailed work orders at the time.
+
+- **Phase 1 — Instantiation + contracts.** Confirm the pruned contracts (`scene.ts`, `thinking.ts`, trimmed `data.ts`) compile and pass their existing tests against empty fixtures. Author Bastion's own first universe content (entities, sources) and first fixture scenes — explicitly NOT done in this fork pass, this is real Phase 1 work.
+- **Phase 2 — Registry + core nodes reused/pruned verification.** Confirm every surviving registry entry renders in Storybook against the new (empty→seeded) universe; resolve the open questions in §10 that gate which nodes are actually in scope before building new fixtures against them.
+- **Phase 3 — Mobile shell.** Build `TabBar`, `ScreenStack`, mobile `Frame` replacement; retire `WorkbenchRow`/`Sidebar`/pane-collapse remnants if any survive the prune pass; land the ask/composer bar per whichever LandingState answer §10 resolves to.
+- **Phase 4 — Renderer/trail reuse verification.** Confirm `SceneRenderer`, `FallbackNode`, `bindings.ts`, and the full `components/trail/` tree work unchanged inside the new mobile shell, against real (if minimal) fixture scenes from Phase 1.
+- **Phase 5 — Wallet-connect + assets screen.** Build the "explore assets" and "view owned assets" screens, starting from the kept `walletConnectionStore`/`ConnectWalletDialog` precedent and whichever asset-detail nodes §10 confirms are in scope.
+- **Phase 6 — AI trading-assistant conversational flow.** The ask-a-question flow, scoped by whatever §10 concludes about trail-driven investigation vs. a more direct assistant response model.
+
+## 10. Open questions for Prem before Phase 1
+
+These are points where Merlin's law does not obviously map to Bastion, or where this fork pass found something Merlin's own spec-writer didn't anticipate. None are decided here — listed so Phase 1 doesn't start on a silent assumption.
+
+1. **Does the AI trading assistant need a simulated buy/sell action, or is it view/analysis-only?** Merlin's entire design register (recommendations are prose, never buttons, never executes) assumes advisory-only. "AI trading feature" in Bastion's brief implies action, not just viewing. Not assumed either way.
+2. **Does Bastion need `analyst-consensus`-style third-party opinion at all?** It's a strong stylistic match for a crypto asset detail page (buy/hold/sell distribution), but it's third-party-opinion framing borrowed from equities research — confirm it's wanted before re-skinning it.
+3. **Does the AI assistant need a thinking-trail-driven "investigation," or does it answer more directly?** Merlin's whole demo thesis is trail-streams-then-interface-assembles for a slow, evidence-heavy analyst workflow. A mobile trading-assistant chat may want faster, more direct answers with the trail de-emphasized or optional. Not decided.
+4. **The Phase 19–21 "TradableAsset" asset-detail subsystem** (`analyst-consensus`, `asset-price-header`, `earnings-history-chart`, `price-movement-timeline`, `ai-rationale-rail`, `trend-chart`, `key-issues-card`, `asset-card-grid`, `asset-trend-card`, `news-feed` — ten nodes plus `contracts/tradableAsset.ts`/`engine/tradableAsset.ts`/`EntityDetailPage.tsx`) is a much closer match to a CoinGecko/Perplexity-Finance-style crypto asset page than the original fork spec anticipated, since it postdates the spec-writer's knowledge of Merlin's later phases. This fork pass has **kept it intact rather than pruning it**, since deleting a working, on-thesis subsystem on a guess seemed like the bigger error — but confirm this call: keep, prune, or partially keep (e.g. drop `earnings-history-chart`, which is equities-earnings-specific and has no obvious crypto analogue).
+5. **`bar-series`, `sparkline`, `contribution-bars`, `risk-return-scatter`** — domain-agnostic charts with no enterprise content, kept in this pass on the same "don't delete working generic infrastructure on a guess" reasoning as #4. Confirm.
+6. **`signal-feed` and `status-grid`** — mechanically domain-agnostic (an event feed, a status grid) but no clear Bastion use was identified (no obvious "operational event log" or "grid of statuses" screen in a wallet app's four stated features). Pruned in this pass on the "no plausible reuse" test the fork spec applied to `concentration-map` et al. — confirm this wasn't too aggressive.
+7. **The Holdings/wallet-connect precedent is stronger than the fork spec described.** `HoldingsPage.tsx`, `WatchlistPage.tsx`, `EntityDetailPage.tsx`, `walletConnectionStore`, and `ConnectWalletDialog` are all already wired together into something close to Bastion's own "view owned assets" + "connect wallet" screens (Merlin's own Phase 15/20/21 work). This fork pass kept all of them. Confirm this is the intended starting point rather than a from-scratch mobile design.
+8. **`LandingState`'s replacement** — assumed in §3 to become a persistent bottom ask/composer bar rather than Merlin's centered-greeting-before-first-turn pattern, per the fork spec's own suggestion. This is stated as an assumption, not a decision: confirm before Phase 3 builds it.
+9. **Final tab-bar destinations** — §3 names "Explore, Holdings, Assistant" as placeholders reflecting the brief's four stated features (explore, view owned, connect wallet, ask assistant — "connect wallet" reads as an action/state rather than its own tab). Not finalized.
+10. **`tokens-spec.md`'s color/type/motion values** — kept in this pass as Bastion's starting visual language (they contain no Merlin business vocabulary, only OKLCH color/type/motion primitives and the ops-dark/glass/glass-light semantic mappings). Confirm whether Bastion should build on this inherited look or get its own visual identity from scratch — this fork pass did not empty the file, on the reasoning that "keep working infra, flag for review" beats "delete and rebuild from nothing," but this is exactly the kind of call the fork spec asked not to be made silently.
+11. **`theme.safe-one.css`** (Merlin's fourth, cybersecurity-dashboard-styled theme) — kept alongside default/ops-dark/glass/glass-light since it's pure token values, no business content, but it was purpose-built for a different product's brief. Confirm whether it's worth keeping registered or should be dropped as noise.
+12. **`d3-hierarchy`** — only consumer was `concentration-map`, now pruned. `sparkline` still needs `d3-scale`/`d3-shape`. Recommend dropping `d3-hierarchy`/`d3-array` from the dependency list if nothing else claims them by the time Phase 1 starts, but not removed unilaterally in this pass — confirm no planned Phase 1 content needs a hierarchy layout.
+13. **`audit/merlin-architecture-audit.md`** — a point-in-time static-analysis report of Merlin's own component tree (references specific files, some now pruned). It goes stale immediately and isn't law. Not touched in this pass (spec didn't name it) — flagging: keep as historical record, or delete as dead weight?
+14. **`narratives/universe.md`** — Merlin's own fictional-world narrative brief (Solent Markets, etc.), same register as `universe/*.json`. This pass deleted it as part of the universe-content prune (spec's "prune, don't adapt" logic applied by extension, since the spec didn't name this specific file) — confirm that extension of the rule was correct.

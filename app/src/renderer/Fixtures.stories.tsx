@@ -2,16 +2,20 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SceneRenderer } from './SceneRenderer';
 import { SceneSchema } from '../contracts/scene';
 import { hydrateScene, loadUniverse } from '../contracts/hydrate';
-import assetDiscovery from '../../scenes/asset-discovery.scene.json';
-import assetDiscoveryRefine from '../../scenes/asset-discovery-refine.scene.json';
-import issuerDossier from '../../scenes/issuer-dossier.scene.json';
-import settlementAnomaly from '../../scenes/settlement-anomaly.scene.json';
-import auditStatusAlert from '../../scenes/audit-status-alert.scene.json';
-import riskDeskDashboard from '../../scenes/risk-desk-dashboard.scene.json';
-import eurusdRiskReversalDetail from '../../scenes/eurusd-risk-reversal-detail.scene.json';
-import southBowCapacityFiling from '../../scenes/south-bow-capacity-filing.scene.json';
 import stressTest from '../../test-fixtures/stress-test.scene.json';
 import stressTestBroken from '../../test-fixtures/stress-test-broken.scene.json';
+
+// Bastion fork note: Merlin's eight real fixture scenes (asset-discovery,
+// issuer-dossier, risk-desk-dashboard, etc.) were deleted per the fork
+// spec's "prune, don't adapt" rule for universe/scene content — Bastion's
+// own fixtures are Phase 1 work (see CLAUDE.md §10, scenes/manifest.json).
+// The per-fixture stories that rendered them are removed below along with
+// the imports; `stressTest`/`stressTestBroken` remain (synthetic,
+// never-registered diagnostic fixtures, not part of the deleted universe)
+// but now reference a few pruned node types (ring-chart/ring-gauge/
+// signal-feed/status-grid) that will render as FallbackNode — still a
+// valid exercise of rule 8 ("unknown never crashes"), just no longer
+// "every family renders successfully" as originally documented.
 
 const universe = loadUniverse();
 
@@ -59,14 +63,6 @@ const meta: Meta<typeof FixtureScene> = {
 export default meta;
 type Story = StoryObj<typeof FixtureScene>;
 
-export const AssetDiscovery: Story = { args: { raw: assetDiscovery } };
-export const AssetDiscoveryRefine: Story = { args: { raw: assetDiscoveryRefine } };
-export const IssuerDossier: Story = { args: { raw: issuerDossier } };
-export const SettlementAnomaly: Story = { args: { raw: settlementAnomaly } };
-export const AuditStatusAlert: Story = { args: { raw: auditStatusAlert } };
-export const RiskDeskDashboard: Story = { args: { raw: riskDeskDashboard } };
-export const EurusdRiskReversalDetail: Story = { args: { raw: eurusdRiskReversalDetail } };
-export const SouthBowCapacityFiling: Story = { args: { raw: southBowCapacityFiling } };
 export const Broken: Story = { args: { raw: brokenScene } };
 // Scene scale stress test (diagnostic order, 2026-07-25): 25 nodes,
 // scene-grid + a nested dashboard-layout, 8+ distinct node families —

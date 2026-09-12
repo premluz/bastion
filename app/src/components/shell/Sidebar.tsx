@@ -6,8 +6,6 @@ import {
   BookmarkIcon,
   SignalIcon,
   FolderIcon,
-  BriefcaseIcon,
-  ShieldExclamationIcon,
   ServerStackIcon,
   WalletIcon,
 } from '@heroicons/react/24/outline';
@@ -42,13 +40,7 @@ const NAV_ITEMS: { page: Page; label: string; icon: ReactNode }[] = [
   // deliberately — surfaced-but-unactioned observations read as a step
   // before the investigated record, not alongside the other index pages.
   { page: 'market-pulse', label: 'Market Pulse', icon: <SignalIcon width={16} height={16} /> },
-  { page: 'portfolio-dashboard', label: 'Portfolio', icon: <BriefcaseIcon width={16} height={16} /> },
-  { page: 'risk-dashboard', label: 'Risk', icon: <ShieldExclamationIcon width={16} height={16} /> },
-  // Portfolio/Risk (Phase 13): pinned, always-available static dashboard
-  // pages, appended after the existing index pages rather than
-  // interleaved — no ordering instruction was given, flagged for review.
-
-    { page: 'data-sources', label: 'Data Sources', icon: <ServerStackIcon width={16} height={16} /> },
+  { page: 'data-sources', label: 'Data Sources', icon: <ServerStackIcon width={16} height={16} /> },
 ];
 
 // No "add/new/plus" icon exists in Astryx's closed set (exhibit 11 —

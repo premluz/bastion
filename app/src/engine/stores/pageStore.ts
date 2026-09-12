@@ -9,8 +9,6 @@ export const PAGES = [
   "holdings",
   "data-sources",
   "market-pulse",
-  "portfolio-dashboard",
-  "risk-dashboard",
   "entity-detail",
 ] as const;
 export type Page = (typeof PAGES)[number];

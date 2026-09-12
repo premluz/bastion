@@ -1,19 +1,15 @@
 import { TradableAssetSchema, type TradableAsset } from "../contracts/tradableAsset";
-import equityJson from "../../universe/fixtures/equity-example.json";
-import cryptoJson from "../../universe/fixtures/crypto-example.json";
 
-// Phase 20 WO-1: replaces entityDetail.ts's resolveEntityDetail. Two
-// golden fixtures only (the schema's own acceptance test, per the phase
-// order) — every other entity in the universe (mock-filled Discover grid
-// cards, unmigrated real entities like Halberg Materials/NordBond) has no
-// TradableAsset fixture yet, by design at this proof-of-concept stage.
-// EntityDetailPage shows an honest "not yet available" empty state for
-// those rather than a dead click or a silent fallback to the retired
-// EntityDetail shape (2026-08-15 ruling).
-const FIXTURES: Record<string, unknown> = {
-  [equityJson.id]: equityJson,
-  [cryptoJson.id]: cryptoJson,
-};
+// Bastion fork note: Merlin's two golden TradableAsset fixtures (South Bow
+// Corp equity, Zenith Protocol crypto — universe/fixtures/*.json) were
+// Merlin's own fictional-world content, deleted per the fork spec's
+// "prune, don't adapt" rule for universe/scene content. Authoring Bastion's
+// own fixtures is explicitly out of scope for this prune pass (see
+// CLAUDE.md §10) — every id resolves to undefined (an honest "not yet
+// available" empty state on EntityDetailPage) until a future phase adds
+// real fixtures here, at which point this becomes the same
+// Record<string, unknown>-keyed lookup Merlin's version was.
+const FIXTURES: Record<string, unknown> = {};
 
 export function resolveTradableAsset(id: string): TradableAsset | undefined {
   const raw = FIXTURES[id];

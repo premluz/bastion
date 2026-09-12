@@ -55,84 +55,22 @@ export const SeriesDataSetSchema = z.object({
 });
 export type SeriesDataSet = z.infer<typeof SeriesDataSetSchema>;
 
-// Positions are authored in the scene data payload, never computed at
-// render time — no force simulation (CLAUDE.md §8, Phase 7).
-//
-// weight is decorative only (radius scaling, Phase 8D) — same status as
-// edge weight below: no registered node may branch, filter, or compute
-// on it.
-const GraphNodeSchema = z.object({
-  id: z.string().min(1),
-  label: z.string().min(1),
-  x: z.number(),
-  y: z.number(),
-  group: z.string().optional(),
-  weight: z.number().optional(),
-});
-
-// weight is decorative only (e.g. edge thickness/opacity) — no
-// registered node may branch, filter, or compute on it.
-const GraphEdgeSchema = z.object({
-  source: z.string().min(1),
-  target: z.string().min(1),
-  label: z.string().optional(),
-  weight: z.number().optional(),
-});
-
-export const GraphDataSetSchema = z.object({
-  kind: z.literal("graph"),
-  nodes: z.array(GraphNodeSchema).min(1),
-  edges: z.array(GraphEdgeSchema),
-});
-export type GraphDataSet = z.infer<typeof GraphDataSetSchema>;
-
-// Stylized abstract map, no tile service — points/regions are plotted
-// in a normalized 0..1 coordinate space (CLAUDE.md §8, Phase 7).
-const GeoPointSchema = z.object({
-  id: z.string().min(1),
-  label: z.string().min(1),
-  x: z.number().min(0).max(1),
-  y: z.number().min(0).max(1),
-  kind: z.string().optional(),
-});
-
-const GeoRegionSchema = z.object({
-  id: z.string().min(1),
-  label: z.string().min(1),
-  path: z.string().min(1),
-});
-
-export const GeoDataSetSchema = z.object({
-  kind: z.literal("geo"),
-  points: z.array(GeoPointSchema),
-  regions: z.array(GeoRegionSchema).optional(),
-});
-export type GeoDataSet = z.infer<typeof GeoDataSetSchema>;
+// Bastion fork note: Merlin's `graph`/`geo` DataSet kinds (backing
+// entity-graph/geo-panel, both pruned — no plausible reuse identified for
+// a wallet app, see CLAUDE.md §10) were removed here rather than carried
+// forward unused. If a future phase needs a relationship graph or a
+// spatial panel, restore from git history rather than re-authoring blind.
 
 const EntityAttributeSchema = z.object({
   label: z.string().min(1),
   value: z.union([z.string(), z.number()]),
 });
 
-// Derivative-shaped attribute set (Phase 12 WO-2): an optional, typed
-// sub-object on EntityDataSet — extends the existing entity shape, not a
-// new DataSet kind (per the reuse precedent every other Phase 12 addition
-// has followed). Fields cover what a derivative position needs that a
-// generic label/value attribute doesn't structurally guarantee (a
-// consumer can rely on `entity.derivative.counterparty` existing, rather
-// than grep-matching a label string). Shared fact types that ALSO apply
-// to non-derivative entities (e.g. RiskLens score) stay in the generic
-// `attributes` array — this sub-object is only for facts specific to a
-// derivative position's own identity.
-const EntityDerivativeSchema = z.object({
-  counterparty: z.string().min(1),
-  notional: z.string().min(1),
-  exposure: z.string().min(1),
-  tenor: z.string().min(1),
-  tradeDate: z.string().min(1),
-});
-export type EntityDerivative = z.infer<typeof EntityDerivativeSchema>;
-
+// Bastion fork note: Merlin's optional `derivative` sub-shape (FX/rates
+// counterparty-position fields — CLAUDE.md §6) was removed here — it was
+// risk-desk-specific and nothing in Bastion's kept node set reads it. If
+// a future phase needs it, restore from git history rather than
+// re-authoring blind.
 export const EntityDataSetSchema = z.object({
   kind: z.literal("entity"),
   entity: z.object({
@@ -140,7 +78,6 @@ export const EntityDataSetSchema = z.object({
     name: z.string().min(1),
     type: z.string().min(1),
     attributes: z.array(EntityAttributeSchema),
-    derivative: EntityDerivativeSchema.optional(),
     tags: z.array(z.string()).optional(),
   }),
 });
@@ -205,8 +142,6 @@ export type MissingDataSet = z.infer<typeof MissingDataSetSchema>;
 export const DataSetSchema = z.discriminatedUnion("kind", [
   TableDataSetSchema,
   SeriesDataSetSchema,
-  GraphDataSetSchema,
-  GeoDataSetSchema,
   EntityDataSetSchema,
   EntityCardsDataSetSchema,
   ScatterDataSetSchema,

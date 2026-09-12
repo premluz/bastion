@@ -1,14 +1,1 @@
-{
-  "kestrel-holdings": {
-    "entityId": "kestrel-holdings",
-    "label": "Kestrel Holdings",
-    "status": "Accumulation pattern flagged — NordBond exposure under active review",
-    "watchedAt": "2026-07-08T09:00:00.000Z"
-  },
-  "helios-yield-fund": {
-    "entityId": "helios-yield-fund",
-    "label": "Helios Yield Fund",
-    "status": "Highest-yield asset on the venue — tracked for concentration risk",
-    "watchedAt": "2026-07-09T14:30:00.000Z"
-  }
-}
+{}

@@ -24,8 +24,15 @@ async function ask(page: Page, query: string, settleMs: number) {
 // assembly ~1490ms ≈ 8.8s; asset-discovery-refine trail 6050ms + exit
 // 200ms + 11-node assembly ~1220ms ≈ 7.5s; unresolved has no trail, only
 // a 200ms exit.
+// Bastion fork note: this test asserts against Merlin's own fixture
+// scenes/intents (asset-discovery, its refine, specific query strings) —
+// all deleted per the universe/scene prune (CLAUDE.md §10;
+// scenes/manifest.json is now an empty skeleton). Authoring Bastion's own
+// fixtures is Phase 1 work, out of scope for this pass. Skipped rather
+// than deleted so the harness/pattern survives for whoever re-authors
+// this gate once real scenes exist.
 for (const theme of THEMES) {
-  test(`shell — two-utterance sequence + unresolved query — ${theme}`, async ({ page }) => {
+  test.skip(`shell — two-utterance sequence + unresolved query — ${theme}`, async ({ page }) => {
     await page.goto(`/iframe.html?id=shell-frame--default&globals=theme:${theme}`);
     await page.waitForSelector('#storybook-root');
 

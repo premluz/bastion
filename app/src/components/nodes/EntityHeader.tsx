@@ -9,29 +9,9 @@ import type { EntityHeaderProps } from '../../contracts/props/entity-header';
 // entities may carry more attributes for other views (dossiers, tables).
 const MAX_DISPLAYED_ATTRIBUTES = 5;
 
-// Phase 12 WO-2: derivative-shaped facts render through the exact same
-// MetadataList as any other entity's generic attributes — no separate
-// visual section, no new component. Ordered ahead of `attributes` since
-// they're the entity's own defining facts when present, subject to the
-// same display cap as everything else.
-const DERIVATIVE_LABELS = {
-  counterparty: 'Counterparty',
-  notional: 'Notional',
-  exposure: 'Mark-to-market exposure',
-  tenor: 'Tenor',
-  tradeDate: 'Trade date',
-} as const;
-
 export function EntityHeader({ data, status }: EntityHeaderProps) {
   const { entity } = data;
-  const { derivative } = entity;
-  const derivativeAttributes = derivative
-    ? (Object.keys(DERIVATIVE_LABELS) as (keyof typeof DERIVATIVE_LABELS)[]).map((key) => ({
-        label: DERIVATIVE_LABELS[key],
-        value: derivative[key],
-      }))
-    : [];
-  const attributes = [...derivativeAttributes, ...entity.attributes].slice(0, MAX_DISPLAYED_ATTRIBUTES);
+  const attributes = entity.attributes.slice(0, MAX_DISPLAYED_ATTRIBUTES);
 
   return (
     <div style={{ display: 'grid', gap: 'var(--space-8)' }}>

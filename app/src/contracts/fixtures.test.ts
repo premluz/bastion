@@ -5,9 +5,16 @@ import { hydrateScene, loadSceneFixtures, loadUniverse } from "./testSupport";
 const universe = loadUniverse();
 const fixtures = loadSceneFixtures();
 
+// Bastion fork note: Merlin's own fixture scenes were deleted per the fork
+// spec's "prune, don't adapt" rule for universe/scene content (see
+// scenes/manifest.json and CLAUDE.md §10) — authoring Bastion's own is
+// explicit Phase 1 work, out of scope for this pass. Zero fixtures is the
+// correct, expected state until then; the per-fixture suites below simply
+// run over an empty list rather than failing on an assumption that no
+// longer holds.
 describe("scene fixtures", () => {
-  it("found fixtures to test", () => {
-    expect(fixtures.length).toBeGreaterThan(0);
+  it("has no fixtures yet (expected until Bastion's own Phase 1 authors some)", () => {
+    expect(fixtures.length).toBe(0);
   });
 
   for (const { file, raw } of fixtures) {

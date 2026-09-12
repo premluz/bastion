@@ -1,15 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TrendChart } from './TrendChart';
-import { TradableAssetSchema } from '../../contracts/tradableAsset';
-import equityJson from '../../../universe/fixtures/equity-example.json';
-import cryptoJson from '../../../universe/fixtures/crypto-example.json';
 
-// Parsed through the real schema, not just imported as JSON — gives
-// correctly-typed `periods` (a literal union, not widened to string[])
-// with zero casting, and doubles as a live check that the fixture stays
-// valid if it's ever edited.
-const equity = TradableAssetSchema.parse(equityJson);
-const crypto = TradableAssetSchema.parse(cryptoJson);
+// Bastion fork note: Merlin's Happy/Partial stories drew content from its
+// own universe/fixtures/*.json (South Bow Corp/Zenith Protocol), deleted
+// per the fork spec's "prune, don't adapt" rule for universe content —
+// authoring Bastion's own fixtures is out of scope for this pass (see
+// CLAUDE.md §10). Replaced with minimal inline placeholder series so the
+// story keeps exercising the same prop shapes without importing deleted
+// fixture data.
+const PLACEHOLDER_SERIES = [
+  { t: '2026-01-01', price: 40.0 },
+  { t: '2026-02-01', price: 42.5 },
+  { t: '2026-03-01', price: 39.8 },
+  { t: '2026-04-01', price: 44.1 },
+];
+const PLACEHOLDER_COMPARE_SERIES = [
+  { label: 'Benchmark', series: PLACEHOLDER_SERIES.map((p) => ({ ...p, price: p.price * 0.9 })) },
+];
 
 const meta: Meta<typeof TrendChart> = {
   title: 'Nodes/TrendChart',
@@ -19,16 +26,14 @@ const meta: Meta<typeof TrendChart> = {
 export default meta;
 type Story = StoryObj<typeof TrendChart>;
 
-// Literal-prop node: content drawn from the real South Bow Corp fixture
-// (universe/fixtures/equity-example.json), including its authored
-// compareSeries. Fixed-width story wrapper (merlin-new-node skill §2),
+// Literal-prop node: fixed-width story wrapper (merlin-new-node skill §2),
 // same reasoning as EarningsHistoryChart's own story.
 export const Happy: Story = {
   args: {
     title: 'Price',
-    series: equity.trendChart.series,
-    periods: equity.trendChart.periods,
-    compareSeries: equity.trendChart.compareSeries,
+    series: PLACEHOLDER_SERIES,
+    periods: ['1M', 'YTD', 'MAX'],
+    compareSeries: PLACEHOLDER_COMPARE_SERIES,
   },
 };
 
@@ -37,8 +42,8 @@ export const Happy: Story = {
 export const Partial: Story = {
   args: {
     title: 'Price',
-    series: crypto.trendChart.series,
-    periods: crypto.trendChart.periods,
+    series: PLACEHOLDER_SERIES,
+    periods: ['1M', 'YTD', 'MAX'],
   },
 };
 

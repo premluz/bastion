@@ -12,21 +12,12 @@ interface UniverseEntityAttribute {
   value: string | number;
 }
 
-interface UniverseEntityDerivative {
-  counterparty: string;
-  notional: string;
-  exposure: string;
-  tenor: string;
-  tradeDate: string;
-}
-
 interface UniverseEntityRecord {
   entity: {
     id: string;
     name: string;
     type: string;
     attributes: UniverseEntityAttribute[];
-    derivative?: UniverseEntityDerivative;
     tags?: string[];
   };
   venue?: string;
@@ -48,14 +39,6 @@ const entities = entitiesJson as Record<string, UniverseEntityRecord>;
 const datasets = datasetsJson as Record<string, DataSet>;
 const news = newsJson as Record<string, DataSet>;
 const analystConsensus = analystConsensusJson as Record<string, unknown>;
-
-const DERIVATIVE_LABELS: Record<keyof UniverseEntityDerivative, string> = {
-  counterparty: "Counterparty",
-  notional: "Notional",
-  exposure: "Mark-to-market exposure",
-  tenor: "Tenor",
-  tradeDate: "Trade date",
-};
 
 export interface EntityDetail {
   id: string;
@@ -117,13 +100,6 @@ export function resolveEntityDetail(id: string): EntityDetail | undefined {
   const record = entities[id];
 
   if (record) {
-    const derivative = record.entity.derivative;
-    const derivativeAttributes: UniverseEntityAttribute[] = derivative
-      ? (Object.keys(DERIVATIVE_LABELS) as (keyof UniverseEntityDerivative)[]).map((key) => ({
-          label: DERIVATIVE_LABELS[key],
-          value: derivative[key],
-        }))
-      : [];
     const chart = findChartSeries(id);
     const primaryLatest = chart?.primary.points[chart.primary.points.length - 1]?.y;
     const newsData = news[`${id}-news`];
@@ -138,7 +114,7 @@ export function resolveEntityDetail(id: string): EntityDetail | undefined {
       id,
       name: record.entity.name,
       type: record.entity.type,
-      attributes: [...derivativeAttributes, ...record.entity.attributes],
+      attributes: [...record.entity.attributes],
       isUniverseEntity: true,
       ...(record.intent !== undefined ? { intent: record.intent } : {}),
       ...(record.entity.tags?.[0] !== undefined ? { category: record.entity.tags[0] } : {}),
