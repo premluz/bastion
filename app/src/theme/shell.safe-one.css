@@ -1,0 +1,37 @@
+/* Phase 3 preview extension: safe-one only, per Prem's scope.
+   Components consume these aliases; no new color or motion scale is introduced. */
+[data-theme='safe-one'] {
+  --shell-inset: var(--space-16);
+  --shell-gap: var(--space-12);
+  --shell-label-gap: var(--space-4);
+  --shell-control-size: var(--space-48);
+  --shell-nav-height: calc(var(--space-64) + var(--space-24));
+  --shell-edge-width: calc(var(--space-2) / 2);
+  --shell-focus-width: var(--space-2);
+  --shell-focus-offset: var(--space-4);
+  --shell-radius: var(--radius-12);
+  --shell-round: var(--radius-full);
+  --shell-fade-height: var(--space-48);
+  --shell-fade: linear-gradient(to bottom, var(--surface-0), transparent);
+  --shell-transcript-mask: linear-gradient(to bottom, transparent, var(--surface-0) var(--shell-inset),
+    var(--surface-0) calc(100% - var(--shell-inset)), transparent);
+  --shell-preview-width: calc(var(--space-64) * 6 + var(--space-8));
+  --shell-preview-height: calc(var(--space-64) * 12 + var(--space-24));
+  --assistant-orb-size: calc(var(--space-48) + var(--space-8));
+  --assistant-orb-expanded-size: var(--space-64);
+  --assistant-orb-fill: radial-gradient(circle at 35% 25%,
+    var(--ink-primary), var(--accent-signal) 35%, var(--surface-3) 85%);
+  --assistant-orb-ring: var(--edge-highlight);
+  --assistant-orb-glow: var(--glow);
+  --assistant-orb-halo: radial-gradient(ellipse at bottom,
+    var(--accent-signal), transparent 70%);
+  --assistant-orb-halo-strength: var(--tint-strong);
+  --assistant-orb-halo-height: calc(var(--space-64) * 4);
+  --assistant-orb-rest-opacity: var(--opacity-70);
+  --assistant-orb-rest-scale: 0.92;
+  --assistant-orb-duration: var(--motion-shimmer-duration);
+  --assistant-orb-ease: var(--motion-enter-ease);
+  --shell-mode-duration: var(--duration-480);
+  --shell-mode-ease: var(--motion-enter-ease);
+  --shell-controls-delay: var(--motion-enter-duration);
+}

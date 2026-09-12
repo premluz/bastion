@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ChatComposer, ChatComposerInput } from '@astryxdesign/core/Chat';
+import { ChatBarComposer } from './ChatBarComposer';
 import { createKeywordResolver } from '../../engine/resolver/keywordResolver';
 import { submitQuery } from '../../engine/submitQuery';
 
@@ -28,13 +28,12 @@ export function ChatBar() {
   };
 
   return (
-    <ChatComposer
+    <ChatBarComposer
       value={value}
       onChange={setValue}
       onSubmit={handleSubmit}
       isDisabled={isSubmitting}
       placeholder="Ask a question about the venue…"
-      input={<ChatComposerInput />}
     />
   );
 }

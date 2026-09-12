@@ -1,0 +1,83 @@
+.root:global(.astryx-dialog) {
+  width: min(100%, var(--shell-preview-width));
+  height: min(100dvh, var(--shell-preview-height));
+  max-height: 100dvh;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--surface-0);
+  box-shadow: none;
+  animation-name: bastion-conversation-enter;
+  animation-duration: var(--motion-enter-duration);
+  animation-timing-function: var(--motion-enter-ease);
+}
+
+.root::backdrop {
+  background: var(--scrim);
+  backdrop-filter: none;
+}
+
+.root[data-shared-orb='true']:global(.astryx-dialog) { background: transparent; animation: none; }
+.root[data-shared-orb='true']::backdrop { background: transparent; }
+.root[data-shared-orb='true'] .layout::before { display: none; }
+.orbSpace { width: var(--assistant-orb-expanded-size); height: var(--assistant-orb-expanded-size); }
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  isolation: isolate;
+}
+
+.layout::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: var(--assistant-orb-halo-height);
+  background: var(--assistant-orb-halo);
+  opacity: var(--assistant-orb-halo-strength);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.transcript {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset);
+  mask-image: var(--shell-transcript-mask);
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--shell-inset);
+  padding-bottom: max(var(--shell-inset), env(safe-area-inset-bottom));
+  gap: var(--shell-gap);
+}
+
+.controls button { min-width: var(--shell-control-size); min-height: var(--shell-control-size); }
+.root[open] .controls button {
+  animation: bastion-controls-enter var(--motion-enter-duration) var(--motion-enter-ease)
+    var(--shell-controls-delay) both;
+}
+.indicator { display: grid; place-items: center; }
+.srOnly { position: absolute; width: 0; height: 0; overflow: hidden; clip-path: inset(50%); }
+
+@keyframes bastion-conversation-enter {
+  from { opacity: 0; transform: translateY(var(--shell-inset)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bastion-controls-enter { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .root:global(.astryx-dialog) { animation: none; }
+  .root[open] .controls button { animation: none; }
+}

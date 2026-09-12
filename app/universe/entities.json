@@ -1,1 +1,62 @@
-{}
+{
+  "eth": {
+    "entity": {
+      "id": "eth",
+      "name": "Ethereum",
+      "type": "Crypto Asset",
+      "attributes": [
+        { "label": "Symbol", "value": "ETH" },
+        { "label": "Network", "value": "Ethereum" }
+      ],
+      "tags": ["crypto"]
+    }
+  },
+  "sol": {
+    "entity": {
+      "id": "sol",
+      "name": "Solana",
+      "type": "Crypto Asset",
+      "attributes": [
+        { "label": "Symbol", "value": "SOL" },
+        { "label": "Network", "value": "Solana" }
+      ],
+      "tags": ["crypto"]
+    }
+  },
+  "usdc": {
+    "entity": {
+      "id": "usdc",
+      "name": "USD Coin",
+      "type": "Crypto Asset",
+      "attributes": [
+        { "label": "Symbol", "value": "USDC" },
+        { "label": "Network", "value": "Multi-chain" }
+      ],
+      "tags": ["crypto"]
+    }
+  },
+  "usdt": {
+    "entity": {
+      "id": "usdt",
+      "name": "Tether",
+      "type": "Crypto Asset",
+      "attributes": [
+        { "label": "Symbol", "value": "USDT" },
+        { "label": "Network", "value": "Multi-chain" }
+      ],
+      "tags": ["crypto"]
+    }
+  },
+  "gala": {
+    "entity": {
+      "id": "gala",
+      "name": "Gala",
+      "type": "Crypto Asset",
+      "attributes": [
+        { "label": "Symbol", "value": "GALA" },
+        { "label": "Network", "value": "GalaChain" }
+      ],
+      "tags": ["crypto"]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": { "noEmit": true, "types": ["vite/client"] },
+  "include": [
+    "../app/src/components/shell/TabBar*.tsx",
+    "../app/src/components/shell/AssistantOrb*.tsx",
+    "../app/src/components/shell/ConversationModeOverlay*.tsx",
+    "../app/src/components/shell/ChatBarComposer*.tsx",
+    "../app/src/components/shell/MobileShellPreview.tsx",
+    "../app/src/components/shell/useMobileShellPreview.ts",
+    "mobile-shell.config.ts",
+    "visual/mobileShell.spec.ts",
+    "visual/mobileShellMotion.spec.ts"
+  ]
+}

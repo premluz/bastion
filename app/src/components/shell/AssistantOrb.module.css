@@ -1,0 +1,41 @@
+.root {
+  display: inline-grid;
+  place-items: center;
+  width: var(--assistant-orb-size);
+  height: var(--assistant-orb-size);
+  flex-shrink: 0;
+  transition: width var(--shell-mode-duration) var(--shell-mode-ease),
+    height var(--shell-mode-duration) var(--shell-mode-ease);
+}
+
+.root[data-expanded='true'] {
+  width: var(--assistant-orb-expanded-size);
+  height: var(--assistant-orb-expanded-size);
+}
+
+.core {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--shell-round);
+  border: var(--shell-edge-width) solid var(--assistant-orb-ring);
+  background: var(--assistant-orb-fill);
+  box-shadow: var(--assistant-orb-glow);
+}
+
+.root:not([data-activity='idle']) .core {
+  animation: bastion-orb-breathe var(--assistant-orb-duration) var(--assistant-orb-ease) infinite alternate;
+}
+
+.root[data-activity='thinking'] .core {
+  animation-direction: alternate-reverse;
+}
+
+@keyframes bastion-orb-breathe {
+  from { transform: scale(var(--assistant-orb-rest-scale)); opacity: var(--assistant-orb-rest-opacity); }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root { transition: none; }
+  .root:not([data-activity='idle']) .core { animation: none; }
+}

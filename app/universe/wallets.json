@@ -1,1 +1,14 @@
-{}
+{
+  "mock-wallet-1": {
+    "id": "mock-wallet-1",
+    "name": "Simulated Wallet",
+    "type": "Mock Wallet",
+    "holdings": [
+      { "entityId": "eth", "quantity": 1.2, "costBasis": 2100.00 },
+      { "entityId": "sol", "quantity": 8, "costBasis": 120.00 },
+      { "entityId": "usdc", "quantity": 950, "costBasis": 1.00 },
+      { "entityId": "usdt", "quantity": 400, "costBasis": 1.00 },
+      { "entityId": "gala", "quantity": 6500, "costBasis": 0.021 }
+    ]
+  }
+}

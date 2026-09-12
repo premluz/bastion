@@ -1,0 +1,15 @@
+.mark {
+  width: var(--space-32);
+  height: var(--space-32);
+  border-radius: var(--radius-full);
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.fallback {
+  width: var(--space-32);
+  height: var(--space-32);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  flex-shrink: 0;
+}
