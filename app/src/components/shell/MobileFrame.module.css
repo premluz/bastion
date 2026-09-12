@@ -59,6 +59,15 @@
 .header::after { top: 100%; }
 .dock::before { bottom: 100%; transform: rotate(180deg); }
 
+/* The dock's fade band is opaque --surface-0 at its top edge, so once the
+   assistant opens it paints a hard horizontal seam straight across the
+   halo rising behind the dock (2026-09-13, direct feedback: "glow should
+   not be interrupted" — measured at y≈572, exactly the dock's own top
+   edge). It earns its place in idle, softening content that scrolls under
+   the nav; in composer/conversation the halo is what should read at the
+   bottom, so the band stands down and the glow stays continuous. */
+.phone:not([data-mode='idle']) .dock::before { opacity: 0; }
+
 .content {
   display: flex;
   flex-direction: column;
