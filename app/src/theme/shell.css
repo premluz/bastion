@@ -41,7 +41,12 @@
   --assistant-orb-halo: radial-gradient(ellipse at bottom,
     var(--accent-signal), transparent 70%);
   --assistant-orb-halo-strength: var(--tint-strong);
-  --assistant-orb-halo-height: calc(var(--space-64) * 4);
+  /* Raised from *4 (2026-09-13, direct feedback: the bottom shadow "is
+     larger"). Shared by both halo consumers — MobileFrame's composer/
+     conversation halo and ConversationModeOverlay's standalone one — which
+     are the same visual in the same two modes, so they grow together
+     rather than drifting behind a local override. */
+  --assistant-orb-halo-height: calc(var(--space-64) * 6);
   --assistant-orb-rest-opacity: var(--opacity-70);
   --assistant-orb-rest-scale: 0.92;
   --assistant-orb-duration: var(--motion-shimmer-duration);

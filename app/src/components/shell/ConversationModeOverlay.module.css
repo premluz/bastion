@@ -22,7 +22,11 @@
 
 .root[data-shared-orb='true']:global(.astryx-dialog) { background: transparent; animation: none; }
 .root[data-shared-orb='true']::backdrop { background: transparent; }
-.root[data-shared-orb='true'] .layout::before { display: none; }
+/* Retargeted from .layout::before when the halo moved to .root::after
+   (2026-09-13): in the shared-orb path the frame behind this transparent
+   dialog already paints its own halo, so painting one here too would
+   double it. */
+.root[data-shared-orb='true']::after { display: none; }
 .orbSpace { width: var(--assistant-orb-expanded-size); height: var(--assistant-orb-expanded-size); }
 
 .layout {
@@ -34,7 +38,19 @@
   isolation: isolate;
 }
 
-.layout::before {
+/* Halo sits at the DIALOG's own bottom edge, not .layout's (2026-09-13,
+   direct feedback: "shadow belongs on the very bottom and is larger").
+   .layout is flex:1 inside the dialog, so its bottom edge stops above the
+   controls' own safe-area padding — anchoring there floated the halo as a
+   band above the controls instead of grounding it at the screen bottom.
+   Height comes from --assistant-orb-halo-height, raised at the token for
+   both consumers (this and MobileFrame's .phone::before) rather than
+   overridden here — they are the same halo in the same two modes.
+   No negative z-index (was -1 under .layout's isolate, which buried it
+   behind every sibling): the halo paints on the dialog root beneath the
+   layout, so the orb and controls stack above it by normal painting order
+   — "glow is on top of shadow". */
+.root::after {
   content: '';
   position: absolute;
   inset-inline: 0;
@@ -42,28 +58,6 @@
   height: var(--assistant-orb-halo-height);
   background: var(--assistant-orb-halo);
   opacity: var(--assistant-orb-halo-strength);
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* Own absolutely-positioned wrapper for the glow primitive's ::before —
-   .layout::before above already exists for the bottom orb halo, and glow's
-   .topLeft/.topRight also need a ::before, so they can't share one element.
-   Sits behind .transcript (DOM order, same stacking context as .layout's
-   isolate) without needing its own z-index.
-   Height is near-zero with .unclipped (not var(--shell-fade-height)):
-   first attempt sized this to the mask's own 48px fade distance and paired
-   it with .clipped, which cropped the glow's actual shape — topLeft/
-   topRight are calc(--blur-z4 * 2) = 80px tall with a 40px blur radius, so
-   a 48px clipped box cut it into a hard-edged band instead of the soft
-   radial spread every other glow consumer gets. Zero height + unclipped
-   lets the shape overflow downward from the very top edge exactly like
-   AssetsHomeHeader's own unconstrained root does for its glow. */
-.glow {
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 0;
   pointer-events: none;
 }
 
