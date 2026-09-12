@@ -1,18 +1,11 @@
-/* Matches MobileFrame's own .header padding so the avatar/search row lands
-   on the same baseline whichever view is active. */
+/* No side/bottom padding — this now renders inside AssetsHomePage's own
+   .body, which already applies var(--shell-inset) on both sides plus
+   bottom (2026-09-13, once this stopped being the page's own top-level
+   root after the avatar/search row moved out to MobileFrame's shared
+   header). Top padding only, so the balance doesn't sit flush against the
+   fade zone under the fixed header. */
 .root {
-  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--shell-inset);
-}
-
-.identityRow {
-  display: flex;
-  align-items: center;
-  gap: var(--space-12);
-}
-
-.identityRow > :last-child {
-  flex: 1;
-  min-width: 0;
+  padding-block-start: var(--shell-inset);
 }
 
 /* Portfolio value is the screen's hero figure: centred, with its own

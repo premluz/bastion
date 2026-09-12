@@ -1,9 +1,7 @@
-import { Avatar } from '@astryxdesign/core/Avatar';
 import { Button } from '@astryxdesign/core/Button';
 import { Heading } from '@astryxdesign/core/Heading';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
-import { TextInput } from '@astryxdesign/core/TextInput';
 import {
   ArrowDownTrayIcon,
   ArrowsRightLeftIcon,
@@ -40,6 +38,13 @@ interface AssetsHomeHeaderProps {
 // light says which way the day went before any number is read. These are
 // the same two tokens TrendDelta already uses, defined in all five
 // registered themes, so no theme falls back silently.
+//
+// No longer renders the avatar/search row (2026-09-13, direct feedback:
+// "header is avatar and search... scrollable is everything in the middle
+// including all mainnets, portfolio value, and buttons"). That row now
+// lives in MobileFrame's own shared <header> — fixed above every tab,
+// avatar+search only, same element every other tab already used. This
+// component is the part that scrolls: glow + balance + action row.
 export function AssetsHomeHeader({ totalValue, changeAbs, changePercent }: AssetsHomeHeaderProps) {
   const isUp = changeAbs >= 0;
   return (
@@ -51,10 +56,6 @@ export function AssetsHomeHeader({ totalValue, changeAbs, changePercent }: Asset
       } as React.CSSProperties}
     >
       <div className={glowStyles.content}>
-        <div className={styles.identityRow}>
-          <Avatar name="Wallet" size="small" />
-          <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />
-        </div>
         <div className={styles.portfolio}>
           <Text type="label" color="secondary">
             All mainnets

@@ -1,54 +1,20 @@
-/* Full-height column so .body's flex:1 + overflow-y:auto below actually has
-   a bounded box to scroll inside, rather than growing with its content
-   the way MobileFrame's own .page container would let it. */
+/* Single scrolling column (2026-09-13, revised): the fixed region is
+   MobileFrame's own shared avatar/search <header>, not anything inside
+   this page — AssetsHomePage (balance/actions/list) is entirely the
+   content that scrolls underneath it, same as any other tab's body. The
+   fade-under-fixed-header effect already lives on that shared header's
+   own ::after (MobileFrame.module.css) — nothing to duplicate here. */
 .root {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  height: 100%;
-}
-
-/* Header is fixed (2026-09-13, direct feedback: "header should be fixed and
-   should also have that gradient at bottom under which content fades softly
-   as it scrolls under") — flex-shrink:0 keeps AssetsHomeHeader out of the
-   scroll flow entirely, sized to its own content. */
-.header {
-  flex-shrink: 0;
-  position: relative;
-  z-index: 1;
-}
-
-/* Same fade mechanism MobileFrame.module.css's own .header::after already
-   uses at the fixed-header/scroll-content boundary in the assistant view —
-   reused via the same --shell-fade/--shell-fade-height tokens rather than a
-   second gradient definition. Sits on top of .body's scroll content (not
-   inside .header, which is flex-shrink:0 and would clip an overflowing
-   pseudo-element) so it reads as the list fading in as it scrolls up
-   underneath the fixed header, not a static line under it. */
-.header::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  inset-inline: 0;
-  height: var(--shell-fade-height);
-  background: var(--shell-fade);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .body {
   display: flex;
   flex-direction: column;
   gap: var(--shell-gap);
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
   padding: 0 var(--shell-inset) var(--shell-inset);
-  /* Content starts scrolling from underneath the fade rather than flush
-     against the header's bottom edge — without this the first row would
-     sit directly under the fixed header with nothing to fade. */
-  margin-top: calc(var(--shell-fade-height) * -1);
-  padding-top: var(--shell-fade-height);
 }
 
 .listHeader {

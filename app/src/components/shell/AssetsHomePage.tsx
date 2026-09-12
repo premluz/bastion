@@ -45,10 +45,8 @@ export function AssetsHomePage() {
 
   return (
     <div className={styles.root}>
-      <div className={styles.header}>
-        <AssetsHomeHeader totalValue={summary.totalValue} changeAbs={summary.changeAbs} changePercent={summary.changePercent} />
-      </div>
       <div className={styles.body}>
+        <AssetsHomeHeader totalValue={summary.totalValue} changeAbs={summary.changeAbs} changePercent={summary.changePercent} />
         <SegmentedControl value={segment} onChange={(value) => setSegment(value as AssetsSegment)} label="Asset category" layout="fill">
           <SegmentedControlItem value="crypto" label="Crypto" />
           <SegmentedControlItem value="earn" label="Earn" />

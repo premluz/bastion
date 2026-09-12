@@ -23,11 +23,16 @@ export function MobileFrame(props: MobileFrameProps) {
   const transcript = state.messages.map(({ id, text }) => (
     <ChatMessage sender="user" key={id}><ChatMessageBubble>{text}</ChatMessageBubble></ChatMessage>
   ));
-  // Home tab (2026-09-12): renders AssetsHomePage instead of the assistant
-  // transcript — AssetsHomePage brings its own avatar/search row (glow
-  // header), so the harness's own plain .header is skipped here rather
-  // than stacking two search rows. Other tabs keep the transcript-only
-  // placeholder — Markets/Trade/Assets pages are out of this task's scope.
+  // Home tab (2026-09-12, revised 2026-09-13): renders AssetsHomePage below
+  // the SAME shared avatar/search header every other tab uses, rather than
+  // a second copy of it — direct feedback clarified the fixed region is
+  // just avatar+search, with "All mainnets"/balance/action row scrolling
+  // away with the rest of the content, same as any other tab's body. The
+  // prior version had AssetsHomePage bring its own duplicate identity row
+  // pinned above ITS OWN copy of the balance/actions, which fixed the
+  // wrong boundary. .header's own ::after fade (below) already does
+  // exactly the soft-scroll-under effect asked for — reused here, not
+  // rebuilt a second time inside AssetsHomePage.
   //
   // Depends on the tab alone, never the mode: gating this on mode too
   // unmounted the page the instant the assistant opened, so the recede
@@ -38,18 +43,16 @@ export function MobileFrame(props: MobileFrameProps) {
     <div className={styles.stage}>
       <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode}>
         <div className={styles.chrome} inert={state.mode === 'conversation'} aria-hidden={state.mode === 'conversation'}>
+          <header className={styles.header} aria-label="Asset search">
+            <Avatar name="Preview user" size="small" />
+            <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />
+          </header>
           {isHome ? (
             <main className={styles.page} aria-label="Home" tabIndex={0}>
               <AssetsHomePage />
             </main>
           ) : (
-            <>
-              <header className={styles.header} aria-label="Asset search">
-                <Avatar name="Preview user" size="small" />
-                <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />
-              </header>
-              <main className={styles.content} aria-label="Preview transcript" tabIndex={0}>{transcript}</main>
-            </>
+            <main className={styles.content} aria-label="Preview transcript" tabIndex={0}>{transcript}</main>
           )}
           <footer className={styles.dock}>
             <TabBar activeTab={state.activeTab} onTabChange={state.selectTab} isComposerOpen={state.mode !== 'idle'}
