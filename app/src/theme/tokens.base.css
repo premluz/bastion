@@ -46,6 +46,13 @@
   --duration-200: 200ms;
   --duration-320: 320ms;
   --duration-480: 480ms;
+  /* 1600 added 2026-09-06 — every existing step covers a UI transition
+     (enter/exit/stagger/chart-reveal), none long enough for a genuinely
+     continuous ambient loop. ThinkingIndicator's new shimmer variant
+     (a moving highlight sweeping across "Thinking…", not a UI reaction
+     to an event) needed a real ~1.5-2.5s pace, not a borrowed 480ms
+     reused past its own intended job. */
+  --duration-1600: 1600ms;
   --ease-standard: cubic-bezier(.2, 0, 0, 1);
   --ease-decel: cubic-bezier(0, 0, .2, 1);
   --ease-float: cubic-bezier(.16, 1, .3, 1);

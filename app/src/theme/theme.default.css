@@ -172,6 +172,10 @@
      scoped to a chart's own line/area draw specifically, not the scene-
      assembly stagger every other node type still uses unchanged. */
   --motion-chart-reveal-duration: var(--duration-480);
+  /* ThinkingIndicator's shimmer variant (2026-09-06) — see
+     tokens.base.css's own --duration-1600 comment for why this needed a
+     new primitive rather than reusing chart-reveal's 480ms. */
+  --motion-shimmer-duration: var(--duration-1600);
 
   /* Type faces (Phase 8E typography audit) — identical across all three
      registered themes, since typeface choice isn't a ◆ per-theme register

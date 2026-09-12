@@ -3,7 +3,6 @@ import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
 import type { ThinkingStep } from '../../contracts/thinking';
 import { StepRow } from './StepRow';
-import { ThinkingIndicator } from './ThinkingIndicator';
 import './trail.css';
 import styles from './ThinkingTrail.module.css';
 
@@ -47,6 +46,15 @@ interface ThinkingTrailProps {
 // handler — skip is already null once trailStore.finish() runs (or when
 // rendering a settled past turn), so the two interaction modes never
 // overlap.
+//
+// "Thinking" has no row/element of its own here (2026-09-06 — two prior
+// attempts, a persistent node above the list and a fixed row pinned at
+// index 0, were both corrected: "always coming in front... not staying
+// at the beginning as first item"). StepRow.tsx's own isActive branch IS
+// the thinking display now — whichever real step is currently active
+// shows the shimmering "Thinking" treatment in place of its own label,
+// so it travels down this same list with the active step for free, no
+// separate position to track here at all.
 export function ThinkingTrail({ steps, activeIndex, isComplete, elapsedMs, skip }: ThinkingTrailProps) {
   if (steps.length === 0) return null;
 
@@ -93,7 +101,6 @@ export function ThinkingTrail({ steps, activeIndex, isComplete, elapsedMs, skip 
       aria-label="Thinking trail — click to skip"
       className={styles.traiContainer}
     >
-      <ThinkingIndicator />
       {stepRows}
     </div>
   );

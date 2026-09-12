@@ -1,0 +1,35 @@
+/* One real text node, zero wrapper spans inside it — genuinely
+   selectable as a whole sentence at any point, including mid-reveal
+   (see LabelReveal.tsx's own comment for the full reasoning). The sweep
+   is a clip-path inset animating from fully-clipped (100% from the
+   right) to fully-revealed (0%) — the same "animate a mask over real
+   content" technique TimeSeries.tsx's chart-reveal and AssetTrendGlyph's
+   line-draw already use elsewhere in this app, just applied to text
+   instead of a chart. --reveal-duration is set per-instance by
+   LabelReveal.tsx, DERIVED from the step's own real durationMs (never
+   invented) — same "per-instance data, not a design constant" precedent
+   chartReveal.ts's own comment documents, floored at 300ms so a very
+   short step's reveal doesn't finish imperceptibly fast. */
+.reveal {
+  display: inline-block;
+  animation-name: merlin-label-reveal;
+  animation-duration: var(--reveal-duration);
+  animation-timing-function: var(--ease-standard);
+  animation-fill-mode: forwards;
+}
+
+@keyframes merlin-label-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+    clip-path: none;
+  }
+}

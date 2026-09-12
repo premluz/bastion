@@ -15,20 +15,50 @@
   cursor: pointer;
 }
 
-/* Persistent thinking pulse (direct order, 2026-08-10) — see
-   ThinkingIndicator.tsx's own comment for the full rationale. Reuses
-   merlin-step-pulse from trail.css verbatim (imported into
-   ThinkingTrail.tsx directly, since this global keyframe isn't reachable
-   from inside a CSS Module by name otherwise). */
-.thinkingIndicator {
-  animation-name: merlin-step-pulse;
-  animation-duration: var(--duration-480);
-  animation-timing-function: var(--ease-standard);
+/* Shimmer label (2026-09-06) — see StepRow.tsx's own isThinkingRow
+   comment for the full model: the perpetual "Thinking" row, now a real
+   member of the same step list/rail, not a separate component. A moving
+   highlight band swept across the label text via background-clip:text +
+   an animated background-position, the standard CSS-only shimmer-text
+   technique — three color stops (muted/primary/muted) repeated so the
+   band reads as one continuous pass rather than a hard reset at the
+   loop boundary. 250% background-size (not 200%) leaves genuine "rest"
+   background on both sides of the bright band at any given position,
+   so the label reads as mostly its own base color with a highlight
+   passing through, not as two colors permanently split down the middle. */
+.shimmerText {
+  background-image: linear-gradient(
+    90deg,
+    var(--ink-muted) 0%,
+    var(--ink-muted) 35%,
+    var(--ink-primary) 50%,
+    var(--ink-muted) 65%,
+    var(--ink-muted) 100%
+  );
+  background-size: 250% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation-name: merlin-thinking-shimmer;
+  animation-duration: var(--motion-shimmer-duration);
+  animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .thinkingIndicator {
-    animation: none;
+@keyframes merlin-thinking-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmerText {
+    animation: none;
+    background-image: none;
+    color: var(--ink-secondary);
+  }
+}
+

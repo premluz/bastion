@@ -4,9 +4,10 @@ import type { ThinkingStep } from '../../contracts/thinking';
 import { SourceChip } from './SourceChip';
 import { ConfidenceBadge } from './ConfidenceBadge';
 import { SearchResultsCard } from './SearchResultsCard';
-import { TextChunkReveal } from './TextChunkReveal';
+import { LabelReveal } from './LabelReveal';
 import './trail.css';
 import styles from './StepRow.module.css';
+import trailStyles from './ThinkingTrail.module.css';
 
 interface StepRowProps {
   step: ThinkingStep;
@@ -29,17 +30,35 @@ interface StepRowProps {
 // icon / label weight / duration on the trailing edge), reimplemented
 // with our own primitives rather than importing ChatToolCalls itself —
 // its own docs say "Don't display outside chat message context," and the
-// trail is deliberately not one (node-vocabulary.md Trail law). The icon
-// now encodes STATUS (clock while active, check once settled) rather
-// than reasoning KIND — supersedes this component's own prior ruling
-// ("kind is the meaningful fact here... our steps don't have a failure
-// state"), a direct, confirmed amendment to match the new git-log
-// reference: the connecting rail (see StepRow.module.css's .rail) reads
-// as a real progress timeline only if its nodes show status, not action
-// type. Duration shows only once a step settles, matching the template's
-// "duration on the trailing edge for completed calls."
+// trail is deliberately not one (node-vocabulary.md Trail law). Duration
+// shows only once a step settles, matching the template's "duration on
+// the trailing edge for completed calls."
+//
+// The active row IS "Thinking" (2026-09-06 — two prior attempts at a
+// separate Thinking element/row were both wrong: a persistent node
+// rendered above the list read as "left behind" once real steps advanced
+// past it, and a fixed row pinned at index 0 had the exact same problem
+// restated. Direct correction: "always coming in front... not staying at
+// the beginning as first item but always coming in front" — "in front"
+// means whichever step is CURRENT, not a fixed position). There is no
+// separate row: whichever step is active shows the shimmering
+// wrench+"Thinking" treatment instead of its own real label; the same
+// row settles into its real label + check + duration exactly as it
+// always has once isActive flips false. This is what makes "Thinking"
+// travel down the list with the active step automatically, with no
+// position bookkeeping anywhere — it was never a step of its own, it's
+// what any step looks like while still in flight.
+//
+// The real label streams in the instant a step settles (2026-09-06
+// follow-up — see LabelReveal.tsx's own comment for the full
+// reasoning/technique). Deleting TextChunkReveal alongside the shimmer
+// change above was a real regression: this row's real text disappearing
+// entirely while active didn't mean the SETTLE transition should lose
+// its own reveal too — LabelReveal plays exactly once, the moment
+// isActive flips from true to false and this branch renders for the
+// first time.
 export function StepRow({ step, isActive, isLast = false }: StepRowProps) {
-  const iconName: IconName = isActive ? 'clock' : 'check';
+  const iconName: IconName = isActive ? 'wrench' : 'check';
   const iconBoxClasses = isActive ? `${styles.iconBox} ${styles.activeIndicator}` : styles.iconBox;
 
   return (
@@ -55,12 +74,12 @@ export function StepRow({ step, isActive, isLast = false }: StepRowProps) {
       <div className={styles.contentBlock}>
         <div className={styles.headerRow}>
           {isActive ? (
-            <Text type="body" weight="medium" color="primary">
-              <TextChunkReveal text={step.label} durationMs={step.durationMs} />
+            <Text type="body" weight="medium" className={trailStyles.shimmerText}>
+              Thinking
             </Text>
           ) : (
             <Text type="body" color="secondary">
-              {step.label}
+              <LabelReveal text={step.label} durationMs={step.durationMs} />
             </Text>
           )}
           {!isActive && (
@@ -69,18 +88,18 @@ export function StepRow({ step, isActive, isLast = false }: StepRowProps) {
             </Text>
           )}
         </div>
-        {step.detail && <Text type="supporting">{step.detail}</Text>}
-        {step.sources && step.sources.length > 0 && (
+        {!isActive && step.detail && <Text type="supporting">{step.detail}</Text>}
+        {!isActive && step.sources && step.sources.length > 0 && (
           <div className={styles.sourceChips}>
             {step.sources.map((source) => (
               <SourceChip key={source.name} name={source.name} />
             ))}
           </div>
         )}
-        {step.kind === 'search' && step.webResults && step.webResults.length > 0 && (
+        {!isActive && step.kind === 'search' && step.webResults && step.webResults.length > 0 && (
           <SearchResultsCard results={step.webResults} />
         )}
-        {step.confidence !== undefined && <ConfidenceBadge confidence={step.confidence} />}
+        {!isActive && step.confidence !== undefined && <ConfidenceBadge confidence={step.confidence} />}
       </div>
     </div>
   );
