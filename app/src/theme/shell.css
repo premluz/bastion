@@ -43,4 +43,14 @@
   --shell-mode-duration: var(--duration-480);
   --shell-mode-ease: var(--motion-enter-ease);
   --shell-controls-delay: var(--motion-enter-duration);
+  /* Page recede: opening the assistant pushes the current page back in
+     depth rather than just dimming it — the page shrinks slightly toward
+     its own centre, blurs, and fades, so the composer reads as a layer in
+     front of it. Conversation mode recedes further than the composer,
+     since it takes over the whole surface. */
+  --shell-recede-scale: 0.94;
+  --shell-recede-scale-far: 0.90;
+  --shell-recede-blur: var(--blur-8);
+  --shell-recede-blur-far: var(--blur-16);
+  --shell-recede-opacity: var(--opacity-40);
 }

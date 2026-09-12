@@ -80,6 +80,35 @@
   overflow-y: auto;
 }
 
+/* Opening the assistant recedes whatever is behind it: the page scales down
+   toward its own centre, blurs, and fades, reading as depth rather than a
+   flat dim. transform-origin is centre so it pulls back evenly instead of
+   sliding. Scrolling is locked while receded — a blurred background layer
+   should not react to touch. */
+.page,
+.content {
+  transform-origin: 50% 50%;
+  transition: transform var(--shell-mode-duration) var(--shell-mode-ease),
+    filter var(--shell-mode-duration) var(--shell-mode-ease),
+    opacity var(--shell-mode-duration) var(--shell-mode-ease);
+}
+
+.phone[data-mode='composer'] .page,
+.phone[data-mode='composer'] .content {
+  transform: scale(var(--shell-recede-scale));
+  filter: blur(var(--shell-recede-blur));
+  opacity: var(--shell-recede-opacity);
+  overflow-y: hidden;
+}
+
+.phone[data-mode='conversation'] .page,
+.phone[data-mode='conversation'] .content {
+  transform: scale(var(--shell-recede-scale-far));
+  filter: blur(var(--shell-recede-blur-far));
+  opacity: 0;
+  overflow-y: hidden;
+}
+
 .dock { position: relative; }
 .composer {
   display: grid;
@@ -105,8 +134,7 @@
 }
 
 .phone[data-mode='conversation'] .header { transform: translateY(var(--shell-inset)); }
-.phone[data-mode='conversation'] .content { opacity: 0; }
 
 @media (prefers-reduced-motion: reduce) {
-  .header, .composer, .phone::before { transition: none; }
+  .header, .composer, .phone::before, .page, .content { transition: none; }
 }
