@@ -1,6 +1,8 @@
 .root:global(.astryx-dialog) {
-  width: min(100%, var(--shell-preview-width));
-  height: min(100dvh, var(--shell-preview-height));
+  /* Matches MobileFrame's own sizing so the overlay covers the phone
+     exactly rather than a differently-sized box behind it. */
+  width: min(100%, var(--shell-frame-max-width));
+  height: 100dvh;
   max-height: 100dvh;
   margin: auto;
   padding: 0;

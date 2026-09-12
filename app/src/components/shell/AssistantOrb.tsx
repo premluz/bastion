@@ -1,4 +1,4 @@
-import '../../theme/shell.safe-one.css';
+
 import styles from './AssistantOrb.module.css';
 
 export type AssistantActivity = 'idle' | 'listening' | 'thinking';

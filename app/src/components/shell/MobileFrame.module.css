@@ -1,14 +1,18 @@
 .stage {
   display: grid;
-  place-items: center;
-  min-height: 100dvh;
+  place-items: start center;
+  height: 100dvh;
   background: var(--surface-1);
 }
 
+/* Fills the viewport height and is capped only on width, so the header
+   stays pinned to the top edge and the nav to the bottom edge at every
+   viewport size — rather than sitting inside a fixed-height box that
+   leaves the nav floating mid-screen on taller viewports. */
 .phone {
   position: relative;
-  width: min(100%, var(--shell-preview-width));
-  height: min(100dvh, var(--shell-preview-height));
+  width: min(100%, var(--shell-frame-max-width));
+  height: 100%;
   overflow: hidden;
   background: var(--surface-0);
   color: var(--ink-primary);

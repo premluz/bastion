@@ -1,6 +1,12 @@
-/* Phase 3 preview extension: safe-one only, per Prem's scope.
-   Components consume these aliases; no new color or motion scale is introduced. */
-[data-theme='safe-one'] {
+/* Phase 3 mobile shell tokens. Originally scoped to [data-theme='safe-one']
+   under that session's narrowed theme scope; promoted to :root (2026-09-12)
+   because scoping them to one theme left every other theme without shell
+   sizing at all — which is why safe-one rendered larger than the rest and
+   was the only theme showing the orb. These are structural aliases over
+   existing primitives (no new color, size, or motion scale), so every
+   registered theme can share them; a theme that genuinely needs different
+   chrome overrides the individual token in its own file. */
+:root {
   --shell-inset: var(--space-16);
   --shell-gap: var(--space-12);
   --shell-label-gap: var(--space-4);
@@ -15,8 +21,11 @@
   --shell-fade: linear-gradient(to bottom, var(--surface-0), transparent);
   --shell-transcript-mask: linear-gradient(to bottom, transparent, var(--surface-0) var(--shell-inset),
     var(--surface-0) calc(100% - var(--shell-inset)), transparent);
-  --shell-preview-width: calc(var(--space-64) * 6 + var(--space-8));
-  --shell-preview-height: calc(var(--space-64) * 12 + var(--space-24));
+  /* 414px — the iPhone Plus/Pro Max logical width, the widest phone tier
+     this shell targets. The frame fills the viewport height and is capped
+     only on width, so header pins to the top and nav to the bottom at any
+     viewport size rather than floating inside a fixed-height box. */
+  --shell-frame-max-width: calc(var(--space-64) * 6 + var(--space-24) + var(--space-4) + var(--space-2));
   --assistant-orb-size: calc(var(--space-48) + var(--space-8));
   --assistant-orb-expanded-size: var(--space-64);
   --assistant-orb-fill: radial-gradient(circle at 35% 25%,
