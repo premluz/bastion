@@ -183,10 +183,20 @@
 /* panelProvisional RETIRED — see theme.default.css's own note for the full
    rationale (2026-08-08 direct order: every content block gets the same
    bordered treatment, no borderless tier). */
-[data-theme='glass'] .astryx-card.panelFlat {
-  background-color: transparent;
+/* .astryx-item added (2026-09-13) — see theme.default.css's own comment
+   at this same selector for the full reasoning, including why
+   background-color is split out below with a :not(:hover) guard on Item
+   only (it fought .astryx-item:hover's overlay; Card has no such rule). */
+[data-theme='glass'] .astryx-card.panelFlat,
+[data-theme='glass'] .astryx-item.panelFlat {
   border: 1px solid var(--edge);
   box-shadow: none;
+}
+[data-theme='glass'] .astryx-card.panelFlat {
+  background-color: transparent;
+}
+[data-theme='glass'] .astryx-item.panelFlat:not(:hover) {
+  background-color: transparent;
 }
 
 /* panelFlatNoBorder — see theme.default.css's own comment for the full

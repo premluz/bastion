@@ -32,6 +32,15 @@ type AssetsSegment = 'crypto' | 'earn' | 'nfts';
 // already documents for vantara-metals' own missing series.
 export function AssetsHomePage() {
   const [segment, setSegment] = useState<AssetsSegment>('crypto');
+  // Tracks which row is open — real state, not a stub, but with nowhere
+  // to route yet (2026-09-13): Bastion's mobile shell has no ScreenStack
+  // or asset-detail screen built (Phase 3/5, both still open per CLAUDE.md
+  // §3/§10). Selecting a row is real interaction — Item needs a real
+  // onClick to render as a button and pick up hover at all, an inert
+  // onClick would be the exact "clickable but does nothing" bug this was
+  // built to fix — but its destination is a placeholder honestly scoped
+  // to this page until a real asset-detail screen exists to open instead.
+  const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const summary = resolveAssetsHomeSummary();
 
   return (
@@ -56,7 +65,7 @@ export function AssetsHomePage() {
         </div>
         {segment === 'crypto' ? (
           summary.rows.length > 0 ? (
-            <AssetsHomeList rows={summary.rows} />
+            <AssetsHomeList rows={summary.rows} selectedAssetId={selectedAssetId} onSelectAsset={setSelectedAssetId} />
           ) : (
             <EmptyState title="No assets yet" description="Connect a wallet to see your crypto holdings here." />
           )

@@ -178,10 +178,21 @@
 /* Panel treatment — same law as every other theme (node-vocabulary.md
    principle 2): facts/reasoning render with zero elevation, outline
    only. */
-[data-theme='safe-one'] .astryx-card.panelFlat {
-  background-color: var(--surface-2);
+/* .astryx-item added (2026-09-13) — see theme.default.css's own comment
+   at this same selector for the full reasoning, including why
+   background-color is split out below with a :not(:hover) guard on Item
+   only (it fought .astryx-item:hover's overlay; Card has no such rule).
+   Same --surface-2 value as before, just no longer unconditional on Item. */
+[data-theme='safe-one'] .astryx-card.panelFlat,
+[data-theme='safe-one'] .astryx-item.panelFlat {
   border: none solid var(--edge);
   box-shadow: none;
+}
+[data-theme='safe-one'] .astryx-card.panelFlat {
+  background-color: var(--surface-2);
+}
+[data-theme='safe-one'] .astryx-item.panelFlat:not(:hover) {
+  background-color: var(--surface-2);
 }
 
 /* panelFlatNoBorder — see theme.default.css's own comment for the full

@@ -4,15 +4,9 @@
   gap: var(--space-8);
 }
 
-/* Logo · identity stack · value stack. The identity column takes the free
-   space so the value column stays hard against the pane's trailing edge. */
-.row {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: var(--space-12);
-}
-
+/* Item's own startContent/label/endContent slots now own the row layout
+   (Logo · identity stack · value stack) — these two classes only style the
+   stacks inside label/endContent, no wrapping grid needed. */
 .identity {
   display: flex;
   flex-direction: column;

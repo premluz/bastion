@@ -1,4 +1,4 @@
-import { Card } from '@astryxdesign/core/Card';
+import { Item } from '@astryxdesign/core/Item';
 import { Text } from '@astryxdesign/core/Text';
 import { CoinLogo } from './CoinLogo';
 import { TrendDelta } from '../nodes/TrendDelta';
@@ -15,29 +15,63 @@ import styles from './AssetsHomeList.module.css';
 // Ticker only, no entity name: the symbol identifies the holding, and the
 // name was redundant against a real brand mark. Delta sits under the
 // ticker, quantity under the value, so each side reads as a stack.
-export function AssetsHomeList({ rows }: { rows: AssetHomeRow[] }) {
+//
+// Card swapped for Item (2026-09-13, direct feedback: "should have hover
+// the cards and are clickable"): Card/panelFlat carries no hover treatment
+// anywhere in the theme cascade, so the prior version was visually a pane
+// but not actually interactive. Item is the row primitive DiscoveryItemRow/
+// Peers/Notable-Movers already use for "row that browses to a detail
+// page" — passing onClick makes it render with real button semantics and
+// picks up .astryx-item:hover's existing project-wide hover rule
+// (theme.default.css) for free, no new CSS. className="panelFlat" layers
+// the same pane look on top, same as Card did.
+//
+// onClick must be unconditional, not gated on the caller passing a handler
+// (2026-09-13 follow-up): Item only renders as a real <button> — and only
+// then does .astryx-item:hover fire — when isInteractive is true, which
+// Astryx defines as onClick != null. An optional handler left undefined
+// silently reproduced the exact "looks like a pane, isn't clickable" bug
+// this change exists to fix. onSelectAsset is still optional for callers
+// (AssetsHomePage always passes one today), but the row's own onClick
+// always fires so hover/button semantics are never silently dropped.
+export function AssetsHomeList({
+  rows,
+  selectedAssetId,
+  onSelectAsset,
+}: {
+  rows: AssetHomeRow[];
+  selectedAssetId?: string | null;
+  onSelectAsset?: (entityId: string | null) => void;
+}) {
   return (
     <div className={styles.list}>
       {rows.map((row) => (
-        <Card key={row.entityId} className="panelFlat" padding={4}>
-          <div className={styles.row}>
-            <CoinLogo entityId={row.entityId} label={row.symbol} />
-            <div className={styles.identity}>
+        <Item
+          key={row.entityId}
+          className="panelFlat"
+          density="balanced"
+          isSelected={row.entityId === selectedAssetId}
+          startContent={<CoinLogo entityId={row.entityId} label={row.symbol} />}
+          label={
+            <span className={styles.identity}>
               <Text type="body" weight="medium">
                 {row.symbol}
               </Text>
               <TrendDelta value={row.deltaPercent} />
-            </div>
-            <div className={styles.valueColumn}>
+            </span>
+          }
+          endContent={
+            <span className={styles.valueColumn}>
               <Text type="body" weight="medium" hasTabularNumbers>
                 ${row.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </Text>
               <Text type="supporting" color="secondary" hasTabularNumbers>
                 {row.quantity} {row.symbol}
               </Text>
-            </div>
-          </div>
-        </Card>
+            </span>
+          }
+          onClick={() => onSelectAsset?.(row.entityId === selectedAssetId ? null : row.entityId)}
+        />
       ))}
     </div>
   );

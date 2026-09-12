@@ -436,10 +436,33 @@
    panelProvisional consumers (SceneSummary's Summary/Recommendation panes,
    DashboardSummaryHeader) now pass panelFlat directly. */
 
-.astryx-card.panelFlat {
-  background-color: transparent;
+/* .astryx-item added (2026-09-13, "cards should have hover and be
+   clickable"): AssetsHomeList swapped Card for Item so its rows get real
+   button semantics + the existing .astryx-item:hover rule below, but
+   panelFlat's pane look (border/transparent bg) only ever targeted
+   astryx-card — Item rendered with none of it. Same declarations, wider
+   selector; no new class, no new values. Border/shadow stay unconditional
+   (the pane's own outline shouldn't disappear on hover) — only the
+   background-color is split out below, since that's the one property that
+   fights the hover overlay. */
+.astryx-card.panelFlat,
+.astryx-item.panelFlat {
   border: 1px solid var(--edge);
   box-shadow: none;
+}
+
+/* background-color split from the rule above (2026-09-13 follow-up):
+   both this and .astryx-item:hover below share specificity (two classes),
+   and this one sits later in source order, so an unconditional transparent
+   background-color silently overwrote --color-overlay-hover on every
+   hover — confirmed live via computed styles before/during hover. Card
+   never had this conflict (no hover rule exists for it), so it keeps its
+   background in the rule above; only Item needs the :not(:hover) split. */
+.astryx-card.panelFlat {
+  background-color: transparent;
+}
+.astryx-item.panelFlat:not(:hover) {
+  background-color: transparent;
 }
 
 /* panelFlatNoBorder (2026-08-19, direct feedback: "should have config for
