@@ -4,7 +4,6 @@ import { AssistantOrb } from './AssistantOrb';
 const meta = {
   title: 'Shell/AssistantOrb',
   component: AssistantOrb,
-  globals: { theme: 'safe-one' },
   parameters: { layout: 'centered' },
   args: { activity: 'idle', expanded: false },
 } satisfies Meta<typeof AssistantOrb>;

@@ -9,12 +9,16 @@ import { AssetsHomePage } from './AssetsHomePage';
 import { ChatBarComposer } from './ChatBarComposer';
 import { ConversationModeOverlay } from './ConversationModeOverlay';
 import { TabBar } from './TabBar';
-import { useMobileShellPreview, type MobileShellPreviewProps } from './useMobileShellPreview';
-import styles from './MobileShellPreview.module.css';
+import { useMobileFrame, type MobileFrameProps } from './useMobileFrame';
+import styles from './MobileFrame.module.css';
 
-// This harness is imported by stories only; it is not the mobile Frame or ScreenStack.
-export function MobileShellPreview(props: MobileShellPreviewProps) {
-  const state = useMobileShellPreview(props);
+// Bastion's mobile app shell — the counterpart to Merlin's Frame.tsx, and
+// the single story entry point (Shell/MobileFrame) through which every page
+// is reached by navigating the TabBar, exactly as Merlin's pages are reached
+// inside Shell/Frame rather than as standalone page stories. Navigation state
+// is local (useMobileFrame) until ScreenStack/pageStore lands in Phase 3.
+export function MobileFrame(props: MobileFrameProps) {
+  const state = useMobileFrame(props);
   const composerId = useId();
   const transcript = state.messages.map(({ id, text }) => (
     <ChatMessage sender="user" key={id}><ChatMessageBubble>{text}</ChatMessageBubble></ChatMessage>

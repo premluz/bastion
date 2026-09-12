@@ -4,13 +4,13 @@ import type { TabDestination } from './TabBar';
 
 export type ShellPreviewMode = 'idle' | 'composer' | 'conversation';
 
-export interface MobileShellPreviewProps {
+export interface MobileFrameProps {
   initialMode?: ShellPreviewMode;
   initialMessages?: readonly string[];
 }
 
 // Storybook-local state only. No page store, scene resolver, or microphone access.
-export function useMobileShellPreview({ initialMode = 'idle', initialMessages = [] }: MobileShellPreviewProps) {
+export function useMobileFrame({ initialMode = 'idle', initialMessages = [] }: MobileFrameProps) {
   const [mode, setMode] = useState<ShellPreviewMode>(initialMode);
   const [activeTab, setActiveTab] = useState<TabDestination>('home');
   const [value, setValue] = useState('');

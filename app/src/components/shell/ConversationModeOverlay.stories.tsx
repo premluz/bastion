@@ -1,13 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ConversationModeOverlay } from './ConversationModeOverlay';
-import { MobileShellPreview } from './MobileShellPreview';
+import { MobileFrame } from './MobileFrame';
 
 const meta: Meta<typeof ConversationModeOverlay> = {
   title: 'Shell/ConversationModeOverlay',
   component: ConversationModeOverlay,
-  globals: { theme: 'safe-one' },
   parameters: { layout: 'fullscreen' },
-  render: () => <MobileShellPreview initialMode="conversation" initialMessages={['Show my holdings.']} />,
+  render: () => <MobileFrame initialMode="conversation" initialMessages={['Show my holdings.']} />,
 };
 export default meta;
 type Story = StoryObj<typeof ConversationModeOverlay>;
