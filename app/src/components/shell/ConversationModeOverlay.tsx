@@ -3,6 +3,7 @@ import { Dialog } from '@astryxdesign/core/Dialog';
 import { Icon } from '@astryxdesign/core/Icon';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { AssistantOrb, type AssistantActivity } from './AssistantOrb';
+import glowStyles from '../../theme/glow.module.css';
 import styles from './ConversationModeOverlay.module.css';
 
 export interface ConversationModeOverlayProps {
@@ -20,6 +21,15 @@ export function ConversationModeOverlay({ isOpen, onClose, children, activity = 
       variant="fullscreen" purpose="form" padding={0} className={styles.root}
       aria-label="Assistant conversation" aria-describedby="conversation-activity" data-shared-orb={String(sharedOrb)}>
       <div className={styles.layout}>
+        {/* Top glow (2026-09-13, direct feedback: "this is global" — same
+            topLeft+topRight combination AssetsHomeHeader already uses), on
+            its own wrapper rather than .layout itself: .layout already
+            owns a ::before for the bottom orb halo below, and glow's
+            .topLeft/.topRight ALSO target ::before — applying both to one
+            element would collide, silently dropping one. Neutral
+            --accent-signal default, unset here: unlike Home's balance, a
+            conversation has no up/down direction to color it by. */}
+        <div className={`${styles.glow} ${glowStyles.root} ${glowStyles.topLeft} ${glowStyles.topRight} ${glowStyles.unclipped}`} />
         <div className={styles.transcript} role="log" aria-label="Conversation transcript" tabIndex={0}>
           {children}
         </div>

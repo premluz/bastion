@@ -19,8 +19,14 @@
   --shell-round: var(--radius-full);
   --shell-fade-height: var(--space-48);
   --shell-fade: linear-gradient(to bottom, var(--surface-0), transparent);
-  --shell-transcript-mask: linear-gradient(to bottom, transparent, var(--surface-0) var(--shell-inset),
-    var(--surface-0) calc(100% - var(--shell-inset)), transparent);
+  /* Fade span was --shell-inset (16px) — nearly invisible against a
+     ~700-900px transcript, reading as a hard cutoff rather than a soft
+     fade (2026-09-13, direct feedback: "shouldn't have this hard line").
+     Uses --shell-fade-height (48px) instead, the same span Home's own
+     scroll-under-header fade already uses, so both read as the same
+     global fade language rather than two different distances. */
+  --shell-transcript-mask: linear-gradient(to bottom, transparent, var(--surface-0) var(--shell-fade-height),
+    var(--surface-0) calc(100% - var(--shell-fade-height)), transparent);
   /* 414px — the iPhone Plus/Pro Max logical width, the widest phone tier
      this shell targets. The frame fills the viewport height and is capped
      only on width, so header pins to the top and nav to the bottom at any

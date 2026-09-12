@@ -46,6 +46,27 @@
   z-index: -1;
 }
 
+/* Own absolutely-positioned wrapper for the glow primitive's ::before —
+   .layout::before above already exists for the bottom orb halo, and glow's
+   .topLeft/.topRight also need a ::before, so they can't share one element.
+   Sits behind .transcript (DOM order, same stacking context as .layout's
+   isolate) without needing its own z-index.
+   Height is near-zero with .unclipped (not var(--shell-fade-height)):
+   first attempt sized this to the mask's own 48px fade distance and paired
+   it with .clipped, which cropped the glow's actual shape — topLeft/
+   topRight are calc(--blur-z4 * 2) = 80px tall with a 40px blur radius, so
+   a 48px clipped box cut it into a hard-edged band instead of the soft
+   radial spread every other glow consumer gets. Zero height + unclipped
+   lets the shape overflow downward from the very top edge exactly like
+   AssetsHomeHeader's own unconstrained root does for its glow. */
+.glow {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 0;
+  pointer-events: none;
+}
+
 .transcript {
   flex: 1;
   min-height: 0;
