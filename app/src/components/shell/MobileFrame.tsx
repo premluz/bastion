@@ -26,11 +26,14 @@ export function MobileFrame(props: MobileFrameProps) {
   // Home tab (2026-09-12): renders AssetsHomePage instead of the assistant
   // transcript — AssetsHomePage brings its own avatar/search row (glow
   // header), so the harness's own plain .header is skipped here rather
-  // than stacking two search rows. Any other tab, or the composer/
-  // conversation assistant modes regardless of tab, keep the prior
-  // transcript-only placeholder — Markets/Trade/Assets pages are out of
-  // this task's scope.
-  const isHome = state.activeTab === 'home' && state.mode === 'idle';
+  // than stacking two search rows. Other tabs keep the transcript-only
+  // placeholder — Markets/Trade/Assets pages are out of this task's scope.
+  //
+  // Depends on the tab alone, never the mode: gating this on mode too
+  // unmounted the page the instant the assistant opened, so the recede
+  // had nothing left to animate and the content vanished outright
+  // instead of scaling and blurring back.
+  const isHome = state.activeTab === 'home';
   return (
     <div className={styles.stage}>
       <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode}>
