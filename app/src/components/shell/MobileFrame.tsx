@@ -1,12 +1,14 @@
 import { Avatar } from '@astryxdesign/core/Avatar';
 import { Button } from '@astryxdesign/core/Button';
 import { AccountExperience } from './AccountExperience';
-import { BuyEthTranscript } from './BuyEthTranscript';
+import { BuyEthTranscriptView } from './BuyEthTranscript';
+import { useBuyEthFlow } from '../../engine/useBuyEthFlow';
 import { ChatMessage, ChatMessageBubble } from '@astryxdesign/core/Chat';
 import { TextInput } from '@astryxdesign/core/TextInput';
 import { AssetsHomePage } from './AssetsHomePage';
 import { ConversationModeOverlay } from './ConversationModeOverlay';
 import { MobileFrameDock } from './MobileFrameDock';
+import { useExploreNavigation } from './useExploreNavigation';
 import { useMobileFrame, type MobileFrameProps } from './useMobileFrame';
 import { SceneRenderer } from '../../renderer/SceneRenderer';
 import { ThinkingTrail } from '../trail/ThinkingTrail';
@@ -20,6 +22,7 @@ import styles from './MobileFrame.module.css';
 // is local (useMobileFrame) until ScreenStack/pageStore lands in Phase 3.
 export function MobileFrame(props: MobileFrameProps) {
   const state = useMobileFrame(props);
+  const explore = useExploreNavigation();
   // Live trail state (2026-09-13) — subscribed via the hook, not
   // getState(), so this component re-renders as playTrail advances
   // activeIndex/elapsedMs. Read unconditionally (cheap, a handful of
@@ -31,6 +34,14 @@ export function MobileFrame(props: MobileFrameProps) {
   const liveIsComplete = useTrailStore((trail) => trail.isComplete);
   const liveElapsedMs = useTrailStore((trail) => trail.elapsedMs);
   const liveSkip = useTrailStore((trail) => trail.skip);
+  // One flow for the whole shell, not one per rendered transcript
+  // (2026-09-13): the same transcript array mounts in both the composer
+  // surface and the conversation overlay, so a flow owned inside the
+  // transcript ran twice, with two independent timer sets. Hooks cannot
+  // run per-item inside the map below, so this keys off the most recent
+  // buy message — the only one whose flow is actually in play.
+  const latestBuyAmount = [...state.messages].reverse().find((message) => message.buyAmount != null)?.buyAmount ?? 0;
+  const buyFlow = useBuyEthFlow(latestBuyAmount);
   // Resolved scenes render right after their own message and its thinking
   // trail (2026-09-13) — same shape BuyEthTranscript.tsx already
   // established for the buy-flow's own hand-built scenes (<ChatMessage>
@@ -62,7 +73,7 @@ export function MobileFrame(props: MobileFrameProps) {
             shell itself was gone. hideQuery suppresses BuyEthTranscript's
             own user bubble — the loop above already drew one for this
             same message. */}
-        {buyAmount != null && <BuyEthTranscript query={text} amount={buyAmount} hideQuery />}
+        {buyAmount != null && <BuyEthTranscriptView query={text} amount={buyAmount} hideQuery flow={buyFlow} />}
       </div>
     );
   });
@@ -91,9 +102,22 @@ export function MobileFrame(props: MobileFrameProps) {
             <Button label="Open account menu" variant="ghost" onClick={openAccounts}><Avatar name="Preview user" size="small" /></Button>
             <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />
           </header>
+          {/* The header fade as a real sibling, not .header::after
+              (2026-09-13, direct feedback: "the glow over total balance
+              should be above the gradient that fades content underneath,
+              but below the search and avatar"). As a child of .header the
+              fade inherited .header's stacking context and always painted
+              above the page's glow; as a sibling it slots between them.
+              Page paths only — the transcript path keeps .header::after,
+              having no glow to order against. */}
+          {(isHome || state.activeTab === 'markets') && <div className={styles.pageFade} aria-hidden="true" />}
           {isHome ? (
             <main className={styles.page} aria-label="Home" tabIndex={0}>
               <AssetsHomePage />
+            </main>
+          ) : state.activeTab === 'markets' ? (
+            <main className={styles.page} aria-label="Explore" tabIndex={0} onClick={explore.onClick}>
+              <SceneRenderer scene={explore.scene} />
             </main>
           ) : (
             <main className={styles.content} aria-label="Preview transcript" tabIndex={0}>{transcript}</main>
