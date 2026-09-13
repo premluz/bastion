@@ -61,6 +61,21 @@
 .header::after { top: 100%; }
 .dock::before { bottom: 100%; transform: rotate(180deg); }
 
+/* Suppressed whenever .page is the sibling below (2026-09-13, direct
+   feedback tracing what actually painted the washed-out look on Explore
+   — this fixed 48px opaque-to-transparent overlay, not the mask-image
+   this session had spent the whole day tuning). .header is one
+   unconditional element shared by every tab; this ::after fires on all
+   of them, but only the true transcript path (.content) still needs it —
+   .page (Home, Explore) already carries its own scroll-aware
+   mask-image, so this overlay was stacking a second, always-on dark wash
+   directly under the header regardless of scroll position. Measured live
+   before this fix: the "Trending" label and filter chips reported
+   opacity:1 and the theme's own full-brightness --ink-primary colour,
+   proving the mask was not the cause — this fixed-height painted layer
+   was. */
+.chrome:has(.page) .header::after { display: none; }
+
 
 /* The dock's fade band is opaque --surface-0 at its top edge, so once the
    assistant opens it paints a hard horizontal seam straight across the
