@@ -57,7 +57,7 @@ export function AssetsHomePage() {
     <div className={styles.root}>
       <div className={styles.body}>
         <AssetsHomeHeader totalValue={summary.totalValue} changeAbs={summary.changeAbs} changePercent={summary.changePercent} />
-        <Carousel aria-label="Promotions" hasButtons={false}>
+        <Carousel aria-label="Promotions" hasButtons={false} gap={2}>
           {PROMOS.map((promo) => (
             <PromoCard key={promo.id} title={promo.title} icon={'icon' in promo ? promo.icon : undefined} />
           ))}
