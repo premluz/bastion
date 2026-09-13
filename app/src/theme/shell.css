@@ -31,7 +31,7 @@
      for five other things — the dock fade's height, .content's padding,
      the history and buy transcripts' padding — and shrinking the fade
      should not move any of those. */
-  --shell-mask-fade: var(--space-24);
+  --shell-mask-fade: var(--space-12);
   --shell-transcript-mask: linear-gradient(to bottom, transparent, var(--surface-0) var(--shell-mask-fade),
     var(--surface-0) calc(100% - var(--shell-mask-fade)), transparent);
   /* 414px — the iPhone Plus/Pro Max logical width, the widest phone tier
