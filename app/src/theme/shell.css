@@ -52,8 +52,14 @@
      0 (fade starts right at the edge, no dead gap first); span goes back
      up to a generous 64px so the ramp itself reads as smooth, not a thin
      line. */
+  /* Ramp shortened, softness kept (2026-09-13, fifth follow-up): "top move
+     top, bottom move bottom" meant the point where content reaches full
+     opacity should sit closer to each edge — a shorter transition — while
+     the transition itself stays a smooth curve, not a hard cutoff.
+     Confirmed with Prem this is about the ramp's own length, not the
+     inset (which stays 0 — the fade still starts right at the edge). */
   --shell-mask-inset: 0px;
-  --shell-mask-span: var(--space-64);
+  --shell-mask-span: var(--space-32);
   --shell-transcript-mask: linear-gradient(to bottom,
     transparent, transparent var(--shell-mask-inset),
     var(--surface-0) calc(var(--shell-mask-inset) + var(--shell-mask-span)),
