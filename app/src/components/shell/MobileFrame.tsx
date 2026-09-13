@@ -102,15 +102,6 @@ export function MobileFrame(props: MobileFrameProps) {
             <Button label="Open account menu" variant="ghost" onClick={openAccounts}><Avatar name="Preview user" size="small" /></Button>
             <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />
           </header>
-          {/* The header fade as a real sibling, not .header::after
-              (2026-09-13, direct feedback: "the glow over total balance
-              should be above the gradient that fades content underneath,
-              but below the search and avatar"). As a child of .header the
-              fade inherited .header's stacking context and always painted
-              above the page's glow; as a sibling it slots between them.
-              Page paths only — the transcript path keeps .header::after,
-              having no glow to order against. */}
-          {(isHome || state.activeTab === 'markets') && <div className={styles.pageFade} aria-hidden="true" />}
           {isHome ? (
             <main className={styles.page} aria-label="Home" tabIndex={0}>
               <AssetsHomePage />

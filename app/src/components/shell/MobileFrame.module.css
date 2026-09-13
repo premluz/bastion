@@ -39,17 +39,12 @@
   align-items: center;
   gap: var(--shell-gap);
   position: relative;
-  /* 2, above .pageFade's own 1 (2026-09-13) — the avatar and search stay
-     crisply above the fade that the balance glow now sits under. */
+  /* Above the page, so the avatar and search stay crisp over anything
+     scrolling beneath them. */
   z-index: 2;
   padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--shell-inset);
   background: var(--surface-0);
 }
-
-/* .header::after would double up with .pageFade on the page path, so it
-   only renders where there is no .pageFade sibling — the assistant/
-   transcript view, which has no glow to order against. */
-.chrome:has(.pageFade) .header::after { display: none; }
 
 .header > :last-child { flex: 1; min-width: 0; }
 
@@ -66,38 +61,6 @@
 .header::after { top: 100%; }
 .dock::before { bottom: 100%; transform: rotate(180deg); }
 
-/* The header fade as a sibling of .header rather than its ::after
-   (2026-09-13, direct feedback: "the glow over total balance should be
-   above the gradient that fades content underneath, but below the search
-   and avatar"). Those are three layers in a specific order, and
-   .header::after cannot produce it: the fade is a child of .header, so it
-   inherits .header's own z-index:1 and paints above the page — glow
-   included — no matter what z-index it is given inside that context.
-   Lifted out to a sibling in .chrome, the order falls out naturally:
-   this fade sits above the scrolling page (and its glow) at z-index 1,
-   while .header at z-index 2 keeps the avatar and search crisply above
-   both. Only the page path uses it; .header::after still serves the
-   assistant/transcript view, which has no glow to order against. */
-.pageFade {
-  position: relative;
-  height: var(--shell-fade-height);
-  /* Overlaps the page below instead of consuming a row of its own: this
-     sits between .header and .page in .chrome's flex column, so without
-     the negative margin it would push the page down by its own height. */
-  margin-bottom: calc(var(--shell-fade-height) * -1);
-  flex: 0 0 auto;
-  background: var(--shell-fade);
-  /* --shell-fade starts at a fully opaque --surface-0, which is right for
-     its other two consumers (.header::after and PillNavigation both hide
-     content scrolling under them). Here it sits over the balance glow, and
-     that opaque top edge painted a hard seam straight across it — visible
-     as a line under the search bar, with the glow only appearing below.
-     Softened per-instance rather than by changing the shared token, so
-     the glow reads through while content still fades out underneath. */
-  opacity: var(--tint-medium);
-  pointer-events: none;
-  z-index: 1;
-}
 
 /* The dock's fade band is opaque --surface-0 at its top edge, so once the
    assistant opens it paints a hard horizontal seam straight across the
@@ -127,6 +90,17 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  /* The fade belongs to the scrolling page, not the header (2026-09-13,
+     direct feedback: "maybe the shade gradient should not be part of the
+     header"). A gradient painted in the header's band could never fix
+     this: .page's own overflow:auto clips its content dead at the
+     header's bottom edge (measured: both exactly 64px, adjacent and not
+     overlapping), so scrolled content was guillotined by a box edge with
+     the gradient painting harmlessly below the cut. Masking the page
+     itself fades content out as it reaches that edge instead. Same
+     --shell-transcript-mask the conversation transcripts already use, so
+     every scrolling surface in the shell fades alike. */
+  mask-image: var(--shell-transcript-mask);
 }
 
 /* Opening the assistant recedes whatever is behind it: the page scales down
