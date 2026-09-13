@@ -87,6 +87,14 @@
   margin-bottom: calc(var(--shell-fade-height) * -1);
   flex: 0 0 auto;
   background: var(--shell-fade);
+  /* --shell-fade starts at a fully opaque --surface-0, which is right for
+     its other two consumers (.header::after and PillNavigation both hide
+     content scrolling under them). Here it sits over the balance glow, and
+     that opaque top edge painted a hard seam straight across it — visible
+     as a line under the search bar, with the glow only appearing below.
+     Softened per-instance rather than by changing the shared token, so
+     the glow reads through while content still fades out underneath. */
+  opacity: var(--tint-medium);
   pointer-events: none;
   z-index: 1;
 }
