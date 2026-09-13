@@ -25,8 +25,15 @@
      Uses --shell-fade-height (48px) instead, the same span Home's own
      scroll-under-header fade already uses, so both read as the same
      global fade language rather than two different distances. */
-  --shell-transcript-mask: linear-gradient(to bottom, transparent, var(--surface-0) var(--shell-fade-height),
-    var(--surface-0) calc(100% - var(--shell-fade-height)), transparent);
+  /* The mask's own fade distance, separate from --shell-fade-height
+     (2026-09-13, direct feedback: "should be smaller, that gradient top
+     shadow"). Its own token because --shell-fade-height is load-bearing
+     for five other things — the dock fade's height, .content's padding,
+     the history and buy transcripts' padding — and shrinking the fade
+     should not move any of those. */
+  --shell-mask-fade: var(--space-24);
+  --shell-transcript-mask: linear-gradient(to bottom, transparent, var(--surface-0) var(--shell-mask-fade),
+    var(--surface-0) calc(100% - var(--shell-mask-fade)), transparent);
   /* 414px — the iPhone Plus/Pro Max logical width, the widest phone tier
      this shell targets. The frame fills the viewport height and is capped
      only on width, so header pins to the top and nav to the bottom at any
