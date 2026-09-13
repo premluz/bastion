@@ -11,6 +11,7 @@ import type { ThinkingStep } from '../../contracts/thinking';
 export type ShellPreviewMode = 'idle' | 'composer' | 'conversation';
 
 export interface MobileFrameProps {
+  navigationVariant?: 'pill' | 'classic';
   initialPurchaseQuery?: string;
   initialAccountView?: import('./accountTypes').AccountInitialView;
   initialMode?: ShellPreviewMode;
@@ -38,6 +39,16 @@ export interface TranscriptMessage {
   // reused as-is, same sequencing presentScene.ts already establishes:
   // trail plays first, scene attaches only once it completes.
   scene?: HydratedScene;
+  // Set when the query parses as a buy-ETH request (2026-09-13, direct
+  // feedback: "inline — for all scenarios entering into composer just
+  // runs the scenario in that view, unless the conversation icon is
+  // clicked"). Lives on the message so the buy flow renders inside the
+  // transcript like any other scenario result, rather than through the
+  // whole-shell takeover this replaces — that early return unmounted the
+  // entire shell, which is why pressing Enter looked like a jump to
+  // conversation mode: the nav and composer were not hidden, they were
+  // gone.
+  buyAmount?: number;
 }
 
 // Storybook-local state, now with live scene resolution and a real
@@ -47,18 +58,31 @@ export interface TranscriptMessage {
 // store, session/artifact store, or microphone access; those remain out
 // of scope until Phase 4/6 (CLAUDE.md).
 export function useMobileFrame({ initialMode = 'idle', initialMessages = [], initialPurchaseQuery = '' }: MobileFrameProps) {
-  const [purchaseQuery, setPurchaseQuery] = useState(initialPurchaseQuery);
   const [mode, setMode] = useState<ShellPreviewMode>(initialMode);
   const [activeTab, setActiveTab] = useState<TabDestination>('home');
   const [value, setValue] = useState('');
-  const [messages, setMessages] = useState<TranscriptMessage[]>(() => initialMessages.map((text, id) => ({ id, text })));
+  // initialPurchaseQuery seeds a real transcript message rather than a
+  // separate purchaseQuery state (2026-09-13): the buy flow now renders
+  // inline like any other scenario, so a story asking to open on it is
+  // just a story that starts with that message already submitted.
+  const [messages, setMessages] = useState<TranscriptMessage[]>(() => {
+    const seeded: TranscriptMessage[] = initialMessages.map((text, id) => ({ id, text }));
+    const buyAmount = initialPurchaseQuery ? parseBuyEthAmount(initialPurchaseQuery) : null;
+    if (initialPurchaseQuery && buyAmount !== null) {
+      seeded.push({ id: seeded.length, text: initialPurchaseQuery.trim(), buyAmount });
+    }
+    return seeded;
+  });
   // Which message is currently playing its trail live (null = none) —
   // MobileFrame reads useTrailStore directly for this one message only,
   // the same "one turn in flight" model useTrailStore's own single-slot
   // shape already assumes (playTrail's generation counter supersedes
   // whatever's in flight on a second query, same as desktop).
   const [liveTrailMessageId, setLiveTrailMessageId] = useState<number | null>(null);
-  const nextId = useRef(initialMessages.length);
+  // Seeded from the real message count, not initialMessages.length — the
+  // buy-query seed above can push one more, and counting the array itself
+  // keeps ids unique whether or not it did.
+  const nextId = useRef(messages.length);
   const resolver = useMemo(() => createKeywordResolver(), []);
   const inputRef = useRef<ChatComposerInputHandle>(null);
   const assistantRef = useRef<HTMLButtonElement>(null);
@@ -74,10 +98,14 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   }, [mode]);
   const submit = (text: string) => {
     if (!text.trim()) return;
-    if (parseBuyEthAmount(text) !== null) setPurchaseQuery(text.trim());
     const trimmed = text.trim();
     const id = nextId.current++;
-    setMessages((current) => [...current, { id, text: trimmed }]);
+    // buyAmount rides on the message so the buy flow renders inline in the
+    // transcript, exactly like a resolver-matched scene does below. The
+    // resolver still runs for these too — "buy eth" simply matches no
+    // manifest intent today, so it stays a plain message plus this flow.
+    const buyAmount = parseBuyEthAmount(trimmed);
+    setMessages((current) => [...current, { id, text: trimmed, ...(buyAmount !== null ? { buyAmount } : {}) }]);
     setValue('');
     // Fire-and-attach: the message is already in the transcript by the time
     // this settles, same "honest non-match" contract submitQuery.ts
@@ -103,6 +131,6 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   const openConversation = () => { submit(value); setMode('conversation'); };
   const toggleComposer = () => setMode((current) => current === 'idle' ? 'composer' : 'idle');
   const closeComposer = () => { setMode('idle'); assistantRef.current?.focus(); };
-  return { mode, setMode, activeTab, value, setValue, messages, liveTrailMessageId, inputRef, submit, purchaseQuery, setPurchaseQuery,
+  return { mode, setMode, activeTab, value, setValue, messages, liveTrailMessageId, inputRef, submit,
     selectTab, openConversation, toggleComposer, assistantRef, closeComposer, conversationRef };
 }

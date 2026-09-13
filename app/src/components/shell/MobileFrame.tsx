@@ -1,18 +1,12 @@
-import { useId } from 'react';
 import { Avatar } from '@astryxdesign/core/Avatar';
 import { Button } from '@astryxdesign/core/Button';
 import { AccountExperience } from './AccountExperience';
-import { BuyEthConversation } from './BuyEthConversation';
-import { parseBuyEthAmount } from '../../engine/buyEthScenes';
+import { BuyEthTranscript } from './BuyEthTranscript';
 import { ChatMessage, ChatMessageBubble } from '@astryxdesign/core/Chat';
-import { Icon } from '@astryxdesign/core/Icon';
-import { IconButton } from '@astryxdesign/core/IconButton';
 import { TextInput } from '@astryxdesign/core/TextInput';
-import { SignalIcon } from '@heroicons/react/24/outline';
 import { AssetsHomePage } from './AssetsHomePage';
-import { ChatBarComposer } from './ChatBarComposer';
 import { ConversationModeOverlay } from './ConversationModeOverlay';
-import { TabBar } from './TabBar';
+import { MobileFrameDock } from './MobileFrameDock';
 import { useMobileFrame, type MobileFrameProps } from './useMobileFrame';
 import { SceneRenderer } from '../../renderer/SceneRenderer';
 import { ThinkingTrail } from '../trail/ThinkingTrail';
@@ -26,7 +20,6 @@ import styles from './MobileFrame.module.css';
 // is local (useMobileFrame) until ScreenStack/pageStore lands in Phase 3.
 export function MobileFrame(props: MobileFrameProps) {
   const state = useMobileFrame(props);
-  const composerId = useId();
   // Live trail state (2026-09-13) — subscribed via the hook, not
   // getState(), so this component re-renders as playTrail advances
   // activeIndex/elapsedMs. Read unconditionally (cheap, a handful of
@@ -46,7 +39,7 @@ export function MobileFrame(props: MobileFrameProps) {
   // desktop: the trail plays first, the scene attaches once it settles.
   // A message with neither a live trail nor a settled one (still
   // resolving, or the resolver found no match) renders as plain text.
-  const transcript = state.messages.map(({ id, text, scene, trail, trailElapsedMs }) => {
+  const transcript = state.messages.map(({ id, text, scene, trail, trailElapsedMs, buyAmount }) => {
     const isLive = state.liveTrailMessageId === id;
     return (
       <div key={id}>
@@ -59,6 +52,17 @@ export function MobileFrame(props: MobileFrameProps) {
           <ThinkingTrail steps={trail} activeIndex={trail.length - 1} isComplete elapsedMs={trailElapsedMs ?? 0} skip={null} />
         )}
         {scene && <SceneRenderer scene={scene} />}
+        {/* Buy flow renders inline, as one more result under its own
+            message (2026-09-13, direct feedback: "inline — for all
+            scenarios entering into composer just runs the scenario in
+            that view, unless the conversation icon is clicked"). This
+            replaces a whole-shell early return that unmounted the entire
+            frame, which is why Enter looked like it jumped to
+            conversation mode: the nav and composer were not hidden, the
+            shell itself was gone. hideQuery suppresses BuyEthTranscript's
+            own user bubble — the loop above already drew one for this
+            same message. */}
+        {buyAmount != null && <BuyEthTranscript query={text} amount={buyAmount} hideQuery />}
       </div>
     );
   });
@@ -78,9 +82,6 @@ export function MobileFrame(props: MobileFrameProps) {
   // had nothing left to animate and the content vanished outright
   // instead of scaling and blurring back.
   const isHome = state.activeTab === 'home';
-  const purchaseAmount = parseBuyEthAmount(state.purchaseQuery);
-  if (purchaseAmount !== null) return <BuyEthConversation query={state.purchaseQuery} amount={purchaseAmount}
-    onClose={() => { state.setPurchaseQuery(''); state.setMode('composer'); }} />;
   return (
     <div className={styles.stage}>
       <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode}>
@@ -109,25 +110,8 @@ export function MobileFrame(props: MobileFrameProps) {
             inert={state.mode !== 'composer'} aria-hidden={state.mode !== 'composer'}>
             {transcript}
           </div>
-          <footer className={styles.dock}>
-            <TabBar activeTab={state.activeTab} onTabChange={state.selectTab} isComposerOpen={state.mode !== 'idle'}
-              isConversation={state.mode === 'conversation'} onAssistantPress={state.toggleComposer}
-              composerId={composerId} assistantRef={state.assistantRef} />
-            <section id={composerId} className={styles.composer} inert={state.mode !== 'composer'}
-              aria-hidden={state.mode !== 'composer'} aria-label="Assistant composer">
-              <div className={styles.composerClip}><div className={styles.composerBody}>
-              <ChatBarComposer value={state.value} onChange={state.setValue} onSubmit={state.submit}
-                placeholder="Ask anything" inputRef={state.inputRef}
-                footerActions={<IconButton label="Close composer" tooltip="Close composer" icon={<Icon icon="close" />}
-                  variant="ghost" onClick={state.closeComposer} />}
-                sendActions={<>
-                  <IconButton label="Microphone unavailable in preview" icon={<Icon icon="microphone" />} variant="ghost" isDisabled />
-                  <IconButton label="Start conversation mode" tooltip="Start conversation mode" icon={<Icon icon={SignalIcon} />}
-                    variant="ghost" onClick={state.openConversation} ref={state.conversationRef} />
-                </>} /></div></div>
-            </section>
-          </footer></div> )}</AccountExperience></div>
-      <ConversationModeOverlay isOpen={state.mode === 'conversation'} onClose={() => state.setMode('composer')} sharedOrb>
+          <MobileFrameDock state={state} variant={props.navigationVariant ?? 'pill'} /></div> )}</AccountExperience></div>
+      <ConversationModeOverlay isOpen={state.mode === 'conversation'} onClose={() => state.setMode('composer')} sharedOrb={props.navigationVariant === 'classic'}>
         {transcript}
       </ConversationModeOverlay>
     </div>
