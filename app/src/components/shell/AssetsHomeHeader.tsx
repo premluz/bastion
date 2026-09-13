@@ -50,9 +50,14 @@ interface AssetsHomeHeaderProps {
 // placeholder documented above.
 export function AssetsHomeHeader({ totalValue, changeAbs, changePercent }: AssetsHomeHeaderProps) {
   const isUp = changeAbs >= 0;
+  // unclipped, not clipped (2026-09-13): .clipped puts overflow:hidden on
+  // the glow host, and that host is only as tall as the balance block
+  // (measured: 253px), so the blurred ::before was sliced flat at that
+  // boundary — a hard rectangular edge below the balance. Unclipped lets
+  // the 40px blur fall off naturally instead.
   return (
     <div
-      className={`${styles.root} ${glowStyles.root} ${glowStyles.topLeft} ${glowStyles.topRight} ${glowStyles.clipped}`}
+      className={`${styles.root} ${glowStyles.root} ${glowStyles.topLeft} ${glowStyles.topRight} ${glowStyles.unclipped}`}
       style={{
         '--glow-color': isUp ? 'var(--delta-up)' : 'var(--delta-down)',
         '--glow-strength': 'var(--tint-subtle)',
