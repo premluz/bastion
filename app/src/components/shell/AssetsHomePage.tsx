@@ -1,16 +1,27 @@
 import { useState } from 'react';
 import { Button } from '@astryxdesign/core/Button';
+import { Carousel } from '@astryxdesign/core/Carousel';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import { Icon } from '@astryxdesign/core/Icon';
-import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 import { Text } from '@astryxdesign/core/Text';
 import { FunnelIcon } from '@heroicons/react/24/outline';
 import { resolveAssetsHomeSummary } from '../../engine/assetsHome';
 import { AssetsHomeHeader } from './AssetsHomeHeader';
 import { AssetsHomeList } from './AssetsHomeList';
+import { PromoCard } from './PromoCard';
 import styles from './AssetsHomePage.module.css';
 
-type AssetsSegment = 'crypto' | 'earn' | 'nfts';
+// Placeholder tiles (2026-09-13) — no real promo/offers content exists in
+// this fork's universe seed; authored copy only, same "never fabricate
+// DATA" line this page already draws for Earn/NFTs (fabricating promo
+// COPY carries no such risk — there's no number here to get wrong — but
+// the tiles themselves are still a stand-in for a real promotions feed,
+// not real offers).
+const PROMOS = [
+  { id: 'offers', title: 'Explore offers and earn' },
+  { id: 'idle-cash', title: 'Put your idle cash to work at 6.4%' },
+  { id: 'lounge', title: 'Free premium lounge at airports', icon: '🎁' },
+] as const;
 
 // New page, not a HoldingsPage.tsx replacement or restyle (2026-09-12 call,
 // stated per the phase brief): HoldingsPage renders a DataTable keyed off
@@ -20,18 +31,17 @@ type AssetsSegment = 'crypto' | 'earn' | 'nfts';
 // treatment — same underlying wallet math (resolveAssetsHomeSummary reuses
 // HoldingsPage's own resolveEntityDetail-based value computation, not a
 // re-derived pipeline), but a different page with a different visibility
-// rule and a different visual grammar (glow header, action row, segmented
-// control). Duplicating the fetch would be the violation this file avoids;
+// rule and a different visual grammar (glow header, category cards, promo
+// carousel). Duplicating the fetch would be the violation this file avoids;
 // duplicating the PAGE would not — they answer different questions
 // ("what do I own, once connected" vs. "what does my wallet look like on
 // open").
 //
-// Earn/NFTs segments (2026-09-12): no Earn or NFT holdings data exists in
-// this fork's universe seed, so both render an honest empty state rather
-// than fabricated rows — same "never fabricate" discipline assetDiscovery
-// already documents for vantara-metals' own missing series.
+// Crypto/Earn/NFTs segmented tabs removed (2026-09-13, direct feedback:
+// "remove tabs crypto earn etc.") — the list always shows crypto holdings
+// now, the only real data this page has; Earn/NFTs had no real data
+// either and only ever rendered an empty state.
 export function AssetsHomePage() {
-  const [segment, setSegment] = useState<AssetsSegment>('crypto');
   // Tracks which row is open — real state, not a stub, but with nowhere
   // to route yet (2026-09-13): Bastion's mobile shell has no ScreenStack
   // or asset-detail screen built (Phase 3/5, both still open per CLAUDE.md
@@ -47,13 +57,13 @@ export function AssetsHomePage() {
     <div className={styles.root}>
       <div className={styles.body}>
         <AssetsHomeHeader totalValue={summary.totalValue} changeAbs={summary.changeAbs} changePercent={summary.changePercent} />
-        <SegmentedControl value={segment} onChange={(value) => setSegment(value as AssetsSegment)} label="Asset category" layout="fill">
-          <SegmentedControlItem value="crypto" label="Crypto" />
-          <SegmentedControlItem value="earn" label="Earn" />
-          <SegmentedControlItem value="nfts" label="NFTs" />
-        </SegmentedControl>
+        <Carousel aria-label="Promotions" hasButtons={false}>
+          {PROMOS.map((promo) => (
+            <PromoCard key={promo.id} title={promo.title} icon={'icon' in promo ? promo.icon : undefined} />
+          ))}
+        </Carousel>
         <div className={styles.listHeader}>
-          <Text type="label">Your assets</Text>
+          <Text type="label">Coins</Text>
           <Button label="Manage" variant="ghost" size="sm">
             <span className={styles.manageContent}>
               <Icon icon={FunnelIcon} size="sm" />
@@ -63,17 +73,10 @@ export function AssetsHomePage() {
             </span>
           </Button>
         </div>
-        {segment === 'crypto' ? (
-          summary.rows.length > 0 ? (
-            <AssetsHomeList rows={summary.rows} selectedAssetId={selectedAssetId} onSelectAsset={setSelectedAssetId} />
-          ) : (
-            <EmptyState title="No assets yet" description="Connect a wallet to see your crypto holdings here." />
-          )
+        {summary.rows.length > 0 ? (
+          <AssetsHomeList rows={summary.rows} selectedAssetId={selectedAssetId} onSelectAsset={setSelectedAssetId} />
         ) : (
-          <EmptyState
-            title={segment === 'earn' ? 'No earn positions yet' : 'No NFTs yet'}
-            description="This preview's universe data doesn't have any yet — nothing fabricated here."
-          />
+          <EmptyState title="No assets yet" description="Connect a wallet to see your crypto holdings here." />
         )}
       </div>
     </div>

@@ -1,0 +1,25 @@
+/* Padding comes from Card's own padding={4} prop, not here. */
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  width: calc(var(--space-64) * 3);
+  flex-shrink: 0;
+}
+
+/* --surface-1, not --surface-2/-3 (2026-09-13 follow-up): checked the
+   actual resolved values across all four surface tokens in this theme —
+   --surface-0/-2/-3 all resolve to the same dark-mode value as the page
+   background, only --surface-1 is genuinely distinguishable from the page
+   background this card sits on. --surface-2's name suggested "one step up
+   from the page," but that assumption didn't hold here; confirmed by
+   reading the resolved custom properties, not by the token names alone. */
+.art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--space-64);
+  border-radius: var(--radius-12);
+  background: var(--surface-1);
+  font-size: var(--text-32);
+}

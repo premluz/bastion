@@ -1,29 +1,24 @@
-import { Button } from '@astryxdesign/core/Button';
 import { Heading } from '@astryxdesign/core/Heading';
-import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
-import {
-  ArrowDownTrayIcon,
-  ArrowsRightLeftIcon,
-  LockClosedIcon,
-  PaperAirplaneIcon,
-  PlusIcon,
-} from '@heroicons/react/24/outline';
 import { TrendDelta } from '../nodes/TrendDelta';
+import { BalanceCategoryCard } from './BalanceCategoryCard';
 import glowStyles from '../../theme/glow.module.css';
 import styles from './AssetsHomeHeader.module.css';
 
-// Five distinct actions (2026-09-12, this page's own call): the reference
-// mockup's action row repeats "Stake" twice, its own copy error rather
-// than a spec — Swap replaces the duplicate as a real, distinct wallet
-// action a crypto app's home screen plausibly needs.
-const ACTIONS = [
-  { id: 'buy', label: 'Buy', icon: PlusIcon },
-  { id: 'send', label: 'Send', icon: PaperAirplaneIcon },
-  { id: 'receive', label: 'Receive', icon: ArrowDownTrayIcon },
-  { id: 'stake', label: 'Stake', icon: LockClosedIcon },
-  { id: 'swap', label: 'Swap', icon: ArrowsRightLeftIcon },
-] as const;
+// Fixed, non-zero placeholder (2026-09-13, direct feedback): no "Money"/
+// fiat balance concept exists anywhere in the universe seed —
+// resolveAssetsHomeSummary computes one crypto total only. Rather than
+// mirror Crypto's real numbers (which would misread as a second real
+// balance) or show a bare $0.00 (which reads as broken, not "not built
+// yet"), this is an authored stand-in distinct from Crypto's own figures,
+// flagged here rather than silently treated as real data. Replace with a
+// real fiat/cash balance source if one is ever added to the universe.
+const MONEY_PLACEHOLDER = { value: 812.4, changeAbs: 2.46, changePercent: 0.3 };
+
+// Action row (Buy/Send/Receive/Stake/Swap) moved out to its own
+// WalletActionRow.tsx component (2026-09-13, direct feedback: "remove
+// from homepage buttons buy spend receive (keep as comp)") — extracted,
+// not deleted; just no longer rendered here.
 
 interface AssetsHomeHeaderProps {
   totalValue: number;
@@ -44,7 +39,15 @@ interface AssetsHomeHeaderProps {
 // including all mainnets, portfolio value, and buttons"). That row now
 // lives in MobileFrame's own shared <header> — fixed above every tab,
 // avatar+search only, same element every other tab already used. This
-// component is the part that scrolls: glow + balance + action row.
+// component is the part that scrolls: glow + total balance + category cards.
+//
+// Category cards added below the hero figure (2026-09-13, direct
+// feedback: "balance cards, two on top, category crypto/money with caret,
+// value, underneath up or down — below balances, promo cards" — i.e. this
+// order: total balance, then the two cards, then the promo carousel one
+// level up in AssetsHomePage.tsx). Crypto uses the same real totals as the
+// hero figure above it (one summary, two presentations); Money is the
+// placeholder documented above.
 export function AssetsHomeHeader({ totalValue, changeAbs, changePercent }: AssetsHomeHeaderProps) {
   const isUp = changeAbs >= 0;
   return (
@@ -58,7 +61,7 @@ export function AssetsHomeHeader({ totalValue, changeAbs, changePercent }: Asset
       <div className={glowStyles.content}>
         <div className={styles.portfolio}>
           <Text type="label" color="secondary">
-            All mainnets
+            Total balance
           </Text>
           <Heading level={1} type="display-1" className={styles.balance}>
             ${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -71,17 +74,10 @@ export function AssetsHomeHeader({ totalValue, changeAbs, changePercent }: Asset
             <TrendDelta value={changePercent} />
           </div>
         </div>
-        <div className={styles.actionRow}>
-          {ACTIONS.map(({ id, label, icon }) => (
-            <Button key={id} label={label} variant="secondary" className={styles.action}>
-              <span className={styles.actionContent}>
-                <Icon icon={icon} size="md" />
-                <Text type="supporting" color="inherit">
-                  {label}
-                </Text>
-              </span>
-            </Button>
-          ))}
+        <div className={styles.categoryRow}>
+          <BalanceCategoryCard label="Crypto" value={totalValue} changeAbs={changeAbs} changePercent={changePercent} />
+          <BalanceCategoryCard label="Money" value={MONEY_PLACEHOLDER.value} changeAbs={MONEY_PLACEHOLDER.changeAbs}
+            changePercent={MONEY_PLACEHOLDER.changePercent} />
         </div>
       </div>
     </div>
