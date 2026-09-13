@@ -61,7 +61,18 @@
   pointer-events: none;
 }
 
+/* Messages stack from the bottom and get pushed up by newer ones
+   (2026-09-13, direct feedback: "messaging in voice chat should start at
+   the bottom and be pushed up by newer messages — atm it starts on top").
+   flex-end inside the scroll container is the same mechanism
+   MobileFrame.module.css's own .composerTranscript already uses for the
+   composer-mode transcript, so both assistant surfaces stack alike rather
+   than one starting at the top and the other at the bottom. */
 .transcript {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--shell-gap);
   flex: 1;
   min-height: 0;
   overflow-y: auto;
