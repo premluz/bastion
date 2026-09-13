@@ -41,17 +41,19 @@
      fully opaque, independent of the inset. A single --shell-mask-fade
      conflated the two — shrinking it moved the fade's start AND its
      height together, when only the start needed to move. */
-  /* Inset dropped to 0, span down to 8px (2026-09-13, third follow-up).
-     Reproduced live against Explore's own dense rows (~40-50px each):
-     with inset at 0 and an 8px span, the first row still measured 8px
-     into the page — inside the span itself — and its computed opacity
-     confirmed the mask was genuinely cutting it to ~50% alpha, not a
-     screenshot artifact. Standing instruction had been to keep or grow
-     the span and only move the inset; confirmed with Prem that this case
-     needed the span reduced too, since inset alone could not clear a row
-     that sits inside the ramp's own height. */
+  /* Corrected direction (2026-09-13, fourth follow-up, against an actual
+     mockup): the *previous* washed-out look on Explore turned out to be a
+     completely different, unrelated overlay (.header::after, fixed
+     separately — see MobileFrame.module.css) — not this mask. Shrinking
+     the span to 8px here was chasing the wrong bug: it produced a short,
+     hard-edged ramp buried deep into the content, when the actual ask
+     (shown against a side-by-side mockup) was the opposite — a long,
+     soft gradient anchored right at the header/nav edge. Inset stays at
+     0 (fade starts right at the edge, no dead gap first); span goes back
+     up to a generous 64px so the ramp itself reads as smooth, not a thin
+     line. */
   --shell-mask-inset: 0px;
-  --shell-mask-span: var(--space-8);
+  --shell-mask-span: var(--space-64);
   --shell-transcript-mask: linear-gradient(to bottom,
     transparent, transparent var(--shell-mask-inset),
     var(--surface-0) calc(var(--shell-mask-inset) + var(--shell-mask-span)),
