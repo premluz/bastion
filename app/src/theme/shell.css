@@ -25,15 +25,29 @@
      Uses --shell-fade-height (48px) instead, the same span Home's own
      scroll-under-header fade already uses, so both read as the same
      global fade language rather than two different distances. */
-  /* The mask's own fade distance, separate from --shell-fade-height
+  /* The mask's own fade geometry, separate from --shell-fade-height
      (2026-09-13, direct feedback: "should be smaller, that gradient top
-     shadow"). Its own token because --shell-fade-height is load-bearing
+     shadow"). Its own tokens because --shell-fade-height is load-bearing
      for five other things — the dock fade's height, .content's padding,
-     the history and buy transcripts' padding — and shrinking the fade
-     should not move any of those. */
-  --shell-mask-fade: var(--space-12);
-  --shell-transcript-mask: linear-gradient(to bottom, transparent, var(--surface-0) var(--shell-mask-fade),
-    var(--surface-0) calc(100% - var(--shell-mask-fade)), transparent);
+     the history and buy transcripts' padding — and shrinking this fade
+     should not move any of those.
+     Two numbers, not one (2026-09-13 follow-up, direct feedback: "upper
+     one should be higher, bottom one should be lower — height to keep
+     gradient fade remain or even slight larger, what matters more is
+     reducing the BEGINNING of the fade zone, not the gradient zone"):
+     --shell-mask-inset is where full transparency starts (pushed toward
+     the edge shrinks how much content is invisible before any fade
+     begins); --shell-mask-span is the ramp's own height from there to
+     fully opaque, independent of the inset. A single --shell-mask-fade
+     conflated the two — shrinking it moved the fade's start AND its
+     height together, when only the start needed to move. */
+  --shell-mask-inset: var(--space-4);
+  --shell-mask-span: var(--space-16);
+  --shell-transcript-mask: linear-gradient(to bottom,
+    transparent, transparent var(--shell-mask-inset),
+    var(--surface-0) calc(var(--shell-mask-inset) + var(--shell-mask-span)),
+    var(--surface-0) calc(100% - var(--shell-mask-inset) - var(--shell-mask-span)),
+    transparent calc(100% - var(--shell-mask-inset)), transparent);
   /* 414px — the iPhone Plus/Pro Max logical width, the widest phone tier
      this shell targets. The frame fills the viewport height and is capped
      only on width, so header pins to the top and nav to the bottom at any
