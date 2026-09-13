@@ -3,7 +3,10 @@ import type { ChatComposerInputHandle } from '@astryxdesign/core/Chat';
 import type { TabDestination } from './TabBar';
 import { parseBuyEthAmount } from '../../engine/buyEthScenes';
 import { createKeywordResolver } from '../../engine/resolver/keywordResolver';
+import { playTrail } from '../../engine/trailPlayer';
+import { useTrailStore } from '../../engine/stores/trailStore';
 import type { HydratedScene } from '../../contracts/scene';
+import type { ThinkingStep } from '../../contracts/thinking';
 
 export type ShellPreviewMode = 'idle' | 'composer' | 'conversation';
 
@@ -17,28 +20,44 @@ export interface MobileFrameProps {
 export interface TranscriptMessage {
   id: number;
   text: string;
-  // Set once the keyword resolver settles (undefined while pending/no
-  // match) — same manifest/keywordResolver ChatBar.tsx already uses on
-  // desktop, called directly rather than through submitQuery/presentScene:
-  // those orchestrate sessionStore/artifactStore, Merlin's desktop
-  // artifact-stack overlay model that CLAUDE.md §3 says does not carry
-  // over to a single-column mobile shell. Resolving directly and
-  // rendering SceneRenderer inline (MobileFrame.tsx, same shape
-  // BuyEthTranscript.tsx already established for the buy-flow's own
-  // hand-built scenes) is the mobile-appropriate equivalent.
+  // Settled trail (2026-09-13): only present once playTrail's own
+  // onComplete has fired for this message — mirrors Transcript.tsx's own
+  // settled-vs-live split (a past turn's frozen turn.trail/
+  // trailElapsedMs vs. the one turn currently in flight, read live from
+  // useTrailStore). Bastion has no sessionStore turn to freeze this onto,
+  // so it lives on the message itself instead.
+  trail?: ThinkingStep[];
+  trailElapsedMs?: number;
+  // Set once the trail completes (undefined while pending/no match) —
+  // same manifest/keywordResolver ChatBar.tsx already uses on desktop,
+  // resolved directly rather than through submitQuery/presentScene: those
+  // orchestrate sessionStore/artifactStore, Merlin's desktop artifact-
+  // stack overlay model that CLAUDE.md §3 says does not carry over to a
+  // single-column mobile shell. playTrail/useTrailStore themselves carry
+  // no such coupling (a plain zustand store, pure-props ThinkingTrail) —
+  // reused as-is, same sequencing presentScene.ts already establishes:
+  // trail plays first, scene attaches only once it completes.
   scene?: HydratedScene;
 }
 
-// Storybook-local state, now with live scene resolution — the resolver
-// call is real (same keywordResolver/manifest.json ChatBar.tsx uses), but
-// there is still no page store, session/artifact store, or microphone
-// access; those remain out of scope until Phase 4/6 (CLAUDE.md).
+// Storybook-local state, now with live scene resolution and a real
+// thinking-trail playback — the resolver and trail player calls are real
+// (same keywordResolver/manifest.json/trailPlayer ChatBar.tsx and
+// presentScene.ts already use on desktop), but there is still no page
+// store, session/artifact store, or microphone access; those remain out
+// of scope until Phase 4/6 (CLAUDE.md).
 export function useMobileFrame({ initialMode = 'idle', initialMessages = [], initialPurchaseQuery = '' }: MobileFrameProps) {
   const [purchaseQuery, setPurchaseQuery] = useState(initialPurchaseQuery);
   const [mode, setMode] = useState<ShellPreviewMode>(initialMode);
   const [activeTab, setActiveTab] = useState<TabDestination>('home');
   const [value, setValue] = useState('');
   const [messages, setMessages] = useState<TranscriptMessage[]>(() => initialMessages.map((text, id) => ({ id, text })));
+  // Which message is currently playing its trail live (null = none) —
+  // MobileFrame reads useTrailStore directly for this one message only,
+  // the same "one turn in flight" model useTrailStore's own single-slot
+  // shape already assumes (playTrail's generation counter supersedes
+  // whatever's in flight on a second query, same as desktop).
+  const [liveTrailMessageId, setLiveTrailMessageId] = useState<number | null>(null);
   const nextId = useRef(initialMessages.length);
   const resolver = useMemo(() => createKeywordResolver(), []);
   const inputRef = useRef<ChatComposerInputHandle>(null);
@@ -63,16 +82,27 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
     // Fire-and-attach: the message is already in the transcript by the time
     // this settles, same "honest non-match" contract submitQuery.ts
     // documents — a null result just leaves the message plain text, no
-    // scene attached, never a crash or a stuck loading state.
+    // trail and no scene attached, never a crash or a stuck loading state.
     void resolver.resolve(trimmed).then((resolved) => {
       if (!resolved) return;
-      setMessages((current) => current.map((message) => (message.id === id ? { ...message, scene: resolved.scene } : message)));
+      setLiveTrailMessageId(id);
+      playTrail(resolved.scene.thinking, () => {
+        // playTrail's own finishNow() calls useTrailStore.getState().finish()
+        // before invoking this callback, so elapsedMs is already the real
+        // settled duration here — same read presentScene.ts does at this
+        // exact point, not a fresh Date.now() timestamp.
+        const trailElapsedMs = useTrailStore.getState().elapsedMs;
+        setLiveTrailMessageId((current) => (current === id ? null : current));
+        setMessages((current) => current.map((message) => (message.id === id
+          ? { ...message, scene: resolved.scene, trail: resolved.scene.thinking, trailElapsedMs }
+          : message)));
+      });
     });
   };
   const selectTab = (tab: TabDestination) => { setActiveTab(tab); setMode('idle'); };
   const openConversation = () => { submit(value); setMode('conversation'); };
   const toggleComposer = () => setMode((current) => current === 'idle' ? 'composer' : 'idle');
   const closeComposer = () => { setMode('idle'); assistantRef.current?.focus(); };
-  return { mode, setMode, activeTab, value, setValue, messages, inputRef, submit, purchaseQuery, setPurchaseQuery,
+  return { mode, setMode, activeTab, value, setValue, messages, liveTrailMessageId, inputRef, submit, purchaseQuery, setPurchaseQuery,
     selectTab, openConversation, toggleComposer, assistantRef, closeComposer, conversationRef };
 }
