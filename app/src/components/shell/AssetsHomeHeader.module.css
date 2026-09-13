@@ -3,14 +3,14 @@
    bottom (2026-09-13, once this stopped being the page's own top-level
    root after the avatar/search row moved out to MobileFrame's shared
    header). Top padding only, so the balance doesn't sit flush against the
-   fade zone under the fixed header. */
+   fade zone under the fixed header — reduced to --space-8 (2026-09-13
+   follow-up, direct feedback: "smaller top padding") from --shell-inset. */
 .root {
-  padding-block-start: var(--shell-inset);
+  padding-block-start: var(--space-8);
 }
 
 /* Portfolio value is the screen's hero figure: centred, with its own
-   breathing room above and below, and a step larger than display-1's own
-   --text-32 ceiling. */
+   breathing room above and below. */
 .portfolio {
   display: flex;
   flex-direction: column;
@@ -19,9 +19,14 @@
   padding-block: var(--space-24);
 }
 
+/* --text-32, not --text-40 (2026-09-13 follow-up, direct feedback:
+   "main balance also smaller") — steps back down to display-1's own
+   built-in ceiling rather than the custom hero size added earlier the
+   same day, now that the category cards below carry some of the visual
+   weight the single oversized figure used to hold alone. */
 .balance {
   font-variant-numeric: tabular-nums;
-  font-size: var(--text-40);
+  font-size: var(--text-32);
 }
 
 .changeRow {

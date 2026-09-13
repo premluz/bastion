@@ -1,14 +1,28 @@
-/* Padding comes from Card's own padding={4} prop, not here. */
+/* calc() against the frame's own known width, not a bare % (2026-09-13
+   follow-up, direct feedback: "2.5 (two and a half) [cards] always
+   visible, scrollable") — a % here resolves against Carousel's own
+   scroller, which sizes itself to fit its content rather than stretching
+   to the visible track, so a %-based card width created a feedback loop
+   (measured live: cards rendered at ~19% of the frame instead of the
+   intended 40%, confirmed before reaching for calc() instead of guessing
+   why). --shell-frame-max-width minus .body's own left+right
+   --shell-inset is the real visible track width; dividing by 2.5 puts two
+   cards fully in view plus a peek of the third. No Card-level padding now
+   (see PromoCard.tsx): overflow:hidden is what clips the edge-to-edge art
+   to the card's own rounded corners. */
 .root {
   display: flex;
   flex-direction: column;
-  gap: var(--space-12);
-  width: calc(var(--space-64) * 3);
+  width: calc((var(--shell-frame-max-width) - var(--shell-inset) * 2) / 2.5);
   flex-shrink: 0;
+  overflow: hidden;
 }
 
-/* --surface-1, not --surface-2/-3 (2026-09-13 follow-up): checked the
-   actual resolved values across all four surface tokens in this theme —
+/* Edge-to-edge (2026-09-13 follow-up, direct feedback: "images inside
+   promo cards carousel should be edge to edge") — no side/top margin or
+   padding, spans the card's own full width. --surface-1, not
+   --surface-2/-3 (2026-09-13, same-day follow-up): checked the actual
+   resolved values across all four surface tokens in this theme —
    --surface-0/-2/-3 all resolve to the same dark-mode value as the page
    background, only --surface-1 is genuinely distinguishable from the page
    background this card sits on. --surface-2's name suggested "one step up
@@ -19,7 +33,12 @@
   align-items: center;
   justify-content: center;
   height: var(--space-64);
-  border-radius: var(--radius-12);
   background: var(--surface-1);
   font-size: var(--text-32);
+}
+
+/* Title's own padding, now that Card carries none (2026-09-13 follow-up) —
+   the art block above is edge-to-edge, only the text below is inset. */
+.body {
+  padding: var(--space-12);
 }

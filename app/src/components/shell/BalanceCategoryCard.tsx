@@ -27,12 +27,19 @@ export function BalanceCategoryCard({ label, value, changeAbs, changePercent }: 
   return (
     <Card className={`${styles.root} panelFlat`} padding={4}>
       <div className={styles.labelRow}>
-        <Text type="label" color="secondary">
+        {/* supporting, not label (2026-09-13 follow-up, direct feedback:
+            "crypto and money labels in balances smaller") — one step down
+            on the type ramp. */}
+        <Text type="supporting" color="secondary">
           {label}
         </Text>
         <Icon icon={ChevronRightIcon} size="sm" color="secondary" />
       </div>
-      <Text type="display-3" hasTabularNumbers className={styles.value}>
+      {/* body + semibold, not display-3 (2026-09-13 follow-up, direct
+          feedback: "also smaller actual balance") — display-3 read too
+          close to the page's own Total balance hero figure; this value is
+          a secondary figure, not a second hero. */}
+      <Text type="body" weight="semibold" hasTabularNumbers className={styles.value}>
         ${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
       </Text>
       <div className={styles.changeRow}>

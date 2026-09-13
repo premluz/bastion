@@ -40,11 +40,6 @@
   --text-20: 20px;
   --text-24: 24px;
   --text-32: 32px;
-  /* Ramp topped out at 32, which display-1 already consumes — the wallet
-     home balance is the first figure that has to read as the screen's
-     single hero number, so it needs a step above it. Added as a primitive
-     rather than inlined in the component, per the tokens-only rule. */
-  --text-40: 40px;
 
   /* Motion */
   --duration-120: 120ms;

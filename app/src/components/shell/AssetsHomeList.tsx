@@ -23,8 +23,12 @@ import styles from './AssetsHomeList.module.css';
 // Peers/Notable-Movers already use for "row that browses to a detail
 // page" — passing onClick makes it render with real button semantics and
 // picks up .astryx-item:hover's existing project-wide hover rule
-// (theme.default.css) for free, no new CSS. className="panelFlat" layers
-// the same pane look on top, same as Card did.
+// (theme.default.css) for free, no new CSS.
+//
+// panelFlat dropped again (2026-09-13 follow-up, direct feedback: "coins
+// cards would not have bg") — rows are now bare Items: no border, no
+// background, hover still works since .astryx-item:hover fires off
+// onClick alone, independent of panelFlat.
 //
 // onClick must be unconditional, not gated on the caller passing a handler
 // (2026-09-13 follow-up): Item only renders as a real <button> — and only
@@ -48,7 +52,6 @@ export function AssetsHomeList({
       {rows.map((row) => (
         <Item
           key={row.entityId}
-          className="panelFlat"
           density="balanced"
           isSelected={row.entityId === selectedAssetId}
           startContent={<CoinLogo entityId={row.entityId} label={row.symbol} />}

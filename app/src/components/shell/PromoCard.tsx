@@ -22,13 +22,21 @@ interface PromoCardProps {
 // the exact same value as the page's --surface-0 background, making the
 // whole tile invisible against the page. Confirmed by screenshot, not
 // assumed from the token names.
+//
+// padding={0}, not omitted (2026-09-13 follow-up, direct feedback: "images
+// inside promo cards carousel should be edge to edge") — Card's own prop
+// defaults to 4 whenever the prop is left out (padding == null resolves to
+// 4 internally, confirmed by reading Card.tsx directly rather than
+// assuming "no prop" means "no padding"), which still wrapped the art
+// block in a gutter. Padding now lives only on the title row below the
+// art, via .body in the module CSS.
 export function PromoCard({ title, icon }: PromoCardProps) {
   return (
-    <Card className={`${styles.root} panelFlat`} padding={4}>
+    <Card className={`${styles.root} panelFlat`} padding={0}>
       <div className={styles.art} aria-hidden="true">
         {icon}
       </div>
-      <Text type="label" weight="semibold">
+      <Text type="label" weight="semibold" className={styles.body}>
         {title}
       </Text>
     </Card>
