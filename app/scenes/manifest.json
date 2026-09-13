@@ -1,4 +1,49 @@
 {
-  "_comment": "Bastion fork: Merlin's own fictional-world fixture scenes (asset-discovery, issuer-dossier, risk-desk-dashboard, hottest-crypto-week, etc.) were deleted here, not adapted in place, per the fork spec's 'prune, don't adapt' rule for universe/scene content. Bastion needs its own universe and fixture scenes authored fresh — this is the first real content task for whoever picks up Phase 1 (see CLAUDE.md's phase plan). Add entries here in the same {id, file, module, intents} shape once fixtures exist.",
-  "scenes": []
+  "_comment": "Bastion's first real fixture scenes (2026-09-13), authored by Prem, sourced from Merlin's asset-discovery genre and adapted to a crypto-native query. 'module' is required by ManifestEntry's TypeScript shape but unused on mobile — MobileFrame has no artifact-stack/investigations-page grouping to read it (that's Merlin's desktop shell only) — set to 'assistant' as the honest placeholder for 'this came from the assistant', not a real navigation destination.",
+  "scenes": [
+    {
+      "id": "hottest-crypto-week",
+      "file": "hottest-crypto-week.scene.json",
+      "module": "assistant",
+      "mount": "inline",
+      "intents": [
+        "hottest crypto this week",
+        "what are the hottest crypto this week",
+        "what's hot in crypto right now",
+        "which crypto assets are moving this week",
+        "biggest crypto movers this week",
+        "top crypto assets right now",
+        "show me trending crypto"
+      ]
+    },
+    {
+      "id": "hottest-crypto-week-refine",
+      "file": "hottest-crypto-week-refine.scene.json",
+      "module": "assistant",
+      "mount": "inline",
+      "intents": [
+        "41% weekly move",
+        "what drove zenith's 41% weekly move",
+        "why did zenith protocol move 41% this week",
+        "zenith protocol 41 percent move",
+        "break down zenith's weekly move",
+        "what's behind zenith's move this week",
+        "zenith weekly move breakdown"
+      ]
+    },
+    {
+      "id": "hottest-crypto-week-refine-refine",
+      "file": "hottest-crypto-week-refine-refine.scene.json",
+      "module": "assistant",
+      "mount": "inline",
+      "intents": [
+        "compare zenith with peers",
+        "compare zenith protocol with peers",
+        "how does zenith compare to other governance tokens",
+        "zenith protocol peer comparison",
+        "compare zenith to similar defi tokens",
+        "zenith vs other governance tokens"
+      ]
+    }
+  ]
 }

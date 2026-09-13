@@ -1,0 +1,178 @@
+{
+  "id": "hottest-crypto-week-refine-refine",
+  "title": "Zenith Protocol vs. Governance-Token Peers",
+  "intents": [
+    "compare zenith with peers",
+    "compare zenith protocol with peers",
+    "how does zenith compare to other governance tokens",
+    "zenith protocol peer comparison",
+    "compare zenith to similar defi tokens",
+    "zenith vs other governance tokens"
+  ],
+  "thinking": [
+    {
+      "id": "plan",
+      "kind": "plan",
+      "label": "Identifying DeFi governance tokens comparable to Zenith Protocol by market cap and use case",
+      "durationMs": 700
+    },
+    {
+      "id": "search",
+      "kind": "search",
+      "label": "Pulling current price, liquidity, and supply figures for Aurion Governance and Brightlane DAO from MarketTape",
+      "sources": [{ "name": "MarketTape", "ref": "governance-token-peers" }],
+      "durationMs": 1100
+    },
+    {
+      "id": "correlate",
+      "kind": "correlate",
+      "label": "Lining up market cap, liquidity, and circulating supply across all three tokens",
+      "durationMs": 900
+    },
+    {
+      "id": "synthesize",
+      "kind": "synthesize",
+      "label": "Positioning Zenith within the peer set on size and liquidity",
+      "confidence": 0.74,
+      "durationMs": 1000
+    }
+  ],
+  "data": {
+    "peer-return-volume-scatter": {
+      "kind": "scatter",
+      "points": [
+        { "label": "ZNTH", "x": 82, "y": 41, "entityId": "zenith-protocol" },
+        { "label": "Aurion", "x": 24, "y": 6, "entityId": "aurion-governance" },
+        { "label": "Brightlane", "x": 38, "y": 10, "entityId": "brightlane-dao" }
+      ]
+    },
+    "peer-criteria-table": {
+      "kind": "table",
+      "columns": [
+        { "key": "dimension", "label": "Criteria", "type": "string" },
+        { "key": "zenith", "label": "Zenith Protocol", "type": "string" },
+        { "key": "aurion", "label": "Aurion Governance", "type": "string" },
+        { "key": "brightlane", "label": "Brightlane DAO", "type": "string" }
+      ],
+      "rows": [
+        { "dimension": "7D Momentum", "zenith": "🔥 Very High", "aurion": "Low", "brightlane": "Medium" },
+        { "dimension": "Liquidity", "zenith": "Medium", "aurion": "Low", "brightlane": "🔥 Very High" },
+        { "dimension": "Volatility", "zenith": "🔥 Very High", "aurion": "Low", "brightlane": "Medium" },
+        { "dimension": "Catalyst Risk", "zenith": "High", "aurion": "Low", "brightlane": "Low" },
+        { "dimension": "Sentiment", "zenith": "🔥 Very High", "aurion": "Medium", "brightlane": "Medium" }
+      ]
+    },
+    "peer-comparison-table": {
+      "kind": "table",
+      "columns": [
+        { "key": "dimension", "label": "Dimension", "type": "string" },
+        { "key": "zenith", "label": "Zenith Protocol", "type": "string" },
+        { "key": "aurion", "label": "Aurion Governance", "type": "string" },
+        { "key": "brightlane", "label": "Brightlane DAO", "type": "string" }
+      ],
+      "rows": [
+        { "dimension": "Price", "zenith": "$3.47", "aurion": "$1.92", "brightlane": "$8.15" },
+        { "dimension": "Market Cap", "zenith": "$185M", "aurion": "$96M", "brightlane": "$412M" },
+        { "dimension": "Liquidity", "zenith": "Moderate", "aurion": "Thin", "brightlane": "Deep" },
+        { "dimension": "Circulating Supply", "zenith": "53.2M tokens", "aurion": "50.1M tokens", "brightlane": "50.6M tokens" },
+        { "dimension": "Launch Date", "zenith": "2026-01-15", "aurion": "2025-09-03", "brightlane": "2024-11-20" }
+      ]
+    }
+  },
+  "layout": {
+    "id": "root",
+    "type": "scene-grid",
+    "reveal": 0,
+    "children": [
+      {
+        "id": "hottest-crypto-week-refine-refine-scatter",
+        "type": "risk-return-scatter",
+        "reveal": 1,
+        "bind": { "data": "peer-return-volume-scatter" },
+        "props": {
+          "title": "7-day return vs. volume",
+          "xAxisLabel": "Volume",
+          "yAxisLabel": "7D Return",
+          "subjectEntityId": "zenith-protocol"
+        }
+      },
+      {
+        "id": "hottest-crypto-week-refine-refine-standouts",
+        "type": "text-block",
+        "reveal": 2,
+        "props": {
+          "text": "What stands out — ZNTH is the clear outperformer: +41% vs. +10% for the next-best peer over the period. But it carries more risk: ZNTH's volume and volatility are materially higher than the peer group. Catalyst matters: unlike the peers, ZNTH's move coincided with the ZIP-14 treasury buyback event."
+        }
+      },
+      {
+        "id": "hottest-crypto-week-refine-refine-criteria-table",
+        "type": "data-table",
+        "reveal": 3,
+        "bind": { "data": "peer-criteria-table" },
+        "props": { "title": "Peer scorecard" }
+      },
+      {
+        "id": "hottest-crypto-week-refine-refine-criteria-comment",
+        "type": "text-block",
+        "reveal": 4,
+        "props": {
+          "text": "Zenith has the strongest momentum, but its volatility and catalyst risk both sit well above the peer group — the buyback that drove this week's move is a real, one-time event, not a settled trend."
+        }
+      },
+      {
+        "id": "hottest-crypto-week-refine-refine-table",
+        "type": "data-table",
+        "reveal": 5,
+        "bind": { "data": "peer-comparison-table" },
+        "props": { "title": "Zenith vs. peers" }
+      },
+      {
+        "id": "hottest-crypto-week-refine-refine-conclusion",
+        "type": "text-block",
+        "reveal": 6,
+        "props": {
+          "text": "ZNTH has the strongest momentum, but you're paying for it with substantially higher volatility. Brightlane DAO offers less upside momentum but a more conservative risk profile."
+        }
+      },
+      {
+        "id": "hottest-crypto-week-refine-refine-chart-zenith",
+        "type": "asset-trend-card",
+        "reveal": 7,
+        "props": {
+          "id": "zenith-protocol",
+          "name": "Zenith Protocol",
+          "symbol": "ZNTH",
+          "seed": "zenith-protocol",
+          "isUp": true,
+          "days": 75
+        }
+      },
+      {
+        "id": "hottest-crypto-week-refine-refine-chart-aurion",
+        "type": "asset-trend-card",
+        "reveal": 8,
+        "props": {
+          "id": "aurion-governance",
+          "name": "Aurion Governance",
+          "symbol": "AURN",
+          "seed": "aurion-governance",
+          "isUp": false,
+          "days": 75
+        }
+      },
+      {
+        "id": "hottest-crypto-week-refine-refine-chart-brightlane",
+        "type": "asset-trend-card",
+        "reveal": 9,
+        "props": {
+          "id": "brightlane-dao",
+          "name": "Brightlane DAO",
+          "symbol": "BDAO",
+          "seed": "brightlane-dao",
+          "isUp": true,
+          "days": 75
+        }
+      }
+    ]
+  }
+}

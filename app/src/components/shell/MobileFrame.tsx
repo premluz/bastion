@@ -1,5 +1,9 @@
 import { useId } from 'react';
 import { Avatar } from '@astryxdesign/core/Avatar';
+import { Button } from '@astryxdesign/core/Button';
+import { AccountExperience } from './AccountExperience';
+import { BuyEthConversation } from './BuyEthConversation';
+import { parseBuyEthAmount } from '../../engine/buyEthScenes';
 import { ChatMessage, ChatMessageBubble } from '@astryxdesign/core/Chat';
 import { Icon } from '@astryxdesign/core/Icon';
 import { IconButton } from '@astryxdesign/core/IconButton';
@@ -10,6 +14,7 @@ import { ChatBarComposer } from './ChatBarComposer';
 import { ConversationModeOverlay } from './ConversationModeOverlay';
 import { TabBar } from './TabBar';
 import { useMobileFrame, type MobileFrameProps } from './useMobileFrame';
+import { SceneRenderer } from '../../renderer/SceneRenderer';
 import styles from './MobileFrame.module.css';
 
 // Bastion's mobile app shell — the counterpart to Merlin's Frame.tsx, and
@@ -20,8 +25,16 @@ import styles from './MobileFrame.module.css';
 export function MobileFrame(props: MobileFrameProps) {
   const state = useMobileFrame(props);
   const composerId = useId();
-  const transcript = state.messages.map(({ id, text }) => (
-    <ChatMessage sender="user" key={id}><ChatMessageBubble>{text}</ChatMessageBubble></ChatMessage>
+  // Resolved scenes render right after their own message (2026-09-13),
+  // same shape BuyEthTranscript.tsx already established for the buy-flow's
+  // hand-built scenes: <ChatMessage> for the query, <SceneRenderer> beneath
+  // it for the result — the live keywordResolver call lives in
+  // useMobileFrame's own submit, not here.
+  const transcript = state.messages.map(({ id, text, scene }) => (
+    <div key={id}>
+      <ChatMessage sender="user"><ChatMessageBubble>{text}</ChatMessageBubble></ChatMessage>
+      {scene && <SceneRenderer scene={scene} />}
+    </div>
   ));
   // Home tab (2026-09-12, revised 2026-09-13): renders AssetsHomePage below
   // the SAME shared avatar/search header every other tab uses, rather than
@@ -39,12 +52,16 @@ export function MobileFrame(props: MobileFrameProps) {
   // had nothing left to animate and the content vanished outright
   // instead of scaling and blurring back.
   const isHome = state.activeTab === 'home';
+  const purchaseAmount = parseBuyEthAmount(state.purchaseQuery);
+  if (purchaseAmount !== null) return <BuyEthConversation query={state.purchaseQuery} amount={purchaseAmount}
+    onClose={() => { state.setPurchaseQuery(''); state.setMode('composer'); }} />;
   return (
     <div className={styles.stage}>
       <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode}>
+        <AccountExperience initialView={props.initialAccountView ?? 'closed'}>{(openAccounts) => (
         <div className={styles.chrome} inert={state.mode === 'conversation'} aria-hidden={state.mode === 'conversation'}>
           <header className={styles.header} aria-label="Asset search">
-            <Avatar name="Preview user" size="small" />
+            <Button label="Open account menu" variant="ghost" onClick={openAccounts}><Avatar name="Preview user" size="small" /></Button>
             <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />
           </header>
           {isHome ? (
@@ -83,7 +100,7 @@ export function MobileFrame(props: MobileFrameProps) {
                     variant="ghost" onClick={state.openConversation} ref={state.conversationRef} />
                 </>} /></div></div>
             </section>
-          </footer></div></div>
+          </footer></div> )}</AccountExperience></div>
       <ConversationModeOverlay isOpen={state.mode === 'conversation'} onClose={() => state.setMode('composer')} sharedOrb>
         {transcript}
       </ConversationModeOverlay>
