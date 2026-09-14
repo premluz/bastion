@@ -1,3 +1,5 @@
+import { useSendMoneyFlows } from '../../engine/useSendMoneyFlows';
+import { SendMoneyTranscript } from './SendMoneyTranscript';
 import { Avatar } from '@astryxdesign/core/Avatar';
 import { Button } from '@astryxdesign/core/Button';
 import { AccountExperience } from './AccountExperience';
@@ -23,6 +25,7 @@ import styles from './MobileFrame.module.css';
 export function MobileFrame(props: MobileFrameProps) {
   const state = useMobileFrame(props);
   const explore = useExploreNavigation();
+  const send = useSendMoneyFlows(state.messages);
   // Live trail state (2026-09-13) — subscribed via the hook, not
   // getState(), so this component re-renders as playTrail advances
   // activeIndex/elapsedMs. Read unconditionally (cheap, a handful of
@@ -63,6 +66,7 @@ export function MobileFrame(props: MobileFrameProps) {
           <ThinkingTrail steps={trail} activeIndex={trail.length - 1} isComplete elapsedMs={trailElapsedMs ?? 0} skip={null} />
         )}
         {scene && <SceneRenderer scene={scene} />}
+        {send.flows[id] && <SendMoneyTranscript state={send.flows[id]} dispatch={(action) => send.dispatch(id, action)} />}
         {/* Buy flow renders inline, as one more result under its own
             message (2026-09-13, direct feedback: "inline — for all
             scenarios entering into composer just runs the scenario in
@@ -102,6 +106,13 @@ export function MobileFrame(props: MobileFrameProps) {
             <Button label="Open account menu" variant="ghost" onClick={openAccounts}><Avatar name="Preview user" size="small" /></Button>
             <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />
           </header>
+          {/* Independent overlay elements, not .header/.dock pseudo-elements
+              (2026-09-14, direct feedback: header painted under its own
+              shadow, and the bottom shadow sat at the dock's own edge
+              instead of the page's true bottom) — see MobileFrame.module.css
+              for the full reasoning. Sit in .chrome directly, between the
+              page and the header/dock's own z-index. */}
+          <div className={styles.topFade} aria-hidden="true" />
           {isHome ? (
             <main className={styles.page} aria-label="Home" tabIndex={0}>
               <AssetsHomePage />
@@ -125,6 +136,7 @@ export function MobileFrame(props: MobileFrameProps) {
             inert={state.mode !== 'composer'} aria-hidden={state.mode !== 'composer'}>
             {transcript}
           </div>
+          <div className={styles.bottomFade} aria-hidden="true" />
           <MobileFrameDock state={state} variant={props.navigationVariant ?? 'pill'} /></div> )}</AccountExperience></div>
       <ConversationModeOverlay isOpen={state.mode === 'conversation'} onClose={() => state.setMode('composer')} sharedOrb={props.navigationVariant === 'classic'}>
         {transcript}

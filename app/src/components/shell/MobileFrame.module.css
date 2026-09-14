@@ -44,30 +44,40 @@
   position: absolute;
   inset-inline: 0;
   top: 0;
-  /* Above the page, so the avatar and search stay crisp over anything
-     scrolling beneath them. */
-  z-index: 2;
+  /* Above both the page AND the fade band below (z-index 3 > topFade's
+     2), so the avatar/search never sit under the fade's own dark wash
+     (2026-09-14, direct feedback: "header should not be under shadow"
+     — .header::after previously shared .header's own z-index and
+     stacking context, so the pseudo-element painted its gradient over
+     the header's real children instead of only over page content). */
+  z-index: 3;
   padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--shell-inset);
 }
 
 .header > :last-child { flex: 1; min-width: 0; }
 
-/* Moved from the header's own bottom edge to .chrome's true top/bottom
-   edges (2026-09-14): the header lost its opaque background, so its
-   fade must now soften content scrolling under the header itself, not
-   content below it — same for the dock's fade at the bottom edge. */
-.header::after,
-.dock::before {
-  content: '';
+/* Independent overlay elements, not .header/.dock pseudo-elements
+   (2026-09-14, direct feedback: header painted under its own shadow,
+   and the bottom shadow sat at the dock's own edge instead of the
+   page's true bottom). A pseudo-element is confined to its host's own
+   box and stacking context — .dock::before at bottom:0 painted across
+   the dock's own nav icons rather than the content above them, and
+   .header::after at top:0 painted over the header's real children
+   since both shared one z-index. These sit directly in .chrome, below
+   the header/dock's own z-index but above .page, spanning exactly
+   --shell-fade-height from each true edge. */
+.topFade,
+.bottomFade {
   position: absolute;
   inset-inline: 0;
   height: var(--shell-fade-height);
   background: var(--shell-fade);
   pointer-events: none;
+  z-index: 2;
 }
 
-.header::after { top: 0; }
-.dock::before { bottom: 0; transform: rotate(180deg); }
+.topFade { top: 0; }
+.bottomFade { bottom: 0; transform: rotate(180deg); }
 
 /* The dock's fade band is opaque --surface-0 at its top edge, so once the
    assistant opens it paints a hard horizontal seam straight across the
@@ -76,7 +86,7 @@
    edge). It earns its place in idle, softening content that scrolls under
    the nav; in composer/conversation the halo is what should read at the
    bottom, so the band stands down and the glow stays continuous. */
-.phone:not([data-mode='idle']) .dock::before { opacity: 0; }
+.phone:not([data-mode='idle']) .bottomFade { opacity: 0; }
 
 .content {
   display: flex;
@@ -183,11 +193,12 @@
 .dock {
   /* Overlays the page instead of sitting in flow below it, matching
      .header — .page/.content run the full phone height and the dock
-     floats on top at the bottom edge. */
+     floats on top at the bottom edge. z-index 3, matching .header:
+     above .bottomFade (2) so the nav icons never sit under its wash. */
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  z-index: 2;
+  z-index: 3;
 }
 .composer {
   display: grid;
