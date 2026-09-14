@@ -115,7 +115,7 @@
      itself fades content out as it reaches that edge instead. Same
      --shell-transcript-mask the conversation transcripts already use, so
      every scrolling surface in the shell fades alike. */
-  mask-image: var(--shell-transcript-mask);
+  mask: var(--shell-transcript-mask);
 }
 
 /* Opening the assistant recedes whatever is behind it: the page scales down
@@ -158,11 +158,11 @@
 .composerTranscript {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: safe flex-end;
   gap: var(--shell-gap);
   overflow-y: auto;
   overflow-wrap: anywhere;
-  mask-image: var(--shell-transcript-mask);
+  mask: var(--shell-transcript-mask);
   opacity: 0;
   pointer-events: none;
   /* Collapsed to nothing outside composer mode: .chrome is a flex column,

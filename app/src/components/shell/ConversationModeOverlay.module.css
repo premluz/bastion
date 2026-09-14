@@ -71,14 +71,14 @@
 .transcript {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: safe flex-end;
   gap: var(--shell-gap);
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overflow-wrap: anywhere;
   padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset);
-  mask-image: var(--shell-transcript-mask);
+  mask: var(--shell-transcript-mask);
 }
 
 .controls {

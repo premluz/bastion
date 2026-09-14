@@ -60,11 +60,23 @@
      inset (which stays 0 — the fade still starts right at the edge). */
   --shell-mask-inset: 0px;
   --shell-mask-span: var(--space-32);
+  /* mask-size defaults to auto, which does not size a gradient mask to the
+     element's own box — every consumer measured the fade reaching 100+px
+     into content regardless of --shell-mask-span (2026-09-14, live pixel
+     sampling: painted brightness at the "Trending"/"perpspad" rows stayed
+     well below full opacity at 80px and 130px down, though computed style
+     reported color/opacity as full-bright). Forcing 100% 100% no-repeat
+     makes the ramp span exactly the box's own height, matching the inset/
+     span math. This value is meaningless without mask-size/mask-repeat
+     alongside it, so it ships as one shorthand rather than a bare image —
+     every consumer uses `mask: var(--shell-transcript-mask);`, never
+     `mask-image`. */
   --shell-transcript-mask: linear-gradient(to bottom,
     transparent, transparent var(--shell-mask-inset),
     var(--surface-0) calc(var(--shell-mask-inset) + var(--shell-mask-span)),
     var(--surface-0) calc(100% - var(--shell-mask-inset) - var(--shell-mask-span)),
-    transparent calc(100% - var(--shell-mask-inset)), transparent);
+    transparent calc(100% - var(--shell-mask-inset)), transparent)
+    0 0 / 100% 100% no-repeat;
   /* 414px — the iPhone Plus/Pro Max logical width, the widest phone tier
      this shell targets. The frame fills the viewport height and is capped
      only on width, so header pins to the top and nav to the bottom at any
