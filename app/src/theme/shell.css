@@ -29,6 +29,14 @@
   --shell-radius: var(--radius-12);
   --shell-round: var(--radius-full);
   --shell-fade-height: var(--space-48);
+  /* .topFade/.bottomFade's own height (2026-09-14, direct feedback:
+     "make shadows top bottom more height... keep gradients, keep
+     position") — separate from --shell-fade-height since that token is
+     load-bearing for five other things (.content's padding, the
+     composer transcript's padding, history/buy transcript padding) that
+     were not asked to change. Same --shell-fade gradient, same top:0/
+     bottom:0 anchoring — only the band's own height grows. */
+  --shell-chrome-fade-height: var(--space-64);
   --shell-fade: linear-gradient(to bottom, var(--surface-0), transparent);
   /* Fade span was --shell-inset (16px) — nearly invisible against a
      ~700-900px transcript, reading as a hard cutoff rather than a soft

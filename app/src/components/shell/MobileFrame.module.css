@@ -70,7 +70,7 @@
 .bottomFade {
   position: absolute;
   inset-inline: 0;
-  height: var(--shell-fade-height);
+  height: var(--shell-chrome-fade-height);
   background: var(--shell-fade);
   pointer-events: none;
   z-index: 2;
