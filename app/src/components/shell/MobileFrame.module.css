@@ -48,11 +48,14 @@
      scrolling beneath them. */
   z-index: 2;
   padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--shell-inset);
-  background: var(--surface-0);
 }
 
 .header > :last-child { flex: 1; min-width: 0; }
 
+/* Moved from the header's own bottom edge to .chrome's true top/bottom
+   edges (2026-09-14): the header lost its opaque background, so its
+   fade must now soften content scrolling under the header itself, not
+   content below it — same for the dock's fade at the bottom edge. */
 .header::after,
 .dock::before {
   content: '';
@@ -63,24 +66,8 @@
   pointer-events: none;
 }
 
-.header::after { top: 100%; }
-.dock::before { bottom: 100%; transform: rotate(180deg); }
-
-/* Suppressed whenever .page is the sibling below (2026-09-13, direct
-   feedback tracing what actually painted the washed-out look on Explore
-   — this fixed 48px opaque-to-transparent overlay, not the mask-image
-   this session had spent the whole day tuning). .header is one
-   unconditional element shared by every tab; this ::after fires on all
-   of them, but only the true transcript path (.content) still needs it —
-   .page (Home, Explore) already carries its own scroll-aware
-   mask-image, so this overlay was stacking a second, always-on dark wash
-   directly under the header regardless of scroll position. Measured live
-   before this fix: the "Trending" label and filter chips reported
-   opacity:1 and the theme's own full-brightness --ink-primary colour,
-   proving the mask was not the cause — this fixed-height painted layer
-   was. */
-.chrome:has(.page) .header::after { display: none; }
-
+.header::after { top: 0; }
+.dock::before { bottom: 0; transform: rotate(180deg); }
 
 /* The dock's fade band is opaque --surface-0 at its top edge, so once the
    assistant opens it paints a hard horizontal seam straight across the
@@ -110,6 +97,12 @@
   position: absolute;
   inset: 0;
   overflow-y: auto;
+  /* Reserves space for the now-transparent header/dock at rest, so
+     content starts below them rather than immediately underneath —
+     scrolling is what slides content under the chrome, not the initial
+     layout (2026-09-14, direct feedback). */
+  padding-top: var(--shell-header-height);
+  padding-bottom: var(--shell-nav-height);
   /* The fade belongs to the scrolling page, not the header (2026-09-13,
      direct feedback: "maybe the shade gradient should not be part of the
      header"). A gradient painted in the header's band could never fix

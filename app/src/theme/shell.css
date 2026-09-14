@@ -12,6 +12,17 @@
   --shell-label-gap: var(--space-4);
   --shell-control-size: var(--space-48);
   --shell-nav-height: calc(var(--space-64) + var(--space-24));
+  /* Header's own rendered height (2026-09-14, live-measured: 64px at
+     414px width) — needed once .header became an absolute overlay
+     rather than a flex row, since .page/.content now must reserve this
+     much top padding themselves instead of getting it for free from
+     flow. Composed of the same tokens .header's own padding already
+     uses: one --shell-inset top/bottom (32px total) plus the 32px tall
+     content row (Avatar small + TextInput, both shorter than
+     --shell-control-size). Not derived from --shell-control-size
+     itself — the header's content row measures shorter than the 48px
+     control size token, so reusing that token here would overstate it. */
+  --shell-header-height: calc(var(--shell-inset) * 2 + var(--space-32));
   --shell-edge-width: calc(var(--space-2) / 2);
   --shell-focus-width: var(--space-2);
   --shell-focus-offset: var(--space-4);
