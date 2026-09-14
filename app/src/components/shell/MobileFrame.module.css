@@ -19,7 +19,7 @@
   font-family: var(--face-ui);
 }
 
-.chrome { display: flex; flex-direction: column; height: 100%; }
+.chrome { position: relative; height: 100%; }
 
 .phone::before {
   content: '';
@@ -38,7 +38,12 @@
   display: flex;
   align-items: center;
   gap: var(--shell-gap);
-  position: relative;
+  /* Overlays the page instead of pushing it down, so .page/.content can
+     run the phone's full height underneath — the header floats on top,
+     content scrolls its entire height including behind it. */
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
   /* Above the page, so the avatar and search stay crisp over anything
      scrolling beneath them. */
   z-index: 2;
@@ -90,8 +95,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--shell-gap);
-  flex: 1;
-  min-height: 0;
+  position: absolute;
+  inset: 0;
   overflow-y: auto;
   overflow-wrap: anywhere;
   padding: var(--shell-fade-height) var(--shell-inset);
@@ -102,8 +107,8 @@
    inset a page header that must sit flush at the top edge, which is what
    made Home's search row sit lower than the assistant view's. */
 .page {
-  flex: 1;
-  min-height: 0;
+  position: absolute;
+  inset: 0;
   overflow-y: auto;
   /* The fade belongs to the scrolling page, not the header (2026-09-13,
      direct feedback: "maybe the shade gradient should not be part of the
@@ -160,30 +165,37 @@
   flex-direction: column;
   justify-content: safe flex-end;
   gap: var(--shell-gap);
+  /* .header/.dock are absolute overlays now, so .chrome no longer
+     reserves flex space for this layer — it's its own full-height
+     overlay too, ending its bottom padding at --shell-nav-height so
+     messages stack up clear of the dock instead of running behind it. */
+  position: absolute;
+  inset: 0;
+  padding-top: var(--shell-nav-height);
+  padding-bottom: var(--shell-nav-height);
   overflow-y: auto;
   overflow-wrap: anywhere;
   mask: var(--shell-transcript-mask);
   opacity: 0;
   pointer-events: none;
-  /* Collapsed to nothing outside composer mode: .chrome is a flex column,
-     so a zero-basis, non-growing row takes no space and leaves the page/
-     dock layout in idle and conversation exactly as it was. */
-  flex: 0 0 0;
-  min-height: 0;
-  padding: 0 var(--shell-inset);
+  padding-inline: var(--shell-inset);
   transition: opacity var(--shell-mode-duration) var(--shell-mode-ease);
 }
 
-/* Takes the free space between the receded page and the dock in composer
-   mode, so flex-end sits just above the composer rather than behind it. */
 .phone[data-mode='composer'] .composerTranscript {
   opacity: 1;
   pointer-events: auto;
-  flex: 1 1 auto;
-  padding-block: var(--shell-inset);
 }
 
-.dock { position: relative; }
+.dock {
+  /* Overlays the page instead of sitting in flow below it, matching
+     .header — .page/.content run the full phone height and the dock
+     floats on top at the bottom edge. */
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 2;
+}
 .composer {
   display: grid;
   grid-template-rows: 0fr;
