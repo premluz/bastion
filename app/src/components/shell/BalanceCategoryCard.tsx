@@ -10,6 +10,7 @@ interface BalanceCategoryCardProps {
   value: number;
   changeAbs: number;
   changePercent: number;
+  onClick?: () => void;
 }
 
 // One category's own balance summary (2026-09-13, direct feedback: "two
@@ -22,10 +23,10 @@ interface BalanceCategoryCardProps {
 // element also carrying Astryx's own root class. A bare div rendered with
 // zero border and identical background to the page (caught in a
 // screenshot — the card was completely invisible against --surface-0).
-export function BalanceCategoryCard({ label, value, changeAbs, changePercent }: BalanceCategoryCardProps) {
+export function BalanceCategoryCard({ label, value, changeAbs, changePercent, onClick }: BalanceCategoryCardProps) {
   const isUp = changeAbs >= 0;
   return (
-    <Card className={`${styles.root} panelFlat`} padding={4}>
+    <Card className={`${styles.root} panelFlat`} padding={4} {...(onClick ? { onClick } : {})}>
       <div className={styles.labelRow}>
         {/* supporting, not label (2026-09-13 follow-up, direct feedback:
             "crypto and money labels in balances smaller") — one step down

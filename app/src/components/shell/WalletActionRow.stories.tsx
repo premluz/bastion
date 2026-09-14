@@ -5,3 +5,4 @@ const meta: Meta<typeof WalletActionRow> = { title: 'Shell/WalletActionRow', com
 export default meta;
 type Story = StoryObj<typeof WalletActionRow>;
 export const Default: Story = {};
+export const Money: Story = { args: { variant: 'money' } };

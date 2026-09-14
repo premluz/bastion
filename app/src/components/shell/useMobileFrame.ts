@@ -1,3 +1,4 @@
+import { parseSendRequest, type SendRequest } from '../../engine/sendMoneyState';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ChatComposerInputHandle } from '@astryxdesign/core/Chat';
 import type { TabDestination } from './TabBar';
@@ -49,6 +50,7 @@ export interface TranscriptMessage {
   // conversation mode: the nav and composer were not hidden, they were
   // gone.
   buyAmount?: number;
+  sendRequest?: SendRequest;
 }
 
 // Storybook-local state, now with live scene resolution and a real
@@ -60,13 +62,23 @@ export interface TranscriptMessage {
 export function useMobileFrame({ initialMode = 'idle', initialMessages = [], initialPurchaseQuery = '' }: MobileFrameProps) {
   const [mode, setMode] = useState<ShellPreviewMode>(initialMode);
   const [activeTab, setActiveTab] = useState<TabDestination>('home');
+  // Money is its own page, not a sheet overlay (2026-09-14, direct
+  // feedback: "treat it like a page not sheet") — plain local state
+  // gated under the Home tab, same lightweight model activeTab itself
+  // uses, rather than the AccountExperience-style animated sheet Account
+  // screens use. Reset to 'default' on any tab change so leaving Home and
+  // coming back never reopens Money from where it was left.
+  const [homeScreen, setHomeScreen] = useState<'default' | 'money'>('default');
   const [value, setValue] = useState('');
   // initialPurchaseQuery seeds a real transcript message rather than a
   // separate purchaseQuery state (2026-09-13): the buy flow now renders
   // inline like any other scenario, so a story asking to open on it is
   // just a story that starts with that message already submitted.
   const [messages, setMessages] = useState<TranscriptMessage[]>(() => {
-    const seeded: TranscriptMessage[] = initialMessages.map((text, id) => ({ id, text }));
+    const seeded: TranscriptMessage[] = initialMessages.map((text, id) => {
+      const sendRequest = parseSendRequest(text);
+      return { id, text, ...(sendRequest ? { sendRequest } : {}) };
+    });
     const buyAmount = initialPurchaseQuery ? parseBuyEthAmount(initialPurchaseQuery) : null;
     if (initialPurchaseQuery && buyAmount !== null) {
       seeded.push({ id: seeded.length, text: initialPurchaseQuery.trim(), buyAmount });
@@ -105,8 +117,10 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
     // resolver still runs for these too — "buy eth" simply matches no
     // manifest intent today, so it stays a plain message plus this flow.
     const buyAmount = parseBuyEthAmount(trimmed);
-    setMessages((current) => [...current, { id, text: trimmed, ...(buyAmount !== null ? { buyAmount } : {}) }]);
+    const sendRequest = parseSendRequest(trimmed);
+    setMessages((current) => [...current, { id, text: trimmed, ...(sendRequest ? { sendRequest } : {}), ...(buyAmount !== null ? { buyAmount } : {}) }]);
     setValue('');
+    if (sendRequest) return;
     // Fire-and-attach: the message is already in the transcript by the time
     // this settles, same "honest non-match" contract submitQuery.ts
     // documents — a null result just leaves the message plain text, no
@@ -127,10 +141,11 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
       });
     });
   };
-  const selectTab = (tab: TabDestination) => { setActiveTab(tab); setMode('idle'); };
+  const selectTab = (tab: TabDestination) => { setActiveTab(tab); setMode('idle'); setHomeScreen('default'); };
   const openConversation = () => { submit(value); setMode('conversation'); };
   const toggleComposer = () => setMode((current) => current === 'idle' ? 'composer' : 'idle');
   const closeComposer = () => { setMode('idle'); assistantRef.current?.focus(); };
   return { mode, setMode, activeTab, value, setValue, messages, liveTrailMessageId, inputRef, submit,
-    selectTab, openConversation, toggleComposer, assistantRef, closeComposer, conversationRef };
+    selectTab, openConversation, toggleComposer, assistantRef, closeComposer, conversationRef,
+    homeScreen, openMoney: () => setHomeScreen('money'), closeMoney: () => setHomeScreen('default') };
 }

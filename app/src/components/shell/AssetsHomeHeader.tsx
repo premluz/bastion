@@ -13,7 +13,11 @@ import styles from './AssetsHomeHeader.module.css';
 // yet"), this is an authored stand-in distinct from Crypto's own figures,
 // flagged here rather than silently treated as real data. Replace with a
 // real fiat/cash balance source if one is ever added to the universe.
-const MONEY_PLACEHOLDER = { value: 812.4, changeAbs: 2.46, changePercent: 0.3 };
+//
+// Shared with MoneyPage.tsx (2026-09-14) — the Money card on Home and the
+// Money page it opens must show the same balance; sourced from
+// moneySummary.ts rather than duplicated as two independent numbers.
+import { MONEY_PLACEHOLDER } from './moneySummary';
 
 // Action row (Buy/Send/Receive/Stake/Swap) moved out to its own
 // WalletActionRow.tsx component (2026-09-13, direct feedback: "remove
@@ -24,6 +28,7 @@ interface AssetsHomeHeaderProps {
   totalValue: number;
   changeAbs: number;
   changePercent: number;
+  onSelectMoney?: () => void;
 }
 
 // Balance glow (2026-09-12): reuses theme/glow.module.css's existing
@@ -48,7 +53,7 @@ interface AssetsHomeHeaderProps {
 // level up in AssetsHomePage.tsx). Crypto uses the same real totals as the
 // hero figure above it (one summary, two presentations); Money is the
 // placeholder documented above.
-export function AssetsHomeHeader({ totalValue, changeAbs, changePercent }: AssetsHomeHeaderProps) {
+export function AssetsHomeHeader({ totalValue, changeAbs, changePercent, onSelectMoney }: AssetsHomeHeaderProps) {
   const isUp = changeAbs >= 0;
   // unclipped, not clipped (2026-09-13): .clipped puts overflow:hidden on
   // the glow host, and that host is only as tall as the balance block
@@ -82,7 +87,7 @@ export function AssetsHomeHeader({ totalValue, changeAbs, changePercent }: Asset
         <div className={styles.categoryRow}>
           <BalanceCategoryCard label="Crypto" value={totalValue} changeAbs={changeAbs} changePercent={changePercent} />
           <BalanceCategoryCard label="Money" value={MONEY_PLACEHOLDER.value} changeAbs={MONEY_PLACEHOLDER.changeAbs}
-            changePercent={MONEY_PLACEHOLDER.changePercent} />
+            changePercent={MONEY_PLACEHOLDER.changePercent} {...(onSelectMoney ? { onClick: onSelectMoney } : {})} />
         </div>
       </div>
     </div>

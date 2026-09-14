@@ -8,6 +8,7 @@ import { useBuyEthFlow } from '../../engine/useBuyEthFlow';
 import { ChatMessage, ChatMessageBubble } from '@astryxdesign/core/Chat';
 import { TextInput } from '@astryxdesign/core/TextInput';
 import { AssetsHomePage } from './AssetsHomePage';
+import { MoneyPage } from './MoneyPage';
 import { ConversationModeOverlay } from './ConversationModeOverlay';
 import { MobileFrameDock } from './MobileFrameDock';
 import { useExploreNavigation } from './useExploreNavigation';
@@ -121,9 +122,13 @@ export function MobileFrame(props: MobileFrameProps) {
               for the full reasoning. Sit in .chrome directly, between the
               page and the header/dock's own z-index. */}
           <div className={styles.topFade} aria-hidden="true" />
-          {isHome ? (
+          {isHome && state.homeScreen === 'money' ? (
+            <main className={styles.page} aria-label="Money" tabIndex={0}>
+              <MoneyPage onBack={state.closeMoney} />
+            </main>
+          ) : isHome ? (
             <main className={styles.page} aria-label="Home" tabIndex={0}>
-              <AssetsHomePage />
+              <AssetsHomePage onSelectMoney={state.openMoney} />
             </main>
           ) : state.activeTab === 'markets' ? (
             <main className={styles.page} aria-label="Explore" tabIndex={0} onClick={explore.onClick}>

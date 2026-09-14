@@ -4,6 +4,12 @@
   gap: var(--space-8);
 }
 
+/* Three wider actions, not five narrow ones (2026-09-14) — Money's own
+   Add/Transfer/Card row per the wireframe. */
+.row[data-variant='money'] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .action {
   width: 100%;
   height: auto;

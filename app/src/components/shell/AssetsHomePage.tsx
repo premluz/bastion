@@ -41,7 +41,9 @@ const PROMOS = [
 // "remove tabs crypto earn etc.") — the list always shows crypto holdings
 // now, the only real data this page has; Earn/NFTs had no real data
 // either and only ever rendered an empty state.
-export function AssetsHomePage() {
+export interface AssetsHomePageProps { onSelectMoney?: () => void }
+
+export function AssetsHomePage({ onSelectMoney }: AssetsHomePageProps) {
   // Tracks which row is open — real state, not a stub, but with nowhere
   // to route yet (2026-09-13): Bastion's mobile shell has no ScreenStack
   // or asset-detail screen built (Phase 3/5, both still open per CLAUDE.md
@@ -56,7 +58,8 @@ export function AssetsHomePage() {
   return (
     <div className={styles.root}>
       <div className={styles.body}>
-        <AssetsHomeHeader totalValue={summary.totalValue} changeAbs={summary.changeAbs} changePercent={summary.changePercent} />
+        <AssetsHomeHeader totalValue={summary.totalValue} changeAbs={summary.changeAbs} changePercent={summary.changePercent}
+          {...(onSelectMoney ? { onSelectMoney } : {})} />
         <Carousel aria-label="Promotions" hasButtons={false} gap={2}>
           {PROMOS.map((promo) => (
             <PromoCard key={promo.id} title={promo.title} icon={'icon' in promo ? promo.icon : undefined} />
