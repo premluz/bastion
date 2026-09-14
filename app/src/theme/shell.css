@@ -23,6 +23,14 @@
      itself — the header's content row measures shorter than the 48px
      control size token, so reusing that token here would overstate it. */
   --shell-header-height: calc(var(--shell-inset) * 2 + var(--space-32));
+  /* Composer mode's own occupied bottom height (2026-09-14, direct
+     feedback: last transcript message sat behind the nav/quick-actions
+     row and the expanded composer input — screenshot showed "Paul
+     Morgan" cut off, ~200px hidden). --shell-nav-height alone only
+     covers the collapsed dock; composer mode also grows the pill quick-
+     actions row and the composer input above it, which --shell-nav-
+     height was never sized for. */
+  --shell-composer-height: calc(var(--shell-nav-height) + var(--space-64) + var(--space-48));
   --shell-edge-width: calc(var(--space-2) / 2);
   --shell-focus-width: var(--space-2);
   --shell-focus-offset: var(--space-4);

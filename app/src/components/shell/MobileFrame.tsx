@@ -15,6 +15,7 @@ import { useMobileFrame, type MobileFrameProps } from './useMobileFrame';
 import { SceneRenderer } from '../../renderer/SceneRenderer';
 import { ThinkingTrail } from '../trail/ThinkingTrail';
 import { useTrailStore } from '../../engine/stores/trailStore';
+import { useAutoScrollBottom } from './useAutoScrollBottom';
 import styles from './MobileFrame.module.css';
 
 // Bastion's mobile app shell — the counterpart to Merlin's Frame.tsx, and
@@ -97,6 +98,13 @@ export function MobileFrame(props: MobileFrameProps) {
   // had nothing left to animate and the content vanished outright
   // instead of scaling and blurring back.
   const isHome = state.activeTab === 'home';
+  // Pinned to the latest content (2026-09-14, direct feedback: a settled
+  // question card rendered below the fold with no way to see it besides
+  // scrolling manually). justify-content: flex-end only sets the initial
+  // resting position — it never reacts to the container growing taller
+  // once mounted, which is exactly when a card/message lands.
+  const composerScrollRef = useAutoScrollBottom();
+  const conversationScrollRef = useAutoScrollBottom();
   return (
     <div className={styles.stage}>
       <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode}>
@@ -132,13 +140,14 @@ export function MobileFrame(props: MobileFrameProps) {
               one of the receded background layers, so putting the
               transcript there would blur and fade the very thing this is
               meant to surface. */}
-          <div className={styles.composerTranscript} role="log" aria-label="Assistant transcript"
+          <div ref={composerScrollRef} className={styles.composerTranscript} role="log" aria-label="Assistant transcript"
             inert={state.mode !== 'composer'} aria-hidden={state.mode !== 'composer'}>
             {transcript}
           </div>
           <div className={styles.bottomFade} aria-hidden="true" />
           <MobileFrameDock state={state} variant={props.navigationVariant ?? 'pill'} /></div> )}</AccountExperience></div>
-      <ConversationModeOverlay isOpen={state.mode === 'conversation'} onClose={() => state.setMode('composer')} sharedOrb={props.navigationVariant === 'classic'}>
+      <ConversationModeOverlay isOpen={state.mode === 'conversation'} onClose={() => state.setMode('composer')} sharedOrb={props.navigationVariant === 'classic'}
+        scrollRef={conversationScrollRef}>
         {transcript}
       </ConversationModeOverlay>
     </div>

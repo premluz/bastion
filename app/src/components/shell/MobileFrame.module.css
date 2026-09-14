@@ -188,6 +188,11 @@
 .phone[data-mode='composer'] .composerTranscript {
   opacity: 1;
   pointer-events: auto;
+  /* Composer mode grows the pill quick-actions row and the composer
+     input above the collapsed dock height .composerTranscript's own
+     base padding assumes — without this the last message sits behind
+     both (2026-09-14, direct feedback, ~200px hidden). */
+  padding-bottom: var(--shell-composer-height);
 }
 
 .dock {
