@@ -4,16 +4,16 @@
   gap: var(--shell-gap);
 }
 
-/* Cards are absolutely stacked, so the track needs its own height — taken
-   from the card's own ID-1 aspect ratio so the deck reserves exactly one
-   card's box however many layers sit behind it. Overflow is hidden to
-   give the "kind of a mask over cards so not full cards are shown" the
-   reference shows (2026-09-16, direct feedback): rear cards peek from
-   behind the front one and clip at the deck's edge rather than spilling
-   into the page's own padding. */
+/* A short viewport, NOT one card's full height (2026-09-16, direct
+   feedback against a reference: "smaller card first of all... they are
+   not fully visible, there is a layer that has overflow hidden kind of a
+   mask"). The cards are deliberately taller than this band and anchored
+   to its bottom, so their upper portion is cut off — only the lower
+   strip (brand mark and bottom edge) reads, which is what makes the deck
+   look like cards tucked into a wallet rather than three full cards. */
 .track {
   position: relative;
-  aspect-ratio: 1.586 / 1;
+  height: var(--card-deck-viewport-height);
   overflow: hidden;
   touch-action: pan-y;
   cursor: grab;
@@ -23,21 +23,20 @@
   cursor: grabbing;
 }
 
-/* Inset from the track's left edge, not inset:0 (2026-09-16): with cards
-   filling the full track width, the fanned rear cards shifted left and
-   were immediately clipped by the mask, leaving the deck looking like a
-   single card — caught by measuring the rendered boxes, not by reading
-   the transforms. The gutter is the room the fan needs; the mask then
-   trims what overhangs, which is exactly the partial-card look the
-   reference shows. */
+/* Anchored to the track's bottom and inset from its left edge: the
+   gutter is the room the stack steps into, and the mask trims whatever
+   overhangs — the partial-card look the reference shows. Height comes
+   from its own token rather than the track, since being TALLER than the
+   viewport is the whole point. */
 .card {
   position: absolute;
-  inset-block: 0;
+  bottom: 0;
   right: 0;
   left: var(--card-deck-fan-gutter);
-  /* Bottom-centre origin: the fan and the drag tilt both pivot from below
-     the card, so a rotation reads as the card leaning rather than
-     spinning about its middle. */
+  height: var(--card-deck-card-height);
+  /* Bottom-centre origin so the constant slant and the drag tilt both
+     pivot from below the visible band, keeping the cards' bottom edges
+     aligned as they lean. */
   transform-origin: 50% 100%;
   /* Only the settle is transitioned — during drag the inline transform is
      driven per-frame by the spring/pointer, and .card[data-dragging] is

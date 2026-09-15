@@ -15,12 +15,15 @@ export interface DeckMotionTokens {
   dragRotationDeg: number;
   dragScale: number;
   backScaleStep: number;
-  backOffsetPx: number;
+  stepXPx: number;
+  stepYPx: number;
+  slantDeg: number;
 }
 
 const FALLBACK: DeckMotionTokens = {
   stiffness: 350, damping: 31, depthDelayMs: 55, parallax: 0.62, commitRatio: 0.3,
-  dragRotationDeg: -4, dragScale: 0.96, backScaleStep: 0.05, backOffsetPx: 16,
+  dragRotationDeg: -4, dragScale: 0.96, backScaleStep: 0.05,
+  stepXPx: 32, stepYPx: 12, slantDeg: -9,
 };
 
 const readNumber = (styles: CSSStyleDeclaration, name: string, fallback: number) => {
@@ -41,7 +44,9 @@ export function useDeckMotionTokens(): DeckMotionTokens {
       dragRotationDeg: readNumber(styles, '--card-deck-drag-rotation', FALLBACK.dragRotationDeg),
       dragScale: readNumber(styles, '--card-deck-drag-scale', FALLBACK.dragScale),
       backScaleStep: readNumber(styles, '--card-deck-back-scale-step', FALLBACK.backScaleStep),
-      backOffsetPx: readNumber(styles, '--card-deck-back-offset', FALLBACK.backOffsetPx),
+      stepXPx: readNumber(styles, '--card-deck-step-x', FALLBACK.stepXPx),
+      stepYPx: readNumber(styles, '--card-deck-step-y', FALLBACK.stepYPx),
+      slantDeg: readNumber(styles, '--card-deck-slant', FALLBACK.slantDeg),
     });
   }, []);
   return tokens;

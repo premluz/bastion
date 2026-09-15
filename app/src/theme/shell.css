@@ -54,11 +54,31 @@
   --card-deck-drag-rotation: -4deg;
   --card-deck-drag-scale: 0.96;
   --card-deck-back-scale-step: 0.05;
-  --card-deck-back-offset: var(--space-16);
-  /* Left gutter inside the deck that the fanned rear cards occupy — the
+  /* Even step between stacked cards (2026-09-16, direct feedback: "not
+     like deck of playing cards spread, instead regularly spaced kind of
+     thing slanted") — a fixed x/y offset applied per depth, rather than
+     a rotational fan from a pivot. Each card behind steps LEFT and UP,
+     so the spread reads along the top edge the way the reference shows,
+     not out of the bottom corner. */
+  --card-deck-step-x: var(--space-32);
+  --card-deck-step-y: var(--space-12);
+  /* The whole stack leans by one constant angle — cards stay parallel to
+     each other (a regular slanted stack), unlike a fan where each layer
+     takes a different angle. */
+  --card-deck-slant: -5deg;
+  /* Visible band of the deck: cards are taller than this, anchored to the
+     bottom, so the mask cuts their upper portion off (2026-09-16, direct
+     feedback: "smaller card... they are not fully visible, there is a
+     layer that has overflow hidden, kind of a mask"). The overhang is
+     kept modest — one --space-32 — so the brand row still lands inside
+     the visible band the way the reference shows, rather than being
+     clipped away with the rest of the card's top half. */
+  --card-deck-viewport-height: calc(var(--space-64) * 2);
+  --card-deck-card-height: calc(var(--space-64) * 2 + var(--space-32));
+  /* Left gutter inside the deck that the stacked rear cards occupy — the
      front card sits flush right, each card behind it steps into this
      space, and the deck's own overflow mask trims the overhang. */
-  --card-deck-fan-gutter: var(--space-48);
+  --card-deck-fan-gutter: var(--space-64);
   --shell-fade-height: var(--space-48);
   /* .topFade/.bottomFade's own height (2026-09-14, direct feedback:
      "make shadows top bottom more height... keep gradients, keep

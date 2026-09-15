@@ -112,27 +112,29 @@ export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: C
           const scale = isFront
             ? settledScale - (1 - tokens.dragScale) * progress
             : settledScale + (depth === 1 ? tokens.backScaleStep * progress : 0);
-          // Rear cards fan back and to the left, the way the reference
-          // shows them (2026-09-16): a centred scale-down alone left them
-          // entirely inside the front card's own footprint and therefore
-          // invisible — measured live before fixing, rather than assumed
-          // from the transform values looking plausible. The fan angle
-          // reuses --card-deck-drag-rotation's magnitude so the resting
-          // stack and the drag tilt read as one rotation language.
-          const fanAngle = Math.abs(tokens.dragRotationDeg);
-          const rotation = isFront
+          // Regular stepped stack, not a rotational fan (2026-09-16,
+          // direct feedback: "not like deck of playing cards spread,
+          // instead regularly spaced kind of thing slanted"). Every card
+          // shares ONE constant slant so they stay parallel; depth only
+          // changes position, stepping left and UP so the spread reads
+          // along the top edge — the prior fan stepped out of the bottom
+          // corner and angled each layer differently, which is the
+          // "spread is at bottom" the feedback called out.
+          const rotation = tokens.slantDeg + (isFront
             ? tokens.dragRotationDeg * progress * Math.sign(offset || 1)
-            : depth * fanAngle;
-          const lift = isFront
-            ? 0
-            : -depth * tokens.backOffsetPx * 2 + (depth === 1 ? tokens.backOffsetPx * 2 * progress : 0);
+            : 0);
+          // As the incoming card rises it closes its own one-step gap,
+          // so depth 1 interpolates toward the front card's position.
+          const closing = depth === 1 ? progress : 0;
+          const stepX = -(depth - closing) * tokens.stepXPx;
+          const stepY = -(depth - closing) * tokens.stepYPx;
           return (
             <div key={index} className={styles.card} data-front={isFront}
               aria-hidden={!isFront}
               style={{
                 zIndex: count - depth,
                 opacity: isFront ? 1 - progress * 0.4 : 1,
-                transform: `translate3d(calc(${translate}px + ${lift}px), 0, 0) rotate(${rotation}deg) scale(${scale})`,
+                transform: `translate3d(calc(${translate}px + ${stepX}px), ${stepY}px, 0) rotate(${rotation}deg) scale(${scale})`,
                 transitionDelay: isDragging ? '0ms' : `${depth * tokens.depthDelayMs}ms`,
               }}>
               {child}
