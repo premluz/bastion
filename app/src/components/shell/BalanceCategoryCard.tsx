@@ -16,17 +16,18 @@ interface BalanceCategoryCardProps {
 // One category's own balance summary (2026-09-13, direct feedback: "two
 // [cards] on top category crypto/money with caret, value, and underneath
 // up or down") — Home renders two of these side by side (Crypto, Money).
-// panelFlat, same pane treatment every other card surface on this page
-// already uses (AssetsHomeList's own rows, Panel.tsx's pattern) — Card,
-// not a bare div: panelFlat's own CSS rule is a compound selector
-// (.astryx-card.panelFlat / .astryx-item.panelFlat) that only matches an
-// element also carrying Astryx's own root class. A bare div rendered with
-// zero border and identical background to the page (caught in a
-// screenshot — the card was completely invisible against --surface-0).
+// Filled, not outlined (2026-09-16, direct feedback: "make it fill not
+// just outline") — panelFlat (border + transparent background) is now
+// dropped in favour of this component's own --surface-2 fill, the same
+// filled-card treatment ContributingBalanceRow/HistoryItem already use
+// on this page. Still Card, not a bare div: Card is what makes
+// className/padding/onClick actually apply as a real interactive
+// surface (confirmed earlier this session Card spreads ...props,
+// unlike RadioList).
 export function BalanceCategoryCard({ label, value, changeAbs, changePercent, onClick }: BalanceCategoryCardProps) {
   const isUp = changeAbs >= 0;
   return (
-    <Card className={`${styles.root} panelFlat`} padding={4} {...(onClick ? { onClick } : {})}>
+    <Card className={`${styles.root}`} padding={4} {...(onClick ? { onClick } : {})}>
       <div className={styles.labelRow}>
         {/* supporting, not label (2026-09-13 follow-up, direct feedback:
             "crypto and money labels in balances smaller") — one step down

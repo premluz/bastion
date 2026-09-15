@@ -1,10 +1,23 @@
 /* Padding comes from Card's own padding={4} prop, not here — avoids
-   doubling it on top of Card's own layout. */
+   doubling it on top of Card's own layout. Filled background, not
+   panelFlat's border-only outline (2026-09-16, direct feedback: "make
+   it fill not just outline") — same --surface-2 fill
+   ContributingBalanceRow/HistoryItem already use elsewhere on this
+   page, applied here directly rather than editing panelFlat itself,
+   which many other unrelated cards across the app still rely on for
+   its outline treatment. */
 .root {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
   min-width: 0;
+  background: var(--surface-2);
+  border-radius: var(--shell-radius);
+  /* Card's own default variant draws a themed border unconditionally
+     (2026-09-16, direct feedback: "no border") — overridden here rather
+     than switching Card to variant="transparent", which would also
+     strip the background this component just added. */
+  border: none;
 }
 
 .labelRow {

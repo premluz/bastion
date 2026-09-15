@@ -19,16 +19,6 @@
   padding-block: var(--space-24);
 }
 
-/* --text-32, not --text-40 (2026-09-13 follow-up, direct feedback:
-   "main balance also smaller") — steps back down to display-1's own
-   built-in ceiling rather than the custom hero size added earlier the
-   same day, now that the category cards below carry some of the visual
-   weight the single oversized figure used to hold alone. */
-.balance {
-  font-variant-numeric: tabular-nums;
-  font-size: var(--text-32);
-}
-
 .changeRow {
   display: flex;
   align-items: center;

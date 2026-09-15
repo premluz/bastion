@@ -1,0 +1,14 @@
+/* Shared "main balance number" treatment (2026-09-16, direct feedback:
+   "total balance font thicker weight, make it a class so to also apply
+   to main balance numbers on screens") — one class both AssetsHomeHeader
+   (Home's Total balance) and MoneyPage (Money/Crypto tab balance) apply,
+   so the two hero figures stay visually identical rather than each
+   carrying its own independent font-size/weight. --text-40 is one step
+   above display-1's own --text-32 ("1 scale larger, extra large" — no
+   larger size existed on the ramp, so this size was added alongside
+   this class); 700 is thicker than Heading's own default weight. */
+.heroBalance {
+  font-variant-numeric: tabular-nums;
+  font-size: var(--text-40);
+  font-weight: 700;
+}

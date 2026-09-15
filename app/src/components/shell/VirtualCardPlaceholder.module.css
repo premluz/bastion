@@ -44,6 +44,11 @@
 .design {
   width: 340px;
   height: 214px;
+  /* Inter, not --face-ui (2026-09-16, direct feedback: "change font to
+     Inter, in the card") — scoped to this card only, not a global
+     typeface swap. Falls back to the same stack --font-ui already uses
+     if the web font hasn't loaded yet. */
+  font-family: 'Inter', var(--font-ui);
   /* Division inside calc() must resolve to a unitless number for
      scale() to accept it — dividing a length by a bare number (e.g.
      "100cqw / 340") silently produces an invalid value in every engine

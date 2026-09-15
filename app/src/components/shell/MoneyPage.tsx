@@ -16,6 +16,7 @@ import { MONEY_HISTORY } from './moneyHistoryData';
 import { MONEY_PLACEHOLDER } from './moneySummary';
 import { WALLET_CARDS } from './cardData';
 import { resolveAssetsHomeSummary } from '../../engine/assetsHome';
+import heroBalanceStyles from '../../theme/heroBalance.module.css';
 import styles from './MoneyPage.module.css';
 
 // Made-up contributing balances (2026-09-15, direct feedback: "small
@@ -66,7 +67,7 @@ export function MoneyPage({ tab, onTabChange }: MoneyPageProps) {
       {tab === 'money' ? (
         <>
           <div className={styles.balanceBlock}>
-            <Heading level={1} type="display-1" className={styles.balance}>
+            <Heading level={1} type="display-1" className={heroBalanceStyles.heroBalance}>
               ${MONEY_PLACEHOLDER.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </Heading>
             <div className={styles.apyRow}>
@@ -113,7 +114,7 @@ export function MoneyPage({ tab, onTabChange }: MoneyPageProps) {
       ) : (
         <>
           <div className={styles.balanceBlock}>
-            <Heading level={1} type="display-1" className={styles.balance}>
+            <Heading level={1} type="display-1" className={heroBalanceStyles.heroBalance}>
               ${cryptoSummary.totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </Heading>
           </div>

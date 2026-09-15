@@ -5,6 +5,9 @@
   --space-8: 8px;
   --space-12: 12px;
   --space-16: 16px;
+  /* Added 2026-09-16 for --shell-gap: 20px, direct feedback: "increase
+     shell gap to 20px" — no existing step between 16/24 covered it. */
+  --space-20: 20px;
   --space-24: 24px;
   --space-32: 32px;
   --space-48: 48px;
@@ -40,6 +43,10 @@
   --text-20: 20px;
   --text-24: 24px;
   --text-32: 32px;
+  /* Added 2026-09-16, direct feedback: "total balance font 1 scale
+     larger, extra large" — one step above display-1's own --text-32,
+     since no larger size existed on the ramp. */
+  --text-40: 40px;
 
   /* Motion */
   --duration-120: 120ms;

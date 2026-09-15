@@ -28,3 +28,31 @@
   background: var(--surface-1);
   font-size: var(--text-32);
 }
+
+/* Whole-card background variant (2026-09-16, direct feedback: "make comp
+   configurable so it may have also background for whole card and not
+   image, being attribute optional") — an inner wrapper this component
+   controls directly, not a modifier on .root: Card's own style prop
+   silently drops a style object here (confirmed live via the React
+   fiber's own props — the correct value reached the component, but
+   never reached the DOM). background-image is set directly via style
+   (not through a --custom-property indirection): a style object
+   containing ONLY a custom property never got applied on this React 19
+   build either, confirmed by testing that failure mode directly before
+   landing on the plain-property form, which works. Fills the card's
+   own padding:0 box edge-to-edge; the title sits over it with a scrim
+   so it stays legible on any image. */
+.withBackground {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+  padding: var(--space-16);
+  background-size: cover;
+  background-position: center;
+}
+
+.backgroundBody {
+  color: var(--ink-primary);
+  text-shadow: 0 1px 3px var(--scrim);
+}

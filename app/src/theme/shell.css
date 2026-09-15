@@ -8,7 +8,12 @@
    chrome overrides the individual token in its own file. */
 :root {
   --shell-inset: var(--space-16);
-  --shell-gap: var(--space-12);
+  /* 20px, revised up from an earlier same-day 16px pass (2026-09-16,
+     direct feedback: "increase shell gap" then "increase shell gap to
+     20px") — this token drives spacing across the shell (header, action
+     rows, Money/wallet page sections, and more), so this is a global
+     increase, not scoped to any one screen. */
+  --shell-gap: var(--space-20);
   --shell-label-gap: var(--space-4);
   --shell-control-size: var(--space-48);
   --shell-nav-height: calc(var(--space-64) + var(--space-24));

@@ -3,6 +3,7 @@ import { Text } from '@astryxdesign/core/Text';
 import { TrendDelta } from '../nodes/TrendDelta';
 import { BalanceCategoryCard } from './BalanceCategoryCard';
 import glowStyles from '../../theme/glow.module.css';
+import heroBalanceStyles from '../../theme/heroBalance.module.css';
 import styles from './AssetsHomeHeader.module.css';
 
 // Fixed, non-zero placeholder (2026-09-13, direct feedback): no "Money"/
@@ -73,7 +74,7 @@ export function AssetsHomeHeader({ totalValue, changeAbs, changePercent, onSelec
           <Text type="label" color="secondary">
             Total balance
           </Text>
-          <Heading level={1} type="display-1" className={styles.balance}>
+          <Heading level={1} type="display-1" className={heroBalanceStyles.heroBalance}>
             ${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </Heading>
           <div className={styles.changeRow}>
