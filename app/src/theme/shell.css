@@ -60,7 +60,7 @@
      a rotational fan from a pivot. Each card behind steps LEFT and UP,
      so the spread reads along the top edge the way the reference shows,
      not out of the bottom corner. */
-  --card-deck-step-x: var(--space-48);
+  --card-deck-step-x: calc(var(--space-64) + var(--space-24));
   --card-deck-step-y: var(--space-8);
   /* The whole stack leans by one constant angle — cards stay parallel to
      each other (a regular slanted stack), unlike a fan where each layer
@@ -73,14 +73,15 @@
      should be visible so need to be moved lower, but mask remains").
      The top inset is what drops them far enough for their top edges and
      rounded corners to read in full. */
-  --card-deck-viewport-height: calc(var(--space-64) + var(--space-48));
-  --card-deck-card-height: calc(var(--space-64) + var(--space-32));
+  /* Viewport is shorter than the card, so the mask keeps trimming the
+     card bottoms while their tops stay fully visible. */
+  --card-deck-viewport-height: calc(var(--space-64) * 2);
+  /* Card keeps real ID-1 proportions (see CardDeck.module.css): this is
+     its height, and width follows from the 1.586 ratio — roughly 222px
+     wide at 140px tall, leaving the rest of a 414px frame as the
+     horizontal gap the spread steps through. */
+  --card-deck-card-height: calc(var(--space-64) * 2 + var(--space-12));
   --card-deck-top-inset: var(--space-16);
-  /* Left gutter inside the deck that the stacked rear cards occupy — the
-     front card sits flush right, each card behind it steps into this
-     space, and the deck's own overflow mask trims the overhang. Sized to
-     hold the full spread: one step per card behind the front. */
-  --card-deck-fan-gutter: calc(var(--card-deck-step-x) * 2);
   --shell-fade-height: var(--space-48);
   /* .topFade/.bottomFade's own height (2026-09-14, direct feedback:
      "make shadows top bottom more height... keep gradients, keep

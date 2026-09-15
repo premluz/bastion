@@ -27,15 +27,21 @@
    lower, but mask remains") — the cards sit low enough that their top
    edges and rounded corners read in full, and the mask now trims their
    bottoms instead. The prior bottom anchoring clipped exactly the edge
-   the reference shows intact. The left gutter is the room the stack
-   steps into; height comes from its own token, since being TALLER than
-   the viewport is the whole point. */
+   the reference shows intact.
+
+   Width follows the card's own ID-1 aspect ratio from its height, rather
+   than being stretched between a left gutter and right:0 (2026-09-16
+   follow-up, direct feedback: "card should keep proportions, not just
+   reduced height") — that stretch had the cards rendering at 2.96:1,
+   nearly double a real card's 1.586:1, measured before fixing. Sizing
+   by ratio also frees the horizontal room the wider spread needs, since
+   a shorter card is now a narrower card too. */
 .card {
   position: absolute;
   top: var(--card-deck-top-inset);
   right: 0;
-  left: var(--card-deck-fan-gutter);
   height: var(--card-deck-card-height);
+  aspect-ratio: 1.586 / 1;
   /* Top-centre origin now that the cards hang from their top edge: the
      slant and drag tilt pivot from the visible edge, so the tops stay
      aligned as they lean rather than swinging out of the band. */
