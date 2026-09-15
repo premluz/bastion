@@ -10,6 +10,10 @@
   --space-20: 20px;
   --space-24: 24px;
   --space-32: 32px;
+  /* Added 2026-09-16 for the Discover/Portfolio tab size bump ("make both
+     one scale up") — no existing step between 32/48 covered the target
+     40px tab height. */
+  --space-40: 40px;
   --space-48: 48px;
   --space-64: 64px;
 

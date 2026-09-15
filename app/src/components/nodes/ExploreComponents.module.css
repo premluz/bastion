@@ -20,18 +20,20 @@
 .tabs, .chips { display: flex; gap: var(--space-8); }
 .tabs { overflow-x: auto; scrollbar-width: none; }
 .chips { flex-wrap: wrap; }
-/* Matched to Portfolio's own tab size (2026-09-16, direct feedback: "tabs
-   on Discover should be same size as on Portfolio") — Token's own size
-   scale tops out at "lg" (28px height, 12px font, 8px padding-inline),
-   smaller than SegmentedControlItem's "lg" (32px/14px/12px) despite
-   sharing the name, since the two components derive their "lg" from
-   different formulas. Token has no larger step to reach for, so the
-   target dimensions are set directly. */
+/* Matched to Portfolio's own tab size, then both bumped one scale up
+   together (2026-09-16, direct feedback: "tabs on Discover should be
+   same size as on Portfolio" then "make both one scale up") — Token's
+   own size scale tops out at "lg" (28px height, 12px font, 8px
+   padding-inline), smaller than SegmentedControlItem's "lg" (32px/14px/
+   12px) despite sharing the name, since the two components derive their
+   "lg" from different formulas. Neither has a larger built-in step to
+   reach for, so the target dimensions are set directly on both (see
+   MoneyPage.module.css's matching .tabs override). */
 .chip.chip {
   flex-shrink: 0;
-  height: var(--space-32);
-  padding-inline: var(--space-12);
-  font-size: var(--text-14);
+  height: var(--space-40);
+  padding-inline: var(--space-16);
+  font-size: var(--text-16);
   border-radius: var(--radius-full);
   background: var(--surface-2);
   color: var(--ink-secondary);
