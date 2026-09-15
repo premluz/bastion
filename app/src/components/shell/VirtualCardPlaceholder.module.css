@@ -4,15 +4,58 @@
    absolutely at inset:0 and owns the deck's ID-1 aspect ratio itself, so
    a second aspect-ratio here would fight the deck's own height. */
 .root {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  position: relative;
   width: 100%;
   height: 100%;
-  padding: var(--space-16);
   border-radius: var(--shell-radius);
   background: linear-gradient(135deg, var(--surface-2) 0%, var(--accent-signal) 55%, var(--surface-3) 100%);
   color: var(--ink-primary);
+  overflow: hidden;
+}
+
+/* Content is laid out at a fixed "real card" size and scaled down to fit
+   the host box, rather than each Text/Icon shrinking independently
+   (2026-09-16, direct feedback: "you didn't scale the card entirely
+   properly, I see oversized text and logo" — CardDeck's cards shrank to
+   roughly a third of a real card's footprint, but Astryx's Text/Icon
+   sizes are fixed tokens with no host-size awareness, so the brand mark
+   and digits stayed at full size and badly overran the smaller card).
+   container query units (cqw) size this against .root's own box, so it
+   tracks whatever size CardDeck renders the card at without CardDeck
+   needing to compute or pass down a scale factor itself. */
+.content {
+  container-type: size;
+  position: absolute;
+  inset: 0;
+}
+
+/* Fixed "real card" design size — a standard ID-1 card at ~2.6x — inside
+   the sized container, scaled down to fill whatever box CardDeck renders
+   the card at. This is a design-reference coordinate space, not a
+   rendered size: like an SVG viewBox, its own numbers only need to stay
+   internally proportional to each other, since the transform: scale
+   below is what actually determines every final on-screen pixel. Real
+   tokens (--space-*, Text/Icon sizes) drive nothing here on purpose —
+   this box is deliberately ~2.6x an actual rendered card so Astryx's
+   Text/Icon components render at their own real, undistorted sizes
+   before being scaled down as a unit, which is the only way their
+   internal font hinting/icon strokes stay proportional at any card size
+   CardDeck ends up rendering. cqw/cqh track the host box with no JS. */
+.design {
+  width: 340px;
+  height: 214px;
+  /* Division inside calc() must resolve to a unitless number for
+     scale() to accept it — dividing a length by a bare number (e.g.
+     "100cqw / 340") silently produces an invalid value in every engine
+     tested, confirmed live before landing on this form: dividing by 1px
+     instead makes the whole expression unitless. */
+  transform: scale(min(calc(100cqw / 340 / 1px), calc(100cqh / 214 / 1px)));
+  transform-origin: 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .topRow {
@@ -24,7 +67,7 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: var(--space-8);
+  gap: 8px;
 }
 
 .bottomRow {

@@ -15,18 +15,22 @@ export interface VirtualCardPlaceholderProps { lastFourDigits: string }
 export function VirtualCardPlaceholder({ lastFourDigits }: VirtualCardPlaceholderProps) {
   return (
     <div className={styles.root}>
-      <div className={styles.topRow}>
-        <span className={styles.brand}>
-          <Icon icon={ShieldCheckIcon} size="lg" />
-          <Text type="body" weight="semibold">Bastion</Text>
-        </span>
-        <Text type="supporting" color="secondary">Virtual Card</Text>
-      </div>
-      <div className={styles.bottomRow}>
-        <Text type="large" weight="semibold" hasTabularNumbers className={styles.digits}>
-          •••• {lastFourDigits}
-        </Text>
-        <Text type="body" weight="semibold" className={styles.network}>VISA</Text>
+      <div className={styles.content}>
+        <div className={styles.design}>
+          <div className={styles.topRow}>
+            <span className={styles.brand}>
+              <Icon icon={ShieldCheckIcon} size="lg" />
+              <Text type="body" weight="semibold">Bastion</Text>
+            </span>
+            <Text type="supporting" color="secondary">Virtual Card</Text>
+          </div>
+          <div className={styles.bottomRow}>
+            <Text type="large" weight="semibold" hasTabularNumbers className={styles.digits}>
+              •••• {lastFourDigits}
+            </Text>
+            <Text type="body" weight="semibold" className={styles.network}>VISA</Text>
+          </div>
+        </div>
       </div>
     </div>
   );
