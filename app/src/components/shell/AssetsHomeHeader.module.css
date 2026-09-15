@@ -9,12 +9,14 @@
   padding-block-start: var(--space-8);
 }
 
-/* Portfolio value is the screen's hero figure: centred, with its own
-   breathing room above and below. */
+/* Left-aligned, not centred (2026-09-16, direct feedback: "total balance
+   on home also left align, same as on portfolio") — matches MoneyPage's
+   own .balanceBlock (align-items: flex-start), so the hero figure reads
+   the same way on both screens. */
 .portfolio {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-4);
   padding-block: var(--space-24);
 }
@@ -34,9 +36,11 @@
 }
 
 /* Crypto/Money side by side (2026-09-13) — replaces the action row, which
-   moved to its own WalletActionRow.tsx component. */
+   moved to its own WalletActionRow.tsx component. Gap matches
+   --shell-gap (2026-09-16, direct feedback: "gap between crypto and
+   money same as shell gap"), not its own independent --space-8. */
 .categoryRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-8);
+  gap: var(--shell-gap);
 }

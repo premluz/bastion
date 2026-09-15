@@ -17,14 +17,3 @@
   padding: 0 var(--shell-inset) var(--shell-inset);
 }
 
-.listHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.manageContent {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
