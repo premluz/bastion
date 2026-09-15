@@ -169,8 +169,12 @@ export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: C
             // reusing one magnitude for both axes the way the reference
             // does, since a symmetric step doesn't read as "more to the
             // right" specifically.
-            const REST_SCALE_X = 6.5;
-            const REST_SCALE_Y = 1.4;
+            // Shrunk 25% alongside --card-deck-card-height (2026-09-16,
+            // direct feedback: "cards smaller 25% so they all fit") — the
+            // stack's own gap must shrink with the cards themselves, not
+            // stay fixed while only the card size changes.
+            const REST_SCALE_X = 6.5 * 0.75;
+            const REST_SCALE_Y = 1.4 * 0.75;
             const base = [
               { s: 1, ox: 0, oy: 0, r: 0 },
               { s: 0.97, ox: 8 * REST_SCALE_X, oy: 8 * REST_SCALE_Y, r: 4 },

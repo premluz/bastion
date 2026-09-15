@@ -63,7 +63,14 @@
      push it down until only its top half clears the mask, rather than
      the whole card mostly fitting with a thin clipped sliver. Width
      follows from the 1.586 ID-1 ratio (see CardDeck.module.css). */
-  --card-deck-card-height: calc(var(--space-64) * 3);
+  /* 25% smaller than the prior 3x --space-64 (2026-09-16, direct
+     feedback: "cards smaller 25% so they all fit" — the third rear
+     card's right edge ran past the track's own right boundary at the
+     larger size). CardDeck.tsx's own REST_SCALE_X/Y shrink by the same
+     25% alongside this, so the whole stack scales down together rather
+     than the gap between cards staying fixed while only the cards
+     themselves shrink. */
+  --card-deck-card-height: calc(var(--space-64) * 3 * 0.75);
   /* Pushed down until only the card's top half is visible (2026-09-16,
      direct feedback) — the card starts far enough below the viewport's
      own top that exactly half its height (card-height / 2) still fits
