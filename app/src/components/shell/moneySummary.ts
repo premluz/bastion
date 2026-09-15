@@ -4,5 +4,5 @@
 // tab's "Money" BalanceCategoryCard and MoneyPage read this one object
 // rather than each keeping an independent number that could drift.
 export const MONEY_PLACEHOLDER = {
-  value: 3475.45, changeAbs: 2.46, changePercent: 0.3, apy: 4, monthlyEarnings: 11.58, annualEarnings: 139.02,
+  value: 3475.45, changeAbs: 2.46, changePercent: 0.3, apy: 4, annualEarnings: 139.02,
 } as const;

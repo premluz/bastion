@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Card } from '@astryxdesign/core/Card';
 import { Heading } from '@astryxdesign/core/Heading';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
@@ -73,28 +72,20 @@ export function MoneyPage({ tab, onTabChange }: MoneyPageProps) {
               <Text type="supporting" weight="semibold" className={styles.apy}>{MONEY_PLACEHOLDER.apy}% APY</Text>
               <Text type="supporting" color="secondary">· mUSD</Text>
               <Icon icon="info" size="sm" color="secondary" />
+              {/* Estimated earnings section removed (2026-09-15, direct
+                  feedback: "hide Estimated earnings section... add to
+                  line 4%... 4% APY Est. annual $139.02") — the annual
+                  figure now lives inline on the APY row instead of its
+                  own card; Monthly is dropped, not folded in, since the
+                  request only asked for the annual number here. */}
+              <Text type="supporting" color="secondary">· Est. annual</Text>
+              <Text type="supporting" weight="semibold" hasTabularNumbers className={styles.apy}>
+                ${MONEY_PLACEHOLDER.annualEarnings.toFixed(2)}
+              </Text>
             </div>
           </div>
           <ContributingBalanceRow balances={CONTRIBUTING_BALANCES} />
           <WalletActionRow variant="money" shape="circle" />
-          <Card className={`${styles.earnings} panelFlat`} padding={4}>
-            <div className={styles.earningsHeader}>
-              <Text type="label" weight="semibold">Estimated earnings</Text>
-              <Icon icon="info" size="sm" color="secondary" />
-            </div>
-            <div className={styles.earningsRow}>
-              <Text type="body" color="secondary">Monthly</Text>
-              <Text type="body" weight="semibold" hasTabularNumbers className={styles.earningsValue}>
-                ${MONEY_PLACEHOLDER.monthlyEarnings.toFixed(2)}
-              </Text>
-            </div>
-            <div className={styles.earningsRow}>
-              <Text type="body" color="secondary">Annual</Text>
-              <Text type="body" weight="semibold" hasTabularNumbers className={styles.earningsValue}>
-                ${MONEY_PLACEHOLDER.annualEarnings.toFixed(2)}
-              </Text>
-            </div>
-          </Card>
           <div className={styles.section}>
             <PromoCarousel aria-label="Cards">
               {WALLET_CARDS.map((card) => <WalletCardTile key={card.id} card={card} />)}

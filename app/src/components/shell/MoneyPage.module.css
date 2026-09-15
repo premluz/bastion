@@ -37,28 +37,6 @@
   color: var(--delta-up);
 }
 
-.earnings {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-12);
-}
-
-.earningsHeader {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.earningsRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.earningsValue {
-  color: var(--delta-up);
-}
-
 .section {
   display: flex;
   flex-direction: column;
