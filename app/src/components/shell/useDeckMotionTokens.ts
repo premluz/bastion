@@ -6,14 +6,14 @@ import { useEffect, useState } from 'react';
 // getComputedStyle escape hatch theme.default.css already documents for
 // recharts consuming --motion-enter-ease. Defaults match shell.css so a
 // missing token degrades to the documented values instead of NaN.
+// Trimmed 2026-09-16 when the deck moved from throw-a-card physics to a
+// continuous scrub: parallax/commit-ratio/drag-rotation/drag-scale/
+// depth-delay all described per-card throw behaviour that no longer
+// exists, so they are gone from here and from shell.css rather than left
+// as tokens nothing reads.
 export interface DeckMotionTokens {
   stiffness: number;
   damping: number;
-  depthDelayMs: number;
-  parallax: number;
-  commitRatio: number;
-  dragRotationDeg: number;
-  dragScale: number;
   backScaleStep: number;
   stepXPx: number;
   stepYPx: number;
@@ -21,8 +21,7 @@ export interface DeckMotionTokens {
 }
 
 const FALLBACK: DeckMotionTokens = {
-  stiffness: 350, damping: 31, depthDelayMs: 55, parallax: 0.62, commitRatio: 0.3,
-  dragRotationDeg: -4, dragScale: 0.96, backScaleStep: 0.05,
+  stiffness: 350, damping: 31, backScaleStep: 0.05,
   stepXPx: 32, stepYPx: 12, slantDeg: -9,
 };
 
@@ -58,11 +57,6 @@ export function useDeckMotionTokens(): DeckMotionTokens {
     setTokens({
       stiffness: readNumber(styles, '--card-deck-stiffness', FALLBACK.stiffness),
       damping: readNumber(styles, '--card-deck-damping', FALLBACK.damping),
-      depthDelayMs: readNumber(styles, '--card-deck-depth-delay', FALLBACK.depthDelayMs),
-      parallax: readNumber(styles, '--card-deck-parallax', FALLBACK.parallax),
-      commitRatio: readNumber(styles, '--card-deck-commit-ratio', FALLBACK.commitRatio),
-      dragRotationDeg: readNumber(styles, '--card-deck-drag-rotation', FALLBACK.dragRotationDeg),
-      dragScale: readNumber(styles, '--card-deck-drag-scale', FALLBACK.dragScale),
       backScaleStep: readNumber(styles, '--card-deck-back-scale-step', FALLBACK.backScaleStep),
       stepXPx: readLength(probe, '--card-deck-step-x', FALLBACK.stepXPx),
       stepYPx: readLength(probe, '--card-deck-step-y', FALLBACK.stepYPx),

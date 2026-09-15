@@ -36,23 +36,18 @@
   --shell-focus-offset: var(--space-4);
   --shell-radius: var(--radius-12);
   --shell-round: var(--radius-full);
-  /* Card-deck motion data (2026-09-16, direct feedback specifying the
-     interaction in physical terms: "spring around stiffness 320-380,
-     damping 28-34... depth delay: each back card starts 40-70ms after
-     the card in front... rear cards move only ~55-70% as far as the
-     front card... cancelled before ~25-30%, spring back"). Tokens, not
-     literals inside CardDeck.tsx, per rule 15 (motion is data) — the
-     spring is integrated in JS because CLAUDE.md §5 closes the stack to
-     any animation library, so these are read once via getComputedStyle,
-     the same escape hatch theme.default.css already documents for
-     recharts consuming --motion-enter-ease. */
+  /* Card-deck motion data (2026-09-16, spring values from direct
+     feedback: "spring around stiffness 320-380, damping 28-34").
+     Tokens, not literals inside CardDeck.tsx, per rule 15 (motion is
+     data) — the spring is integrated in JS because CLAUDE.md §5 closes
+     the stack to any animation library, so these are read once via
+     getComputedStyle, the same escape hatch theme.default.css already
+     documents for recharts consuming --motion-enter-ease.
+     The per-card throw tokens that lived here (depth-delay, parallax,
+     commit-ratio, drag-rotation, drag-scale) went out with the throw
+     interaction itself when the deck became a continuous scrub. */
   --card-deck-stiffness: 350;
   --card-deck-damping: 31;
-  --card-deck-depth-delay: 55ms;
-  --card-deck-parallax: 0.62;
-  --card-deck-commit-ratio: 0.3;
-  --card-deck-drag-rotation: -4deg;
-  --card-deck-drag-scale: 0.96;
   --card-deck-back-scale-step: 0.05;
   /* Even step between stacked cards (2026-09-16, direct feedback: "not
      like deck of playing cards spread, instead regularly spaced kind of
@@ -65,7 +60,10 @@
   /* The whole stack leans by one constant angle — cards stay parallel to
      each other (a regular slanted stack), unlike a fan where each layer
      takes a different angle. */
-  --card-deck-slant: -5deg;
+  /* -16deg, between the literal -25deg asked for and the ~-10deg the
+     reference image actually shows (2026-09-16, confirmed with Prem):
+     a visible diagonal lean without the hard tilt -25deg produced. */
+  --card-deck-slant: -16deg;
   /* Visible band of the deck: cards are taller than this and hang from
      --card-deck-top-inset, so the mask cuts their LOWER portion off
      (2026-09-16, direct feedback: "smaller card... not fully visible,
@@ -80,8 +78,13 @@
      its height, and width follows from the 1.586 ratio — roughly 222px
      wide at 140px tall, leaving the rest of a 414px frame as the
      horizontal gap the spread steps through. */
-  --card-deck-card-height: calc(var(--space-64) * 2 + var(--space-12));
-  --card-deck-top-inset: var(--space-16);
+  --card-deck-card-height: calc(var(--space-64) + var(--space-32) + var(--space-2));
+  /* Pushed further down the viewport (2026-09-16, "30% lowered down") —
+     with the stack slanted hard, the extra top inset is what keeps the
+     leading card's top corner inside the band instead of the whole
+     deck hugging the top edge. */
+  --card-deck-top-inset: var(--space-48);
+  --card-deck-right-inset: var(--space-24);
   --shell-fade-height: var(--space-48);
   /* .topFade/.bottomFade's own height (2026-09-14, direct feedback:
      "make shadows top bottom more height... keep gradients, keep

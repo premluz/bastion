@@ -39,7 +39,12 @@
 .card {
   position: absolute;
   top: var(--card-deck-top-inset);
-  right: 0;
+  /* Inset from the right edge, not flush against it: rotating about
+     top-centre swings the card's right corner outward, and at the
+     current slant a flush card had that corner clipped by the mask
+     (2026-09-16 — the rotation is steep enough that the overhang is
+     real, not a rounding artefact). */
+  right: var(--card-deck-right-inset);
   height: var(--card-deck-card-height);
   aspect-ratio: 1.586 / 1;
   /* Top-centre origin now that the cards hang from their top edge: the

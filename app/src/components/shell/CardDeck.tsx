@@ -1,4 +1,4 @@
-import { useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import { useDeckMotionTokens } from './useDeckMotionTokens';
 import { useDeckSpring } from './useDeckSpring';
 import styles from './CardDeck.module.css';
@@ -8,51 +8,101 @@ export interface CardDeckProps {
   'aria-label': string;
   // Rendered below the deck for whichever card is currently in front —
   // the reference shows the name/badge/Manage row as a single static row
-  // under the stack, not one row travelling inside each slide (which is
-  // what the prior scroll-snap version did).
+  // under the stack, not one row travelling inside each slide.
   renderDetails?: (activeIndex: number) => ReactNode;
 }
 
-// Distance a card must travel before the swipe commits, as a share of the
-// deck's own width — the spec's "if the swipe is cancelled before ~25-30%,
-// spring everything back" threshold, read from --card-deck-commit-ratio.
-const SWIPE_AXIS_LOCK_PX = 8;
+// Pointer travel that advances the deck by exactly one card. Smaller than
+// the track's own width so a comfortable flick moves a card, and a long
+// scrub crosses several without needing a full screen-width per card.
+const SCRUB_DISTANCE_PX = 120;
+const AXIS_LOCK_PX = 8;
+// Trackpad deltas are far finer-grained than pointer travel; this scales
+// wheel distance into the same scrub space.
+const WHEEL_SCALE = 0.6;
 
-// Drag-driven stacked deck (2026-09-16, direct feedback specifying the
-// interaction physically: front card tracks the finger with rotation and
-// scale-down, drops behind the deck past the commit threshold, the next
-// card rises into the primary slot, and the former front card reappears
-// rear-most for an infinite-deck feel).
+// Continuously scrubbed stacked deck (2026-09-16, direct feedback:
+// "scroll magic mouse horizontal and drag across scrub should produce
+// same interaction as clicking dots but continues — so could scrub
+// across to go through all cards seamlessly... no separate drag the
+// cards interaction, just triggering next card move").
 //
-// Replaces a scroll-snap track for THIS surface only — PromoCarousel
-// still drives Home's promo strip, which wants a flat one-at-a-time
-// carousel, not a deck (2026-09-16 call).
-//
-// Every card's transform derives from its depth (its distance from the
-// front in the rotated order) plus live drag progress, rather than each
-// card being imperatively animated: a reorder is then just an index
-// change, which is what keeps "cards reorder, they don't fly across the
-// screen" true by construction.
+// The deck's whole state is ONE fractional position: 1.4 means "40% of
+// the way from card 1 to card 2". Every card's depth — and therefore its
+// step, scale and z-order — is derived from that fraction, so the stack
+// flows continuously through any number of cards rather than each card
+// being thrown individually. Dragging, wheeling and clicking a dot all
+// write to the same value, which is what makes them the same interaction
+// at different granularities.
 export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: CardDeckProps) {
   const tokens = useDeckMotionTokens();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [drag, setDrag] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
+  // Committed target (whole number) and the live scrub offset in cards.
+  const [target, setTarget] = useState(0);
+  const [scrub, setScrub] = useState(0);
+  const [isScrubbing, setIsScrubbing] = useState(false);
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const axisLocked = useRef(false);
   const trackRef = useRef<HTMLDivElement>(null);
+  const wheelIdle = useRef(0);
   const count = children.length;
+  const maxIndex = count - 1;
 
-  // Springs to 0 on release: the committed reorder is an index change, so
-  // the offset always settles home rather than animating to a new resting
-  // offset. isDragging disables the spring entirely — a finger down means
-  // the card tracks the pointer exactly.
-  const springedDrag = useDeckSpring(isDragging ? drag : 0,
-    { stiffness: tokens.stiffness, damping: tokens.damping }, !isDragging);
-  const offset = isDragging ? drag : springedDrag;
+  // Settles to the nearest whole card when released; while scrubbing the
+  // deck tracks the input exactly, so the spring is disabled.
+  const settled = useDeckSpring(target, { stiffness: tokens.stiffness, damping: tokens.damping }, !isScrubbing);
+  const position = isScrubbing ? target + scrub : settled;
+  const activeIndex = Math.max(0, Math.min(maxIndex, Math.round(position)));
 
-  const width = trackRef.current?.offsetWidth ?? 1;
-  const progress = Math.min(Math.abs(offset) / width, 1);
+  const clamp = (value: number) => Math.max(0, Math.min(maxIndex, value));
+
+  const commit = (next: number) => {
+    const clamped = clamp(Math.round(next));
+    // Haptic tick as a new card crosses into the primary slot. Guarded:
+    // vibrate is absent on desktop Safari/Firefox entirely.
+    if (clamped !== target) navigator.vibrate?.(8);
+    setTarget(clamped);
+  };
+
+  // Latest committed target, read inside the native wheel handler — the
+  // listener is registered once, so it must not close over a stale value.
+  const targetRef = useRef(target);
+  targetRef.current = target;
+
+  // Horizontal wheel/trackpad scrub. Registered natively rather than via
+  // onWheel so it can be non-passive: the deck must be able to preventDefault
+  // on a horizontal gesture to stop the page scrolling sideways under it,
+  // which React's own passive-by-default wheel listener cannot do.
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track || count < 2) return;
+    const onWheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+      event.preventDefault();
+      setIsScrubbing(true);
+      setScrub((current) => {
+        const next = current + (event.deltaX / SCRUB_DISTANCE_PX) * WHEEL_SCALE;
+        // Clamp against the committed target so the deck can't be scrubbed
+        // past either end of the real deck.
+        return clamp(targetRef.current + next) - targetRef.current;
+      });
+      // A wheel gesture has no "release" event, so settle on a quiet gap.
+      window.clearTimeout(wheelIdle.current);
+      wheelIdle.current = window.setTimeout(() => {
+        setScrub((currentScrub) => {
+          const landed = clamp(Math.round(targetRef.current + currentScrub));
+          if (landed !== targetRef.current) navigator.vibrate?.(8);
+          setTarget(landed);
+          return 0;
+        });
+        setIsScrubbing(false);
+      }, 120);
+    };
+    track.addEventListener('wheel', onWheel, { passive: false });
+    return () => {
+      track.removeEventListener('wheel', onWheel);
+      window.clearTimeout(wheelIdle.current);
+    };
+  }, [count, maxIndex]);
 
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (count < 2) return;
@@ -67,28 +117,24 @@ export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: C
     const dy = event.clientY - start.y;
     // Axis lock: the deck sits inside a vertically scrolling page, so a
     // mostly-vertical gesture must stay a page scroll rather than being
-    // stolen as a card swipe.
+    // stolen as a deck scrub.
     if (!axisLocked.current) {
-      if (Math.abs(dx) < SWIPE_AXIS_LOCK_PX && Math.abs(dy) < SWIPE_AXIS_LOCK_PX) return;
+      if (Math.abs(dx) < AXIS_LOCK_PX && Math.abs(dy) < AXIS_LOCK_PX) return;
       if (Math.abs(dy) > Math.abs(dx)) { pointerStart.current = null; return; }
       axisLocked.current = true;
-      setIsDragging(true);
+      setIsScrubbing(true);
       event.currentTarget.setPointerCapture(event.pointerId);
     }
-    setDrag(dx);
+    // Dragging left (negative dx) advances forward through the deck.
+    setScrub(clamp(target - dx / SCRUB_DISTANCE_PX) - target);
   };
 
   const onPointerUp = () => {
     if (!pointerStart.current) return;
     pointerStart.current = null;
-    if (axisLocked.current && Math.abs(drag) / width >= tokens.commitRatio) {
-      // Haptic tick as the incoming card crosses into the primary slot.
-      // Guarded: vibrate is absent on desktop Safari/Firefox entirely.
-      navigator.vibrate?.(8);
-      setActiveIndex((current) => (current + (drag < 0 ? 1 : count - 1)) % count);
-    }
-    setDrag(0);
-    setIsDragging(false);
+    if (axisLocked.current) commit(target + scrub);
+    setScrub(0);
+    setIsScrubbing(false);
     axisLocked.current = false;
   };
 
@@ -98,44 +144,26 @@ export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: C
         onPointerDown={onPointerDown} onPointerMove={onPointerMove}
         onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
         {children.map((child, index) => {
-          const depth = (index - activeIndex + count) % count;
-          const isFront = depth === 0;
-          // Rear cards travel a fraction of the front card's distance —
-          // the spec's "subtle parallax, rear cards move only ~55-70% as
-          // far" — and each one's depth delay is applied as a transition
-          // delay so the restack staggers front-to-back on release.
-          const parallax = isFront ? 1 : tokens.parallax ** depth;
-          const translate = isFront ? offset : offset * parallax * 0.35;
-          // Past the commit threshold the front card dims and drops
-          // behind; the incoming card gains contrast as it rises.
-          const settledScale = 1 - depth * tokens.backScaleStep;
-          const scale = isFront
-            ? settledScale - (1 - tokens.dragScale) * progress
-            : settledScale + (depth === 1 ? tokens.backScaleStep * progress : 0);
-          // Regular stepped stack, not a rotational fan (2026-09-16,
-          // direct feedback: "not like deck of playing cards spread,
-          // instead regularly spaced kind of thing slanted"). Every card
-          // shares ONE constant slant so they stay parallel; depth only
-          // changes position, stepping left and UP so the spread reads
-          // along the top edge — the prior fan stepped out of the bottom
-          // corner and angled each layer differently, which is the
-          // "spread is at bottom" the feedback called out.
-          const rotation = tokens.slantDeg + (isFront
-            ? tokens.dragRotationDeg * progress * Math.sign(offset || 1)
-            : 0);
-          // As the incoming card rises it closes its own one-step gap,
-          // so depth 1 interpolates toward the front card's position.
-          const closing = depth === 1 ? progress : 0;
-          const stepX = -(depth - closing) * tokens.stepXPx;
-          const stepY = -(depth - closing) * tokens.stepYPx;
+          // Fractional depth: 0 is the front slot, and a card mid-scrub
+          // sits between two slots rather than snapping between them.
+          const depth = index - position;
+          const isFront = Math.round(depth) === 0;
+          // Cards already passed fade out as they leave the front slot;
+          // those still ahead keep their place in the stack.
+          const opacity = depth < -0.5 ? Math.max(0, 1 + (depth + 0.5) * 2) : 1;
+          const scale = Math.max(0.5, 1 - Math.max(depth, 0) * tokens.backScaleStep);
+          const stepX = -Math.max(depth, -1) * tokens.stepXPx;
+          const stepY = -Math.max(depth, -1) * tokens.stepYPx;
           return (
             <div key={index} className={styles.card} data-front={isFront}
               aria-hidden={!isFront}
               style={{
-                zIndex: count - depth,
-                opacity: isFront ? 1 - progress * 0.4 : 1,
-                transform: `translate3d(calc(${translate}px + ${stepX}px), ${stepY}px, 0) rotate(${rotation}deg) scale(${scale})`,
-                transitionDelay: isDragging ? '0ms' : `${depth * tokens.depthDelayMs}ms`,
+                zIndex: count - Math.round(Math.max(depth, 0)),
+                opacity,
+                transform: `translate3d(${stepX}px, ${stepY}px, 0) rotate(${tokens.slantDeg}deg) scale(${scale})`,
+                // No transition while scrubbing: the position itself is
+                // already continuous, so a transition would smear it.
+                transition: isScrubbing ? 'none' : undefined,
               }}>
               {child}
             </div>
@@ -148,7 +176,7 @@ export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: C
           {children.map((_, index) => (
             <button key={index} type="button" role="tab" aria-selected={index === activeIndex}
               aria-label={`Go to card ${index + 1}`} className={styles.dot} data-active={index === activeIndex}
-              onClick={() => setActiveIndex(index)} />
+              onClick={() => commit(index)} />
           ))}
         </div>
       )}
