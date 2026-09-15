@@ -1,0 +1,92 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--shell-gap);
+}
+
+/* Cards are absolutely stacked, so the track needs its own height — taken
+   from the card's own ID-1 aspect ratio so the deck reserves exactly one
+   card's box however many layers sit behind it. Overflow is hidden to
+   give the "kind of a mask over cards so not full cards are shown" the
+   reference shows (2026-09-16, direct feedback): rear cards peek from
+   behind the front one and clip at the deck's edge rather than spilling
+   into the page's own padding. */
+.track {
+  position: relative;
+  aspect-ratio: 1.586 / 1;
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.track:active {
+  cursor: grabbing;
+}
+
+/* Inset from the track's left edge, not inset:0 (2026-09-16): with cards
+   filling the full track width, the fanned rear cards shifted left and
+   were immediately clipped by the mask, leaving the deck looking like a
+   single card — caught by measuring the rendered boxes, not by reading
+   the transforms. The gutter is the room the fan needs; the mask then
+   trims what overhangs, which is exactly the partial-card look the
+   reference shows. */
+.card {
+  position: absolute;
+  inset-block: 0;
+  right: 0;
+  left: var(--card-deck-fan-gutter);
+  /* Bottom-centre origin: the fan and the drag tilt both pivot from below
+     the card, so a rotation reads as the card leaning rather than
+     spinning about its middle. */
+  transform-origin: 50% 100%;
+  /* Only the settle is transitioned — during drag the inline transform is
+     driven per-frame by the spring/pointer, and .card[data-dragging] is
+     not used because the component swaps transition-delay to 0ms instead,
+     keeping one code path for both states. */
+  transition: transform var(--motion-enter-duration) var(--ease-float),
+    opacity var(--motion-enter-duration) var(--ease-standard),
+    filter var(--motion-enter-duration) var(--ease-standard);
+  will-change: transform;
+}
+
+/* One clean primary shadow on the front card; rear cards read as depth
+   through scale/offset and a slight desaturating veil rather than
+   competing shadows (the spec's "one clean primary shadow" on settle). */
+.card[data-front='true'] {
+  box-shadow: var(--shading-raised, 0 0 0 transparent);
+  filter: none;
+}
+
+.card[data-front='false'] {
+  filter: brightness(0.82);
+  pointer-events: none;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-8);
+}
+
+.dot {
+  width: var(--space-8);
+  height: var(--space-8);
+  padding: 0;
+  border: 0;
+  border-radius: var(--shell-round);
+  background: var(--edge);
+  cursor: pointer;
+  transition: background var(--motion-enter-duration) var(--motion-enter-ease),
+    width var(--motion-enter-duration) var(--motion-enter-ease);
+}
+
+/* Active dot widens into a pill, matching the reference's own indicator
+   rather than the plain scale-up PromoCarousel uses. */
+.dot[data-active='true'] {
+  width: var(--space-24);
+  background: var(--accent-signal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .dot { transition: none; }
+}

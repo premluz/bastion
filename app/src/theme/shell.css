@@ -36,6 +36,29 @@
   --shell-focus-offset: var(--space-4);
   --shell-radius: var(--radius-12);
   --shell-round: var(--radius-full);
+  /* Card-deck motion data (2026-09-16, direct feedback specifying the
+     interaction in physical terms: "spring around stiffness 320-380,
+     damping 28-34... depth delay: each back card starts 40-70ms after
+     the card in front... rear cards move only ~55-70% as far as the
+     front card... cancelled before ~25-30%, spring back"). Tokens, not
+     literals inside CardDeck.tsx, per rule 15 (motion is data) — the
+     spring is integrated in JS because CLAUDE.md §5 closes the stack to
+     any animation library, so these are read once via getComputedStyle,
+     the same escape hatch theme.default.css already documents for
+     recharts consuming --motion-enter-ease. */
+  --card-deck-stiffness: 350;
+  --card-deck-damping: 31;
+  --card-deck-depth-delay: 55ms;
+  --card-deck-parallax: 0.62;
+  --card-deck-commit-ratio: 0.3;
+  --card-deck-drag-rotation: -4deg;
+  --card-deck-drag-scale: 0.96;
+  --card-deck-back-scale-step: 0.05;
+  --card-deck-back-offset: var(--space-16);
+  /* Left gutter inside the deck that the fanned rear cards occupy — the
+     front card sits flush right, each card behind it steps into this
+     space, and the deck's own overflow mask trims the overhang. */
+  --card-deck-fan-gutter: var(--space-48);
   --shell-fade-height: var(--space-48);
   /* .topFade/.bottomFade's own height (2026-09-14, direct feedback:
      "make shadows top bottom more height... keep gradients, keep

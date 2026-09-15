@@ -5,7 +5,8 @@ import { Text } from '@astryxdesign/core/Text';
 import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 import { WalletActionRow } from './WalletActionRow';
 import { ContributingBalanceRow } from './ContributingBalanceRow';
-import { PromoCarousel } from './PromoCarousel';
+import { CardDeck } from './CardDeck';
+import { VirtualCardPlaceholder } from './VirtualCardPlaceholder';
 import { WalletCardTile } from './WalletCardTile';
 import { HistoryItem } from './HistoryItem';
 import { AssetsHomeList } from './AssetsHomeList';
@@ -87,9 +88,12 @@ export function MoneyPage({ tab, onTabChange }: MoneyPageProps) {
           <ContributingBalanceRow balances={CONTRIBUTING_BALANCES} />
           <WalletActionRow variant="money" shape="circle" />
           <div className={styles.section}>
-            <PromoCarousel aria-label="Cards">
-              {WALLET_CARDS.map((card) => <WalletCardTile key={card.id} card={card} />)}
-            </PromoCarousel>
+            <CardDeck aria-label="Cards"
+              renderDetails={(activeIndex) => <WalletCardTile card={WALLET_CARDS[activeIndex]!} />}>
+              {WALLET_CARDS.map((card) => (
+                <VirtualCardPlaceholder key={card.id} lastFourDigits={card.lastFourDigits} />
+              ))}
+            </CardDeck>
           </div>
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
