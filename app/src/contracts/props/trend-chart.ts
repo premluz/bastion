@@ -43,5 +43,13 @@ export const TrendChartPropsSchema = z.object({
   // peer-comparison tile) — Entity Detail's own real price chart omits
   // this and keeps time-series's existing 320px bleed default.
   bleedHeight: z.number().positive().optional(),
+  // Suppresses the directional glow pane entirely (2026-09-16, direct
+  // feedback for a portfolio-summary usage: "make the chart quieter...
+  // minimal fill, no heavy glow. It should support the balance rather
+  // than dominate the screen") — the chart/fill/period-selector otherwise
+  // render exactly as before; this affects only the glow wrapper's own
+  // classes/CSS variables. false/omitted (every existing usage) keeps the
+  // glow exactly as before.
+  quiet: z.boolean().optional(),
 });
 export type TrendChartProps = z.infer<typeof TrendChartPropsSchema>;

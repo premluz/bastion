@@ -59,6 +59,15 @@
   border-radius: var(--shell-radius);
 }
 
+/* Smaller footprint (2026-09-16, direct feedback: "compact actions" for
+   Investments, where the row sits above allocation/holdings rather than
+   being the page's own focal point). Same fill/hover/shape logic above,
+   just a smaller box. */
+.iconShape[data-size='compact'] {
+  width: var(--space-32);
+  height: var(--space-32);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .iconShape { transition: none; }
 }

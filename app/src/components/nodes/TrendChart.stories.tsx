@@ -54,3 +54,16 @@ export const Empty: Story = {
     periods: ['MAX'],
   },
 };
+
+// No glow pane, no title (2026-09-16) — a portfolio-summary usage that
+// supports a balance figure sitting above it, rather than a standalone
+// asset-detail chart with its own directional glow.
+export const Quiet: Story = {
+  args: {
+    series: PLACEHOLDER_SERIES,
+    periods: ['1M', 'YTD', 'MAX'],
+    hidePeriodSelector: true,
+    bleedHeight: 120,
+    quiet: true,
+  },
+};

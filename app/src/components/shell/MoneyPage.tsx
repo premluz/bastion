@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Heading } from '@astryxdesign/core/Heading';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
@@ -9,13 +8,11 @@ import { CardDeck } from './CardDeck';
 import { VirtualCardPlaceholder } from './VirtualCardPlaceholder';
 import { WalletCardTile } from './WalletCardTile';
 import { HistoryItem } from './HistoryItem';
-import { AssetsHomeList } from './AssetsHomeList';
-import { EmptyState } from '@astryxdesign/core/EmptyState';
+import { InvestmentsTab } from './InvestmentsTab';
 import { groupAccountHistory } from './accountHistory';
 import { MONEY_HISTORY } from './moneyHistoryData';
 import { MONEY_PLACEHOLDER } from './moneySummary';
 import { WALLET_CARDS } from './cardData';
-import { resolveAssetsHomeSummary } from '../../engine/assetsHome';
 import heroBalanceStyles from '../../theme/heroBalance.module.css';
 import styles from './MoneyPage.module.css';
 
@@ -46,14 +43,16 @@ export interface MoneyPageProps { tab: WalletTab; onTabChange: (tab: WalletTab) 
 // (2026-09-15) — Home's "Money" card needs to preset this page's tab to
 // Money from outside, which a page-internal useState couldn't be told.
 //
-// Crypto tab reuses Home's own resolveAssetsHomeSummary()/AssetsHomeList
-// (2026-09-15 call) rather than a second independent crypto view — same
-// data, same list component, so the two never drift into different
-// totals.
+// "Crypto" tab renamed to "Investments" (2026-09-16, direct feedback) —
+// internal id stays 'crypto' (WalletTab/useMobileFrame/HoldingsPage all
+// key off it; only the visible label changed, an unrelated rename across
+// those files would be its own out-of-scope diff). Its body now lives in
+// InvestmentsTab.tsx, not inlined here — a full value/chart/timeframe/
+// allocation/holdings build-out pushed this file well past a page-shell's
+// worth of JSX, same file-budget reasoning AssetsHomePage.tsx already
+// follows as its own file rather than living inside MobileFrame.tsx.
 export function MoneyPage({ tab, onTabChange }: MoneyPageProps) {
-  const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const groups = groupAccountHistory(MONEY_HISTORY, 'all');
-  const cryptoSummary = resolveAssetsHomeSummary();
 
   return (
     <div className={styles.root}>
@@ -61,7 +60,7 @@ export function MoneyPage({ tab, onTabChange }: MoneyPageProps) {
         <SegmentedControl value={tab} onChange={(value) => onTabChange(value as WalletTab)} label="Wallet section"
           layout="fill" size="lg" className={styles.tabs}>
           <SegmentedControlItem value="money" label="Money" />
-          <SegmentedControlItem value="crypto" label="Crypto" />
+          <SegmentedControlItem value="crypto" label="Investments" />
         </SegmentedControl>
       </div>
       {tab === 'money' ? (
@@ -112,19 +111,7 @@ export function MoneyPage({ tab, onTabChange }: MoneyPageProps) {
           </div>
         </>
       ) : (
-        <>
-          <div className={styles.balanceBlock}>
-            <Heading level={1} type="display-1" className={heroBalanceStyles.heroBalance}>
-              ${cryptoSummary.totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-            </Heading>
-          </div>
-          <WalletActionRow variant="wallet" />
-          {cryptoSummary.rows.length > 0 ? (
-            <AssetsHomeList rows={cryptoSummary.rows} selectedAssetId={selectedAssetId} onSelectAsset={setSelectedAssetId} />
-          ) : (
-            <EmptyState title="No assets yet" description="Connect a wallet to see your crypto holdings here." />
-          )}
-        </>
+        <InvestmentsTab />
       )}
     </div>
   );

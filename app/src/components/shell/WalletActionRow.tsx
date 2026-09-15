@@ -52,12 +52,18 @@ export interface WalletActionRowProps {
   // same size/fill/hover, differing only in border-radius; neither is a
   // fallback for the other.
   shape?: 'roundedSquare' | 'circle';
+  // Compact size (2026-09-16, direct feedback for Investments: "five
+  // large actions plus allocation push the actual assets too far down.
+  // Use compact actions") — a smaller icon/label footprint for a context
+  // where actions are a secondary row, not the page's own focal point
+  // the way Money's/Home's full-size row is. Default unchanged.
+  size?: 'default' | 'compact';
 }
 
-export function WalletActionRow({ variant = 'wallet', shape = 'roundedSquare' }: WalletActionRowProps) {
+export function WalletActionRow({ variant = 'wallet', shape = 'roundedSquare', size = 'default' }: WalletActionRowProps) {
   const actions = variant === 'money' ? MONEY_ACTIONS : WALLET_ACTIONS;
   return (
-    <div className={styles.row} data-variant={variant}>
+    <div className={styles.row} data-variant={variant} data-size={size}>
       {actions.map(({ id, label, icon }) => (
         <div key={id} className={styles.action}>
           {/* IconButton itself is the whole clickable/hoverable surface
@@ -69,8 +75,8 @@ export function WalletActionRow({ variant = 'wallet', shape = 'roundedSquare' }:
               tile (icon + label) its own panel and hover. ghost strips
               that panel; the shape/fill/color this component already
               applied to the icon now lives directly on the real button. */}
-          <IconButton label={label} icon={<Icon icon={icon} size="md" />} variant="ghost"
-            className={styles.iconShape} data-shape={shape} />
+          <IconButton label={label} icon={<Icon icon={icon} size={size === 'compact' ? 'sm' : 'md'} />} variant="ghost"
+            className={styles.iconShape} data-shape={shape} data-size={size} />
           <Text type="supporting" color="secondary">
             {label}
           </Text>

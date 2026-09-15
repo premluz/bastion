@@ -255,6 +255,7 @@ export function TrendChart({
   compareSeries,
   hidePeriodSelector,
   bleedHeight,
+  quiet,
   activePeriod: controlledPeriod,
   onPeriodChange,
 }: TrendChartProps & {
@@ -338,8 +339,8 @@ export function TrendChart({
     // opaque than glow.module.css's own --tint-strong default (KeyIssues-
     // Card's badges/panes are untouched, still --tint-strong).
     <div
-      className={`${styles.root} ${bleedStyles.inline} ${bleedStyles.blockEnd} ${glowStyles.root} ${glowStyles.bottom} ${glowStyles.clipped}`}
-      style={{ '--glow-color': trendColor, '--glow-strength': 'var(--tint-subtle)' } as React.CSSProperties}
+      className={`${styles.root} ${bleedStyles.inline} ${bleedStyles.blockEnd}${quiet ? '' : ` ${glowStyles.root} ${glowStyles.bottom} ${glowStyles.clipped}`}`}
+      {...(quiet ? {} : { style: { '--glow-color': trendColor, '--glow-strength': 'var(--tint-subtle)' } as React.CSSProperties })}
     >
       <div className={glowStyles.content}>
         {/* Header re-inset by exactly what the root above bled out
