@@ -69,8 +69,12 @@
   filter: none;
 }
 
+/* Darker than the prior 0.82 (2026-09-16) — at this card size and the
+   deck's tight masked band, the reference's own subtle rest-state
+   offsets read as noise unless rear cards are more clearly receded;
+   0.6 gives enough contrast for the stack to read as intentional. */
 .card[data-front='false'] {
-  filter: brightness(0.82);
+  filter: brightness(0.6);
   pointer-events: none;
 }
 

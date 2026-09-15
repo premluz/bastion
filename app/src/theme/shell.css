@@ -36,34 +36,17 @@
   --shell-focus-offset: var(--space-4);
   --shell-radius: var(--radius-12);
   --shell-round: var(--radius-full);
-  /* Card-deck motion data (2026-09-16, spring values from direct
-     feedback: "spring around stiffness 320-380, damping 28-34").
-     Tokens, not literals inside CardDeck.tsx, per rule 15 (motion is
-     data) — the spring is integrated in JS because CLAUDE.md §5 closes
-     the stack to any animation library, so these are read once via
-     getComputedStyle, the same escape hatch theme.default.css already
-     documents for recharts consuming --motion-enter-ease.
-     The per-card throw tokens that lived here (depth-delay, parallax,
-     commit-ratio, drag-rotation, drag-scale) went out with the throw
-     interaction itself when the deck became a continuous scrub. */
-  --card-deck-stiffness: 350;
-  --card-deck-damping: 31;
-  --card-deck-back-scale-step: 0.05;
-  /* Even step between stacked cards (2026-09-16, direct feedback: "not
-     like deck of playing cards spread, instead regularly spaced kind of
-     thing slanted") — a fixed x/y offset applied per depth, rather than
-     a rotational fan from a pivot. Each card behind steps LEFT and UP,
-     so the spread reads along the top edge the way the reference shows,
-     not out of the bottom corner. */
-  --card-deck-step-x: calc(var(--space-64) + var(--space-24));
-  --card-deck-step-y: var(--space-8);
-  /* The whole stack leans by one constant angle — cards stay parallel to
-     each other (a regular slanted stack), unlike a fan where each layer
-     takes a different angle. */
-  /* -16deg, between the literal -25deg asked for and the ~-10deg the
-     reference image actually shows (2026-09-16, confirmed with Prem):
-     a visible diagonal lean without the hard tilt -25deg produced. */
-  --card-deck-slant: -16deg;
+  /* Card-deck geometry (2026-09-16). The per-card throw's own timing/
+     easing/offsets are ported as literal constants inside CardDeck.tsx
+     instead of tokens here (2026-09-16 follow-up, direct request: "try
+     this [SwiftUI] reference, might build a new comp off it") — that
+     port intentionally mirrors the reference's own math term-for-term
+     (drag divisors, rest-state offsets, rotation-per-depth), which reads
+     more honestly as inline constants tied to that specific algorithm
+     than as generic reusable tokens. The earlier stiffness/damping/step/
+     slant tokens for the prior scrub and fan interactions are removed
+     rather than left unread. Sizing stays tokenized here since it's
+     genuinely shared shell geometry, not part of the ported algorithm. */
   /* Visible band of the deck: cards are taller than this and hang from
      --card-deck-top-inset, so the mask cuts their LOWER portion off
      (2026-09-16, direct feedback: "smaller card... not fully visible,
@@ -84,7 +67,13 @@
      leading card's top corner inside the band instead of the whole
      deck hugging the top edge. */
   --card-deck-top-inset: var(--space-48);
-  --card-deck-right-inset: var(--space-24);
+  /* Room for the ported reference's own down-right rest-state stepping
+     (up to ~22px at depth 3) to actually clear the front card before
+     hitting the mask's right edge (2026-09-16) — at the smaller 24px
+     inset the rear cards ran straight off the visible track instead of
+     fanning into view, confirmed by measuring their rendered boxes
+     rather than assumed from the transform values alone. */
+  --card-deck-right-inset: calc(var(--space-64) + var(--space-16));
   --shell-fade-height: var(--space-48);
   /* .topFade/.bottomFade's own height (2026-09-14, direct feedback:
      "make shadows top bottom more height... keep gradients, keep

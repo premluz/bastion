@@ -1,6 +1,4 @@
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
-import { useDeckMotionTokens } from './useDeckMotionTokens';
-import { useDeckSpring } from './useDeckSpring';
+import { useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import styles from './CardDeck.module.css';
 
 export interface CardDeckProps {
@@ -12,171 +10,209 @@ export interface CardDeckProps {
   renderDetails?: (activeIndex: number) => ReactNode;
 }
 
-// Pointer travel that advances the deck by exactly one card. Smaller than
-// the track's own width so a comfortable flick moves a card, and a long
-// scrub crosses several without needing a full screen-width per card.
-const SCRUB_DISTANCE_PX = 120;
-const AXIS_LOCK_PX = 8;
-// Trackpad deltas are far finer-grained than pointer travel; this scales
-// wheel distance into the same scrub space.
-const WHEEL_SCALE = 0.6;
+// Ported from a SwiftUI reference (swiftui-4-card-deck-swipe, direct
+// request: "try this reference, might build a new comp off it") —
+// individual card-throw gestures, replacing the continuous scrub the
+// deck used previously. The reference's own constants (drag divisors,
+// rest-state offsets, rotation-per-depth) are kept as literal ports
+// rather than re-derived, since the ask was to match that interaction,
+// not reinterpret it.
+const SWIPE_THRESHOLD_PX = 90;
+const DRAG_NORMALIZER_PX = 140;
+const AXIS_LOCK_PX = 10;
+const SETTLE_MS = 320;
+const EXIT_MS = 420;
 
-// Continuously scrubbed stacked deck (2026-09-16, direct feedback:
-// "scroll magic mouse horizontal and drag across scrub should produce
-// same interaction as clicking dots but continues — so could scrub
-// across to go through all cards seamlessly... no separate drag the
-// cards interaction, just triggering next card move").
-//
-// The deck's whole state is ONE fractional position: 1.4 means "40% of
-// the way from card 1 to card 2". Every card's depth — and therefore its
-// step, scale and z-order — is derived from that fraction, so the stack
-// flows continuously through any number of cards rather than each card
-// being thrown individually. Dragging, wheeling and clicking a dot all
-// write to the same value, which is what makes them the same interaction
-// at different granularities.
+type Direction = 'left' | 'right' | null;
+
+// clamp(-1, 1, x)
+const clampUnit = (value: number) => Math.max(-1, Math.min(1, value));
+
 export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: CardDeckProps) {
-  const tokens = useDeckMotionTokens();
-  // Committed target (whole number) and the live scrub offset in cards.
-  const [target, setTarget] = useState(0);
-  const [scrub, setScrub] = useState(0);
-  const [isScrubbing, setIsScrubbing] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
+  const [exitDirection, setExitDirection] = useState<Direction>(null);
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const axisLocked = useRef(false);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const wheelIdle = useRef(0);
+  const exitTimer = useRef(0);
   const count = children.length;
-  const maxIndex = count - 1;
 
-  // Settles to the nearest whole card when released; while scrubbing the
-  // deck tracks the input exactly, so the spring is disabled.
-  const settled = useDeckSpring(target, { stiffness: tokens.stiffness, damping: tokens.damping }, !isScrubbing);
-  const position = isScrubbing ? target + scrub : settled;
-  const activeIndex = Math.max(0, Math.min(maxIndex, Math.round(position)));
+  const wrap = (index: number) => ((index % count) + count) % count;
 
-  const clamp = (value: number) => Math.max(0, Math.min(maxIndex, value));
-
-  const commit = (next: number) => {
-    const clamped = clamp(Math.round(next));
-    // Haptic tick as a new card crosses into the primary slot. Guarded:
-    // vibrate is absent on desktop Safari/Firefox entirely.
-    if (clamped !== target) navigator.vibrate?.(8);
-    setTarget(clamped);
-  };
-
-  // Latest committed target, read inside the native wheel handler — the
-  // listener is registered once, so it must not close over a stale value.
-  const targetRef = useRef(target);
-  targetRef.current = target;
-
-  // Horizontal wheel/trackpad scrub. Registered natively rather than via
-  // onWheel so it can be non-passive: the deck must be able to preventDefault
-  // on a horizontal gesture to stop the page scrolling sideways under it,
-  // which React's own passive-by-default wheel listener cannot do.
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track || count < 2) return;
-    const onWheel = (event: WheelEvent) => {
-      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
-      event.preventDefault();
-      setIsScrubbing(true);
-      setScrub((current) => {
-        const next = current + (event.deltaX / SCRUB_DISTANCE_PX) * WHEEL_SCALE;
-        // Clamp against the committed target so the deck can't be scrubbed
-        // past either end of the real deck.
-        return clamp(targetRef.current + next) - targetRef.current;
-      });
-      // A wheel gesture has no "release" event, so settle on a quiet gap.
-      window.clearTimeout(wheelIdle.current);
-      wheelIdle.current = window.setTimeout(() => {
-        setScrub((currentScrub) => {
-          const landed = clamp(Math.round(targetRef.current + currentScrub));
-          if (landed !== targetRef.current) navigator.vibrate?.(8);
-          setTarget(landed);
-          return 0;
-        });
-        setIsScrubbing(false);
-      }, 120);
-    };
-    track.addEventListener('wheel', onWheel, { passive: false });
-    return () => {
-      track.removeEventListener('wheel', onWheel);
-      window.clearTimeout(wheelIdle.current);
-    };
-  }, [count, maxIndex]);
+  const dragProgress = clampUnit(dragOffset / DRAG_NORMALIZER_PX);
+  const leftProgress = Math.max(0, -dragProgress);
+  const rightProgress = Math.max(0, dragProgress);
 
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (count < 2) return;
+    if (count < 2 || isExiting) return;
     pointerStart.current = { x: event.clientX, y: event.clientY };
     axisLocked.current = false;
   };
 
   const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     const start = pointerStart.current;
-    if (!start) return;
+    if (!start || isExiting) return;
     const dx = event.clientX - start.x;
     const dy = event.clientY - start.y;
     // Axis lock: the deck sits inside a vertically scrolling page, so a
     // mostly-vertical gesture must stay a page scroll rather than being
-    // stolen as a deck scrub.
+    // stolen as a card swipe.
     if (!axisLocked.current) {
       if (Math.abs(dx) < AXIS_LOCK_PX && Math.abs(dy) < AXIS_LOCK_PX) return;
       if (Math.abs(dy) > Math.abs(dx)) { pointerStart.current = null; return; }
       axisLocked.current = true;
-      setIsScrubbing(true);
+      setIsDragging(true);
       event.currentTarget.setPointerCapture(event.pointerId);
     }
-    // Dragging left (negative dx) advances forward through the deck.
-    setScrub(clamp(target - dx / SCRUB_DISTANCE_PX) - target);
+    setDragOffset(dx);
   };
 
   const onPointerUp = () => {
     if (!pointerStart.current) return;
     pointerStart.current = null;
-    if (axisLocked.current) commit(target + scrub);
-    setScrub(0);
-    setIsScrubbing(false);
+    if (!axisLocked.current) return;
+    setIsDragging(false);
+    const translation = dragOffset;
+    if (translation <= -SWIPE_THRESHOLD_PX) {
+      startExit('left');
+    } else if (translation >= SWIPE_THRESHOLD_PX) {
+      startExit('right');
+    } else {
+      setDragOffset(0);
+    }
     axisLocked.current = false;
+  };
+
+  // Left exit: the front card flies off-screen left; the next card (its
+  // own rest-state depth-1 slot) becomes front once the index advances.
+  // Right exit: the PREVIOUS card comes back as front. The reference
+  // gives it an elaborate two-phase escape/crown animation; this keeps
+  // the single left/right symmetry the rest of this deck already uses
+  // (advance/retreat by one), settling for a simpler right transition
+  // rather than porting that two-phase choreography verbatim.
+  const startExit = (direction: Direction) => {
+    navigator.vibrate?.(8);
+    setExitDirection(direction);
+    setIsExiting(true);
+    setDragOffset(direction === 'left' ? -DRAG_NORMALIZER_PX * 2.2 : DRAG_NORMALIZER_PX * 1.6);
+    window.clearTimeout(exitTimer.current);
+    exitTimer.current = window.setTimeout(() => {
+      setSelectedIndex((current) => wrap(current + (direction === 'left' ? 1 : -1)));
+      setIsExiting(false);
+      setExitDirection(null);
+      setDragOffset(0);
+    }, EXIT_MS);
   };
 
   return (
     <div className={styles.root}>
-      <div ref={trackRef} className={styles.track} role="region" aria-label={ariaLabel}
+      <div className={styles.track} role="region" aria-label={ariaLabel}
         onPointerDown={onPointerDown} onPointerMove={onPointerMove}
         onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
         {children.map((child, index) => {
-          // Fractional depth: 0 is the front slot, and a card mid-scrub
-          // sits between two slots rather than snapping between them.
-          const depth = index - position;
-          const isFront = Math.round(depth) === 0;
-          // Cards already passed fade out as they leave the front slot;
-          // those still ahead keep their place in the stack.
-          const opacity = depth < -0.5 ? Math.max(0, 1 + (depth + 0.5) * 2) : 1;
-          const scale = Math.max(0.5, 1 - Math.max(depth, 0) * tokens.backScaleStep);
-          const stepX = -Math.max(depth, -1) * tokens.stepXPx;
-          const stepY = -Math.max(depth, -1) * tokens.stepYPx;
+          const forward = wrap(index - selectedIndex);
+          const isFront = forward === 0;
+          let scale: number;
+          let x: number;
+          let y: number;
+          let rotation: number;
+          let opacity = 1;
+          let zIndex: number;
+
+          if (isFront) {
+            if (isExiting && exitDirection === 'left') {
+              x = dragOffset * 0.9;
+              y = 10;
+              rotation = -18;
+              scale = 0.92;
+            } else if (isExiting && exitDirection === 'right') {
+              x = dragOffset * 0.42;
+              y = 4;
+              rotation = 6;
+              scale = 0.965;
+            } else {
+              // Interactive drag: the front card follows the finger,
+              // easing off on the right side the way the reference does
+              // (rightProgress softens the 0.42 multiplier).
+              x = dragOffset * 0.42 * (1 - rightProgress * 0.55) + 10 * rightProgress;
+              y = 6 * leftProgress + 4 * rightProgress;
+              rotation = -9 * leftProgress + 4 * rightProgress;
+              scale = 1 - 0.03 * leftProgress - 0.015 * rightProgress;
+            }
+            zIndex = 100;
+          } else if (forward === count - 1 && (dragOffset > 0 || (isExiting && exitDirection === 'right'))) {
+            // The PREVIOUS card, rising into front from the back-right as
+            // the user drags/exits right — the reference's "incoming"
+            // card, interpolated the same eased way toward the front slot.
+            const progress = isExiting ? 1 : Math.min(1, Math.max(0, dragOffset) / DRAG_NORMALIZER_PX);
+            const eased = 1 - (1 - progress) ** 2;
+            scale = 0.91 + 0.06 * eased;
+            x = 22 - 68 * eased;
+            y = 22 - 18 * eased;
+            rotation = 12 - 18 * eased;
+            zIndex = 12;
+          } else {
+            // Rest-state stack: diagonal down-right offsets, increasing
+            // rotation per depth — ported directly from the reference's
+            // back1/back2/back3 states (depths beyond 3 stay hidden).
+            const depth = forward;
+            // Reference offsets (8/15/22px) were tuned for its own 176px
+            // card in a compact frame; at our card size and the deck's
+            // tight masked band they read as visual noise rather than a
+            // clear stack (2026-09-16, measured live: the composite of
+            // barely-offset, barely-differentiated cards looked like a
+            // rendering glitch, not an intentional deck). REST_SCALE
+            // amplifies just the offset, keeping the reference's own
+            // scale/rotation-per-depth values verbatim.
+            const REST_SCALE = 1.8;
+            const base = [
+              { s: 1, o: 0, r: 0 },
+              { s: 0.97, o: 8 * REST_SCALE, r: 4 },
+              { s: 0.94, o: 15 * REST_SCALE, r: 8 },
+              { s: 0.91, o: 22 * REST_SCALE, r: 12 },
+            ][Math.min(depth, 3)]!;
+            scale = base.s + 0.03 * leftProgress - 0.03 * rightProgress;
+            x = base.o - 8 * leftProgress + 7 * rightProgress;
+            // Stepped UP, not down (2026-09-16, confirmed with Prem): the
+            // reference steps rear cards down-right, but our mask clips
+            // each card's BOTTOM (tops stay anchored visible), so a
+            // downward step pushes rear cards further into the clipped
+            // area instead of revealing them — measured live, this is
+            // why they read as barely-there. Flipping the vertical step
+            // keeps the reference's rightward step and rotation-per-depth
+            // direction while actually staying inside the visible band.
+            y = -base.o + 8 * leftProgress - 7 * rightProgress;
+            rotation = base.r - 4 * leftProgress + 4 * rightProgress;
+            if (depth === 2) opacity = 1 - 0.06 * rightProgress;
+            if (depth >= 3) opacity = depth === 3 ? 1 - 0.18 * rightProgress : 0;
+            zIndex = 30 - depth * 10;
+          }
+
           return (
             <div key={index} className={styles.card} data-front={isFront}
               aria-hidden={!isFront}
               style={{
-                zIndex: count - Math.round(Math.max(depth, 0)),
+                zIndex,
                 opacity,
-                transform: `translate3d(${stepX}px, ${stepY}px, 0) rotate(${tokens.slantDeg}deg) scale(${scale})`,
-                // No transition while scrubbing: the position itself is
-                // already continuous, so a transition would smear it.
-                transition: isScrubbing ? 'none' : undefined,
+                transform: `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg) scale(${scale})`,
+                transition: isDragging ? 'none'
+                  : isExiting ? `transform ${EXIT_MS}ms var(--ease-standard), opacity ${EXIT_MS}ms var(--ease-standard)`
+                  : `transform ${SETTLE_MS}ms var(--ease-float), opacity ${SETTLE_MS}ms var(--ease-standard)`,
               }}>
               {child}
             </div>
           );
         })}
       </div>
-      {renderDetails?.(activeIndex)}
+      {renderDetails?.(selectedIndex)}
       {count > 1 && (
         <div className={styles.dots} role="tablist" aria-label={`${ariaLabel} pagination`}>
           {children.map((_, index) => (
-            <button key={index} type="button" role="tab" aria-selected={index === activeIndex}
-              aria-label={`Go to card ${index + 1}`} className={styles.dot} data-active={index === activeIndex}
-              onClick={() => commit(index)} />
+            <button key={index} type="button" role="tab" aria-selected={index === selectedIndex}
+              aria-label={`Go to card ${index + 1}`} className={styles.dot} data-active={index === selectedIndex}
+              onClick={() => setSelectedIndex(index)} />
           ))}
         </div>
       )}
