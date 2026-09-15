@@ -79,6 +79,21 @@
 .topFade { top: 0; }
 .bottomFade { bottom: 0; transform: rotate(180deg); }
 
+/* Suppressed whenever .page is the active sibling (2026-09-16, direct
+   feedback: "gradient glow is cut off by shadow gradient, should be on
+   top") — .page already fades its OWN content via mask-image
+   (--shell-transcript-mask), so .topFade's painted overlay was a second,
+   redundant dark wash stacked on top of it. Unlike the mask (which fades
+   the actual pixels, glow included, proportionally as they scroll under
+   the edge), a painted overlay sits opaque above everything regardless
+   of what's underneath — that's what was washing out AssetsHomeHeader's
+   ambient glow near the top. Still needed for .content (the true
+   transcript view), which has no mask of its own. */
+.chrome:has(.page) .topFade,
+.chrome:has(.page) .bottomFade {
+  display: none;
+}
+
 /* The dock's fade band is opaque --surface-0 at its top edge, so once the
    assistant opens it paints a hard horizontal seam straight across the
    halo rising behind the dock (2026-09-13, direct feedback: "glow should
