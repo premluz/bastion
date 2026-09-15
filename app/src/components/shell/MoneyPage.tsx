@@ -59,7 +59,7 @@ export function MoneyPage({ tab, onTabChange }: MoneyPageProps) {
     <div className={styles.root}>
       <div className={styles.tabRow}>
         <SegmentedControl value={tab} onChange={(value) => onTabChange(value as WalletTab)} label="Wallet section"
-          layout="fill" className={styles.tabs}>
+          layout="fill" size="lg" className={styles.tabs}>
           <SegmentedControlItem value="money" label="Money" />
           <SegmentedControlItem value="crypto" label="Crypto" />
         </SegmentedControl>
