@@ -57,23 +57,21 @@
   /* Viewport is shorter than the card, so the mask keeps trimming the
      card bottoms while their tops stay fully visible. */
   --card-deck-viewport-height: calc(var(--space-64) * 2);
-  /* Card keeps real ID-1 proportions (see CardDeck.module.css): this is
-     its height, and width follows from the 1.586 ratio — roughly 222px
-     wide at 140px tall, leaving the rest of a 414px frame as the
-     horizontal gap the spread steps through. */
-  --card-deck-card-height: calc(var(--space-64) + var(--space-32) + var(--space-2));
-  /* Pushed further down the viewport (2026-09-16, "30% lowered down") —
-     with the stack slanted hard, the extra top inset is what keeps the
-     leading card's top corner inside the band instead of the whole
-     deck hugging the top edge. */
-  --card-deck-top-inset: var(--space-48);
-  /* Room for the ported reference's own down-right rest-state stepping
-     (up to ~22px at depth 3) to actually clear the front card before
-     hitting the mask's right edge (2026-09-16) — at the smaller 24px
-     inset the rear cards ran straight off the visible track instead of
-     fanning into view, confirmed by measuring their rendered boxes
-     rather than assumed from the transform values alone. */
-  --card-deck-right-inset: calc(var(--space-64) + var(--space-16));
+  /* Card is much larger now (2026-09-16, direct feedback: "larger cards
+     but moved down so the front card is roughly half top part visible")
+     — height grows well past the viewport so the top-inset below can
+     push it down until only its top half clears the mask, rather than
+     the whole card mostly fitting with a thin clipped sliver. Width
+     follows from the 1.586 ID-1 ratio (see CardDeck.module.css). */
+  --card-deck-card-height: calc(var(--space-64) * 3);
+  /* Pushed down until only the card's top half is visible (2026-09-16,
+     direct feedback) — the card starts far enough below the viewport's
+     own top that exactly half its height (card-height / 2) still fits
+     above the viewport's BOTTOM edge, where the mask cuts it off. Not
+     top-inset = card-height / 2 directly: that put the inset itself
+     past the viewport's own height, leaving nothing but a rotated
+     sliver visible (caught on screenshot before landing on this form). */
+  --card-deck-top-inset: calc(var(--card-deck-viewport-height) - (var(--card-deck-card-height) / 2));
   --shell-fade-height: var(--space-48);
   /* .topFade/.bottomFade's own height (2026-09-14, direct feedback:
      "make shadows top bottom more height... keep gradients, keep

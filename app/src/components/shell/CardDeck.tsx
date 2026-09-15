@@ -163,18 +163,22 @@ export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: C
             // tight masked band they read as visual noise rather than a
             // clear stack (2026-09-16, measured live: the composite of
             // barely-offset, barely-differentiated cards looked like a
-            // rendering glitch, not an intentional deck). REST_SCALE
-            // amplifies just the offset, keeping the reference's own
-            // scale/rotation-per-depth values verbatim.
-            const REST_SCALE = 1.8;
+            // rendering glitch, not an intentional deck). Horizontal and
+            // vertical steps now scale independently — direct feedback:
+            // "spread other cards more to the right" — rather than
+            // reusing one magnitude for both axes the way the reference
+            // does, since a symmetric step doesn't read as "more to the
+            // right" specifically.
+            const REST_SCALE_X = 6.5;
+            const REST_SCALE_Y = 1.4;
             const base = [
-              { s: 1, o: 0, r: 0 },
-              { s: 0.97, o: 8 * REST_SCALE, r: 4 },
-              { s: 0.94, o: 15 * REST_SCALE, r: 8 },
-              { s: 0.91, o: 22 * REST_SCALE, r: 12 },
+              { s: 1, ox: 0, oy: 0, r: 0 },
+              { s: 0.97, ox: 8 * REST_SCALE_X, oy: 8 * REST_SCALE_Y, r: 4 },
+              { s: 0.94, ox: 15 * REST_SCALE_X, oy: 15 * REST_SCALE_Y, r: 8 },
+              { s: 0.91, ox: 22 * REST_SCALE_X, oy: 22 * REST_SCALE_Y, r: 12 },
             ][Math.min(depth, 3)]!;
             scale = base.s + 0.03 * leftProgress - 0.03 * rightProgress;
-            x = base.o - 8 * leftProgress + 7 * rightProgress;
+            x = base.ox - 8 * leftProgress + 7 * rightProgress;
             // Stepped UP, not down (2026-09-16, confirmed with Prem): the
             // reference steps rear cards down-right, but our mask clips
             // each card's BOTTOM (tops stay anchored visible), so a
@@ -183,7 +187,7 @@ export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: C
             // why they read as barely-there. Flipping the vertical step
             // keeps the reference's rightward step and rotation-per-depth
             // direction while actually staying inside the visible band.
-            y = -base.o + 8 * leftProgress - 7 * rightProgress;
+            y = -base.oy + 8 * leftProgress - 7 * rightProgress;
             rotation = base.r - 4 * leftProgress + 4 * rightProgress;
             if (depth === 2) opacity = 1 - 0.06 * rightProgress;
             if (depth >= 3) opacity = depth === 3 ? 1 - 0.18 * rightProgress : 0;
@@ -196,7 +200,11 @@ export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: C
               style={{
                 zIndex,
                 opacity,
-                transform: `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg) scale(${scale})`,
+                // -50% first: .card is left:50% in CSS so it can stay
+                // centred as a group (2026-09-16, direct feedback: the
+                // front card "remains in the center of screen"); each
+                // card's own x/y then offsets it from that shared centre.
+                transform: `translate3d(calc(-50% + ${x}px), ${y}px, 0) rotate(${rotation}deg) scale(${scale})`,
                 transition: isDragging ? 'none'
                   : isExiting ? `transform ${EXIT_MS}ms var(--ease-standard), opacity ${EXIT_MS}ms var(--ease-standard)`
                   : `transform ${SETTLE_MS}ms var(--ease-float), opacity ${SETTLE_MS}ms var(--ease-standard)`,
