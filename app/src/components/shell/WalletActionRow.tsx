@@ -1,4 +1,4 @@
-import { Button } from '@astryxdesign/core/Button';
+import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
 import {
@@ -58,16 +58,22 @@ export function WalletActionRow({ variant = 'wallet', shape = 'roundedSquare' }:
   return (
     <div className={styles.row} data-variant={variant}>
       {actions.map(({ id, label, icon }) => (
-        <Button key={id} label={label} variant="secondary" className={styles.action}>
-          <span className={styles.actionContent}>
-            <span className={styles.iconShape} data-shape={shape}>
-              <Icon icon={icon} size="md" />
-            </span>
-            <Text type="supporting" color="inherit">
-              {label}
-            </Text>
-          </span>
-        </Button>
+        <div key={id} className={styles.action}>
+          {/* IconButton itself is the whole clickable/hoverable surface
+              (2026-09-15, direct feedback against a reference screenshot:
+              "rounded action row has not got additional square rounded
+              pane around it, it's just rounded... hover is on that
+              rounded pill, label is outside") — the label used to live
+              inside a Button variant="secondary", which gave the entire
+              tile (icon + label) its own panel and hover. ghost strips
+              that panel; the shape/fill/color this component already
+              applied to the icon now lives directly on the real button. */}
+          <IconButton label={label} icon={<Icon icon={icon} size="md" />} variant="ghost"
+            className={styles.iconShape} data-shape={shape} />
+          <Text type="supporting" color="secondary">
+            {label}
+          </Text>
+        </div>
       ))}
     </div>
   );

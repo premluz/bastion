@@ -11,13 +11,10 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+/* Plain layout column, not a shared clickable panel (2026-09-15, direct
+   feedback: the icon button IS the whole hoverable surface; the label is
+   a separate sibling outside it, not part of one bigger button). */
 .action {
-  width: 100%;
-  height: auto;
-  padding: var(--space-8) 0;
-}
-
-.actionContent {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,13 +22,9 @@
 }
 
 /* Configurable shape (2026-09-15, direct feedback) — roundedSquare keeps
-   the existing look with no visible background; circle wraps the icon in
-   its own filled disc, Money's own request. */
-.iconShape {
-  display: grid;
-  place-items: center;
-}
-
+   the button's own default footprint (no extra fill), circle gives it a
+   filled disc, Money's own request. Both apply directly to the real
+   IconButton now, not a decorative inner span it used to wrap. */
 .iconShape[data-shape='circle'] {
   width: var(--shell-control-size);
   height: var(--shell-control-size);
