@@ -1,0 +1,43 @@
+@import '../../theme/explore.css';
+.page { padding: var(--space-24) var(--space-16) var(--space-32); }
+.stack { display: flex; flex-direction: column; gap: var(--space-24); min-width: 0; }
+.group { min-width: 0; }
+.rows { display: flex; flex-direction: column; gap: var(--space-8); }
+.heading { margin: 0 0 var(--space-12); font: inherit; color: var(--ink-primary); }
+.heading .headingLink { padding: 0; min-height: var(--space-32);  }
+.identity, .values { display: flex; flex-direction: column; gap: var(--space-4); min-width: 0; }
+.identity { align-items: flex-start; }
+.values { align-items: flex-end; white-space: nowrap; }
+.name { display: flex; align-items: center; gap: var(--space-4); min-width: 0; max-width: 100%; }
+.name > :first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.badge { font-size: var(--text-12); color: var(--ink-secondary); background: var(--surface-3); border-radius: var(--radius-8); padding: var(--space-2) var(--space-4); white-space: nowrap; }
+.row { width: 100%; min-width: 0; }
+.prominent.prominent { overflow: hidden; width: var(--explore-card-width); background: var(--surface-2); border-radius: var(--radius-12); box-shadow: none; border: 0; }
+.cardContent { --pane-inset: var(--space-16); display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-12); min-height: var(--explore-card-min-height); }
+.cardContent > :first-child { width: calc(var(--space-32) + var(--space-8)); height: calc(var(--space-32) + var(--space-8)); }
+.chart { composes: inline blockEnd from '../../theme/bleed.module.css'; align-self: stretch; margin-top: auto; }
+.chart svg { display: block; width: 100%; }
+.tabs, .chips { display: flex; gap: var(--space-8); }
+.tabs { overflow-x: auto; scrollbar-width: none; }
+.chips { flex-wrap: wrap; }
+/* Matched to Portfolio's own tab size (2026-09-16, direct feedback: "tabs
+   on Discover should be same size as on Portfolio") — Token's own size
+   scale tops out at "lg" (28px height, 12px font, 8px padding-inline),
+   smaller than SegmentedControlItem's "lg" (32px/14px/12px) despite
+   sharing the name, since the two components derive their "lg" from
+   different formulas. Token has no larger step to reach for, so the
+   target dimensions are set directly. */
+.chip.chip {
+  flex-shrink: 0;
+  height: var(--space-32);
+  padding-inline: var(--space-12);
+  font-size: var(--text-14);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  color: var(--ink-secondary);
+  text-decoration: none;
+}
+.chipWrap[aria-current='page'] .chip { background: var(--ink-primary); color: var(--surface-0); }
+
+.chipWrap { flex-shrink: 0; }
+.headingLink span { font-size: var(--text-20); }
