@@ -13,12 +13,19 @@
    on home also left align, same as on portfolio") — matches MoneyPage's
    own .balanceBlock (align-items: flex-start), so the hero figure reads
    the same way on both screens. */
+/* Top padding dropped to match Money/Explore's own page-level top inset
+   (2026-09-16 follow-up, direct feedback: "homepage also should have
+   same" — .root's --space-8 plus this --space-24 stacked to 32px before
+   the balance, a visible jump against Money's/Explore's 8px before their
+   own first line of content). Bottom padding is unchanged: that's
+   breathing room before the category cards below, not part of the
+   top-of-page inset the request points at. */
 .portfolio {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-4);
-  padding-block: var(--space-24);
+  padding-block: 0 var(--space-24);
 }
 
 .changeRow {

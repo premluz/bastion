@@ -3,9 +3,9 @@ import { EmptyState } from '@astryxdesign/core/EmptyState';
 import { resolveAssetsHomeSummary } from '../../engine/assetsHome';
 import { AssetsHomeHeader } from './AssetsHomeHeader';
 import { AssetsHomeList } from './AssetsHomeList';
+import { ContentGroup } from '../nodes/ContentGroup';
 import { PromoCardFull } from './PromoCardFull';
 import { PromoCarousel } from './PromoCarousel';
-import exploreStyles from '../nodes/ExploreComponents.module.css';
 import styles from './AssetsHomePage.module.css';
 
 // Placeholder tiles (2026-09-13) — no real promo/offers content exists in
@@ -62,19 +62,22 @@ export function AssetsHomePage({ onSelectMoney }: AssetsHomePageProps) {
             <PromoCardFull key={promo.id} title={promo.title} {...('icon' in promo ? { icon: promo.icon } : {})} />
           ))}
         </PromoCarousel>
-        {/* Same heading style Explore's own Trending section uses
-            (2026-09-16, direct feedback: "Coins on homepage same style
-            as Trending on Discover, and remove manage") — ContentGroup's
-            own .heading class from ExploreComponents.module.css, no
-            href (plain text, no trailing chevron/link — Coins has no
-            drilldown destination the way Trending's own group does).
-            Manage/filter button removed entirely rather than restyled. */}
-        <h2 className={exploreStyles.heading}>Coins</h2>
-        {summary.rows.length > 0 ? (
-          <AssetsHomeList rows={summary.rows} selectedAssetId={selectedAssetId} onSelectAsset={setSelectedAssetId} />
-        ) : (
-          <EmptyState title="No assets yet" description="Connect a wallet to see your crypto holdings here." />
-        )}
+        {/* Same heading treatment as Discover's own sections (2026-09-16
+            follow-up, direct feedback: "Coins header on homepage should
+            be with link and chevron as Perps etc on Discover") —
+            ContentGroup itself, with a placeholder href: Home has no
+            delegated data-explore-link listener (that's Explore/Markets'
+            own .page onClick), so this is inert, same honest posture as
+            Discover's own #explore/group/perp-cards href, which also
+            leads nowhere yet. Manage/filter button stays removed
+            (2026-09-16 ruling, unchanged). */}
+        <ContentGroup title="Coins" href="#home/coins" layout="stack">
+          {summary.rows.length > 0 ? (
+            <AssetsHomeList rows={summary.rows} selectedAssetId={selectedAssetId} onSelectAsset={setSelectedAssetId} />
+          ) : (
+            <EmptyState title="No assets yet" description="Connect a wallet to see your crypto holdings here." />
+          )}
+        </ContentGroup>
       </div>
     </div>
   );
