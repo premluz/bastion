@@ -1,0 +1,47 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* mandatory, not proximity (2026-09-15) — a soft snap can settle short of
+   fully covering one card at momentum-scroll speeds, showing a sliver of
+   the next slide; mandatory forces the track to rest exactly on one
+   slide's edge every time, matching "at once full rectangle". */
+.track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-8);
+}
+
+.dot {
+  width: var(--space-8);
+  height: var(--space-8);
+  padding: 0;
+  border: 0;
+  border-radius: var(--shell-round);
+  background: var(--edge);
+  cursor: pointer;
+  transition: background var(--motion-enter-duration) var(--motion-enter-ease),
+    transform var(--motion-enter-duration) var(--motion-enter-ease);
+}
+
+.dot[data-active='true'] {
+  background: var(--accent-signal);
+  transform: scale(1.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot { transition: none; }
+}

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button } from '@astryxdesign/core/Button';
-import { Carousel } from '@astryxdesign/core/Carousel';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
@@ -8,7 +7,8 @@ import { FunnelIcon } from '@heroicons/react/24/outline';
 import { resolveAssetsHomeSummary } from '../../engine/assetsHome';
 import { AssetsHomeHeader } from './AssetsHomeHeader';
 import { AssetsHomeList } from './AssetsHomeList';
-import { PromoCard } from './PromoCard';
+import { PromoCardFull } from './PromoCardFull';
+import { PromoCarousel } from './PromoCarousel';
 import styles from './AssetsHomePage.module.css';
 
 // Placeholder tiles (2026-09-13) — no real promo/offers content exists in
@@ -60,11 +60,11 @@ export function AssetsHomePage({ onSelectMoney }: AssetsHomePageProps) {
       <div className={styles.body}>
         <AssetsHomeHeader totalValue={summary.totalValue} changeAbs={summary.changeAbs} changePercent={summary.changePercent}
           {...(onSelectMoney ? { onSelectMoney } : {})} />
-        <Carousel aria-label="Promotions" hasButtons={false} gap={2}>
+        <PromoCarousel aria-label="Promotions">
           {PROMOS.map((promo) => (
-            <PromoCard key={promo.id} title={promo.title} icon={'icon' in promo ? promo.icon : undefined} />
+            <PromoCardFull key={promo.id} title={promo.title} {...('icon' in promo ? { icon: promo.icon } : {})} />
           ))}
-        </Carousel>
+        </PromoCarousel>
         <div className={styles.listHeader}>
           <Text type="label">Coins</Text>
           <Button label="Manage" variant="ghost" size="sm">
