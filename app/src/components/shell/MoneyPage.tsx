@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { Card } from '@astryxdesign/core/Card';
 import { Heading } from '@astryxdesign/core/Heading';
 import { Icon } from '@astryxdesign/core/Icon';
-import { Button } from '@astryxdesign/core/Button';
 import { Text } from '@astryxdesign/core/Text';
 import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 import { WalletActionRow } from './WalletActionRow';
 import { ContributingBalanceRow } from './ContributingBalanceRow';
 import { PromoCarousel } from './PromoCarousel';
-import { VirtualCardPlaceholder } from './VirtualCardPlaceholder';
+import { WalletCardTile } from './WalletCardTile';
 import { HistoryItem } from './HistoryItem';
 import { AssetsHomeList } from './AssetsHomeList';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
@@ -98,17 +97,8 @@ export function MoneyPage({ tab, onTabChange }: MoneyPageProps) {
           </Card>
           <div className={styles.section}>
             <PromoCarousel aria-label="Cards">
-              {WALLET_CARDS.map((card) => <VirtualCardPlaceholder key={card.id} lastFourDigits={card.lastFourDigits} />)}
+              {WALLET_CARDS.map((card) => <WalletCardTile key={card.id} card={card} />)}
             </PromoCarousel>
-            {WALLET_CARDS.map((card) => (
-              <div key={card.id} className={styles.cardMeta}>
-                <Text type="body" weight="semibold">{card.name}</Text>
-                <span className={styles.cardBadge}>
-                  <Text type="supporting" weight="semibold" className={styles.cardBadgeText}>{card.cashbackPercent}% mUSD back</Text>
-                </span>
-                <Button label="Manage" variant="secondary" size="sm" className={styles.manageButton} />
-              </div>
-            ))}
           </div>
           <div className={styles.section}>
             <div className={styles.sectionHeader}>

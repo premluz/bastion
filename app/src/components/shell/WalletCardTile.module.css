@@ -1,0 +1,29 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  padding: var(--space-16);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--shell-gap);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-8);
+  border-radius: var(--shell-round);
+  background: var(--delta-up-bg);
+}
+
+.badgeText {
+  color: var(--delta-up);
+}
+
+.manageButton {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+}
