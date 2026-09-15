@@ -1,8 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { WalletActionRow } from './WalletActionRow';
 
-const meta: Meta<typeof WalletActionRow> = { title: 'Shell/WalletActionRow', component: WalletActionRow };
+// shape is independent of variant (2026-09-16, direct feedback: "2
+// variants that can be configured per instance, not each instance has
+// different like now") — exposed as its own control so either action set
+// can use either shape, rather than one shape being implicitly tied to
+// one variant.
+const meta: Meta<typeof WalletActionRow> = {
+  title: 'Shell/WalletActionRow',
+  component: WalletActionRow,
+  argTypes: { shape: { control: 'radio', options: ['roundedSquare', 'circle'] } },
+};
 export default meta;
 type Story = StoryObj<typeof WalletActionRow>;
-export const Default: Story = {};
+export const RoundedSquare: Story = { args: { shape: 'roundedSquare' } };
+export const Circle: Story = { args: { shape: 'circle' } };
 export const Money: Story = { args: { variant: 'money', shape: 'circle' } };
+export const MoneyRoundedSquare: Story = { args: { variant: 'money', shape: 'roundedSquare' } };

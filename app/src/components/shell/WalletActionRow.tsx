@@ -46,10 +46,11 @@ const MONEY_ACTIONS = [
 
 export interface WalletActionRowProps {
   variant?: 'wallet' | 'money';
-  // Configurable icon shape (2026-09-15, direct feedback: "make this
-  // component configurable so it's rounded square or circle... and here
-  // deploy as circle") — roundedSquare keeps the row's existing look
-  // (WALLET_ACTIONS' own default), circle is Money's own request.
+  // Two complete, independently choosable shapes (2026-09-16, direct
+  // feedback: "2 variants that can be configured per instance, not each
+  // instance has different like now") — roundedSquare and circle are the
+  // same size/fill/hover, differing only in border-radius; neither is a
+  // fallback for the other.
   shape?: 'roundedSquare' | 'circle';
 }
 

@@ -21,14 +21,44 @@
   gap: var(--space-4);
 }
 
-/* Configurable shape (2026-09-15, direct feedback) — roundedSquare keeps
-   the button's own default footprint (no extra fill), circle gives it a
-   filled disc, Money's own request. Both apply directly to the real
-   IconButton now, not a decorative inner span it used to wrap. */
-.iconShape[data-shape='circle'] {
+/* Two complete, equally real stylings (2026-09-16, direct feedback: "we
+   need 2 variants that can be configured per instance, not each instance
+   has different like now... roundedSquare should have bg and hover
+   highlighted, and should be same size bg active area like rounded, just
+   less rounding — currently is smaller. fully rounded lacks hover" — the
+   prior pass only ever styled circle; roundedSquare fell through to
+   IconButton's own bare ghost footprint with no fill and a smaller
+   default size. "Lacks hover" turned out to be true of BOTH: checked
+   every loaded stylesheet for a :hover rule matching astryx-button.ghost
+   and found none — Astryx's own ghost variant carries no hover state at
+   all here, so circle's apparent hover before this fix never actually
+   existed either. Both variants now share the exact same box (size,
+   fill) and a real hover of their own, differing only in border-radius. */
+.iconShape {
   width: var(--shell-control-size);
   height: var(--shell-control-size);
-  border-radius: var(--shell-round);
   background: var(--surface-2);
   color: var(--accent-signal);
+  transition: background-color var(--motion-enter-duration) var(--motion-enter-ease);
+}
+
+/* --color-overlay-hover, not a second flat background swap: it's already
+   semi-transparent, so it layers as a highlight over --surface-2 rather
+   than replacing it outright — same token/reasoning theme.default.css's
+   own .astryx-item:hover / .astryx-list-item:hover rules already use to
+   close this identical "Astryx element has no hover of its own" gap. */
+.iconShape:hover {
+  background-color: var(--color-overlay-hover);
+}
+
+.iconShape[data-shape='circle'] {
+  border-radius: var(--shell-round);
+}
+
+.iconShape[data-shape='roundedSquare'] {
+  border-radius: var(--shell-radius);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iconShape { transition: none; }
 }
