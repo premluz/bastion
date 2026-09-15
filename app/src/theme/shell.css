@@ -60,25 +60,27 @@
      a rotational fan from a pivot. Each card behind steps LEFT and UP,
      so the spread reads along the top edge the way the reference shows,
      not out of the bottom corner. */
-  --card-deck-step-x: var(--space-32);
-  --card-deck-step-y: var(--space-12);
+  --card-deck-step-x: var(--space-48);
+  --card-deck-step-y: var(--space-8);
   /* The whole stack leans by one constant angle — cards stay parallel to
      each other (a regular slanted stack), unlike a fan where each layer
      takes a different angle. */
   --card-deck-slant: -5deg;
-  /* Visible band of the deck: cards are taller than this, anchored to the
-     bottom, so the mask cuts their upper portion off (2026-09-16, direct
-     feedback: "smaller card... they are not fully visible, there is a
-     layer that has overflow hidden, kind of a mask"). The overhang is
-     kept modest — one --space-32 — so the brand row still lands inside
-     the visible band the way the reference shows, rather than being
-     clipped away with the rest of the card's top half. */
-  --card-deck-viewport-height: calc(var(--space-64) * 2);
-  --card-deck-card-height: calc(var(--space-64) * 2 + var(--space-32));
+  /* Visible band of the deck: cards are taller than this and hang from
+     --card-deck-top-inset, so the mask cuts their LOWER portion off
+     (2026-09-16, direct feedback: "smaller card... not fully visible,
+     layer that has overflow hidden kind of a mask", then "top of cards
+     should be visible so need to be moved lower, but mask remains").
+     The top inset is what drops them far enough for their top edges and
+     rounded corners to read in full. */
+  --card-deck-viewport-height: calc(var(--space-64) + var(--space-48));
+  --card-deck-card-height: calc(var(--space-64) + var(--space-32));
+  --card-deck-top-inset: var(--space-16);
   /* Left gutter inside the deck that the stacked rear cards occupy — the
      front card sits flush right, each card behind it steps into this
-     space, and the deck's own overflow mask trims the overhang. */
-  --card-deck-fan-gutter: var(--space-64);
+     space, and the deck's own overflow mask trims the overhang. Sized to
+     hold the full spread: one step per card behind the front. */
+  --card-deck-fan-gutter: calc(var(--card-deck-step-x) * 2);
   --shell-fade-height: var(--space-48);
   /* .topFade/.bottomFade's own height (2026-09-14, direct feedback:
      "make shadows top bottom more height... keep gradients, keep

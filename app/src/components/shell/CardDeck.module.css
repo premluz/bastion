@@ -7,10 +7,9 @@
 /* A short viewport, NOT one card's full height (2026-09-16, direct
    feedback against a reference: "smaller card first of all... they are
    not fully visible, there is a layer that has overflow hidden kind of a
-   mask"). The cards are deliberately taller than this band and anchored
-   to its bottom, so their upper portion is cut off — only the lower
-   strip (brand mark and bottom edge) reads, which is what makes the deck
-   look like cards tucked into a wallet rather than three full cards. */
+   mask"). The cards are deliberately taller than this band, so part of
+   each is always cut off — which is what makes the deck look like cards
+   tucked into a wallet rather than three full cards. */
 .track {
   position: relative;
   height: var(--card-deck-viewport-height);
@@ -23,21 +22,24 @@
   cursor: grabbing;
 }
 
-/* Anchored to the track's bottom and inset from its left edge: the
-   gutter is the room the stack steps into, and the mask trims whatever
-   overhangs — the partial-card look the reference shows. Height comes
-   from its own token rather than the track, since being TALLER than the
-   viewport is the whole point. */
+/* Anchored to the track's TOP, not its bottom (2026-09-16 follow-up,
+   direct feedback: "top of cards should be visible so need to be moved
+   lower, but mask remains") — the cards sit low enough that their top
+   edges and rounded corners read in full, and the mask now trims their
+   bottoms instead. The prior bottom anchoring clipped exactly the edge
+   the reference shows intact. The left gutter is the room the stack
+   steps into; height comes from its own token, since being TALLER than
+   the viewport is the whole point. */
 .card {
   position: absolute;
-  bottom: 0;
+  top: var(--card-deck-top-inset);
   right: 0;
   left: var(--card-deck-fan-gutter);
   height: var(--card-deck-card-height);
-  /* Bottom-centre origin so the constant slant and the drag tilt both
-     pivot from below the visible band, keeping the cards' bottom edges
-     aligned as they lean. */
-  transform-origin: 50% 100%;
+  /* Top-centre origin now that the cards hang from their top edge: the
+     slant and drag tilt pivot from the visible edge, so the tops stay
+     aligned as they lean rather than swinging out of the band. */
+  transform-origin: 50% 0%;
   /* Only the settle is transitioned — during drag the inline transform is
      driven per-frame by the spring/pointer, and .card[data-dragging] is
      not used because the component swaps transition-delay to 0ms instead,
