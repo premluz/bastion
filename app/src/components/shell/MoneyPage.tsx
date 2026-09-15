@@ -1,94 +1,145 @@
+import { useState } from 'react';
 import { Card } from '@astryxdesign/core/Card';
 import { Heading } from '@astryxdesign/core/Heading';
 import { Icon } from '@astryxdesign/core/Icon';
-import { IconButton } from '@astryxdesign/core/IconButton';
 import { Button } from '@astryxdesign/core/Button';
 import { Text } from '@astryxdesign/core/Text';
+import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 import { WalletActionRow } from './WalletActionRow';
+import { ContributingBalanceRow } from './ContributingBalanceRow';
+import { PromoCarousel } from './PromoCarousel';
+import { VirtualCardPlaceholder } from './VirtualCardPlaceholder';
 import { HistoryItem } from './HistoryItem';
+import { AssetsHomeList } from './AssetsHomeList';
+import { EmptyState } from '@astryxdesign/core/EmptyState';
 import { groupAccountHistory } from './accountHistory';
 import { MONEY_HISTORY } from './moneyHistoryData';
 import { MONEY_PLACEHOLDER } from './moneySummary';
+import { WALLET_CARDS } from './cardData';
+import { resolveAssetsHomeSummary } from '../../engine/assetsHome';
 import styles from './MoneyPage.module.css';
 
-export interface MoneyPageProps { onBack: () => void }
+// Made-up contributing balances (2026-09-15, direct feedback: "small
+// scrollable cards with logo (flag USA) USD, USDT, USDC — basically
+// these contributing balances") — no real fiat sub-account breakdown
+// exists in the universe seed, same authored-stand-in posture as
+// MONEY_PLACEHOLDER; these three sum to MONEY_PLACEHOLDER.value.
+const CONTRIBUTING_BALANCES = [
+  { id: 'usd', code: 'USD', amount: 1024.11, flag: '🇺🇸' },
+  { id: 'usdt', code: 'USDT', amount: 1850.00, assetId: 'usdt' },
+  { id: 'usdc', code: 'USDC', amount: 601.34, assetId: 'usdc' },
+] as const;
 
-// Its own page, not a sheet (2026-09-14, direct feedback: "treat it like a
-// page not sheet") — reached by tapping Home's "Money" BalanceCategoryCard,
-// gated in useMobileFrame as its own homeScreen state rather than a new
-// AccountExperience-style overlay. Keeps MobileFrame's shared avatar/
-// search header exactly as every other tab does; this page supplies its
-// own back control and title in its own scrolling body, same boundary
-// AssetsHomePage already draws between the fixed header and its content.
-export function MoneyPage({ onBack }: MoneyPageProps) {
+export type WalletTab = 'money' | 'crypto';
+export interface MoneyPageProps { tab: WalletTab; onTabChange: (tab: WalletTab) => void }
+
+// Portfolio/Wallet nav destination (2026-09-15, direct feedback: "this is
+// essentially Portfolio item in the nav (Wallet)") — reached both from the
+// Wallet nav icon directly and from Home's "Money" BalanceCategoryCard
+// (which opens straight to the Money tab). Its own page, not a sheet
+// (2026-09-14 ruling, unchanged): keeps MobileFrame's shared avatar/
+// search header exactly as every other tab does. No back arrow (2026-09-15
+// ruling): a real nav tab like Home/Explore, not a drill-down screen —
+// leaving is switching tabs via the nav bar, same as leaving any other tab.
+//
+// tab/onTabChange are lifted to useMobileFrame, not local state
+// (2026-09-15) — Home's "Money" card needs to preset this page's tab to
+// Money from outside, which a page-internal useState couldn't be told.
+//
+// Crypto tab reuses Home's own resolveAssetsHomeSummary()/AssetsHomeList
+// (2026-09-15 call) rather than a second independent crypto view — same
+// data, same list component, so the two never drift into different
+// totals.
+export function MoneyPage({ tab, onTabChange }: MoneyPageProps) {
+  const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const groups = groupAccountHistory(MONEY_HISTORY, 'all');
+  const cryptoSummary = resolveAssetsHomeSummary();
+
   return (
     <div className={styles.root}>
-      <div className={styles.titleRow}>
-        <IconButton label="Back" icon={<Icon icon="chevronLeft" />} variant="ghost" onClick={onBack} />
-        <Heading level={1} type="display-2">Money</Heading>
+      <div className={styles.tabRow}>
+        <SegmentedControl value={tab} onChange={(value) => onTabChange(value as WalletTab)} label="Wallet section"
+          layout="fill" className={styles.tabs}>
+          <SegmentedControlItem value="money" label="Money" />
+          <SegmentedControlItem value="crypto" label="Crypto" />
+        </SegmentedControl>
       </div>
-      <div className={styles.balanceBlock}>
-        <Heading level={2} type="display-1" className={styles.balance}>
-          ${MONEY_PLACEHOLDER.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-        </Heading>
-        <div className={styles.apyRow}>
-          <Text type="supporting" weight="semibold" className={styles.apy}>{MONEY_PLACEHOLDER.apy}% APY</Text>
-          <Text type="supporting" color="secondary">· mUSD</Text>
-          <Icon icon="info" size="sm" color="secondary" />
-        </div>
-      </div>
-      <WalletActionRow variant="money" />
-      <Card className={`${styles.earnings} panelFlat`} padding={4}>
-        <div className={styles.earningsHeader}>
-          <Text type="label" weight="semibold">Estimated earnings</Text>
-          <Icon icon="info" size="sm" color="secondary" />
-        </div>
-        <div className={styles.earningsRow}>
-          <Text type="body" color="secondary">Monthly</Text>
-          <Text type="body" weight="semibold" hasTabularNumbers className={styles.earningsValue}>
-            ${MONEY_PLACEHOLDER.monthlyEarnings.toFixed(2)}
-          </Text>
-        </div>
-        <div className={styles.earningsRow}>
-          <Text type="body" color="secondary">Annual</Text>
-          <Text type="body" weight="semibold" hasTabularNumbers className={styles.earningsValue}>
-            ${MONEY_PLACEHOLDER.annualEarnings.toFixed(2)}
-          </Text>
-        </div>
-      </Card>
-      <div className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <Text type="label" weight="semibold">MetaMask Card</Text>
-          <Icon icon="chevronRight" size="sm" color="secondary" />
-        </div>
-        <Card className={`${styles.cardPromo} panelFlat`} padding={4}>
-          <div className={styles.cardArt} aria-hidden="true">
-            <Text type="supporting" weight="semibold" className={styles.cardArtLabel}>MetaMask</Text>
-          </div>
-          <div className={styles.cardPromoBody}>
-            <Text type="body" weight="semibold">Metal card</Text>
-            <span className={styles.cardBadge}>
-              <Text type="supporting" weight="semibold" className={styles.cardBadgeText}>3% mUSD back</Text>
-            </span>
-          </div>
-          <Button label="Manage" variant="secondary" size="sm" className={styles.manageButton} />
-        </Card>
-      </div>
-      <div className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <Text type="label" weight="semibold">Activity</Text>
-          <Icon icon="chevronRight" size="sm" color="secondary" />
-        </div>
-        <div className={styles.activityList}>
-          {groups.map((group) => (
-            <div key={group.day} className={styles.activityGroup}>
-              <Text type="supporting" color="secondary">{group.label}</Text>
-              {group.items.map((entry) => <HistoryItem key={entry.id} entry={entry} />)}
+      {tab === 'money' ? (
+        <>
+          <div className={styles.balanceBlock}>
+            <Heading level={1} type="display-1" className={styles.balance}>
+              ${MONEY_PLACEHOLDER.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </Heading>
+            <div className={styles.apyRow}>
+              <Text type="supporting" weight="semibold" className={styles.apy}>{MONEY_PLACEHOLDER.apy}% APY</Text>
+              <Text type="supporting" color="secondary">· mUSD</Text>
+              <Icon icon="info" size="sm" color="secondary" />
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+          <ContributingBalanceRow balances={CONTRIBUTING_BALANCES} />
+          <WalletActionRow variant="money" shape="circle" />
+          <Card className={`${styles.earnings} panelFlat`} padding={4}>
+            <div className={styles.earningsHeader}>
+              <Text type="label" weight="semibold">Estimated earnings</Text>
+              <Icon icon="info" size="sm" color="secondary" />
+            </div>
+            <div className={styles.earningsRow}>
+              <Text type="body" color="secondary">Monthly</Text>
+              <Text type="body" weight="semibold" hasTabularNumbers className={styles.earningsValue}>
+                ${MONEY_PLACEHOLDER.monthlyEarnings.toFixed(2)}
+              </Text>
+            </div>
+            <div className={styles.earningsRow}>
+              <Text type="body" color="secondary">Annual</Text>
+              <Text type="body" weight="semibold" hasTabularNumbers className={styles.earningsValue}>
+                ${MONEY_PLACEHOLDER.annualEarnings.toFixed(2)}
+              </Text>
+            </div>
+          </Card>
+          <div className={styles.section}>
+            <PromoCarousel aria-label="Cards">
+              {WALLET_CARDS.map((card) => <VirtualCardPlaceholder key={card.id} lastFourDigits={card.lastFourDigits} />)}
+            </PromoCarousel>
+            {WALLET_CARDS.map((card) => (
+              <div key={card.id} className={styles.cardMeta}>
+                <Text type="body" weight="semibold">{card.name}</Text>
+                <span className={styles.cardBadge}>
+                  <Text type="supporting" weight="semibold" className={styles.cardBadgeText}>{card.cashbackPercent}% mUSD back</Text>
+                </span>
+                <Button label="Manage" variant="secondary" size="sm" className={styles.manageButton} />
+              </div>
+            ))}
+          </div>
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <Text type="label" weight="semibold">Activity</Text>
+              <Icon icon="chevronRight" size="sm" color="secondary" />
+            </div>
+            <div className={styles.activityList}>
+              {groups.map((group) => (
+                <div key={group.day} className={styles.activityGroup}>
+                  <Text type="supporting" color="secondary">{group.label}</Text>
+                  {group.items.map((entry) => <HistoryItem key={entry.id} entry={entry} />)}
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className={styles.balanceBlock}>
+            <Heading level={1} type="display-1" className={styles.balance}>
+              ${cryptoSummary.totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </Heading>
+          </div>
+          <WalletActionRow variant="wallet" />
+          {cryptoSummary.rows.length > 0 ? (
+            <AssetsHomeList rows={cryptoSummary.rows} selectedAssetId={selectedAssetId} onSelectAsset={setSelectedAssetId} />
+          ) : (
+            <EmptyState title="No assets yet" description="Connect a wallet to see your crypto holdings here." />
+          )}
+        </>
+      )}
     </div>
   );
 }

@@ -8,7 +8,7 @@
   padding: var(--space-8) var(--shell-inset) var(--shell-inset);
 }
 
-.titleRow {
+.tabRow {
   display: flex;
   align-items: center;
   gap: var(--shell-gap);

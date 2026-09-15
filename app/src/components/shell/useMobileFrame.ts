@@ -62,13 +62,14 @@ export interface TranscriptMessage {
 export function useMobileFrame({ initialMode = 'idle', initialMessages = [], initialPurchaseQuery = '' }: MobileFrameProps) {
   const [mode, setMode] = useState<ShellPreviewMode>(initialMode);
   const [activeTab, setActiveTab] = useState<TabDestination>('home');
-  // Money is its own page, not a sheet overlay (2026-09-14, direct
-  // feedback: "treat it like a page not sheet") — plain local state
-  // gated under the Home tab, same lightweight model activeTab itself
-  // uses, rather than the AccountExperience-style animated sheet Account
-  // screens use. Reset to 'default' on any tab change so leaving Home and
-  // coming back never reopens Money from where it was left.
-  const [homeScreen, setHomeScreen] = useState<'default' | 'money'>('default');
+  // MoneyPage is its own page, not a sheet overlay (2026-09-14, direct
+  // feedback: "treat it like a page not sheet"), reached two ways
+  // (2026-09-15, direct feedback: "this is essentially Portfolio item in
+  // the nav (Wallet)") — the "assets" tab destination directly, or Home's
+  // "Money" BalanceCategoryCard, which also presets the Money/Crypto tab
+  // to Money specifically. walletTab lives here rather than as local
+  // state inside MoneyPage so Home's shortcut can drive it from outside.
+  const [walletTab, setWalletTab] = useState<'money' | 'crypto'>('money');
   const [value, setValue] = useState('');
   // initialPurchaseQuery seeds a real transcript message rather than a
   // separate purchaseQuery state (2026-09-13): the buy flow now renders
@@ -141,11 +142,15 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
       });
     });
   };
-  const selectTab = (tab: TabDestination) => { setActiveTab(tab); setMode('idle'); setHomeScreen('default'); };
+  const selectTab = (tab: TabDestination) => { setActiveTab(tab); setMode('idle'); };
   const openConversation = () => { submit(value); setMode('conversation'); };
   const toggleComposer = () => setMode((current) => current === 'idle' ? 'composer' : 'idle');
   const closeComposer = () => { setMode('idle'); assistantRef.current?.focus(); };
+  // Home's "Money" card jumps straight to the assets tab, preset to Money
+  // (2026-09-15) — a real navigation, not just a tab preselect, since
+  // Money currently only opens from Home or the nav's own Wallet icon.
+  const openMoney = () => { setActiveTab('assets'); setWalletTab('money'); setMode('idle'); };
   return { mode, setMode, activeTab, value, setValue, messages, liveTrailMessageId, inputRef, submit,
     selectTab, openConversation, toggleComposer, assistantRef, closeComposer, conversationRef,
-    homeScreen, openMoney: () => setHomeScreen('money'), closeMoney: () => setHomeScreen('default') };
+    walletTab, setWalletTab, openMoney };
 }

@@ -122,13 +122,13 @@ export function MobileFrame(props: MobileFrameProps) {
               for the full reasoning. Sit in .chrome directly, between the
               page and the header/dock's own z-index. */}
           <div className={styles.topFade} aria-hidden="true" />
-          {isHome && state.homeScreen === 'money' ? (
-            <main className={styles.page} aria-label="Money" tabIndex={0}>
-              <MoneyPage onBack={state.closeMoney} />
-            </main>
-          ) : isHome ? (
+          {isHome ? (
             <main className={styles.page} aria-label="Home" tabIndex={0}>
               <AssetsHomePage onSelectMoney={state.openMoney} />
+            </main>
+          ) : state.activeTab === 'assets' ? (
+            <main className={styles.page} aria-label="Wallet" tabIndex={0}>
+              <MoneyPage tab={state.walletTab} onTabChange={state.setWalletTab} />
             </main>
           ) : state.activeTab === 'markets' ? (
             <main className={styles.page} aria-label="Explore" tabIndex={0} onClick={explore.onClick}>

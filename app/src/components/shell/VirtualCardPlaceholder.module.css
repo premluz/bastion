@@ -1,0 +1,42 @@
+/* Fixed card aspect ratio (standard ID-1 card proportions), gradient
+   stand-in for real card art (2026-09-15, direct feedback: real bg art
+   arrives later — placeholder only). */
+/* Width/flex-shrink/scroll-snap-align come from PromoCarousel.module.css's
+   own .track > * rule (2026-09-15) — every slide gets them from the
+   carousel, not repeated per slide component. */
+.root {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  aspect-ratio: 1.586 / 1;
+  padding: var(--space-16);
+  border-radius: var(--shell-radius);
+  background: linear-gradient(135deg, var(--surface-2) 0%, var(--accent-signal) 55%, var(--surface-3) 100%);
+  color: var(--ink-primary);
+}
+
+.topRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.bottomRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.digits {
+  font-variant-numeric: tabular-nums;
+}
+
+.network {
+  font-style: italic;
+}

@@ -19,6 +19,18 @@
   display: none;
 }
 
+/* Snap belongs to the carousel, not each slide component (2026-09-15,
+   fixing a bug where VirtualCardPlaceholder's own cards rendered side by
+   side instead of one-at-a-time — PromoCardFull happened to set this
+   itself, but a slide type shouldn't have to opt itself into its parent's
+   snap contract). Every direct child snaps and fills the track, whatever
+   component it is. */
+.track > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  width: 100%;
+}
+
 .dots {
   display: flex;
   justify-content: center;

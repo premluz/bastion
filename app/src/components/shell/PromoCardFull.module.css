@@ -1,15 +1,11 @@
-/* Full width of the visible track, not PromoCard's 2.5-card calc()
-   (2026-09-15) — PromoCarousel shows exactly one card at a time, so this
-   sizes to 100% of its scroll-snap parent rather than a fixed fraction of
-   the frame. */
+/* Width/flex-shrink/scroll-snap-align come from PromoCarousel.module.css's
+   own .track > * rule (2026-09-15) — every slide gets them from the
+   carousel, not repeated per slide component. */
 .root {
   display: flex;
   align-items: center;
   gap: var(--shell-gap);
-  width: 100%;
-  flex-shrink: 0;
   padding: var(--space-16);
-  scroll-snap-align: start;
 }
 
 .body {

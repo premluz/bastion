@@ -3,6 +3,7 @@ import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
 import {
   ArrowDownTrayIcon,
+  ArrowUpTrayIcon,
   ArrowsRightLeftIcon,
   CreditCardIcon,
   LockClosedIcon,
@@ -29,27 +30,39 @@ const WALLET_ACTIONS = [
   { id: 'swap', label: 'Swap', icon: ArrowsRightLeftIcon },
 ] as const;
 
-// Money screen's own three actions (2026-09-14, direct feedback: wireframe
-// shows Add/Transfer/Card, not the wallet row's five) — a distinct action
-// set, not a subset toggle of WALLET_ACTIONS: "Card" has no wallet-row
-// equivalent, and "Add"/"Transfer" are fiat-account concepts (top up,
-// move between accounts) rather than Buy/Send's crypto-market framing.
+// Money screen's own four actions (2026-09-15, direct feedback against a
+// wireframe: "Add money / Send / Withdraw / Manage card" — supersedes the
+// prior day's three-action Add/Transfer/Card guess, built before this
+// wireframe existed). A distinct action set, not a subset toggle of
+// WALLET_ACTIONS: "Manage card" has no wallet-row equivalent, and these
+// are fiat-account concepts (top up, move between accounts, card
+// management) rather than Buy/Send's crypto-market framing.
 const MONEY_ACTIONS = [
-  { id: 'add', label: 'Add', icon: PlusIcon },
-  { id: 'transfer', label: 'Transfer', icon: ArrowsRightLeftIcon },
-  { id: 'card', label: 'Card', icon: CreditCardIcon },
+  { id: 'add', label: 'Add money', icon: PlusIcon },
+  { id: 'send', label: 'Send', icon: ArrowUpTrayIcon },
+  { id: 'withdraw', label: 'Withdraw', icon: ArrowDownTrayIcon },
+  { id: 'manage-card', label: 'Manage card', icon: CreditCardIcon },
 ] as const;
 
-export interface WalletActionRowProps { variant?: 'wallet' | 'money' }
+export interface WalletActionRowProps {
+  variant?: 'wallet' | 'money';
+  // Configurable icon shape (2026-09-15, direct feedback: "make this
+  // component configurable so it's rounded square or circle... and here
+  // deploy as circle") — roundedSquare keeps the row's existing look
+  // (WALLET_ACTIONS' own default), circle is Money's own request.
+  shape?: 'roundedSquare' | 'circle';
+}
 
-export function WalletActionRow({ variant = 'wallet' }: WalletActionRowProps) {
+export function WalletActionRow({ variant = 'wallet', shape = 'roundedSquare' }: WalletActionRowProps) {
   const actions = variant === 'money' ? MONEY_ACTIONS : WALLET_ACTIONS;
   return (
     <div className={styles.row} data-variant={variant}>
       {actions.map(({ id, label, icon }) => (
         <Button key={id} label={label} variant="secondary" className={styles.action}>
           <span className={styles.actionContent}>
-            <Icon icon={icon} size="md" />
+            <span className={styles.iconShape} data-shape={shape}>
+              <Icon icon={icon} size="md" />
+            </span>
             <Text type="supporting" color="inherit">
               {label}
             </Text>

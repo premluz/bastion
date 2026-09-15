@@ -4,10 +4,11 @@
   gap: var(--space-8);
 }
 
-/* Three wider actions, not five narrow ones (2026-09-14) — Money's own
-   Add/Transfer/Card row per the wireframe. */
+/* Four wider actions, not five narrow ones (2026-09-15, revised from the
+   prior day's three-action guess against a real wireframe) — Money's own
+   Add money/Send/Withdraw/Manage card row. */
 .row[data-variant='money'] {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .action {
@@ -21,4 +22,20 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-4);
+}
+
+/* Configurable shape (2026-09-15, direct feedback) — roundedSquare keeps
+   the existing look with no visible background; circle wraps the icon in
+   its own filled disc, Money's own request. */
+.iconShape {
+  display: grid;
+  place-items: center;
+}
+
+.iconShape[data-shape='circle'] {
+  width: var(--shell-control-size);
+  height: var(--shell-control-size);
+  border-radius: var(--shell-round);
+  background: var(--surface-2);
+  color: var(--accent-signal);
 }
