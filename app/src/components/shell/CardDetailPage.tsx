@@ -1,13 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
 import { Heading } from '@astryxdesign/core/Heading';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
-import { EyeIcon, PauseCircleIcon, Cog6ToothIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon } from '@heroicons/react/24/outline';
 import { VirtualCardPlaceholder } from './VirtualCardPlaceholder';
 import { WalletActionRow } from './WalletActionRow';
 import { HistoryItem } from './HistoryItem';
+import { LinkChips } from '../nodes/LinkChips';
 import { groupAccountHistory } from './accountHistory';
 import { MONEY_HISTORY } from './moneyHistoryData';
 import { MONEY_PLACEHOLDER } from './moneySummary';
@@ -28,6 +29,19 @@ export interface CardDetailPageProps {
 }
 
 type DetailTab = 'transactions' | 'benefits';
+
+// Same pill-chip treatment as Discover's own category row (2026-09-16
+// follow-up, direct feedback: "Transactions Benefits should be pill
+// style tabs same as on discover All Crypto") — LinkChips itself (the
+// exact component/markup Discover's row is), with a local
+// "#card/tab/..." href namespace and a local delegated click handler,
+// same two-line data-explore-link pattern Investments' own category
+// chips already use for the identical "real component, local state, no
+// navigation" need.
+const DETAIL_TABS = [
+  { id: 'transactions', label: 'Transactions', href: '#card/tab/transactions' },
+  { id: 'benefits', label: 'Benefits', href: '#card/tab/benefits' },
+] as const;
 
 // Card Details screen (2026-09-16, direct feedback against a reference
 // screenshot: "let's build card details page, needs to be seamless
@@ -56,6 +70,16 @@ export function CardDetailPage({ card, sourceRect, onClose }: CardDetailPageProp
   const cardRef = useRef<HTMLDivElement>(null);
   const groups = groupAccountHistory(MONEY_HISTORY, 'all');
   const cardIndex = WALLET_CARDS.findIndex((candidate) => candidate.id === card.id);
+
+  function onTabClick(event: MouseEvent<HTMLElement>) {
+    if (!(event.target instanceof Element)) return;
+    const link = event.target.closest('[data-explore-link]');
+    const href = link?.getAttribute('data-explore-link');
+    if (!href?.startsWith('#card/tab/')) return;
+    event.preventDefault();
+    const id = href.split('/')[2];
+    if (id === 'transactions' || id === 'benefits') setTab(id);
+  }
 
   useEffect(() => {
     const el = cardRef.current;
@@ -113,11 +137,14 @@ export function CardDetailPage({ card, sourceRect, onClose }: CardDetailPageProp
           </div>
         )}
 
-        <div className={styles.cardOptions}>
-          <IconButton label="Show details" icon={<Icon icon={EyeIcon} />} variant="ghost" className={styles.optionButton} />
-          <IconButton label="Freeze" icon={<Icon icon={PauseCircleIcon} />} variant="ghost" className={styles.optionButton} />
-          <IconButton label="Settings" icon={<Icon icon={Cog6ToothIcon} />} variant="ghost" className={styles.optionButton} />
-        </div>
+        {/* Show details/Freeze/Manage card, moved here from a small
+            ghost-icon row (2026-09-16 follow-up, direct feedback: "hide
+            Pause settings remove and change them... move them under
+            card") — same circular-icon-with-label styling as every
+            other WalletActionRow variant, not icon-only pills. Manage
+            card moved up from Money's own action row below (which drops
+            to three actions) rather than appearing in both places. */}
+        <WalletActionRow variant="card" shape="circle" />
 
         <div className={styles.balanceBlock}>
           <Heading level={1} type="display-1" className={heroBalanceStyles.heroBalance}>
@@ -136,13 +163,8 @@ export function CardDetailPage({ card, sourceRect, onClose }: CardDetailPageProp
 
         <WalletActionRow variant="money" shape="circle" />
 
-        <div className={styles.tabRow}>
-          <button type="button" className={styles.tabButton} data-active={tab === 'transactions'} onClick={() => setTab('transactions')}>
-            <Text type="label" weight="semibold">Transactions</Text>
-          </button>
-          <button type="button" className={styles.tabButton} data-active={tab === 'benefits'} onClick={() => setTab('benefits')}>
-            <Text type="label" weight="semibold">Benefits</Text>
-          </button>
+        <div onClick={onTabClick}>
+          <LinkChips label="Card detail tabs" variant="chips" active={tab} links={[...DETAIL_TABS]} />
         </div>
 
         {tab === 'transactions' ? (

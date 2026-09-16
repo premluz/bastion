@@ -4,11 +4,12 @@
   gap: var(--space-8);
 }
 
-/* Four wider actions, not five narrow ones (2026-09-15, revised from the
-   prior day's three-action guess against a real wireframe) — Money's own
-   Add money/Send/Withdraw/Manage card row. */
-.row[data-variant='money'] {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+/* Three actions, not four (2026-09-16 follow-up, direct feedback:
+   "Manage card" moved up into the new 'card' variant's own row under the
+   card art — Money's own row is now Add money/Send/Withdraw only). */
+.row[data-variant='money'],
+.row[data-variant='card'] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 /* Plain layout column, not a shared clickable panel (2026-09-15, direct

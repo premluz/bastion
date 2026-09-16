@@ -65,7 +65,12 @@ const CHART_DISPLAY_SEED = 'investments-chart';
 // delegated click handler — same two-line data-explore-link pattern
 // useExploreNavigation.ts already uses, just updating LOCAL state instead
 // of navigating, since this page has no delegated listener of its own the
-// way Explore/Markets' .page does.
+// way Explore/Markets' .page does. variant="tabs", not "chips" (2026-09-16
+// follow-up bug fix, direct feedback: "should not wrap this tab style and
+// be scrollable") — Discover's own row uses "tabs" too (confirmed against
+// its real scene JSON): ExploreComponents.module.css's .chips wraps
+// (flex-wrap: wrap), .tabs scrolls horizontally with no wrap
+// (overflow-x: auto). "chips" was the wrong variant here from the start.
 const CATEGORY_CHIPS = [
   { id: 'all', label: 'All', href: '#investments/category/all' },
   { id: 'crypto', label: 'Crypto', href: '#investments/category/crypto' },
@@ -97,7 +102,7 @@ export function InvestmentsTab() {
   return (
     <>
       <div onClick={onCategoryClick}>
-        <LinkChips label="Investment categories" variant="chips" active={category} links={[...CATEGORY_CHIPS]} />
+        <LinkChips label="Investment categories" variant="tabs" active={category} links={[...CATEGORY_CHIPS]} />
       </div>
 
       <div className={styles.balanceBlock}>

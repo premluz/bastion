@@ -20,4 +20,5 @@ export const RoundedSquare: Story = { args: { shape: 'roundedSquare' } };
 export const Circle: Story = { args: { shape: 'circle' } };
 export const Money: Story = { args: { variant: 'money', shape: 'circle' } };
 export const MoneyRoundedSquare: Story = { args: { variant: 'money', shape: 'roundedSquare' } };
+export const Card: Story = { args: { variant: 'card', shape: 'circle' } };
 export const Compact: Story = { args: { shape: 'circle', size: 'compact' } };

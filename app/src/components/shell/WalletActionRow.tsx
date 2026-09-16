@@ -6,7 +6,9 @@ import {
   ArrowUpTrayIcon,
   ArrowsRightLeftIcon,
   CreditCardIcon,
+  EyeIcon,
   LockClosedIcon,
+  PauseCircleIcon,
   PaperAirplaneIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
@@ -41,11 +43,26 @@ const MONEY_ACTIONS = [
   { id: 'add', label: 'Add money', icon: PlusIcon },
   { id: 'send', label: 'Send', icon: ArrowUpTrayIcon },
   { id: 'withdraw', label: 'Withdraw', icon: ArrowDownTrayIcon },
+] as const;
+
+// Card Details' own row, directly under the card art (2026-09-16, direct
+// feedback: hide the small ghost Pause/Settings icons that used to sit
+// there, and move "Manage card" up out of Money's own action row to join
+// them here instead — Money's own row drops to three actions
+// (Add money/Send/Withdraw) since Manage card now lives only here, not
+// in both places). Same circular-icon-with-label styling as every other
+// WalletActionRow variant, not the small ghost pills this replaces.
+const CARD_ACTIONS = [
+  { id: 'show-details', label: 'Show details', icon: EyeIcon },
+  // PauseCircleIcon stands in for "Freeze" — no snowflake glyph exists in
+  // the closed Heroicons set this project is pinned to (confirmed when
+  // the icon-only row was first built).
+  { id: 'freeze', label: 'Freeze', icon: PauseCircleIcon },
   { id: 'manage-card', label: 'Manage card', icon: CreditCardIcon },
 ] as const;
 
 export interface WalletActionRowProps {
-  variant?: 'wallet' | 'money';
+  variant?: 'wallet' | 'money' | 'card';
   // Two complete, independently choosable shapes (2026-09-16, direct
   // feedback: "2 variants that can be configured per instance, not each
   // instance has different like now") — roundedSquare and circle are the
@@ -61,7 +78,7 @@ export interface WalletActionRowProps {
 }
 
 export function WalletActionRow({ variant = 'wallet', shape = 'roundedSquare', size = 'default' }: WalletActionRowProps) {
-  const actions = variant === 'money' ? MONEY_ACTIONS : WALLET_ACTIONS;
+  const actions = variant === 'money' ? MONEY_ACTIONS : variant === 'card' ? CARD_ACTIONS : WALLET_ACTIONS;
   return (
     <div className={styles.row} data-variant={variant} data-size={size}>
       {actions.map(({ id, label, icon }) => (
