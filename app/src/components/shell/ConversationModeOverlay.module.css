@@ -61,11 +61,12 @@
   pointer-events: none;
 }
 
-/* Top header: close (leading) + a chat-history placeholder (trailing)
-   (2026-09-16, direct feedback: "close would be in the top left corner
-   and we need on the right icon button placeholder for chat history
-   list") — safe-area top inset moved here from .transcript's own
-   padding-top, since this row now owns the screen's top edge instead. */
+/* Top header: close-the-assistant-altogether (leading) + a chat-history
+   placeholder (trailing) — kept through the 2026-09-16 rollback ("keep
+   close and history on top") even though the bottom controls row's own
+   close was restored; the two buttons do different things now (see
+   ConversationModeOverlay.tsx's own comment). Safe-area top inset lives
+   here, not on .transcript, since this row owns the screen's top edge. */
 .header {
   display: flex;
   justify-content: space-between;
@@ -93,13 +94,13 @@
   mask: var(--shell-transcript-mask);
 }
 
-/* Centered, not space-between (2026-09-16 follow-up: close moved out to
-   the new .header above, leaving just mic+orb — centering the remaining
-   pair reads intentional rather than space-between spreading two items
-   to the row's edges with an empty gap where close used to sit). */
+/* space-between, mic/orb/close (2026-09-16 rollback: restored to the
+   original 3-item layout/behavior — see ConversationModeOverlay.tsx's
+   own comment on why close belongs here too now, distinct from the top
+   header's own close). */
 .controls {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: var(--shell-inset);
   padding-bottom: max(var(--shell-inset), env(safe-area-inset-bottom));

@@ -20,7 +20,7 @@ export function MobileFrameDock({ state, variant }: { state: ReturnType<typeof u
   if (variant === 'pill') return <PillNavigation activeItem={state.mode === 'idle' ? pillDestinations[state.activeTab] : 'assistant'}
     onNavigate={navigate} isActionsOpen={actionsOpen} onActionsOpenChange={setActionsOpen}
     onAction={(action) => { state.setValue(actionDrafts[action]); state.setMode('composer'); }}
-    isComposerOpen={state.mode === 'composer'} isConversation={state.mode === 'conversation'}
+    isComposerOpen={state.mode === 'composer'}
     assistantRef={state.assistantRef} composer={<MobileFrameComposer state={state} />} />;
   return <footer className={styles.dock}>
     <TabBar activeTab={state.activeTab} onTabChange={state.selectTab} isComposerOpen={state.mode !== 'idle'}

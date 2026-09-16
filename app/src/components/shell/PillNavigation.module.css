@@ -1,4 +1,19 @@
-.root { display: flex; align-items: center; gap: var(--pill-detached-gap); width: 100%; padding: var(--pill-inset); padding-bottom: max(var(--pill-inset), env(safe-area-inset-bottom)); }
+.root { display: flex; align-items: center; gap: var(--pill-detached-gap); width: 100%; padding: var(--pill-inset); padding-bottom: max(var(--pill-inset), env(safe-area-inset-bottom)); transition: opacity var(--motion-enter-duration) var(--motion-enter-ease); }
+/* Fades the nav pill/toggle during the transition INTO the composer
+   screen (2026-09-16, direct feedback, corrected after an initial
+   attempt targeted conversation mode instead: "the change was requested
+   on the composer screen itself, that's where we also fade out the main
+   nav during transition into composer screen") — .root (the pill nav +
+   quick-actions toggle) is a SIBLING of .composer inside .dock, not an
+   ancestor, so fading it here leaves the composer's own growing input
+   section (.composer/.composerClip/.composerBody below) fully visible;
+   only the destination pills fade, exactly the "main nav" the request
+   names. */
+.dock[data-composer-open='true'] .root {
+  opacity: 0;
+  transition-duration: var(--motion-exit-duration);
+  transition-timing-function: var(--motion-exit-ease);
+}
 .pill { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: var(--pill-padding); border: var(--pill-edge-width) solid var(--pill-edge); border-radius: var(--pill-radius); background: var(--surface-1); transition: background var(--pill-duration) var(--pill-ease), border-color var(--pill-duration) var(--pill-ease), opacity var(--pill-duration) var(--pill-ease); }
 .pill .destination { width: 100%; min-width: 0; min-height: var(--pill-item-size); padding: 0; border-radius: var(--pill-radius); color: var(--ink-secondary); box-shadow: none; border-color: transparent; }
 .pill .destination[aria-current='page'] { color: var(--ink-primary); background: transparent; }
@@ -18,20 +33,7 @@
 .phone { width: min(100%, var(--shell-frame-max-width)); height: 100%; display: flex; flex-direction: column; background: var(--surface-0); }
 .content { flex: 1; padding: var(--pill-inset); display: grid; place-items: center; }
 @media (prefers-reduced-motion: reduce) { .pill, .plus { transition: none; } }
-.dock { position: absolute; inset-inline: 0; bottom: 0; z-index: 3; isolation: isolate; transition: opacity var(--motion-enter-duration) var(--motion-enter-ease); }
-/* Fades during the transition into the full-screen AI conversation
-   screen (2026-09-16, direct feedback: "the AI composer screen should
-   actually fade out the main nav during transition to it") — scoped to
-   data-conversation specifically, not data-composer-open: the composer's
-   own input lives inside this same .dock (the .composer section below),
-   so fading on composer-open would hide the input, not just chrome
-   around it. ConversationModeOverlay covers this .dock outright once
-   fully open either way; this only softens the MOMENT of transition. */
-.dock[data-conversation='true'] {
-  opacity: 0;
-  transition-duration: var(--motion-exit-duration);
-  transition-timing-function: var(--motion-exit-ease);
-}
+.dock { position: absolute; inset-inline: 0; bottom: 0; z-index: 3; isolation: isolate; }
 .dock::before { content: ''; position: absolute; inset-inline: 0; bottom: 0; height: var(--assistant-orb-halo-height); background: var(--assistant-orb-halo); opacity: 0; transition: opacity var(--pill-slide-duration) var(--pill-ease); pointer-events: none; z-index: -1; }
 .dock[data-composer-open='true']::before { opacity: var(--assistant-orb-halo-strength); }
 /* Removed own .dock::after fade (2026-09-14, direct feedback: "shadow
@@ -59,4 +61,4 @@
 .dock[data-composer-open='true'] .composerBody { transform: translateY(0); }
 .composerBody button { min-height: var(--pill-item-size); }
 @keyframes pill-stretch { 0%, 100% { transform: scaleX(1); } 40% { transform: scaleX(var(--pill-stretch)); } }
-@media (prefers-reduced-motion: reduce) { .indicator, .composer, .composerBody, .dock, .dock::before { transition: none; } .highlight { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .indicator, .composer, .composerBody, .root, .dock::before { transition: none; } .highlight { animation: none; } }

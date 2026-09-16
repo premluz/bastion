@@ -156,8 +156,8 @@ export function MobileFrame(props: MobileFrameProps) {
           <MobileFrameDock state={state} variant={props.navigationVariant ?? 'pill'} />
           {selectedCardData && <CardDetailPage card={selectedCardData} sourceRect={state.selectedCard!.sourceRect} onClose={state.closeCard} />}
           </div> )}</AccountExperience></div>
-      <ConversationModeOverlay isOpen={state.mode === 'conversation'} onClose={() => state.setMode('composer')} sharedOrb={props.navigationVariant === 'classic'}
-        scrollRef={conversationScrollRef}>
+      <ConversationModeOverlay isOpen={state.mode === 'conversation'} onClose={() => state.setMode('composer')} onCloseAll={state.closeComposer}
+        sharedOrb={props.navigationVariant === 'classic'} scrollRef={conversationScrollRef}>
         {transcript}
       </ConversationModeOverlay>
     </div>

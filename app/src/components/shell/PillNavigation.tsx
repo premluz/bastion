@@ -21,24 +21,16 @@ export type PillAction = (typeof actions)[number]['id'];
 export interface PillNavigationProps {
   assistantRef?: Ref<HTMLButtonElement>;
   composer?: ReactNode; isComposerOpen?: boolean;
-  // Distinct from isComposerOpen (2026-09-16, direct feedback: "the AI
-  // composer screen should actually fade out the main nav during
-  // transition to it") — same isConversation naming TabBar.tsx's own
-  // props already use, kept separate from isComposerOpen since the dock
-  // must NOT fade for plain composer (the composer's own input lives
-  // inside this same dock — fading it would hide the input, not just
-  // chrome around it), only for the full-screen conversation takeover.
-  isConversation?: boolean;
   activeItem: PillDestination; onNavigate: (destination: PillDestination) => void;
   isActionsOpen: boolean; onActionsOpenChange: (open: boolean) => void; onAction: (action: PillAction) => void;
 }
 
-export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onActionsOpenChange, onAction, composer, isComposerOpen = false, isConversation = false, assistantRef }: PillNavigationProps) {
+export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onActionsOpenChange, onAction, composer, isComposerOpen = false, assistantRef }: PillNavigationProps) {
   const composerId = useId();
   const menu = <div className={styles.menu}>{actions.map(({ id, label, icon }) =>
     <Button key={id} label={label} endContent={<Icon icon={icon} size="lg" />} variant="ghost" className={styles.action}
       onClick={() => { onActionsOpenChange(false); onAction(id); }} />)}</div>;
-  return <div className={styles.dock} data-composer-open={isComposerOpen} data-conversation={isConversation}>
+  return <div className={styles.dock} data-composer-open={isComposerOpen}>
     <div className={styles.root} data-open={isActionsOpen} data-testid="pill-navigation">
     <nav className={styles.pill} aria-label="Pill navigation" inert={isActionsOpen}>
       <span className={styles.track} aria-hidden="true"><span className={styles.indicator} data-active={activeItem}>

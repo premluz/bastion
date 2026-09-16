@@ -1,0 +1,16 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* Same close-assistant/chat-history pair as ConversationModeOverlay's
+   own header, but sized for the composer's own compact context (no
+   safe-area top inset — the composer sits inside the dock's own already-
+   inset .composerBody, not flush against the phone's true top edge the
+   way the full-screen conversation overlay is). */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
