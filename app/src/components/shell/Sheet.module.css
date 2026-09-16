@@ -1,0 +1,137 @@
+/* Backdrop owns the scrim + positions the sheet at the bottom edge —
+   .sheet itself only sizes/animates its own box. Each stacked sheet gets
+   its own backdrop+scrim (useSheetStack's own stackIndex assigns the
+   z-index), so a second sheet's scrim visually dims the first sheet
+   AND its own now-transparent scrim together, reading as one
+   continuously deepening stack rather than two flat overlays. */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  background: var(--scrim, rgb(0 0 0 / 0.4));
+  animation: sheet-scrim-in var(--duration-200) var(--motion-enter-ease) both;
+}
+
+.backdrop[data-closing='true'] .scrim {
+  animation: sheet-scrim-out var(--duration-200) var(--motion-exit-ease) both;
+}
+
+@keyframes sheet-scrim-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sheet-scrim-out { from { opacity: 1; } to { opacity: 0; } }
+
+.sheet {
+  position: relative;
+  width: 100%;
+  max-width: var(--shell-frame-max-width);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-0);
+  border-radius: var(--shell-radius) var(--shell-radius) 0 0;
+  overflow: hidden;
+  /* transform itself (translateY for enter/drag/close, scale for recede)
+     is written inline from Sheet.tsx as ONE composed string — see its
+     own comment for why: a `both`-fill-mode @keyframes animation here
+     previously overrode any other rule trying to set `transform` on this
+     element for as long as the fill mode held, which silently broke the
+     recede scale below. This class only owns the TRANSITION (how a
+     transform change animates), never the transform value itself. */
+  transition: transform var(--duration-320) var(--motion-enter-ease), height var(--duration-320) var(--motion-enter-ease),
+    opacity var(--duration-320) var(--motion-enter-ease);
+}
+
+.sheet[data-dragging='true'] { transition: none; }
+
+/* Faster exit than enter (convention this app already applies elsewhere:
+   --motion-exit-duration/-ease distinct from --motion-enter-*) —
+   Sheet.tsx's own close() timeout (200ms) matches this exactly, since
+   the unmount callback needs the same number the CSS transition uses. */
+.sheet[data-closing='true'] {
+  transition-duration: var(--duration-200);
+  transition-timing-function: var(--motion-exit-ease);
+}
+
+/* Three fixed snap heights, not freeform (2026-09-16 ruling: "fixed size
+   variants + optional expand-to-full... discrete snap points instead"
+   of a continuously draggable height) — compact/half/full. */
+.sheet[data-size='compact'] { height: 40dvh; }
+.sheet[data-size='half'] { height: 65dvh; }
+.sheet[data-size='full'] { height: 100dvh; border-radius: 0; }
+
+/* Receded (2026-09-16, same visual language as MobileFrame's own
+   assistant-mode recede) — a sheet now sitting BENEATH a newly pushed
+   one scales/dims slightly rather than vanishing, reading the stack as
+   literal depth. Not interactive while receded (Sheet.tsx's own
+   isReceded prop also skips rendering this sheet's scrim and disables
+   its focus trap) — the topmost sheet alone is ever interactive. Only
+   opacity lives here; the scale half of "receded" is part of the same
+   inline transform string as everything else (see .sheet's own comment). */
+.sheet[data-receded='true'] {
+  opacity: var(--shell-recede-opacity);
+  pointer-events: none;
+}
+
+.handleZone {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-8) 0 var(--space-4);
+  cursor: grab;
+  touch-action: none;
+}
+
+.handleZone:active { cursor: grabbing; }
+
+/* Same handle dimensions AccountSheet's own --account-handle-width/
+   -height already established (32×4px) — visual consistency across
+   every sheet in the app, not a Sheet-specific reinvention. */
+.handle {
+  width: var(--space-32);
+  height: var(--space-4);
+  border-radius: var(--radius-full);
+  background: var(--ink-secondary);
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--shell-inset);
+}
+
+.headerSide {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: var(--shell-control-size);
+}
+
+.headerSide[data-align='end'] {
+  justify-content: flex-end;
+}
+
+.headerTitle {
+  flex-shrink: 0;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrim { animation: none; }
+  .sheet { transition: none; }
+}
