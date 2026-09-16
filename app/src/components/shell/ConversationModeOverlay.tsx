@@ -2,6 +2,7 @@ import type { ReactNode, Ref } from 'react';
 import { Dialog } from '@astryxdesign/core/Dialog';
 import { Icon } from '@astryxdesign/core/Icon';
 import { IconButton } from '@astryxdesign/core/IconButton';
+import { ClockIcon } from '@heroicons/react/24/outline';
 import { AssistantOrb, type AssistantActivity } from './AssistantOrb';
 import styles from './ConversationModeOverlay.module.css';
 
@@ -21,6 +22,18 @@ export function ConversationModeOverlay({ isOpen, onClose, children, activity = 
       variant="fullscreen" purpose="form" padding={0} className={styles.root}
       aria-label="Assistant conversation" aria-describedby="conversation-activity" data-shared-orb={String(sharedOrb)}>
       <div className={styles.layout}>
+        {/* Close moved to a top-left header (2026-09-16, direct feedback:
+            "close would be in the top left corner") — reuses Sheet's own
+            header rather than a bespoke one, same leading/trailing slot
+            shape. Trailing is a placeholder for a future chat-history
+            list (direct feedback: "icon button placeholder for chat
+            history list" on the right) — inert for now, no real history
+            feature exists yet to open. */}
+        <div className={styles.header}>
+          <IconButton label="Close conversation" tooltip="Close conversation" icon={<Icon icon="close" />}
+            variant="ghost" onClick={onClose} data-autofocus="true" />
+          <IconButton label="Chat history" icon={<Icon icon={ClockIcon} />} variant="ghost" />
+        </div>
         <div ref={scrollRef} className={styles.transcript} role="log" aria-label="Conversation transcript" tabIndex={0}>
           {children}
         </div>
@@ -33,8 +46,6 @@ export function ConversationModeOverlay({ isOpen, onClose, children, activity = 
               {activity === 'thinking' ? 'Thinking preview' : 'Listening preview — microphone is off'}
             </span>
           </div>
-          <IconButton label="Close conversation" tooltip="Close conversation" icon={<Icon icon="close" />}
-            variant="ghost" size="lg" onClick={onClose} data-autofocus="true" />
         </div>
       </div>
     </Dialog>

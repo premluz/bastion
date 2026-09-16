@@ -220,6 +220,15 @@
   bottom: 0;
   z-index: 3;
 }
+/* No conversation-mode fade here: this .dock (the CLASSIC nav variant's
+   own <footer>) hosts TabBar's own AssistantOrb, which is deliberately
+   shown THROUGH ConversationModeOverlay's now-transparent dialog surface
+   (sharedOrb prop) to look like it expands in place rather than jump-
+   cutting to a new orb — fading this .dock during that transition would
+   hide the very orb that illusion depends on. The pill nav variant's own
+   dock (PillNavigation.module.css's own .dock, a DIFFERENT class in a
+   different CSS module — pill has no shared-orb concept) gets its own
+   conversation-mode fade there instead, see its own comment. */
 .composer {
   display: grid;
   grid-template-rows: 0fr;

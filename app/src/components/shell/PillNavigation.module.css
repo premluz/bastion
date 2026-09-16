@@ -1,0 +1,62 @@
+.root { display: flex; align-items: center; gap: var(--pill-detached-gap); width: 100%; padding: var(--pill-inset); padding-bottom: max(var(--pill-inset), env(safe-area-inset-bottom)); }
+.pill { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: var(--pill-padding); border: var(--pill-edge-width) solid var(--pill-edge); border-radius: var(--pill-radius); background: var(--surface-1); transition: background var(--pill-duration) var(--pill-ease), border-color var(--pill-duration) var(--pill-ease), opacity var(--pill-duration) var(--pill-ease); }
+.pill .destination { width: 100%; min-width: 0; min-height: var(--pill-item-size); padding: 0; border-radius: var(--pill-radius); color: var(--ink-secondary); box-shadow: none; border-color: transparent; }
+.pill .destination[aria-current='page'] { color: var(--ink-primary); background: transparent; }
+.root[data-open='true'] .pill { background: transparent; border-color: transparent; opacity: var(--pill-muted-opacity); }
+.root[data-open='true'] .destination { background: transparent; }
+.root .toggle { width: var(--pill-toggle-size); height: var(--pill-toggle-size); min-width: var(--pill-toggle-size); padding: 0; border-radius: var(--pill-radius); background: var(--surface-1); border: var(--pill-edge-width) solid var(--pill-edge); color: var(--ink-primary); box-shadow: none; }
+.plus { display: grid; place-items: center; transition: transform var(--pill-duration) var(--pill-ease); }
+.root[data-open='true'] .plus { transform: rotate(45deg); }
+.popover:global(.astryx-popover) { padding: var(--pill-menu-padding); }
+.menu { display: flex; flex-direction: column; gap: var(--pill-padding); }
+.menu .action { min-height: var(--pill-item-size); width: 100%; justify-content: flex-end; text-align: right; padding-inline: var(--pill-menu-inset) var(--pill-menu-inset-end); border-radius: var(--pill-menu-radius); border: 0; box-shadow: none; }
+/* Astryx's Button sets its label size on an inner span via its own stylex
+   classes, so this has to reach that descendant — sizing .action alone
+   leaves the label at Button's default 14px. */
+.menu .action span { font-size: var(--pill-menu-label-size); }
+.stage { display: grid; place-items: center; height: 100dvh; background: var(--surface-1); }
+.phone { width: min(100%, var(--shell-frame-max-width)); height: 100%; display: flex; flex-direction: column; background: var(--surface-0); }
+.content { flex: 1; padding: var(--pill-inset); display: grid; place-items: center; }
+@media (prefers-reduced-motion: reduce) { .pill, .plus { transition: none; } }
+.dock { position: absolute; inset-inline: 0; bottom: 0; z-index: 3; isolation: isolate; transition: opacity var(--motion-enter-duration) var(--motion-enter-ease); }
+/* Fades during the transition into the full-screen AI conversation
+   screen (2026-09-16, direct feedback: "the AI composer screen should
+   actually fade out the main nav during transition to it") — scoped to
+   data-conversation specifically, not data-composer-open: the composer's
+   own input lives inside this same .dock (the .composer section below),
+   so fading on composer-open would hide the input, not just chrome
+   around it. ConversationModeOverlay covers this .dock outright once
+   fully open either way; this only softens the MOMENT of transition. */
+.dock[data-conversation='true'] {
+  opacity: 0;
+  transition-duration: var(--motion-exit-duration);
+  transition-timing-function: var(--motion-exit-ease);
+}
+.dock::before { content: ''; position: absolute; inset-inline: 0; bottom: 0; height: var(--assistant-orb-halo-height); background: var(--assistant-orb-halo); opacity: 0; transition: opacity var(--pill-slide-duration) var(--pill-ease); pointer-events: none; z-index: -1; }
+.dock[data-composer-open='true']::before { opacity: var(--assistant-orb-halo-strength); }
+/* Removed own .dock::after fade (2026-09-14, direct feedback: "shadow
+   should be at the bottom" / "nav is below shadow" — this pill dock's
+   own box is padded well beyond the visible pill itself, so bottom:100%
+   floated the fade ~90px above the actual nav with a visible gap
+   instead of sitting flush at the true bottom edge). MobileFrame.tsx now
+   renders its own .bottomFade directly in .chrome, anchored to the
+   phone's real bottom edge regardless of which nav variant renders
+   inside it — this pill dock no longer needs its own copy. */
+.pill { position: relative; }
+.destination { position: relative; z-index: 1; }
+.track { position: absolute; inset: var(--pill-padding); pointer-events: none; }
+.indicator { display: block; width: 25%; height: 100%; transition: transform var(--pill-slide-duration) var(--pill-slide-ease), opacity var(--pill-duration) var(--pill-ease); }
+.indicator[data-active='home'] { transform: translateX(0); }
+.indicator[data-active='explore'] { transform: translateX(100%); }
+.indicator[data-active='assets'] { transform: translateX(200%); }
+.indicator[data-active='assistant'] { transform: translateX(300%); }
+.highlight { display: block; width: 100%; height: 100%; border-radius: var(--pill-radius); background: var(--surface-3); animation: pill-stretch var(--pill-slide-duration) var(--pill-slide-ease) both; }
+.root[data-open='true'] .indicator { opacity: 0; }
+.composer { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows var(--pill-slide-duration) var(--pill-slide-ease), opacity var(--pill-duration) var(--pill-ease); }
+.dock[data-composer-open='true'] .composer { grid-template-rows: 1fr; opacity: 1; }
+.composerClip { min-height: 0; overflow: hidden; }
+.composerBody { padding: 0 var(--pill-inset) max(var(--pill-inset), env(safe-area-inset-bottom)); transform: translateY(calc(-1 * var(--pill-inset))); transition: transform var(--pill-slide-duration) var(--pill-slide-ease); }
+.dock[data-composer-open='true'] .composerBody { transform: translateY(0); }
+.composerBody button { min-height: var(--pill-item-size); }
+@keyframes pill-stretch { 0%, 100% { transform: scaleX(1); } 40% { transform: scaleX(var(--pill-stretch)); } }
+@media (prefers-reduced-motion: reduce) { .indicator, .composer, .composerBody, .dock, .dock::before { transition: none; } .highlight { animation: none; } }
