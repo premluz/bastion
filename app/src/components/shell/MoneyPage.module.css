@@ -14,32 +14,6 @@
   gap: var(--shell-gap);
 }
 
-/* Larger and fully rounded (2026-09-16, direct feedback: "make larger
-   and fully rounded, same as pill tabs on discover... same scale
-   whatever scales we have md lg xl") — matches LinkChips.module.css's
-   own .chip treatment (Explore's category filter row), the "pill tabs
-   on discover" this request points at: border-radius: var(--radius-full)
-   directly, and size="lg" on the component itself (SegmentedControl's
-   own scale tops out at lg — no xl exists). border-radius is overridden
-   here rather than SegmentedControl's own private
-   --_segmented-control-radius variable, which isn't a documented
-   public API.
-   Then bumped one scale up together with Discover's chips (2026-09-16
-   follow-up, direct feedback: "still larger [on Discover], make both
-   one scale up") — SegmentedControlItem's "lg" (32px/14px/12px) has no
-   larger built-in step either, so height/padding/font are set directly
-   here too, matching ExploreComponents.module.css's .chip.chip. */
-.tabs,
-.tabs :global(.astryx-segmented-control-item) {
-  border-radius: var(--radius-full);
-}
-
-.tabs :global(.astryx-segmented-control-item) {
-  height: var(--space-40);
-  padding-inline: var(--space-16);
-  font-size: var(--text-16);
-}
-
 .balanceBlock {
   display: flex;
   flex-direction: column;

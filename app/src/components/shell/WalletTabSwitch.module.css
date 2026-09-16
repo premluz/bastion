@@ -1,0 +1,72 @@
+/* Same shape/scale as the tabs this replaces (2026-09-16 follow-up):
+   fully rounded, --space-40 tall, matching Discover's own chip scale
+   (see MoneyPage.module.css's prior .tabs override, now superseded by
+   this component owning its own sizing directly). */
+.root {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--wallet-tab-count), minmax(0, 1fr));
+  height: var(--space-40);
+  padding: var(--space-4);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+}
+
+.tab {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radius-full);
+  color: var(--ink-secondary);
+  cursor: pointer;
+}
+
+.tab[aria-selected='true'] {
+  color: var(--ink-primary);
+}
+
+/* Same track/indicator/highlight split PillNavigation.module.css's own
+   mechanism uses: .track pins the sliding box's own coordinate space
+   (inset by the shared padding), .indicator is the sliding box itself
+   (width = one item's share, translated by --wallet-tab-active steps),
+   .highlight is the visible pill INSIDE it, remounted (key={value} in
+   the component) each switch so its own squash-stretch keyframe replays
+   every time rather than only on first mount. */
+.track {
+  position: absolute;
+  inset: var(--space-4);
+  pointer-events: none;
+}
+
+.indicator {
+  display: block;
+  width: calc(100% / var(--wallet-tab-count));
+  height: 100%;
+  transform: translateX(calc(var(--wallet-tab-active) * 100%));
+  transition: transform var(--duration-480) var(--motion-enter-ease);
+}
+
+.highlight {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--surface-0);
+  animation: wallet-tab-stretch var(--duration-480) var(--motion-enter-ease) both;
+}
+
+@keyframes wallet-tab-stretch {
+  0%, 100% { transform: scaleX(1); }
+  40% { transform: scaleX(1.18); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indicator { transition: none; }
+  .highlight { animation: none; }
+}

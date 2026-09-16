@@ -25,7 +25,23 @@
 .chart { composes: inline blockEnd from '../../theme/bleed.module.css'; align-self: stretch; margin-top: auto; }
 .chart svg { display: block; width: 100%; }
 .tabs, .chips { display: flex; gap: var(--space-8); }
-.tabs { overflow-x: auto; scrollbar-width: none; }
+/* Full-bleed scroll track, not inset like the rest of the page's content
+   (2026-09-16, direct feedback: "the pill tabs on discover and
+   investments the ones that are scrollable should be full page width
+   avoiding normal content padding... but first tab has this content
+   padding on left to align with other content items") — cancels .page's
+   own --space-16 horizontal inset (negative margin) so the scrollable
+   TRACK spans the true edge-to-edge width, then restores only the
+   START padding so the first chip still lines up with every other
+   content item above/below it. No restored END padding: scrolling runs
+   all the way to the true right edge, which is the "full bleed" scroll
+   itself, not just a wider hitbox with the same visual stopping point. */
+.tabs {
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-inline: calc(-1 * var(--space-16));
+  padding-inline-start: var(--space-16);
+}
 .chips { flex-wrap: wrap; }
 /* Matched to Portfolio's own tab size, then both bumped one scale up
    together (2026-09-16, direct feedback: "tabs on Discover should be

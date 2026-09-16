@@ -1,7 +1,7 @@
 import { Heading } from '@astryxdesign/core/Heading';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
-import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
+import { WalletTabSwitch } from './WalletTabSwitch';
 import { WalletActionRow } from './WalletActionRow';
 import { ContributingBalanceRow } from './ContributingBalanceRow';
 import { CardDeck } from './CardDeck';
@@ -55,17 +55,26 @@ export interface MoneyPageProps {
 // allocation/holdings build-out pushed this file well past a page-shell's
 // worth of JSX, same file-budget reasoning AssetsHomePage.tsx already
 // follows as its own file rather than living inside MobileFrame.tsx.
+const WALLET_TAB_ITEMS = [
+  { id: 'money', label: 'Money' },
+  { id: 'crypto', label: 'Investments' },
+] as const;
+
 export function MoneyPage({ tab, onTabChange, onCardOpen }: MoneyPageProps) {
   const groups = groupAccountHistory(MONEY_HISTORY, 'all');
 
   return (
     <div className={styles.root}>
       <div className={styles.tabRow}>
-        <SegmentedControl value={tab} onChange={(value) => onTabChange(value as WalletTab)} label="Wallet section"
-          layout="fill" size="lg" className={styles.tabs}>
-          <SegmentedControlItem value="money" label="Money" />
-          <SegmentedControlItem value="crypto" label="Investments" />
-        </SegmentedControl>
+        {/* Same sliding-highlight interaction as the main pill nav
+            (2026-09-16 follow-up, direct feedback: "on changing tabs
+            (money/investments in portfolio) we need same interaction
+            animation as on main menu") — SegmentedControl (used until
+            now) has no shared-highlight concept: its own selected item
+            just swaps background/shadow in place, nothing travels.
+            WalletTabSwitch is a small dedicated component replicating
+            PillNavigation's own track/indicator/highlight mechanism. */}
+        <WalletTabSwitch items={WALLET_TAB_ITEMS} value={tab} onChange={onTabChange} label="Wallet section" />
       </div>
       {tab === 'money' ? (
         <>
