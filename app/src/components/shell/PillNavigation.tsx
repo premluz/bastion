@@ -1,4 +1,4 @@
-import { useId, type ReactNode, type Ref } from 'react';
+import { Fragment, useId, type ReactNode, type Ref } from 'react';
 import { Button } from '@astryxdesign/core/Button';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
@@ -30,7 +30,25 @@ export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onAction
   const menu = <div className={styles.menu}>{actions.map(({ id, label, icon }) =>
     <Button key={id} label={label} endContent={<Icon icon={icon} size="lg" />} variant="ghost" className={styles.action}
       onClick={() => { onActionsOpenChange(false); onAction(id); }} />)}</div>;
-  return <div className={styles.dock} data-composer-open={isComposerOpen}>
+  return <Fragment>
+    {/* Modal scrim, not alpha-dimming the nav itself (2026-09-16, direct
+        feedback: "the menu when opened via + in the nav sets alpha
+        opacity on nav but actually should put scrim, so should be modal
+        that popover, undo alpha") — the quick-actions popover is a real
+        modal-feeling surface: content behind it dims, the nav pill
+        stays fully visible/undimmed on top (it's the thing that opened
+        the menu, not part of what's being backgrounded). A sibling of
+        .dock (not nested inside it) so its own absolute inset:0 resolves
+        against .chrome — the true full-phone containing block — rather
+        than .dock's own bottom-anchored, intrinsic-height box, which
+        would only cover the dock's own band. Click dismisses the
+        popover, same as the existing outside-click behavior Popover's
+        own onOpenChange already wires up — this just gives that
+        dismissal a visible surface to click, rather than relying on an
+        invisible "anywhere outside" hit-test. */}
+    {isActionsOpen && <button type="button" className={styles.scrim} aria-hidden="true" tabIndex={-1}
+      onClick={() => onActionsOpenChange(false)} />}
+    <div className={styles.dock} data-composer-open={isComposerOpen}>
     <div className={styles.root} data-open={isActionsOpen} data-testid="pill-navigation">
     <nav className={styles.pill} aria-label="Pill navigation" inert={isActionsOpen}>
       <span className={styles.track} aria-hidden="true"><span className={styles.indicator} data-active={activeItem}>
@@ -50,5 +68,6 @@ export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onAction
     <section id={composerId} className={styles.composer} aria-label="Assistant composer" inert={!isComposerOpen} aria-hidden={!isComposerOpen}>
       <div className={styles.composerClip}><div className={styles.composerBody}>{composer}</div></div>
     </section>
-  </div>;
+    </div>
+  </Fragment>;
 }

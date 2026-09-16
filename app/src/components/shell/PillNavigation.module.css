@@ -1,4 +1,7 @@
-.root { display: flex; align-items: center; gap: var(--pill-detached-gap); width: 100%; padding: var(--pill-inset); padding-bottom: max(var(--pill-inset), env(safe-area-inset-bottom)); transition: opacity var(--motion-enter-duration) var(--motion-enter-ease); }
+/* position:relative + z-index:6 (above .scrim's own 5) so the nav pill/
+   toggle stay clickable and undimmed ABOVE the modal scrim, rather than
+   the scrim visually and interactively covering them too. */
+.root { position: relative; z-index: 6; display: flex; align-items: center; gap: var(--pill-detached-gap); width: 100%; padding: var(--pill-inset); padding-bottom: max(var(--pill-inset), env(safe-area-inset-bottom)); transition: opacity var(--motion-enter-duration) var(--motion-enter-ease); }
 /* Fades the nav pill/toggle during the transition INTO the composer
    screen (2026-09-16, direct feedback, corrected after an initial
    attempt targeted conversation mode instead: "the change was requested
@@ -17,7 +20,14 @@
 .pill { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: var(--pill-padding); border: var(--pill-edge-width) solid var(--pill-edge); border-radius: var(--pill-radius); background: var(--surface-1); transition: background var(--pill-duration) var(--pill-ease), border-color var(--pill-duration) var(--pill-ease), opacity var(--pill-duration) var(--pill-ease); }
 .pill .destination { width: 100%; min-width: 0; min-height: var(--pill-item-size); padding: 0; border-radius: var(--pill-radius); color: var(--ink-secondary); box-shadow: none; border-color: transparent; }
 .pill .destination[aria-current='page'] { color: var(--ink-primary); background: transparent; }
-.root[data-open='true'] .pill { background: transparent; border-color: transparent; opacity: var(--pill-muted-opacity); }
+/* No opacity dimming here anymore (2026-09-16, direct feedback: "sets
+   alpha opacity on nav but actually should put scrim... undo alpha") —
+   the nav pill stays fully visible/undimmed while the quick-actions
+   popover is open; a real modal scrim (.scrim below) now dims the
+   PAGE content behind it instead. background/border-color still clear
+   to transparent: that's the pill's own fill resetting to blend with
+   its surroundings, not alpha dimming. */
+.root[data-open='true'] .pill { background: transparent; border-color: transparent; }
 .root[data-open='true'] .destination { background: transparent; }
 .root .toggle { width: var(--pill-toggle-size); height: var(--pill-toggle-size); min-width: var(--pill-toggle-size); padding: 0; border-radius: var(--pill-radius); background: var(--surface-1); border: var(--pill-edge-width) solid var(--pill-edge); color: var(--ink-primary); box-shadow: none; }
 .plus { display: grid; place-items: center; transition: transform var(--pill-duration) var(--pill-ease); }
@@ -33,7 +43,38 @@
 .phone { width: min(100%, var(--shell-frame-max-width)); height: 100%; display: flex; flex-direction: column; background: var(--surface-0); }
 .content { flex: 1; padding: var(--pill-inset); display: grid; place-items: center; }
 @media (prefers-reduced-motion: reduce) { .pill, .plus { transition: none; } }
-.dock { position: absolute; inset-inline: 0; bottom: 0; z-index: 3; isolation: isolate; }
+/* z-index 6, ABOVE .scrim's own 5 — .dock's own isolation:isolate makes
+   it a single stacking-context UNIT: it competes against .scrim as one
+   z-index value, not per-child (confirmed live: .root's own z-index:6
+   had no effect on the real click target while .dock itself stayed at
+   3, since isolation:isolate scopes z-index comparisons to WITHIN .dock
+   only — a sibling never sees past the isolated boundary to an inner
+   child's stacking order). Raising .dock itself, not just .root, is
+   what actually keeps the toggle button clickable above the scrim. */
+.dock { position: absolute; inset-inline: 0; bottom: 0; z-index: 6; isolation: isolate; }
+/* Covers the whole phone frame, not just .dock's own band — the quick-
+   actions menu should read as backgrounding the ENTIRE screen behind
+   it, same register as Sheet's own modal scrim. z-index 5, ABOVE
+   MobileFrame's own .header (z-index 3) — a lower z-index (originally
+   tried: 2, matching .topFade/.bottomFade's own "dims content, sits
+   under interactive chrome" slot) left .header's own top-left corner
+   still winning the hit-test there (confirmed live via
+   elementFromPoint: a click at the phone's top-left landed on .header,
+   not this scrim, since .header's z-index:3 out-ranked it) — a scrim
+   must out-rank EVERY sibling layer it needs to dim/intercept clicks
+   for, not just the ones directly behind the popover's own trigger. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  background: var(--scrim, rgb(0 0 0 / 0.4));
+  animation: pill-scrim-in var(--duration-200) var(--motion-enter-ease) both;
+}
+@keyframes pill-scrim-in { from { opacity: 0; } to { opacity: 1; } }
 .dock::before { content: ''; position: absolute; inset-inline: 0; bottom: 0; height: var(--assistant-orb-halo-height); background: var(--assistant-orb-halo); opacity: 0; transition: opacity var(--pill-slide-duration) var(--pill-ease); pointer-events: none; z-index: -1; }
 .dock[data-composer-open='true']::before { opacity: var(--assistant-orb-halo-strength); }
 /* Removed own .dock::after fade (2026-09-14, direct feedback: "shadow
