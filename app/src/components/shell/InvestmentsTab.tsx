@@ -14,6 +14,7 @@ import {
   resolveInvestmentsPeriodDelta,
   investmentsPeriodHasCoverage,
   isInvestmentsPeriod,
+  densifyForDisplay,
   INVESTMENTS_PERIODS,
   type InvestmentsPeriod,
 } from '../../engine/assetsHome';
@@ -44,6 +45,15 @@ import styles from './InvestmentsTab.module.css';
 // reusing the same week under a longer label (2026-09-16 ruling).
 const DEFAULT_PERIOD: InvestmentsPeriod = '7D';
 
+// Chart line only, not the headline/delta (2026-09-16 follow-up, direct
+// feedback against a reference chart: "need more mocked points to be
+// more like this chart not so smooth") — densifyForDisplay's own comment
+// has the full reasoning: this inserts noisy interpolated steps between
+// the real points for visual texture, landing exactly on every real
+// point's own real value/date. periodDelta below is computed from the
+// real `series`, never the densified one.
+const CHART_DISPLAY_SEED = 'investments-chart';
+
 export function InvestmentsTab() {
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const [period, setPeriod] = useState<InvestmentsPeriod>(DEFAULT_PERIOD);
@@ -52,6 +62,7 @@ export function InvestmentsTab() {
   const hasCoverage = investmentsPeriodHasCoverage(period);
   const periodDelta = resolveInvestmentsPeriodDelta(period, series);
   const isUp = (periodDelta?.changeAbs ?? 0) >= 0;
+  const displaySeries = hasCoverage ? densifyForDisplay(series, CHART_DISPLAY_SEED) : [];
 
   return (
     <>
@@ -84,8 +95,21 @@ export function InvestmentsTab() {
             <SegmentedControlItem key={candidate} value={candidate} label={candidate} />
           ))}
         </SegmentedControl>
-        <TrendChart series={hasCoverage ? series : []} periods={[...INVESTMENTS_PERIODS]}
-          activePeriod={period} onPeriodChange={(value) => { if (isInvestmentsPeriod(value)) setPeriod(value); }} bleedHeight={120} quiet />
+        {/* TrendChart's own internal day-count slicer (sliceByPeriod,
+            DAYS_BACK) assumes roughly one point per day — densifyForDisplay
+            above turns 7 real points into dozens, which '7D''s own
+            slice(-7) would wrongly cut down to the last real day. 'YTD'
+            also maps to DAYS_BACK 'all' (untouched slicing) WITHOUT being
+            the literal string 'MAX', which matters: TrendChart's own
+            isZoomedPeriod (activePeriod !== 'MAX') gates Y-axis auto-scale,
+            and passing 'MAX' here flattened this narrow ~$150 range
+            against a 0-anchored axis (caught live via screenshot — the
+            chart nearly vanished). 'YTD' gets both: the whole densified
+            array, AND an auto-scaled axis. Always requesting it internally
+            decouples TrendChart's own slicing from OUR OWN period buttons
+            above, which already decide what `displaySeries` even contains
+            before it gets here. */}
+        <TrendChart series={displaySeries} periods={['YTD']} activePeriod="YTD" onPeriodChange={() => {}} bleedHeight={120} quiet />
       </div>
 
       <WalletActionRow variant="wallet" shape="circle" size="compact" />

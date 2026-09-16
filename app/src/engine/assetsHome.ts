@@ -168,3 +168,67 @@ export function resolveInvestmentsPeriodDelta(period: InvestmentsPeriod, series:
   const changePercent = first.price !== 0 ? (changeAbs / first.price) * 100 : 0;
   return { changeAbs, changePercent };
 }
+
+// Deterministic per-series PRNG (mulberry32) — same technique
+// AssetTrendGlyph.tsx's own seededRandom already uses for its generated
+// walk, reused here rather than re-derived.
+function seededRandom(seed: string): () => number {
+  let h = 1779033703 ^ seed.length;
+  for (let i = 0; i < seed.length; i += 1) {
+    h = Math.imul(h ^ seed.charCodeAt(i), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  return () => {
+    h = Math.imul(h ^ (h >>> 16), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    h ^= h >>> 16;
+    return (h >>> 0) / 4294967296;
+  };
+}
+
+// DISPLAY-ONLY texture, never a data source (2026-09-16, direct feedback
+// against a reference chart: "need more mocked points to be more like
+// this chart not so smooth" — the reference is AssetTrendGlyph's own
+// procedurally-generated glyph, explicitly sanctioned in ITS OWN comment
+// for a context with "no real data to hold"). The Investments chart is
+// not that context — its headline/delta stay computed from the real
+// 7-point series untouched (resolveInvestmentsPeriodDelta above never
+// calls this) — so this function inserts noisy interpolated steps
+// BETWEEN each real consecutive point while landing exactly ON every
+// real point's own real price at its own real date. The line's overall
+// shape (start, end, every real day's real value) stays truthful; only
+// the path connecting them gains texture, the same way a real price
+// chart has intra-day movement a daily close-only series can't show.
+// stepsBetween defaults to enough points that a 7-point week reads as
+// dozens of points, matching the reference's own ~48-point density.
+export function densifyForDisplay(series: PortfolioSeriesPoint[], seed: string, stepsBetween = 6): PortfolioSeriesPoint[] {
+  if (series.length < 2) return series;
+  const random = seededRandom(seed);
+  const result: PortfolioSeriesPoint[] = [];
+  for (let i = 0; i < series.length - 1; i += 1) {
+    const from = series[i]!;
+    const to = series[i + 1]!;
+    result.push(from);
+    const span = to.price - from.price;
+    // Noise scaled to this segment's own real move (never a fixed
+    // absolute wiggle) — a $5 week-over-week change gets proportionally
+    // small texture, a $500 one gets proportionally larger, rather than
+    // one magic-number amplitude misrepresenting either.
+    const noiseScale = Math.max(Math.abs(span), Math.abs(from.price) * 0.01) * 0.35;
+    const fromTime = new Date(from.t).getTime();
+    const toTime = new Date(to.t).getTime();
+    for (let step = 1; step <= stepsBetween; step += 1) {
+      const t = step / (stepsBetween + 1);
+      const interpolated = from.price + span * t + (random() - 0.5) * noiseScale;
+      // A real, valid interpolated TIMESTAMP (not a suffixed string) —
+      // TrendChart's own axis logic (formatAxisLabel, granularityForPeriod,
+      // unitLabel) all parse `t` as a real date; an invalid one would
+      // corrupt tick labels for these synthetic points specifically. Only
+      // the PRICE at this timestamp is synthetic texture; the x-position
+      // it's plotted at is real time between two real, honest readings.
+      result.push({ t: new Date(fromTime + (toTime - fromTime) * t).toISOString(), price: interpolated });
+    }
+  }
+  result.push(series[series.length - 1]!);
+  return result;
+}
