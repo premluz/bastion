@@ -61,19 +61,6 @@
   pointer-events: none;
 }
 
-/* Top header: close-the-assistant-altogether (leading) + a chat-history
-   placeholder (trailing) — kept through the 2026-09-16 rollback ("keep
-   close and history on top") even though the bottom controls row's own
-   close was restored; the two buttons do different things now (see
-   ConversationModeOverlay.tsx's own comment). Safe-area top inset lives
-   here, not on .transcript, since this row owns the screen's top edge. */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--space-8);
-}
-
 /* Messages stack from the bottom and get pushed up by newer ones
    (2026-09-13, direct feedback: "messaging in voice chat should start at
    the bottom and be pushed up by newer messages — atm it starts on top").
@@ -90,14 +77,10 @@
   min-height: 0;
   overflow-y: auto;
   overflow-wrap: anywhere;
-  padding: 0 var(--shell-inset);
+  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) 0;
   mask: var(--shell-transcript-mask);
 }
 
-/* space-between, mic/orb/close (2026-09-16 rollback: restored to the
-   original 3-item layout/behavior — see ConversationModeOverlay.tsx's
-   own comment on why close belongs here too now, distinct from the top
-   header's own close). */
 .controls {
   display: flex;
   justify-content: space-between;

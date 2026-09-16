@@ -5,13 +5,14 @@ import { ChatBarComposer } from './ChatBarComposer';
 import type { useMobileFrame } from './useMobileFrame';
 import styles from './MobileFrameComposer.module.css';
 
-// Top header (2026-09-16, direct feedback: "the change was requested on
-// the composer screen itself... and show top close and history") — same
-// close-the-assistant-altogether + chat-history-placeholder pair
-// ConversationModeOverlay's own header already has, so both assistant
-// screens read consistently. The composer's own former footer close
-// button (bottom-left, inside ChatBarComposer's footerActions) is
-// removed as redundant now that this top X does the same job.
+// Top header (2026-09-16, direct feedback: "on composer these X and
+// history should be on top, and in conversation mode we shouldn't have
+// those on top") — this header lives HERE, on the composer screen only;
+// ConversationModeOverlay (voice/conversation mode) deliberately has no
+// top header at all, back to its original bottom-controls-only layout.
+// The composer's own former footer close button (bottom-left, inside
+// ChatBarComposer's footerActions) is removed as redundant now that this
+// top X does the same job.
 export function MobileFrameComposer({ state }: { state: ReturnType<typeof useMobileFrame> }) {
   return <div className={styles.root}>
     <div className={styles.header}>
