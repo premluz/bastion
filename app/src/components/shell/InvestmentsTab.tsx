@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, type MouseEvent } from 'react';
 import { Heading } from '@astryxdesign/core/Heading';
 import { Text } from '@astryxdesign/core/Text';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 import { TrendChart } from '../nodes/TrendChart';
 import { TrendDelta } from '../nodes/TrendDelta';
+import { LinkChips } from '../nodes/LinkChips';
 import { AssetsHomeList } from './AssetsHomeList';
 import { AllocationBar } from './AllocationBar';
 import { WalletActionRow } from './WalletActionRow';
@@ -54,9 +55,29 @@ const DEFAULT_PERIOD: InvestmentsPeriod = '7D';
 // real `series`, never the densified one.
 const CHART_DISPLAY_SEED = 'investments-chart';
 
+// Same category set as Discover's own "Explore Categories" row (2026-09-16,
+// direct feedback: "we need tabs on crypto portfolio same as on discover —
+// All Crypto Stocks Perps Commodities") — visual-only for now, confirmed:
+// every current holding is crypto (no stocks/perps/commodities exist
+// anywhere in the universe seed), so this doesn't filter yet. Uses
+// LinkChips directly (the exact component/markup Discover's own row is),
+// with its own local "#investments/..." href namespace and a local
+// delegated click handler — same two-line data-explore-link pattern
+// useExploreNavigation.ts already uses, just updating LOCAL state instead
+// of navigating, since this page has no delegated listener of its own the
+// way Explore/Markets' .page does.
+const CATEGORY_CHIPS = [
+  { id: 'all', label: 'All', href: '#investments/category/all' },
+  { id: 'crypto', label: 'Crypto', href: '#investments/category/crypto' },
+  { id: 'stocks', label: 'Stocks', href: '#investments/category/stocks' },
+  { id: 'perps', label: 'Perps', href: '#investments/category/perps' },
+  { id: 'commodities', label: 'Commodities', href: '#investments/category/commodities' },
+] as const;
+
 export function InvestmentsTab() {
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const [period, setPeriod] = useState<InvestmentsPeriod>(DEFAULT_PERIOD);
+  const [category, setCategory] = useState('all');
   const summary = resolveAssetsHomeSummary();
   const series = resolveInvestmentsSeries();
   const hasCoverage = investmentsPeriodHasCoverage(period);
@@ -64,8 +85,21 @@ export function InvestmentsTab() {
   const isUp = (periodDelta?.changeAbs ?? 0) >= 0;
   const displaySeries = hasCoverage ? densifyForDisplay(series, CHART_DISPLAY_SEED) : [];
 
+  function onCategoryClick(event: MouseEvent<HTMLElement>) {
+    if (!(event.target instanceof Element)) return;
+    const link = event.target.closest('[data-explore-link]');
+    const href = link?.getAttribute('data-explore-link');
+    if (!href?.startsWith('#investments/category/')) return;
+    event.preventDefault();
+    setCategory(href.split('/')[2] ?? 'all');
+  }
+
   return (
     <>
+      <div onClick={onCategoryClick}>
+        <LinkChips label="Investment categories" variant="chips" active={category} links={[...CATEGORY_CHIPS]} />
+      </div>
+
       <div className={styles.balanceBlock}>
         <Heading level={1} type="display-1" className={heroBalanceStyles.heroBalance}>
           ${summary.totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -89,7 +123,7 @@ export function InvestmentsTab() {
             expected to render the SegmentedControl itself, elsewhere") —
             same pattern AssetOverviewTab.tsx already uses for its price
             header's period row. */}
-        <SegmentedControl label="Period" value={period}
+        <SegmentedControl label="Period" value={period} className={styles.periodTabs}
           onChange={(value) => { if (isInvestmentsPeriod(value)) setPeriod(value); }}>
           {INVESTMENTS_PERIODS.map((candidate) => (
             <SegmentedControlItem key={candidate} value={candidate} label={candidate} />

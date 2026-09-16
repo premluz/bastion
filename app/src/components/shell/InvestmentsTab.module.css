@@ -28,3 +28,28 @@
   flex-direction: column;
   gap: var(--space-8);
 }
+
+/* Separate pills, not one shared track with a sliding highlight rail
+   (2026-09-16, direct feedback: "make as pill tabs not tabs with rail")
+   — SegmentedControl's own container paints a single --color-neutral
+   background behind every item alike (that's the "rail"); each
+   SegmentedControlItem is transparent until aria-checked, so removing
+   the shared background and giving every item its OWN resting
+   background (matching Discover's own unselected chip, --surface-2)
+   is what turns one track into independent pills. aria-checked, not a
+   stylex-internal "selected" class name, since that's the one public,
+   stable marker SegmentedControlItem exposes for its own active state. */
+.periodTabs {
+  background: transparent;
+  gap: var(--space-8);
+}
+
+.periodTabs :global(.astryx-segmented-control-item) {
+  background: var(--surface-2);
+  border-radius: var(--radius-full);
+}
+
+.periodTabs :global(.astryx-segmented-control-item[aria-checked='true']) {
+  background: var(--ink-primary);
+  color: var(--surface-0);
+}
