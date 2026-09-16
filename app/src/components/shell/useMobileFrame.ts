@@ -70,6 +70,18 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   // to Money specifically. walletTab lives here rather than as local
   // state inside MoneyPage so Home's shortcut can drive it from outside.
   const [walletTab, setWalletTab] = useState<'money' | 'crypto'>('money');
+  // Card Details screen (2026-09-16): lifted to the shell, not local state
+  // inside MoneyPage, for the same reason walletTab is — CardDetailPage
+  // needs to mount as its own full-screen overlay sibling of .chrome
+  // (MobileFrame.tsx's own level), not nested inside MoneyPage's own
+  // scrolling body. sourceRect is the front card's real on-screen rect at
+  // the moment of tap (CardDeck's own onCardOpen), captured once per open
+  // so CardDetailPage's shared-element transform has a real FROM position
+  // to animate out of, without re-measuring a card that's about to be
+  // covered by the very overlay animating over it.
+  const [selectedCard, setSelectedCard] = useState<{ id: string; sourceRect: DOMRect } | null>(null);
+  const openCard = (id: string, sourceRect: DOMRect) => setSelectedCard({ id, sourceRect });
+  const closeCard = () => setSelectedCard(null);
   const [value, setValue] = useState('');
   // initialPurchaseQuery seeds a real transcript message rather than a
   // separate purchaseQuery state (2026-09-13): the buy flow now renders
@@ -152,5 +164,5 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   const openMoney = () => { setActiveTab('assets'); setWalletTab('money'); setMode('idle'); };
   return { mode, setMode, activeTab, value, setValue, messages, liveTrailMessageId, inputRef, submit,
     selectTab, openConversation, toggleComposer, assistantRef, closeComposer, conversationRef,
-    walletTab, setWalletTab, openMoney };
+    walletTab, setWalletTab, openMoney, selectedCard, openCard, closeCard };
 }

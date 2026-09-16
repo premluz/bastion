@@ -1,4 +1,4 @@
-import { useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
+import { useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import styles from './CardDeck.module.css';
 
 export interface CardDeckProps {
@@ -8,6 +8,14 @@ export interface CardDeckProps {
   // the reference shows the name/badge/Manage row as a single static row
   // under the stack, not one row travelling inside each slide.
   renderDetails?: (activeIndex: number) => ReactNode;
+  // Fires on a genuine TAP of the front card only — never mid-drag/swipe
+  // (2026-09-16, for the new Card Details screen: "card in money view
+  // moves up and scale during page transition"). The caller needs the
+  // front card's own real on-screen rect at the moment of tap to drive a
+  // shared-element transform into the detail screen's resting position;
+  // measuring it here (not in the caller) is the only place that has a
+  // ref to the actual front-card element as rendered mid-deck.
+  onCardOpen?: (index: number, rect: DOMRect) => void;
 }
 
 // Ported from a SwiftUI reference (swiftui-4-card-deck-swipe, direct
@@ -28,7 +36,7 @@ type Direction = 'left' | 'right' | null;
 // clamp(-1, 1, x)
 const clampUnit = (value: number) => Math.max(-1, Math.min(1, value));
 
-export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: CardDeckProps) {
+export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails, onCardOpen }: CardDeckProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -36,6 +44,12 @@ export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: C
   const [exitDirection, setExitDirection] = useState<Direction>(null);
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const axisLocked = useRef(false);
+  // Set true the instant a drag axis-locks, read (then cleared) by the
+  // front card's own onClick — click fires right after pointerup for the
+  // same gesture, so this is the one reliable way to tell "the user just
+  // dragged this card" apart from "the user tapped it" without guessing
+  // at browser-specific click-suppression-after-drag behavior.
+  const didDrag = useRef(false);
   const exitTimer = useRef(0);
   const count = children.length;
 
@@ -46,9 +60,10 @@ export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: C
   const rightProgress = Math.max(0, dragProgress);
 
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (count < 2 || isExiting) return;
+    if (isExiting) return;
     pointerStart.current = { x: event.clientX, y: event.clientY };
     axisLocked.current = false;
+    didDrag.current = false;
   };
 
   const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -63,6 +78,7 @@ export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: C
       if (Math.abs(dx) < AXIS_LOCK_PX && Math.abs(dy) < AXIS_LOCK_PX) return;
       if (Math.abs(dy) > Math.abs(dx)) { pointerStart.current = null; return; }
       axisLocked.current = true;
+      didDrag.current = true;
       setIsDragging(true);
       event.currentTarget.setPointerCapture(event.pointerId);
     }
@@ -201,6 +217,20 @@ export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails }: C
           return (
             <div key={index} className={styles.card} data-front={isFront}
               aria-hidden={!isFront}
+              {...(isFront && onCardOpen ? {
+                role: 'button',
+                tabIndex: 0,
+                'aria-label': 'Open card details',
+                onClick: (event: ReactMouseEvent<HTMLDivElement>) => {
+                  if (didDrag.current) return;
+                  onCardOpen(index, event.currentTarget.getBoundingClientRect());
+                },
+                onKeyDown: (event: ReactKeyboardEvent<HTMLDivElement>) => {
+                  if (event.key !== 'Enter' && event.key !== ' ') return;
+                  event.preventDefault();
+                  onCardOpen(index, event.currentTarget.getBoundingClientRect());
+                },
+              } : {})}
               style={{
                 zIndex,
                 opacity,

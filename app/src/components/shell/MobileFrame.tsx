@@ -9,6 +9,8 @@ import { ChatMessage, ChatMessageBubble } from '@astryxdesign/core/Chat';
 import { TextInput } from '@astryxdesign/core/TextInput';
 import { AssetsHomePage } from './AssetsHomePage';
 import { MoneyPage } from './MoneyPage';
+import { CardDetailPage } from './CardDetailPage';
+import { WALLET_CARDS } from './cardData';
 import { ConversationModeOverlay } from './ConversationModeOverlay';
 import { MobileFrameDock } from './MobileFrameDock';
 import { useExploreNavigation } from './useExploreNavigation';
@@ -99,6 +101,7 @@ export function MobileFrame(props: MobileFrameProps) {
   // had nothing left to animate and the content vanished outright
   // instead of scaling and blurring back.
   const isHome = state.activeTab === 'home';
+  const selectedCardData = state.selectedCard && WALLET_CARDS.find((candidate) => candidate.id === state.selectedCard!.id);
   // Pinned to the latest content (2026-09-14, direct feedback: a settled
   // question card rendered below the fold with no way to see it besides
   // scrolling manually). justify-content: flex-end only sets the initial
@@ -128,7 +131,7 @@ export function MobileFrame(props: MobileFrameProps) {
             </main>
           ) : state.activeTab === 'assets' ? (
             <main className={styles.page} aria-label="Wallet" tabIndex={0}>
-              <MoneyPage tab={state.walletTab} onTabChange={state.setWalletTab} />
+              <MoneyPage tab={state.walletTab} onTabChange={state.setWalletTab} onCardOpen={state.openCard} />
             </main>
           ) : state.activeTab === 'markets' ? (
             <main className={styles.page} aria-label="Explore" tabIndex={0} onClick={explore.onClick}>
@@ -150,7 +153,9 @@ export function MobileFrame(props: MobileFrameProps) {
             {transcript}
           </div>
           <div className={styles.bottomFade} aria-hidden="true" />
-          <MobileFrameDock state={state} variant={props.navigationVariant ?? 'pill'} /></div> )}</AccountExperience></div>
+          <MobileFrameDock state={state} variant={props.navigationVariant ?? 'pill'} />
+          {selectedCardData && <CardDetailPage card={selectedCardData} sourceRect={state.selectedCard!.sourceRect} onClose={state.closeCard} />}
+          </div> )}</AccountExperience></div>
       <ConversationModeOverlay isOpen={state.mode === 'conversation'} onClose={() => state.setMode('composer')} sharedOrb={props.navigationVariant === 'classic'}
         scrollRef={conversationScrollRef}>
         {transcript}

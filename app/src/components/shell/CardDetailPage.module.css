@@ -1,0 +1,139 @@
+/* Full-screen overlay, above header/dock/fades alike (z-index 3) — the
+   reference shows no bottom nav visible on this screen, a genuine
+   full-screen takeover rather than a page still sitting inside the
+   tab-bar chrome. */
+.root {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-0);
+  overflow-y: auto;
+  animation: fadeIn var(--shell-mode-duration) var(--ease-standard);
+}
+
+.root[data-closing='true'] {
+  animation: fadeOut var(--shell-mode-duration) var(--ease-standard) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--space-8);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--shell-gap);
+  padding: 0 var(--shell-inset) var(--shell-inset);
+}
+
+/* The shared-element transform target — CardDetailPage.tsx writes
+   transform/transition directly onto this element's own style, not via
+   a CSS class, since the values are per-open computed geometry (real
+   measured rects), the same "genuinely dynamic per-instance value"
+   escape hatch AssetsHomeHeader's own --glow-color/--glow-strength
+   already uses, just via direct style writes here instead of a custom
+   property (no static CSS rule could express these). */
+.cardStage {
+  align-self: center;
+  width: 100%;
+  max-width: 360px;
+  /* VirtualCardPlaceholder's own .root is height:100% of whatever box
+     hosts it (by design — CardDeck provides the height itself elsewhere)
+     — same real ID-1 card ratio CardDeck.module.css's own .card uses, so
+     this stage gives it one too, otherwise the card art collapses to
+     zero height (caught live via screenshot: an empty gap where the card
+     should be). */
+  aspect-ratio: 1.586 / 1;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-8);
+}
+
+.dot {
+  width: var(--space-8);
+  height: var(--space-8);
+  border-radius: var(--radius-full);
+  background: var(--edge);
+}
+
+.dot[data-active='true'] {
+  background: var(--ink-primary);
+}
+
+.cardOptions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-24);
+}
+
+.optionButton {
+  background: var(--surface-2);
+  color: var(--ink-primary);
+}
+
+.balanceBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-8);
+}
+
+.apyRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.apy {
+  color: var(--delta-up);
+}
+
+.tabRow {
+  display: flex;
+  gap: var(--space-24);
+  border-bottom: 1px solid var(--edge);
+}
+
+.tabButton {
+  padding: 0 0 var(--space-8);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--ink-secondary);
+  cursor: pointer;
+}
+
+.tabButton[data-active='true'] {
+  color: var(--ink-primary);
+  border-bottom-color: var(--ink-primary);
+}
+
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--shell-gap);
+}
+
+.activityGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}

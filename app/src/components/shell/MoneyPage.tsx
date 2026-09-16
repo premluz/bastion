@@ -28,7 +28,11 @@ const CONTRIBUTING_BALANCES = [
 ] as const;
 
 export type WalletTab = 'money' | 'crypto';
-export interface MoneyPageProps { tab: WalletTab; onTabChange: (tab: WalletTab) => void }
+export interface MoneyPageProps {
+  tab: WalletTab;
+  onTabChange: (tab: WalletTab) => void;
+  onCardOpen?: (id: string, rect: DOMRect) => void;
+}
 
 // Portfolio/Wallet nav destination (2026-09-15, direct feedback: "this is
 // essentially Portfolio item in the nav (Wallet)") — reached both from the
@@ -51,7 +55,7 @@ export interface MoneyPageProps { tab: WalletTab; onTabChange: (tab: WalletTab) 
 // allocation/holdings build-out pushed this file well past a page-shell's
 // worth of JSX, same file-budget reasoning AssetsHomePage.tsx already
 // follows as its own file rather than living inside MobileFrame.tsx.
-export function MoneyPage({ tab, onTabChange }: MoneyPageProps) {
+export function MoneyPage({ tab, onTabChange, onCardOpen }: MoneyPageProps) {
   const groups = groupAccountHistory(MONEY_HISTORY, 'all');
 
   return (
@@ -89,7 +93,8 @@ export function MoneyPage({ tab, onTabChange }: MoneyPageProps) {
           <WalletActionRow variant="money" shape="circle" />
           <div className={styles.section}>
             <CardDeck aria-label="Cards"
-              renderDetails={(activeIndex) => <WalletCardTile card={WALLET_CARDS[activeIndex]!} />}>
+              renderDetails={(activeIndex) => <WalletCardTile card={WALLET_CARDS[activeIndex]!} />}
+              {...(onCardOpen ? { onCardOpen: (index: number, rect: DOMRect) => onCardOpen(WALLET_CARDS[index]!.id, rect) } : {})}>
               {WALLET_CARDS.map((card) => (
                 <VirtualCardPlaceholder key={card.id} lastFourDigits={card.lastFourDigits} />
               ))}

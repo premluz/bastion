@@ -71,6 +71,14 @@
   filter: none;
 }
 
+/* Front card is a real tap target once onCardOpen is wired (2026-09-16,
+   Card Details screen) — role="button" alone doesn't imply pointer, and
+   the card otherwise looks identical whether or not a caller wants it
+   openable. */
+.card[data-front='true'][role='button'] {
+  cursor: pointer;
+}
+
 /* Darker than the prior 0.82 (2026-09-16) — at this card size and the
    deck's tight masked band, the reference's own subtle rest-state
    offsets read as noise unless rear cards are more clearly receded;
