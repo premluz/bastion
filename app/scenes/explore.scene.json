@@ -1,0 +1,607 @@
+{
+  "id": "explore",
+  "title": "Explore",
+  "intents": [],
+  "thinking": [],
+  "data": {},
+  "layout": {
+    "id": "explore-page",
+    "type": "content-group",
+    "props": {
+      "layout": "page"
+    },
+    "children": [
+      {
+        "id": "explore-categories",
+        "type": "link-chips",
+        "props": {
+          "label": "Explore Categories",
+          "links": [
+            {
+              "id": "all",
+              "label": "All",
+              "href": "#explore/category/all"
+            },
+            {
+              "id": "crypto",
+              "label": "Crypto",
+              "href": "#explore/category/crypto"
+            },
+            {
+              "id": "stocks",
+              "label": "Stocks",
+              "href": "#explore/category/stocks"
+            },
+            {
+              "id": "perps",
+              "label": "Perps",
+              "href": "#explore/category/perps"
+            },
+            {
+              "id": "commodities",
+              "label": "Commodities",
+              "href": "#explore/category/commodities"
+            }
+          ],
+          "variant": "tabs",
+          "active": "all"
+        },
+        "reveal": 0
+      },
+      {
+        "id": "trending",
+        "type": "content-group",
+        "props": {
+          "title": "Trending",
+          "href": "#explore/group/trending",
+          "layout": "rows"
+        },
+        "children": [
+          {
+            "id": "perpspad",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "perpspad",
+              "name": "perpspad",
+              "symbol": "PPAD",
+              "value": "$0.0068",
+              "marketCap": "$5.2M",
+              "volume": "$3.7M",
+              "deltaPercent": 303.43,
+              "href": "#explore/asset/perpspad"
+            },
+            "reveal": 2
+          },
+          {
+            "id": "lisk",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "lisk",
+              "name": "Lisk",
+              "symbol": "LSK",
+              "value": "$0.9719",
+              "marketCap": "$228.3M",
+              "volume": "$7.2M",
+              "deltaPercent": 273.92,
+              "href": "#explore/asset/lisk",
+              "badge": "Verified"
+            },
+            "reveal": 3
+          },
+          {
+            "id": "flame",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "flame",
+              "name": "Flame",
+              "symbol": "FLAME",
+              "value": "$0.003",
+              "marketCap": "$3.0M",
+              "volume": "$3.0M",
+              "deltaPercent": 194.19,
+              "href": "#explore/asset/flame",
+              "badge": "Risky"
+            },
+            "reveal": 4
+          }
+        ],
+        "reveal": 1
+      },
+      {
+        "id": "perp-cards",
+        "type": "content-group",
+        "props": {
+          "title": "Perps",
+          "href": "#explore/group/perp-cards",
+          "layout": "cards"
+        },
+        "children": [
+          {
+            "id": "btc-perp",
+            "type": "prominent-asset-card",
+            "props": {
+              "entityId": "btc",
+              "symbol": "BTC",
+              "primary": "BTC",
+              "secondary": "$549.11M Vol",
+              "variant": "perp",
+              "href": "#explore/asset/btc",
+              "badge": "40x",
+              "price": "$63,480.00",
+              "deltaPercent": 3.74
+            },
+            "children": [
+              {
+                "id": "btc-spark",
+                "type": "sparkline",
+                "props": {
+                  "points": [
+                    {
+                      "x": "0",
+                      "y": 22
+                    },
+                    {
+                      "x": "1",
+                      "y": 24
+                    },
+                    {
+                      "x": "2",
+                      "y": 20
+                    },
+                    {
+                      "x": "3",
+                      "y": 21
+                    },
+                    {
+                      "x": "4",
+                      "y": 19
+                    },
+                    {
+                      "x": "5",
+                      "y": 23
+                    },
+                    {
+                      "x": "6",
+                      "y": 22
+                    },
+                    {
+                      "x": "7",
+                      "y": 26
+                    },
+                    {
+                      "x": "8",
+                      "y": 24
+                    },
+                    {
+                      "x": "9",
+                      "y": 29
+                    },
+                    {
+                      "x": "10",
+                      "y": 28
+                    },
+                    {
+                      "x": "11",
+                      "y": 45
+                    },
+                    {
+                      "x": "12",
+                      "y": 55
+                    }
+                  ],
+                  "variant": "block"
+                }
+              }
+            ],
+            "reveal": 3
+          },
+          {
+            "id": "eth-perp",
+            "type": "prominent-asset-card",
+            "props": {
+              "entityId": "eth",
+              "symbol": "ETH",
+              "primary": "ETH",
+              "secondary": "$350.73M Vol",
+              "variant": "perp",
+              "href": "#explore/asset/eth",
+              "badge": "25x",
+              "price": "$2,684.56",
+              "deltaPercent": 2.31
+            },
+            "children": [
+              {
+                "id": "eth-spark",
+                "type": "sparkline",
+                "props": {
+                  "points": [
+                    {
+                      "x": "0",
+                      "y": 20
+                    },
+                    {
+                      "x": "1",
+                      "y": 18
+                    },
+                    {
+                      "x": "2",
+                      "y": 23
+                    },
+                    {
+                      "x": "3",
+                      "y": 22
+                    },
+                    {
+                      "x": "4",
+                      "y": 25
+                    },
+                    {
+                      "x": "5",
+                      "y": 29
+                    },
+                    {
+                      "x": "6",
+                      "y": 25
+                    },
+                    {
+                      "x": "7",
+                      "y": 28
+                    },
+                    {
+                      "x": "8",
+                      "y": 32
+                    },
+                    {
+                      "x": "9",
+                      "y": 30
+                    },
+                    {
+                      "x": "10",
+                      "y": 36
+                    },
+                    {
+                      "x": "11",
+                      "y": 40
+                    }
+                  ],
+                  "variant": "block"
+                }
+              }
+            ],
+            "reveal": 4
+          },
+          {
+            "id": "hype-perp",
+            "type": "prominent-asset-card",
+            "props": {
+              "entityId": "hype",
+              "symbol": "HYPE",
+              "primary": "HYPE",
+              "secondary": "$154.31M Vol",
+              "variant": "perp",
+              "href": "#explore/asset/hype",
+              "badge": "20x",
+              "price": "$42.18",
+              "deltaPercent": -1.2
+            },
+            "children": [
+              {
+                "id": "hype-spark",
+                "type": "sparkline",
+                "props": {
+                  "points": [
+                    {
+                      "x": "0",
+                      "y": 30
+                    },
+                    {
+                      "x": "1",
+                      "y": 35
+                    },
+                    {
+                      "x": "2",
+                      "y": 34
+                    },
+                    {
+                      "x": "3",
+                      "y": 29
+                    },
+                    {
+                      "x": "4",
+                      "y": 30
+                    },
+                    {
+                      "x": "5",
+                      "y": 27
+                    },
+                    {
+                      "x": "6",
+                      "y": 24
+                    },
+                    {
+                      "x": "7",
+                      "y": 26
+                    },
+                    {
+                      "x": "8",
+                      "y": 23
+                    },
+                    {
+                      "x": "9",
+                      "y": 20
+                    }
+                  ],
+                  "variant": "block"
+                }
+              }
+            ],
+            "reveal": 5
+          }
+        ],
+        "reveal": 2
+      },
+      {
+        "id": "earn",
+        "type": "content-group",
+        "props": {
+          "title": "Earn",
+          "href": "#explore/group/earn",
+          "layout": "cards"
+        },
+        "children": [
+          {
+            "id": "juno-earn",
+            "type": "prominent-asset-card",
+            "props": {
+              "entityId": "juno",
+              "symbol": "JUNO",
+              "primary": "22.66% APY",
+              "secondary": "on JUNO",
+              "variant": "earn",
+              "href": "#explore/asset/juno"
+            },
+            "reveal": 4
+          },
+          {
+            "id": "ksm-earn",
+            "type": "prominent-asset-card",
+            "props": {
+              "entityId": "ksm",
+              "symbol": "KSM",
+              "primary": "15.36% APY",
+              "secondary": "on KSM",
+              "variant": "earn",
+              "href": "#explore/asset/ksm"
+            },
+            "reveal": 5
+          },
+          {
+            "id": "lunc-earn",
+            "type": "prominent-asset-card",
+            "props": {
+              "entityId": "lunc",
+              "symbol": "LUNC",
+              "primary": "15.00% APY",
+              "secondary": "on LUNC",
+              "variant": "earn",
+              "href": "#explore/asset/lunc"
+            },
+            "reveal": 6
+          }
+        ],
+        "reveal": 3
+      },
+      {
+        "id": "stocks",
+        "type": "content-group",
+        "props": {
+          "title": "Stocks",
+          "href": "#explore/group/stocks",
+          "layout": "rows"
+        },
+        "children": [
+          {
+            "id": "bwts",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "bwts",
+              "name": "Breakwave Tanker Shipping ETF",
+              "symbol": "BWTS",
+              "value": "$726.38",
+              "marketCap": "$228.9M",
+              "volume": "$286K",
+              "deltaPercent": 12.15,
+              "href": "#explore/asset/bwts"
+            },
+            "reveal": 5
+          },
+          {
+            "id": "hpe",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "hpe",
+              "name": "Hewlett Packard Enterprise Company",
+              "symbol": "HPE",
+              "value": "$62.21",
+              "marketCap": "$83B",
+              "volume": "$39.0M",
+              "deltaPercent": 12.08,
+              "href": "#explore/asset/hpe"
+            },
+            "reveal": 6
+          },
+          {
+            "id": "dell",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "dell",
+              "name": "Dell Technologies Inc.",
+              "symbol": "DELL",
+              "value": "$570.55",
+              "marketCap": "$363B",
+              "volume": "$14.5M",
+              "deltaPercent": 11.97,
+              "href": "#explore/asset/dell"
+            },
+            "reveal": 7
+          }
+        ],
+        "reveal": 4
+      },
+      {
+        "id": "equity-perps",
+        "type": "content-group",
+        "props": {
+          "title": "Perps",
+          "href": "#explore/group/equity-perps",
+          "layout": "rows"
+        },
+        "children": [
+          {
+            "id": "perp-categories",
+            "type": "link-chips",
+            "props": {
+              "label": "Perp Categories",
+              "links": [
+                {
+                  "id": "stocks",
+                  "label": "Stocks",
+                  "href": "#explore/perps/stocks"
+                },
+                {
+                  "id": "forex",
+                  "label": "Forex",
+                  "href": "#explore/perps/forex"
+                },
+                {
+                  "id": "indices",
+                  "label": "Indices",
+                  "href": "#explore/perps/indices"
+                },
+                {
+                  "id": "etfs",
+                  "label": "Etfs",
+                  "href": "#explore/perps/etfs"
+                }
+              ],
+              "variant": "tabs",
+              "active": "stocks"
+            },
+            "reveal": 6
+          },
+          {
+            "id": "crwd",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "crwd",
+              "name": "CrowdStrike",
+              "symbol": "CRWD",
+              "value": "$209.28",
+              "marketCap": "",
+              "volume": "$52K",
+              "deltaPercent": 1.88,
+              "href": "#explore/asset/crwd",
+              "badge": "10x"
+            },
+            "reveal": 7
+          },
+          {
+            "id": "orcl",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "orcl",
+              "name": "Oracle",
+              "symbol": "ORCL",
+              "value": "$148.31",
+              "marketCap": "",
+              "volume": "$12.08M",
+              "deltaPercent": 0.81,
+              "href": "#explore/asset/orcl",
+              "badge": "10x"
+            },
+            "reveal": 8
+          },
+          {
+            "id": "nflx",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "nflx",
+              "name": "Netflix",
+              "symbol": "NFLX",
+              "value": "$77.36",
+              "marketCap": "",
+              "volume": "$250K",
+              "deltaPercent": 0.24,
+              "href": "#explore/asset/nflx",
+              "badge": "10x"
+            },
+            "reveal": 9
+          }
+        ],
+        "reveal": 5
+      },
+      {
+        "id": "lists",
+        "type": "content-group",
+        "props": {
+          "title": "Lists",
+          "href": "#explore/group/lists",
+          "layout": "rows"
+        },
+        "children": [
+          {
+            "id": "market-lists",
+            "type": "link-chips",
+            "props": {
+              "label": "Market Lists",
+              "links": [
+                {
+                  "id": "blue-chips",
+                  "label": "Blue Chips",
+                  "href": "#explore/list/blue-chips"
+                },
+                {
+                  "id": "defi",
+                  "label": "DeFi",
+                  "href": "#explore/list/defi"
+                },
+                {
+                  "id": "hyperevm",
+                  "label": "HyperEVM",
+                  "href": "#explore/list/hyperevm"
+                },
+                {
+                  "id": "top-volume",
+                  "label": "Top Volume",
+                  "href": "#explore/list/top-volume"
+                },
+                {
+                  "id": "memes",
+                  "label": "Memes",
+                  "href": "#explore/list/memes"
+                },
+                {
+                  "id": "z500",
+                  "label": "Z500",
+                  "href": "#explore/list/z500"
+                }
+              ],
+              "variant": "chips"
+            },
+            "reveal": 7
+          }
+        ],
+        "reveal": 6
+      }
+    ]
+  }
+}

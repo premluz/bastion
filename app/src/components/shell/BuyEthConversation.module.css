@@ -1,0 +1,21 @@
+.layout { display: flex; flex-direction: column; height: 100%; position: relative; isolation: isolate; }
+.layout::before { content: ''; position: absolute; inset-inline: 0; bottom: 0; height: var(--assistant-orb-halo-height); background: var(--assistant-orb-halo); opacity: var(--assistant-orb-halo-strength); pointer-events: none; z-index: -1; }
+/* Messages stack from the bottom and get pushed up by newer ones
+   (2026-09-13, direct feedback: "in conversation mode messages start from
+   top"). This is the transcript actually on screen during a buy flow —
+   ConversationModeOverlay's own .transcript was fixed the same way
+   earlier and is a different surface, which is why fixing that one alone
+   did not change what this flow shows. flex-end here matches both it and
+   MobileFrame.module.css's .composerTranscript, so all three assistant
+   transcripts stack alike. */
+.scroll { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: flex-end; overflow-y: auto; padding: var(--shell-inset); mask: var(--shell-transcript-mask); }
+.transcript { display: flex; flex-direction: column; align-items: stretch; gap: var(--shell-gap); padding-block: var(--shell-inset) var(--shell-fade-height); overflow-wrap: anywhere; }
+.choice[data-leaving='true'] { animation: funding-exit var(--purchase-choice-exit-duration) var(--motion-exit-ease) both; pointer-events: none; }
+.footer { display: flex; justify-content: space-between; align-items: center; padding: var(--shell-inset); padding-bottom: max(var(--shell-inset), env(safe-area-inset-bottom)); }
+.footer button { min-height: var(--shell-control-size); }
+.spacer { width: var(--shell-control-size); }
+@keyframes funding-exit { to { opacity: 0; transform: translateY(var(--shell-gap)); } }
+@media (prefers-reduced-motion: reduce) {
+  .choice[data-leaving='true'] { animation: none; }
+  .transcript :global([class*='nodeWrapper']) { animation: none; }
+}

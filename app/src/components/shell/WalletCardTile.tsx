@@ -1,9 +1,10 @@
 import { Button } from '@astryxdesign/core/Button';
 import { Text } from '@astryxdesign/core/Text';
 import type { WalletCard } from './cardData';
+import { PROTOTYPE_NOTICE, notifyPrototypeUnavailable } from './PrototypeNotice';
 import styles from './WalletCardTile.module.css';
 
-export interface WalletCardTileProps { card: WalletCard }
+export interface WalletCardTileProps { card: WalletCard; onManage?: () => void }
 
 // The active card's name/cashback badge/Manage row, rendered once beneath
 // the deck (2026-09-16). This reverses the prior day's arrangement, where
@@ -17,14 +18,16 @@ export interface WalletCardTileProps { card: WalletCard }
 // Card art itself is VirtualCardPlaceholder, now passed straight into the
 // deck rather than wrapped here: the deck stacks and transforms the art,
 // and this row must stay still while the cards move behind it.
-export function WalletCardTile({ card }: WalletCardTileProps) {
+export function WalletCardTile({ card, onManage }: WalletCardTileProps) {
   return (
     <div className={styles.meta}>
       <Text type="body" weight="semibold">{card.name}</Text>
       <span className={styles.badge}>
         <Text type="supporting" weight="semibold" className={styles.badgeText}>{card.cashbackPercent}% mUSD back</Text>
       </span>
-      <Button label="Manage" variant="secondary" size="sm" className={styles.manageButton} />
+      {onManage ? <Button label="Manage" variant="secondary" size="sm" className={styles.manageButton} onClick={onManage} />
+        : <Button label="Manage" tooltip={PROTOTYPE_NOTICE} variant="secondary" size="sm"
+          className={styles.manageButton} onClick={notifyPrototypeUnavailable} />}
     </div>
   );
 }

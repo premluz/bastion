@@ -1,0 +1,160 @@
+/* Transparent layer over its own scrim: the receded conversation stays
+   visible behind it, dimmed, rather than being replaced by a new page. */
+.root:global(.astryx-dialog) {
+  width: min(100%, var(--shell-frame-max-width));
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.root::backdrop { background: var(--scrim); }
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: max(var(--space-64), env(safe-area-inset-top)) var(--shell-inset) max(var(--shell-inset), env(safe-area-inset-bottom));
+  color: var(--ink-primary);
+}
+
+.summary { display: flex; flex-direction: column; align-items: center; gap: var(--space-4); }
+.amount { font-variant-numeric: tabular-nums; }
+
+/* Every layer stacks in one centred cell. */
+.stage {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: var(--send-ripple-size);
+}
+.stage > * { grid-area: 1 / 1; }
+
+.glow,
+.glowDone {
+  width: var(--send-ripple-size);
+  height: var(--send-ripple-size);
+  background: var(--send-glow);
+  transition: opacity var(--send-color-duration) var(--motion-enter-ease);
+}
+.glowDone { background: var(--send-glow-done); opacity: 0; }
+
+.ripple {
+  width: var(--send-ripple-size);
+  height: var(--send-ripple-size);
+  border: var(--shell-edge-width) solid var(--send-ripple-color);
+  border-radius: var(--radius-full);
+  opacity: 0;
+  animation: send-ripple var(--send-ripple-period) var(--ease-decel) infinite;
+  transition: border-color var(--send-color-duration) var(--motion-enter-ease);
+}
+.ripple + .ripple { animation-delay: calc(var(--send-ripple-period) / -3); }
+.ripple + .ripple + .ripple { animation-delay: calc(var(--send-ripple-period) / -1.5); }
+
+.lane { display: flex; align-items: center; }
+
+.party {
+  position: relative;
+  z-index: 1;
+  border: var(--shell-edge-width) solid transparent;
+  border-radius: var(--radius-full);
+  /* Opaque glass disc: the avatar's own fill is translucent, so without
+     this the ripples read straight through it (2026-10-01, direct
+     feedback: "avatars on top of ripples"). */
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--glass-edge) border-box;
+  display: grid;
+  place-items: center;
+  width: var(--send-avatar-size);
+  height: var(--send-avatar-size);
+  transition: translate var(--send-converge-duration) var(--send-converge-ease),
+    scale var(--send-converge-duration) var(--send-converge-ease),
+    opacity var(--send-converge-duration) var(--send-converge-ease);
+}
+
+.chevrons {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  width: var(--send-lane-width);
+  color: var(--ink-primary);
+  transition: opacity var(--send-color-duration) var(--motion-exit-ease);
+}
+.chevron {
+  width: var(--space-20);
+  height: var(--space-20);
+  opacity: var(--send-chevron-rest);
+  animation: send-chevron var(--send-chevron-period) var(--motion-enter-ease) infinite;
+}
+.chevron + .chevron { animation-delay: var(--send-chevron-step); }
+.chevron + .chevron + .chevron { animation-delay: calc(var(--send-chevron-step) * 2); }
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: var(--send-mark-size);
+  height: var(--send-mark-size);
+  border-radius: var(--radius-full);
+  background: var(--accent-ok);
+  box-shadow: var(--send-mark-glow);
+  opacity: 0;
+  scale: var(--send-mark-from-scale);
+}
+.check { width: var(--send-check-size); height: var(--send-check-size); }
+.check path {
+  fill: none;
+  stroke: var(--surface-0);
+  stroke-width: var(--send-check-width);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.status { margin-block: var(--space-16) var(--space-24); }
+.shimmer { composes: shimmerText from '../trail/ThinkingTrail.module.css'; }
+
+.footer { display: flex; justify-content: center; width: 100%; }
+.action { min-height: var(--shell-control-size); padding-inline: var(--space-24); color: var(--accent-signal); }
+
+/* Success: final states are the base of each rule, the animations only
+   name where they start, so reduced motion simply lands on the result. */
+.layout[data-phase='success'] .glow { opacity: 0; }
+.layout[data-phase='success'] .glowDone { opacity: 1; }
+.layout[data-phase='success'] .ripple { opacity: 0; animation: none; }
+.layout[data-phase='success'] .chevrons { opacity: 0; }
+.layout[data-phase='success'] .party { scale: var(--send-mark-from-scale); opacity: 0; }
+.layout[data-phase='success'] .party[data-side='from'] { translate: calc((var(--send-lane-width) + var(--send-avatar-size)) / 2) 0; }
+.layout[data-phase='success'] .party[data-side='to'] { translate: calc((var(--send-lane-width) + var(--send-avatar-size)) / -2) 0; }
+.layout[data-phase='success'] .mark {
+  opacity: 1;
+  scale: 1;
+  animation: send-mark-in var(--send-mark-duration) var(--send-mark-ease) var(--send-mark-delay) backwards;
+}
+.layout[data-phase='success'] .check path {
+  stroke-dashoffset: 0;
+  animation: send-check-draw var(--send-check-duration) var(--ease-decel) var(--send-check-delay) backwards;
+}
+
+@keyframes send-ripple {
+  from { scale: var(--send-ripple-from-scale); opacity: 0; }
+  25% { opacity: 1; }
+  to { scale: 1; opacity: 0; }
+}
+@keyframes send-chevron {
+  0%, 60%, 100% { opacity: var(--send-chevron-rest); translate: 0 0; }
+  25% { opacity: 1; translate: var(--space-2) 0; }
+}
+@keyframes send-mark-in { from { opacity: 0; scale: var(--send-mark-from-scale); } }
+@keyframes send-check-draw { from { stroke-dashoffset: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ripple, .chevron, .layout[data-phase='success'] .mark, .layout[data-phase='success'] .check path { animation: none; }
+  .ripple { opacity: var(--send-chevron-rest); scale: var(--send-ripple-rest-scale); }
+  .party, .chevrons, .glow, .glowDone { transition: none; }
+}

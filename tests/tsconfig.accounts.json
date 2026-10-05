@@ -1,0 +1,5 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": { "noEmit": true, "types": ["vite/client"] },
+  "include": ["../app/src/components/shell/Account*.tsx", "../app/src/components/shell/HistoryItem*.tsx", "accounts.config.ts", "visual/accounts.spec.ts"]
+}

@@ -1,6 +1,6 @@
 import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 
-const THEME_VALUES = ['default', 'ops-dark', 'glass', 'glass-light', 'safe-one'] as const;
+const THEME_VALUES = ['default', 'ops-dark', 'glass', 'glass-light', 'safe-one', 'bastion'] as const;
 
 export type Theme = (typeof THEME_VALUES)[number];
 
@@ -29,6 +29,7 @@ export function ThemeSwitch({ theme, onThemeChange }: ThemeSwitchProps) {
       <SegmentedControlItem value="glass" label="Glass" />
       <SegmentedControlItem value="glass-light" label="Glass Light" />
       <SegmentedControlItem value="safe-one" label="SAFE ONE" />
+      <SegmentedControlItem value="bastion" label="Bastion" />
     </SegmentedControl>
   );
 }

@@ -1,0 +1,23 @@
+/* Account chrome follows the current shell cascade; safe-one is the review target. */
+:root {
+  --account-page-offset: 74%;
+  --account-page-scale: var(--shell-recede-scale-far);
+  --account-page-opacity: var(--shell-recede-opacity);
+  --account-page-radius: calc(var(--shell-radius) * 2);
+  --account-page-mask: linear-gradient(to bottom, var(--surface-2), transparent 70%);
+  --account-menu-width: 70%;
+  --account-menu-top: var(--space-48);
+  --account-menu-duration: var(--duration-320);
+  --account-menu-ease: var(--motion-enter-ease);
+  --account-sheet-origin: 50%;
+  --account-sheet-duration: var(--duration-320);
+  --account-sheet-exit-duration: var(--duration-200);
+  --account-sheet-ease: var(--motion-enter-ease);
+  --account-sheet-exit-ease: var(--motion-exit-ease);
+  --account-handle-width: var(--space-32);
+  --account-handle-height: var(--space-4);
+  --account-avatar-size: calc(var(--space-48) * 2);
+  --account-row-inset: var(--space-12);
+  --account-section-gap: var(--space-24);
+  --account-sheet-fade: linear-gradient(to top, var(--surface-0), transparent);
+}

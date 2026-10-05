@@ -1,0 +1,41 @@
+/* Sending screen (2026-09-30, direct feedback). Structural aliases over
+   primitives and semantic colours only — the violet → green turn is
+   --accent-signal → --accent-ok, so every theme gets it for free. */
+:root {
+  --send-avatar-size: var(--space-64);
+  --send-lane-width: calc(var(--space-64) + var(--space-32));
+  --send-ripple-size: calc(var(--space-64) * 4 + var(--space-32));
+  --send-ripple-period: calc(var(--duration-1600) * 2);
+  --send-ripple-from-scale: .3;
+  --send-ripple-rest-scale: .7;
+  --send-ripple-color: color-mix(in oklab, var(--accent-signal) 45%, transparent);
+  --send-ripple-color-done: color-mix(in oklab, var(--accent-ok) 45%, transparent);
+  --send-glow: radial-gradient(closest-side, color-mix(in oklab, var(--accent-signal) 30%, transparent), transparent);
+  --send-glow-done: radial-gradient(closest-side, color-mix(in oklab, var(--accent-ok) 32%, transparent), transparent);
+  --send-color-duration: var(--duration-480);
+  --send-chevron-period: calc(var(--duration-480) * 3);
+  --send-chevron-step: var(--duration-200);
+  --send-chevron-rest: var(--opacity-20);
+  /* Success: avatars glide into the centre while the mark pops in behind
+     them on the bounciest spring, then the check draws itself. */
+  --send-converge-duration: var(--duration-480);
+  --send-converge-ease: var(--ease-float);
+  --send-mark-size: calc(var(--space-64) + var(--space-16));
+  --send-mark-from-scale: .4;
+  --send-mark-glow: 0 0 var(--space-48) var(--send-ripple-color-done);
+  --send-check-size: 55%;
+  --send-mark-delay: var(--duration-200);
+  --send-mark-duration: var(--duration-550);
+  --send-mark-ease: var(--ease-spring-pop);
+  --send-check-delay: var(--duration-480);
+  --send-check-duration: var(--duration-320);
+  --send-check-width: var(--space-2);
+  /* The page behind recedes less than the account menu's push, and
+     straight back rather than off to the side. */
+  --send-recede-scale: var(--shell-recede-scale);
+  --send-recede-blur: var(--shell-recede-blur);
+  --send-recede-opacity: var(--opacity-55);
+  --send-recede-radius: calc(var(--shell-radius) * 2);
+  --send-recede-duration: var(--shell-overlay-enter-duration);
+  --send-recede-ease: var(--shell-overlay-enter-ease);
+}

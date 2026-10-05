@@ -1,3 +1,9 @@
+import { ThinkingFindingsPropsSchema } from '../contracts/props/thinking-findings';
+import { PaymentCardPropsSchema } from '../contracts/props/payment-card';
+import { AssetRowPropsSchema } from '../contracts/props/asset-row';
+import { ProminentAssetCardPropsSchema } from '../contracts/props/prominent-asset-card';
+import { ContentGroupPropsSchema } from '../contracts/props/content-group';
+import { LinkChipsPropsSchema } from '../contracts/props/link-chips';
 import { lazy } from 'react';
 import type { ComponentType } from 'react';
 import type { ZodType } from 'zod';
@@ -29,6 +35,8 @@ import { AssetCardGridPropsSchema } from '../contracts/props/asset-card-grid';
 import { ContributionBarsPropsSchema } from '../contracts/props/contribution-bars';
 import { RiskReturnScatterPropsSchema } from '../contracts/props/risk-return-scatter';
 import { AssetTrendCardPropsSchema } from '../contracts/props/asset-trend-card';
+import { ApprovalCardPropsSchema } from '../contracts/props/approval-card';
+import { PurchaseCardPropsSchema, PurchaseDetailPropsSchema } from '../contracts/props/purchase-card';
 
 interface RegistryEntry {
   component: ComponentType<never>;
@@ -36,6 +44,43 @@ interface RegistryEntry {
 }
 
 export const registry: Record<string, RegistryEntry> = {
+  'thinking-findings': {
+    component: lazy(() => import('../components/nodes/ThinkingFindings').then((m) => ({ default: m.ThinkingFindings }))),
+    propSchema: ThinkingFindingsPropsSchema,
+  },
+  'payment-card': {
+    component: lazy(() => import('../components/nodes/PaymentCard').then((m) => ({ default: m.PaymentCard }))),
+    propSchema: PaymentCardPropsSchema,
+  },
+  'asset-row': {
+    component: lazy(() => import('../components/nodes/AssetRow').then((m) => ({ default: m.AssetRow }))),
+    propSchema: AssetRowPropsSchema,
+  },
+  'prominent-asset-card': {
+    component: lazy(() => import('../components/nodes/ProminentAssetCard').then((m) => ({ default: m.ProminentAssetCard }))),
+    propSchema: ProminentAssetCardPropsSchema,
+  },
+  'content-group': {
+    component: lazy(() => import('../components/nodes/ContentGroup').then((m) => ({ default: m.ContentGroup }))),
+    propSchema: ContentGroupPropsSchema,
+  },
+  'link-chips': {
+    component: lazy(() => import('../components/nodes/LinkChips').then((m) => ({ default: m.LinkChips }))),
+    propSchema: LinkChipsPropsSchema,
+  },
+
+  'approval-card': {
+    component: lazy(() => import('../components/nodes/ApprovalCard').then((m) => ({ default: m.ApprovalCard }))),
+    propSchema: ApprovalCardPropsSchema,
+  },
+  'purchase-card': {
+    component: lazy(() => import('../components/nodes/PurchaseCard').then((m) => ({ default: m.PurchaseCard }))),
+    propSchema: PurchaseCardPropsSchema,
+  },
+  'purchase-detail': {
+    component: lazy(() => import('../components/nodes/PurchaseDetail').then((m) => ({ default: m.PurchaseDetail }))),
+    propSchema: PurchaseDetailPropsSchema,
+  },
   'scene-grid': {
     component: lazy(() => import('../components/nodes/SceneGrid').then((m) => ({ default: m.SceneGrid }))),
     propSchema: SceneGridPropsSchema,

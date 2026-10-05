@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": { "noEmit": true, "allowImportingTsExtensions": true, "types": ["vite/client"] },
+  "include": [
+    "../app/src/components/nodes/ApprovalCard.tsx",
+    "../app/src/components/nodes/PurchaseCard.tsx",
+    "../app/src/components/nodes/PurchaseDetail.tsx",
+    "../app/src/components/shell/StreamingReply.tsx",
+    "../app/src/engine/buyEthScenes*.ts", "../app/src/engine/useBuyEthFlow.ts",
+    "visual/buyEth.spec.ts", "visual/approvalCard.spec.ts"
+  ]
+}

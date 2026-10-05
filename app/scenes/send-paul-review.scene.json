@@ -1,0 +1,107 @@
+{
+  "id": "send-paul-review",
+  "title": "Transfer to Daniel Smith",
+  "intents": [],
+  "thinking": [
+    {
+      "id": "recipient",
+      "kind": "retrieve",
+      "label": "Preparing the transfer now.",
+      "detail": "Confirmed.",
+      "durationMs": 850
+    },
+    {
+      "id": "funds",
+      "kind": "retrieve",
+      "label": "Consolidating your balances now.",
+      "detail": "Funds are ready.",
+      "durationMs": 850
+    },
+    {
+      "id": "transfer",
+      "kind": "retrieve",
+      "label": "Finalizing transfer…",
+      "detail": "All set.",
+      "durationMs": 850
+    },
+    {
+      "id": "interface",
+      "kind": "retrieve",
+      "label": "Generating interface…",
+      "detail": "Transfer ready for your review.",
+      "durationMs": 850
+    }
+  ],
+  "data": {},
+  "layout": {
+    "id": "send-fulfilment",
+    "type": "content-group",
+    "props": {
+      "layout": "stack"
+    },
+    "children": [
+      {
+        "id": "send-acknowledgement",
+        "type": "text-block",
+        "props": {
+          "text": "Got it, I have everything I need."
+        }
+      },
+      {
+        "id": "transfer-findings",
+        "type": "thinking-findings",
+        "props": {
+          "label": "Generating transfer",
+          "steps": [
+            {
+              "id": "recipient",
+              "kind": "retrieve",
+              "label": "Preparing the transfer now.",
+              "detail": "Confirmed.",
+              "durationMs": 850
+            },
+            {
+              "id": "funds",
+              "kind": "retrieve",
+              "label": "Consolidating your balances now.",
+              "detail": "Funds are ready.",
+              "durationMs": 850
+            },
+            {
+              "id": "transfer",
+              "kind": "retrieve",
+              "label": "Finalizing transfer…",
+              "detail": "All set.",
+              "durationMs": 850
+            },
+            {
+              "id": "interface",
+              "kind": "retrieve",
+              "label": "Generating interface…",
+              "detail": "Transfer ready for your review.",
+              "durationMs": 850
+            }
+          ],
+          "activeIndex": 0,
+          "isComplete": false
+        }
+      },
+      {
+        "id": "payment",
+        "type": "payment-card",
+        "reveal": 1,
+        "props": {
+          "title": "Transfer to Daniel Smith",
+          "recipient": "Daniel Smith",
+          "amount": "50.00",
+          "purpose": "Coffee",
+          "from": "Main USDT (after consolidation)",
+          "fee": "$0.08",
+          "arrival": "Instantly",
+          "balance": "$62.00",
+          "note": ""
+        }
+      }
+    ]
+  }
+}

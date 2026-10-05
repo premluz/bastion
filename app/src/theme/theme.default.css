@@ -61,6 +61,8 @@
      (file-header comment above) — every other semantic token here stays
      Direction A. */
   --accent-signal: oklch(.78 .14 225);
+  --orb-liquid-blue: var(--accent-signal);
+  --orb-liquid-ice: var(--ink-primary);
   --accent-alert: var(--color-error);
   --accent-warn: var(--color-warning);
   --accent-ok: var(--color-success);
@@ -137,7 +139,29 @@
   --surface-blur: 0px;
   --surface-opacity: 1;
   --glow: none;
-  --scrim: transparent;
+  /* Was transparent — an oversight, not a deliberate matte-theme choice:
+     no comment justified it, and it silently disabled every modal scrim
+     (Sheet, PillNavigation's quick-actions popover) under this theme,
+     leaving page content undimmed behind them (caught live via
+     screenshot, 2026-09-17). A scrim reads as a dim toward black in
+     either scheme — not the scheme's own ink color inverted, the same
+     posture --shadow-low above already takes with light-dark() — rather
+     than a single OKLCH pinned to one hue the way the dark-only themes
+     below use, since this theme's own scheme actually toggles. */
+  --scrim: light-dark(oklch(0 0 0 / .35), oklch(0 0 0 / .5));
+
+  /* Glass edge system + orb halo + shell ambient — see theme.safe-one.css
+     for the rationale. This theme keeps its existing look: opaque fill,
+     no gradient edge, no sheen/shadow, the original single-colour halo, no
+     ambient light. */
+  --glass-fill: var(--surface-1);
+  --glass-fill-clear: var(--surface-1);
+  --glass-sheen: none;
+  --glass-edge: none;
+  --glass-edge-accent: none;
+  --glass-shadow: none;
+  --halo-fill: radial-gradient(ellipse at bottom, var(--accent-signal), transparent 70%);
+  --shell-ambient: none;
 
   /* Glass material — the backdrop-filter value panes actually consume, and
      the pointer-specular intensity/geometry. `none` (not `blur(0px)`) is

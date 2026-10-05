@@ -1,0 +1,15 @@
+{
+  "id": "buy-eth-quote", "title": "ETH purchase preview", "intents": [], "data": {},
+  "thinking": [
+    { "id": "price", "kind": "search", "label": "Finding best price...", "durationMs": 1000 },
+    { "id": "interface", "kind": "synthesize", "label": "Generating interface...", "durationMs": 900 }
+  ],
+  "layout": { "id": "purchase", "type": "purchase-card", "props": { "title": "Confirm swap", "currency": "USDT" }, "children": [
+    { "id": "spend", "type": "purchase-detail", "reveal": 1, "props": { "kind": "amount", "label": "Spend", "value": "800.00 USDT" } },
+    { "id": "receive", "type": "purchase-detail", "reveal": 2, "props": { "kind": "amount", "label": "You'll receive", "value": "0.2980 ETH" } },
+    { "id": "rate", "type": "purchase-detail", "reveal": 3, "props": { "label": "Exchange rate", "value": "1 USDT ≈ 0.0003725 ETH" } },
+    { "id": "fees", "type": "purchase-detail", "reveal": 4, "props": { "label": "Network fee", "value": "Included (demo)" } },
+    { "id": "impact", "type": "purchase-detail", "reveal": 5, "props": { "label": "Price impact", "value": "0.10% (demo)" } },
+    { "id": "confirm", "type": "purchase-detail", "reveal": 6, "props": { "kind": "confirm", "label": "Confirm Purchase" } }
+  ] }
+}

@@ -1,0 +1,17 @@
+.root { position: relative; height: 100%; isolation: isolate; overflow: hidden; background: var(--surface-0); }
+.source { position: relative; height: 100%; transform-origin: left center; transition: transform var(--account-menu-duration) var(--account-menu-ease), opacity var(--account-menu-duration) var(--account-menu-ease), border-radius var(--account-menu-duration) var(--account-menu-ease); overflow: hidden; background: var(--surface-0); }
+.root[data-open='true'] .source { transform: translateX(var(--account-page-offset)) scale(var(--account-page-scale)); opacity: var(--account-page-opacity); border-radius: var(--account-page-radius); }
+.sourceBody { height: 100%; }
+.returnPage { position: absolute; inset: 0; width: 100%; border: 0; cursor: pointer; background: var(--account-page-mask); }
+.menu { position: absolute; inset: 0 auto 0 0; width: var(--account-menu-width); padding: var(--account-menu-top) var(--shell-inset) var(--space-24); display: flex; flex-direction: column; align-items: stretch; gap: var(--space-12); }
+.menu button { min-height: var(--shell-control-size); justify-content: flex-start; }
+.bottomLink { margin-top: auto; }
+.sheet:global(.astryx-dialog) { width: min(100%, var(--shell-frame-max-width)); max-width: var(--shell-frame-max-width); height: 100dvh; max-height: 100dvh; margin: auto; border: 0; border-radius: 0; background: var(--surface-0); animation: account-enter var(--account-sheet-duration) var(--account-sheet-ease) both; }
+.sheet[data-closing='true']:global(.astryx-dialog) { animation: account-exit var(--account-sheet-exit-duration) var(--account-sheet-exit-ease) both; }
+.handle { flex-shrink: 0; width: var(--account-handle-width); height: var(--account-handle-height); border-radius: var(--radius-full); background: var(--ink-secondary); margin: var(--space-16) auto var(--space-8); }
+.sheetHeader { display: flex; align-items: center; gap: var(--space-8); padding: var(--space-8) var(--shell-inset); }
+.sheetHeader h1 { flex: 1; }
+.sheetBody { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: var(--space-24); }
+@keyframes account-enter { from { transform: translateY(var(--account-sheet-origin)); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes account-exit { from { transform: translateY(0); opacity: 1; } to { transform: translateY(var(--account-sheet-origin)); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .source { transition: none; } .sheet:global(.astryx-dialog), .sheet[data-closing='true']:global(.astryx-dialog) { animation: none; } }

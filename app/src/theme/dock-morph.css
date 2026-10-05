@@ -1,0 +1,148 @@
+/* Dock ⇄ composer morph (2026-10-01, direct feedback: the toolbar persists
+   and transforms — "icon buttons stagger fade out as it scales up to become
+   the input field, then stagger fade in of the input's own buttons").
+
+   The pill and the composer share `dock-bar`; every icon on both sides has
+   its own name, which lifts it out of the bar's snapshot. So the bar group
+   is pure glass that stretches into its new shape, while each icon is a
+   one-sided group that leaves or arrives on its own staggered clock.
+   Timing (open): items out left→right, one stagger apart → the bar starts
+   once the first item has gone → input controls arrive in reading order
+   as the bar settles. Close reverses it, and the nav returns while the bar
+   is still contracting. */
+
+::view-transition-group(dock-bar) {
+  animation-duration: var(--dock-morph-duration);
+  animation-timing-function: var(--dock-morph-ease);
+  animation-delay: var(--dock-bar-delay);
+}
+
+/* The bar images are glass only (their contents are named elsewhere), so
+   stretching them to the morphing box is safe; they cross-fade across it. */
+::view-transition-old(dock-bar),
+::view-transition-new(dock-bar) {
+  height: 100%;
+  animation-duration: var(--dock-morph-duration);
+  animation-delay: var(--dock-bar-delay);
+}
+
+/* The shared bar owns the rounded surface, never a square backing fill. */
+::view-transition-image-pair(dock-bar) {
+  overflow: hidden;
+  border-radius: var(--radius-chat);
+}
+
+::view-transition-old(dock-nav-0),
+::view-transition-old(dock-nav-1),
+::view-transition-old(dock-nav-2),
+::view-transition-old(dock-nav-3),
+::view-transition-old(dock-nav-4),
+::view-transition-old(dock-nav-5),
+::view-transition-old(dock-input-1),
+::view-transition-old(dock-input-2),
+::view-transition-old(dock-input-3),
+::view-transition-old(dock-input-4) {
+  animation: dock-item-out var(--dock-item-duration) var(--motion-exit-ease) both;
+}
+
+::view-transition-new(dock-nav-0),
+::view-transition-new(dock-nav-1),
+::view-transition-new(dock-nav-2),
+::view-transition-new(dock-nav-3),
+::view-transition-new(dock-nav-4),
+::view-transition-new(dock-nav-5),
+::view-transition-new(dock-input-1),
+::view-transition-new(dock-input-2),
+::view-transition-new(dock-input-3),
+::view-transition-new(dock-input-4) {
+  animation: dock-item-in var(--dock-item-in-duration) var(--motion-enter-ease) both;
+}
+
+/* Leaving, left to right. */
+::view-transition-old(dock-nav-1), ::view-transition-old(dock-input-2) { animation-delay: var(--dock-item-stagger); }
+::view-transition-old(dock-nav-2), ::view-transition-old(dock-input-3) { animation-delay: calc(var(--dock-item-stagger) * 2); }
+::view-transition-old(dock-nav-3), ::view-transition-old(dock-input-4) { animation-delay: calc(var(--dock-item-stagger) * 3); }
+::view-transition-old(dock-nav-4) { animation-delay: calc(var(--dock-item-stagger) * 4); }
+::view-transition-old(dock-nav-5) { animation-delay: calc(var(--dock-item-stagger) * 5); }
+
+/* Arriving, in reading order: input controls once the bar has mostly
+   opened; nav icons earlier, while the bar is still contracting. */
+::view-transition-new(dock-input-1) { animation-delay: var(--dock-input-in-delay); }
+::view-transition-new(dock-input-2) { animation-delay: calc(var(--dock-input-in-delay) + var(--dock-item-stagger)); }
+::view-transition-new(dock-input-3) { animation-delay: calc(var(--dock-input-in-delay) + var(--dock-item-stagger) * 2); }
+::view-transition-new(dock-input-4) { animation-delay: calc(var(--dock-input-in-delay) + var(--dock-item-stagger) * 3); }
+::view-transition-new(dock-nav-0),
+::view-transition-new(dock-nav-1) { animation-delay: var(--dock-nav-in-delay); }
+::view-transition-new(dock-nav-2) { animation-delay: calc(var(--dock-nav-in-delay) + var(--dock-item-stagger)); }
+::view-transition-new(dock-nav-3) { animation-delay: calc(var(--dock-nav-in-delay) + var(--dock-item-stagger) * 2); }
+::view-transition-new(dock-nav-4) { animation-delay: calc(var(--dock-nav-in-delay) + var(--dock-item-stagger) * 3); }
+::view-transition-new(dock-nav-5) { animation-delay: calc(var(--dock-nav-in-delay) + var(--dock-item-stagger) * 4); }
+
+/* The sphere overshoots while the bar's geometry keeps its smooth path. */
+:root {
+  --orb-enter-scale: .72;
+  --orb-overshoot-scale: 1.06;
+}
+
+/* Composer ⇄ orb: clip follows the composer's actual radius before
+   becoming a circle; a fully round clip on frame one exposed a border
+   crescent while the wide composer snapshot was still visible. */
+:root:active-view-transition-type(to-orb, from-orb)::view-transition-group(dock-bar) {
+  animation-duration: var(--orb-morph-duration);
+  animation-timing-function: var(--orb-morph-ease);
+}
+:root:active-view-transition-type(to-orb)::view-transition-image-pair(dock-bar) {
+  animation: dock-corners-to-orb var(--orb-morph-duration) var(--orb-morph-ease) var(--dock-bar-delay) both;
+}
+:root:active-view-transition-type(from-orb)::view-transition-image-pair(dock-bar) {
+  animation: dock-corners-from-orb var(--orb-morph-duration) var(--orb-morph-ease) var(--dock-bar-delay) both;
+}
+:root:active-view-transition-type(to-orb)::view-transition-old(dock-bar) {
+  animation: dock-bar-to-orb-out var(--orb-morph-duration) var(--orb-morph-ease) var(--dock-bar-delay) both;
+}
+:root:active-view-transition-type(to-orb)::view-transition-old(dock-bar),
+:root:active-view-transition-type(from-orb)::view-transition-new(dock-bar) {
+  clip-path: inset(0 round var(--radius-chat));
+}
+:root:active-view-transition-type(to-orb)::view-transition-new(dock-bar),
+:root:active-view-transition-type(from-orb)::view-transition-old(dock-bar) {
+  clip-path: circle(50%);
+}
+:root:active-view-transition-type(to-orb)::view-transition-new(dock-bar) {
+  animation: dock-orb-reveal var(--orb-reveal-duration) var(--orb-morph-ease) var(--orb-reveal-delay) both,
+    dock-orb-pop var(--orb-morph-duration) linear var(--dock-bar-delay) both;
+}
+
+/* The three orb layers share one bounce so their edges stay aligned. */
+:root:active-view-transition-type(to-orb, from-orb)::view-transition-group(dock-orb-texture),
+:root:active-view-transition-type(to-orb, from-orb)::view-transition-group(dock-orb-aura) {
+  animation: none;
+}
+:root:active-view-transition-type(to-orb)::view-transition-new(dock-orb-texture),
+:root:active-view-transition-type(to-orb)::view-transition-new(dock-orb-aura) {
+  animation: dock-texture-in var(--orb-morph-duration) linear var(--dock-bar-delay) both,
+    dock-orb-pop var(--orb-morph-duration) linear var(--dock-bar-delay) both;
+}
+:root:active-view-transition-type(from-orb)::view-transition-old(dock-orb-texture),
+:root:active-view-transition-type(from-orb)::view-transition-old(dock-orb-aura) {
+  animation: dock-texture-out var(--orb-reveal-duration) var(--motion-exit-ease) both;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--dock-morph-duration);
+}
+
+@keyframes dock-item-out { to { opacity: 0; scale: var(--dock-item-scale); filter: blur(var(--dock-morph-blur)); } }
+@keyframes dock-item-in { from { opacity: 0; scale: var(--dock-item-scale); filter: blur(var(--dock-morph-blur)); } }
+@keyframes dock-corners-to-orb { from { border-radius: var(--radius-chat); } to { border-radius: 50%; } }
+@keyframes dock-corners-from-orb { from { border-radius: 50%; } to { border-radius: var(--radius-chat); } }
+@keyframes dock-bar-to-orb-out { 20% { opacity: 1; } 70%, to { opacity: 0; } }
+@keyframes dock-orb-reveal { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dock-orb-pop {
+  from { scale: var(--orb-enter-scale); }
+  50% { scale: var(--orb-overshoot-scale); animation-timing-function: var(--ease-spring-soft); }
+  to { scale: 1; }
+}
+@keyframes dock-texture-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dock-texture-out { to { opacity: 0; } }

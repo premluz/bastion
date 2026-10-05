@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 500, height: 900 } });
+await page.goto('http://localhost:6007/iframe.html?id=shell-mobileframe--default&viewMode=story&globals=theme:ops-dark', { waitUntil: 'networkidle' });
+await page.waitForSelector('[data-testid="mobile-shell"]');
+await page.waitForTimeout(600);
+await page.evaluate(() => document.querySelector('main[aria-label="Home"]').scrollBy(0, 200));
+await page.waitForTimeout(300);
+await page.screenshot({ path: 'home-scrolled.png', clip: { x: 0, y: 0, width: 500, height: 300 } });
+await browser.close();

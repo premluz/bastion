@@ -1,0 +1,4 @@
+:root {
+  --explore-card-width: calc(var(--space-64) * 2 + var(--space-32));
+  --explore-card-min-height: calc(var(--space-64) + var(--space-32));
+}

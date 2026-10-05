@@ -1,0 +1,154 @@
+/* Bastion — Safe One's component contract in a matte, architectural register.
+   Charcoal carries the surfaces; soft apricot warms interactions and reflected
+   light without reading as gilded metal. Status colours retain their meaning. */
+[data-theme='bastion'] {
+  color-scheme: dark;
+
+  --surface-0: oklch(.12 .006 80);
+  --surface-1: oklch(.16 .007 80);
+  --surface-2: oklch(.20 .008 80);
+  --surface-3: oklch(.24 .009 80);
+  --ink-primary: oklch(.88 .01 85);
+  --ink-secondary: oklch(.70 .012 85);
+  --ink-muted: oklch(.51 .012 85);
+
+  --accent-signal: oklch(.82 .075 58);
+  --orb-liquid-blue: oklch(.8 .13 210);
+  --orb-liquid-ice: oklch(.94 .055 220);
+  --accent-alert: oklch(.66 .12 25);
+  --accent-warn: oklch(.76 .1 75);
+  --accent-ok: oklch(.73 .1 165);
+  --delta-up: oklch(.75 .12 162);
+  --delta-down: oklch(.69 .14 22);
+  --delta-up-bg: oklch(.75 .12 162 / .2);
+  --delta-down-bg: oklch(.69 .14 22 / .2);
+  --tint-subtle: var(--opacity-12);
+  --tint-medium: var(--opacity-18);
+  --tint-strong: var(--opacity-40);
+
+  --viz-1: oklch(.68 .08 225);
+  --viz-2: oklch(.68 .08 165);
+  --viz-3: oklch(.7 .08 75);
+  --viz-4: oklch(.66 .09 285);
+  --viz-5: oklch(.66 .08 25);
+  --viz-6: oklch(.68 .08 115);
+  --edge: oklch(.72 .012 70 / .12);
+  --edge-highlight: oklch(.83 .018 70 / .22);
+  --surface-1-solid: oklch(.16 .007 80);
+  --pane-surface: oklch(.16 .007 80 / .92);
+  --glow: 0 0 12px oklch(from var(--orb-liquid-blue) l c h / .22);
+  --scrim: oklch(.09 .006 80 / .62);
+
+  /* Top-lit edges give the flat panels the depth of cut stone, not glass. */
+  --glass-fill: oklch(.16 .007 80 / .94);
+  --glass-fill-clear: oklch(.16 .007 80 / .84);
+  --glass-sheen: linear-gradient(to bottom, oklch(.9 .015 70 / .035), transparent 58%);
+  --glass-edge: linear-gradient(to bottom, oklch(.83 .015 70 / .19), oklch(.7 .012 70 / .07) 45%, oklch(.7 .012 70 / .04));
+  --glass-edge-accent: linear-gradient(to bottom, oklch(.85 .045 60 / .3), oklch(.82 .075 58 / .16) 48%, oklch(.82 .075 58 / .05));
+  --glass-shadow: inset 0 1px 0 oklch(.9 .02 80 / .04), 0 14px 32px -18px oklch(0 0 0 / .8);
+  --halo-fill:
+    radial-gradient(42% 72% at 50% 100%, oklch(.94 .055 220 / .3), transparent 72%),
+    radial-gradient(62% 100% at 28% 100%, oklch(.72 .12 210 / .34), transparent 74%),
+    radial-gradient(58% 95% at 74% 100%, oklch(.5 .08 225 / .25), transparent 74%);
+  --shell-ambient:
+    radial-gradient(72% 84% at 100% 0%, oklch(.45 .05 60 / .09), transparent 72%),
+    radial-gradient(55% 68% at 0% 0%, oklch(.52 .02 70 / .05), transparent 72%);
+  --shading-light: oklch(.85 .025 80 / .04);
+  --shading-dark: oklch(0 0 0 / .18);
+  --shadow-low: 0px 1px 1px oklch(0 0 0 / .16), 0px 1px 4px oklch(0 0 0 / .16);
+  --surface-blur: var(--blur-z0);
+  --surface-material: none;
+  --spec-alpha: 0;
+  --spec-radius: var(--spec-radius-lg);
+  --surface-opacity: 1;
+  --canvas-backdrop: linear-gradient(155deg, oklch(.2 .009 80 / .16), transparent 38%);
+
+  --motion-enter-duration: var(--duration-200);
+  --motion-enter-ease: var(--ease-standard);
+  --motion-exit-duration: var(--duration-120);
+  --motion-exit-ease: var(--ease-standard);
+  --motion-assembly-stagger: 60ms;
+  --motion-table-stagger: 30ms;
+  --motion-chart-reveal-duration: var(--duration-480);
+  --motion-shimmer-duration: var(--duration-1600);
+  --face-ui: var(--font-ui);
+  --face-data: var(--font-data);
+  --face-voice: var(--font-voice);
+
+  --color-background-body: var(--surface-0);
+  --color-background-surface: var(--surface-1);
+  --color-background-card: var(--surface-2);
+  --color-background-popover: var(--surface-3);
+  --color-text-primary: var(--ink-primary);
+  --color-text-secondary: var(--ink-secondary);
+  --color-text-disabled: var(--ink-muted);
+  --color-icon-primary: var(--ink-primary);
+  --color-icon-secondary: var(--ink-secondary);
+  --color-icon-disabled: var(--ink-muted);
+  --color-accent: var(--accent-signal);
+  --color-text-accent: var(--accent-signal);
+  --color-icon-accent: var(--accent-signal);
+  --color-error: var(--accent-alert);
+  --color-icon-red: var(--accent-alert);
+  --color-warning: var(--accent-warn);
+  --color-success: var(--accent-ok);
+  --color-border: var(--edge);
+  --color-shadow: oklch(0 0 0 / .6);
+}
+
+[data-theme='bastion'] .astryx-card.panelFlat,
+[data-theme='bastion'] .astryx-item.panelFlat {
+  border: none solid var(--edge);
+  box-shadow: none;
+}
+[data-theme='bastion'] .astryx-card.panelFlat {
+  border: var(--shell-edge-width) solid transparent;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--glass-edge) border-box;
+}
+[data-theme='bastion'] .astryx-item.panelFlat:not(:hover) {
+  background-color: var(--surface-2);
+}
+[data-theme='bastion'] .astryx-card.panelFlatNoBorder {
+  background-color: var(--surface-1);
+  border: none;
+  box-shadow: none;
+}
+[data-theme='bastion'] .astryx-card.cardSurface1 {
+  border: var(--shell-edge-width) solid transparent;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-1), var(--surface-1)) padding-box, var(--glass-edge) border-box;
+  box-shadow: none;
+}
+[data-theme='bastion'] #astryx-app-shell-main {
+  background-color: var(--surface-0);
+}
+[data-theme='bastion'] .astryx-chat-composer > div {
+  border: var(--shell-edge-width) solid transparent;
+  background: var(--glass-sheen) padding-box,
+    linear-gradient(var(--glass-fill), var(--glass-fill)) padding-box,
+    var(--glass-edge) border-box;
+  box-shadow: var(--glass-shadow), var(--glow);
+  backdrop-filter: var(--surface-material);
+}
+[data-theme='bastion'] .astryx-text-input:not(#\#):not(#\#):not(#\#) {
+  border-color: transparent;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--field-glass-fill, var(--glass-fill)), var(--field-glass-fill, var(--glass-fill))) padding-box, var(--glass-edge) border-box;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--field-backdrop, var(--surface-material));
+}
+[data-theme='bastion'] .astryx-text-input:focus-within:not(#\#):not(#\#):not(#\#) {
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--field-glass-fill, var(--glass-fill)), var(--field-glass-fill, var(--glass-fill))) padding-box, var(--glass-edge-accent) border-box;
+  box-shadow: var(--glass-shadow), 0 0 0 var(--shell-edge-width) oklch(from var(--accent-signal) l c h / .45);
+}
+[data-theme='bastion'] .astryx-chat-message-bubble.filled,
+[data-theme='bastion'] .astryx-token.default {
+  background-color: var(--surface-2);
+}
+[data-theme='bastion'] .astryx-segmented-control:not(#\#):not(#\#):not(#\#) {
+  background-color: var(--surface-2) !important;
+}
+[data-theme='bastion'] .astryx-segmented-control-item.selected:not(#\#):not(#\#):not(#\#) {
+  background-color: var(--surface-3) !important;
+}
+[data-theme='bastion'] .astryx-tooltip {
+  color: var(--surface-1-solid);
+}

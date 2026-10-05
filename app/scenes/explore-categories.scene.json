@@ -1,0 +1,186 @@
+{
+  "id": "explore-categories",
+  "title": "Explore categories",
+  "intents": [],
+  "thinking": [],
+  "data": {},
+  "layout": {
+    "id": "explore-catalogue",
+    "type": "content-group",
+    "props": {
+      "layout": "page"
+    },
+    "children": [
+      {
+        "id": "commodities",
+        "type": "content-group",
+        "props": {
+          "title": "Commodities",
+          "href": "#explore/group/commodities",
+          "layout": "rows"
+        },
+        "children": [
+          {
+            "id": "gold",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "gold",
+              "name": "Gold",
+              "symbol": "XAU",
+              "value": "$2,410.50",
+              "marketCap": "",
+              "volume": "$82.4M",
+              "deltaPercent": 0.62,
+              "href": "#explore/asset/gold"
+            }
+          },
+          {
+            "id": "silver",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "silver",
+              "name": "Silver",
+              "symbol": "XAG",
+              "value": "$28.42",
+              "marketCap": "",
+              "volume": "$16.8M",
+              "deltaPercent": -0.38,
+              "href": "#explore/asset/silver"
+            }
+          }
+        ]
+      },
+      {
+        "id": "forex",
+        "type": "content-group",
+        "props": {
+          "title": "Forex",
+          "href": "#explore/group/forex",
+          "layout": "rows"
+        },
+        "children": [
+          {
+            "id": "eurusd",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "eurusd",
+              "name": "Euro / US Dollar",
+              "symbol": "EUR/USD",
+              "value": "$1.0842",
+              "marketCap": "",
+              "volume": "$41.2M",
+              "deltaPercent": 0.21,
+              "href": "#explore/asset/eurusd",
+              "badge": "20x"
+            }
+          },
+          {
+            "id": "gbpusd",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "gbpusd",
+              "name": "Pound / US Dollar",
+              "symbol": "GBP/USD",
+              "value": "$1.2710",
+              "marketCap": "",
+              "volume": "$24.8M",
+              "deltaPercent": -0.14,
+              "href": "#explore/asset/gbpusd",
+              "badge": "20x"
+            }
+          }
+        ]
+      },
+      {
+        "id": "indices",
+        "type": "content-group",
+        "props": {
+          "title": "Indices",
+          "href": "#explore/group/indices",
+          "layout": "rows"
+        },
+        "children": [
+          {
+            "id": "spx",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "spx",
+              "name": "S&P 500",
+              "symbol": "SPX",
+              "value": "$5,431.60",
+              "marketCap": "",
+              "volume": "$82M",
+              "deltaPercent": 0.85,
+              "href": "#explore/asset/spx",
+              "badge": "10x"
+            }
+          },
+          {
+            "id": "ndx",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "ndx",
+              "name": "Nasdaq 100",
+              "symbol": "NDX",
+              "value": "$19,082.30",
+              "marketCap": "",
+              "volume": "$46M",
+              "deltaPercent": 1.12,
+              "href": "#explore/asset/ndx",
+              "badge": "10x"
+            }
+          }
+        ]
+      },
+      {
+        "id": "etfs",
+        "type": "content-group",
+        "props": {
+          "title": "ETFs",
+          "href": "#explore/group/etfs",
+          "layout": "rows"
+        },
+        "children": [
+          {
+            "id": "spy",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "spy",
+              "name": "SPDR S&P 500 ETF",
+              "symbol": "SPY",
+              "value": "$542.10",
+              "marketCap": "",
+              "volume": "$28M",
+              "deltaPercent": 0.82,
+              "href": "#explore/asset/spy",
+              "badge": "10x"
+            }
+          },
+          {
+            "id": "qqq",
+            "type": "asset-row",
+            "props": {
+              "variant": "market",
+              "entityId": "qqq",
+              "name": "Invesco QQQ",
+              "symbol": "QQQ",
+              "value": "$464.90",
+              "marketCap": "",
+              "volume": "$19M",
+              "deltaPercent": 1.05,
+              "href": "#explore/asset/qqq",
+              "badge": "10x"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

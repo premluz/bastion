@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Text } from '@astryxdesign/core/Text';
 import styles from './WalletTabSwitch.module.css';
 
@@ -21,8 +22,10 @@ export interface WalletTabSwitchProps<T extends string> {
 // switch, exactly like PillNavigation's own <span key={activeItem}>.
 export function WalletTabSwitch<T extends string>({ items, value, onChange, label }: WalletTabSwitchProps<T>) {
   const activeIndex = Math.max(0, items.findIndex((item) => item.id === value));
+  const [hasSwitched, setHasSwitched] = useState(false);
   return (
-    <div className={styles.root} role="tablist" aria-label={label}
+    <div className={styles.root} role="tablist" aria-label={label} data-entrance="morph"
+      data-switched={hasSwitched ? '' : undefined}
       style={{ '--wallet-tab-count': items.length, '--wallet-tab-active': activeIndex } as React.CSSProperties}>
       <span className={styles.track} aria-hidden="true">
         <span className={styles.indicator}>
@@ -31,7 +34,7 @@ export function WalletTabSwitch<T extends string>({ items, value, onChange, labe
       </span>
       {items.map((item) => (
         <button key={item.id} type="button" role="tab" aria-selected={item.id === value}
-          className={styles.tab} onClick={() => onChange(item.id as T)}>
+          className={styles.tab} onClick={() => { setHasSwitched(true); onChange(item.id as T); }}>
           <Text type="body" weight={item.id === value ? 'semibold' : 'medium'}>{item.label}</Text>
         </button>
       ))}

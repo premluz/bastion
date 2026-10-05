@@ -10,10 +10,21 @@
   border-radius: 0;
   background: var(--surface-0);
   box-shadow: none;
-  animation-name: bastion-conversation-enter;
-  animation-duration: var(--motion-enter-duration);
-  animation-timing-function: var(--motion-enter-ease);
 }
+
+/* Fallback entrance only: where view transitions exist, the composer bar
+   morphs into the orb (theme/dock-morph.css) and that is the entrance. */
+@supports not (view-transition-name: none) {
+  .root:global(.astryx-dialog) {
+    animation-name: bastion-conversation-enter;
+    animation-duration: var(--shell-overlay-enter-duration);
+    animation-timing-function: var(--shell-overlay-enter-ease);
+  }
+}
+
+/* The orb is the composer bar's other shape: same `dock-bar` name while
+   open, so starting conversation mode shrinks the bar into this sphere. */
+.root[open]:not([data-shared-orb='true']) .indicator > :first-child { view-transition-name: dock-bar; }
 
 .root::backdrop {
   background: var(--scrim);
@@ -77,7 +88,7 @@
   min-height: 0;
   overflow-y: auto;
   overflow-wrap: anywhere;
-  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) 0;
+  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--space-32);
   mask: var(--shell-transcript-mask);
 }
 
@@ -95,17 +106,47 @@
   animation: bastion-controls-enter var(--motion-enter-duration) var(--motion-enter-ease)
     var(--shell-controls-delay) both;
 }
-.indicator { display: grid; place-items: center; }
+.indicator { position: relative; display: grid; place-items: center; }
+.micIcon { position: relative; display: inline-grid; place-items: center; }
+.micIcon[data-muted]::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  border-top: var(--shell-edge-width) solid currentColor;
+  rotate: var(--shell-muted-mic-angle);
+}
+.orbRestore { position: absolute; inset: 0; border: 0; border-radius: var(--shell-round); background: transparent; cursor: pointer; }
+.orbRestore:disabled { pointer-events: none; }
+.orbRestore:focus-visible { outline: var(--shell-edge-width) solid var(--accent-signal); }
 .srOnly { position: absolute; width: 0; height: 0; overflow: hidden; clip-path: inset(50%); }
 
 @keyframes bastion-conversation-enter {
-  from { opacity: 0; transform: translateY(var(--shell-inset)); }
+  from { opacity: 0; transform: translateY(50%); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes bastion-controls-enter { from { opacity: 0; } to { opacity: 1; } }
 
+/* Recedes straight back into depth while the sending screen is open on
+   top — smaller than the account menu's push and centred, not sideways. */
+.layout {
+  transform-origin: 50% 50%;
+  transition: scale var(--send-recede-duration) var(--send-recede-ease),
+    filter var(--send-recede-duration) var(--send-recede-ease),
+    opacity var(--send-recede-duration) var(--send-recede-ease),
+    border-radius var(--send-recede-duration) var(--send-recede-ease);
+}
+.layout[data-receded] {
+  scale: var(--send-recede-scale);
+  filter: blur(var(--send-recede-blur));
+  opacity: var(--send-recede-opacity);
+  border-radius: var(--send-recede-radius);
+  overflow: hidden;
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .root:global(.astryx-dialog) { animation: none; }
+  .layout { transition: none; }
   .root[open] .controls button { animation: none; }
 }

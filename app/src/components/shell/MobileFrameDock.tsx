@@ -1,17 +1,19 @@
-import { useId, useState } from 'react';
-import { PillNavigation, type PillAction, type PillDestination } from './PillNavigation';
-import { MobileFrameComposer } from './MobileFrameComposer';
+import { useState } from 'react';
+import { PillNavigation, type PillDestination } from './PillNavigation';
 import { TabBar, type TabDestination } from './TabBar';
 import type { useMobileFrame } from './useMobileFrame';
 import styles from './MobileFrame.module.css';
 
 const pillDestinations: Record<TabDestination, PillDestination> = { home: 'home', markets: 'explore', assets: 'assets', trade: 'explore' };
-const actionDrafts: Record<PillAction, string> = {
-  'add-cash': 'I want to add cash', send: 'I want to send crypto', receive: 'I want to receive crypto', trade: 'I want to trade crypto',
-};
-
+// The composer's own UI is a full-screen ComposerModeOverlay (mounted in
+// MobileFrame.tsx, same level as ConversationModeOverlay), not rendered
+// inside this dock at all (2026-09-16 follow-up, caught live from a
+// screenshot: a header rendered inside the dock's own expanding panel
+// sits wherever that panel grows to — near the bottom, not the true
+// screen top). Both nav variants' own dock now only ever renders the
+// destinations/tab bar itself; isComposerOpen still flows through purely
+// to drive each dock's own halo/fade cues.
 export function MobileFrameDock({ state, variant }: { state: ReturnType<typeof useMobileFrame>; variant: 'pill' | 'classic' }) {
-  const composerId = useId();
   const [actionsOpen, setActionsOpen] = useState(false);
   const navigate = (item: PillDestination) => {
     if (item === 'assistant') state.toggleComposer();
@@ -19,16 +21,11 @@ export function MobileFrameDock({ state, variant }: { state: ReturnType<typeof u
   };
   if (variant === 'pill') return <PillNavigation activeItem={state.mode === 'idle' ? pillDestinations[state.activeTab] : 'assistant'}
     onNavigate={navigate} isActionsOpen={actionsOpen} onActionsOpenChange={setActionsOpen}
-    onAction={(action) => { state.setValue(actionDrafts[action]); state.setMode('composer'); }}
-    isComposerOpen={state.mode === 'composer'}
-    assistantRef={state.assistantRef} composer={<MobileFrameComposer state={state} />} />;
+    onAction={() => undefined}
+    isComposerOpen={state.mode !== 'idle'} assistantRef={state.assistantRef} />;
   return <footer className={styles.dock}>
     <TabBar activeTab={state.activeTab} onTabChange={state.selectTab} isComposerOpen={state.mode !== 'idle'}
       isConversation={state.mode === 'conversation'} onAssistantPress={state.toggleComposer}
-      composerId={composerId} assistantRef={state.assistantRef} />
-    <section id={composerId} className={styles.composer} inert={state.mode !== 'composer'}
-      aria-hidden={state.mode !== 'composer'} aria-label="Assistant composer">
-      <div className={styles.composerClip}><div className={styles.composerBody}><MobileFrameComposer state={state} /></div></div>
-    </section>
+      assistantRef={state.assistantRef} />
   </footer>;
 }

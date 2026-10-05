@@ -18,6 +18,8 @@
 
   /* Accents — equal perceptual weight, one signal hue system-wide */
   --accent-signal: oklch(.78 .14 225);
+  --orb-liquid-blue: oklch(.82 .16 210);
+  --orb-liquid-ice: oklch(.94 .055 220);
   --accent-alert: oklch(.68 .19 25);
   --accent-warn: oklch(.78 .16 75);
   --accent-ok: oklch(.76 .15 165);
@@ -90,7 +92,27 @@
   --pane-surface: var(--surface-1);
 
   --glow: none;
-  --scrim: transparent;
+  /* Was transparent — an oversight, not a deliberate matte-theme choice:
+     no comment justified it, and it silently disabled every modal scrim
+     (Sheet, PillNavigation's quick-actions popover) under this theme,
+     leaving page content undimmed behind them (caught live via
+     screenshot, 2026-09-17: content and nav both fully visible through
+     an "open" popover). Same dark hue/alpha theme.glass.css's own scrim
+     already uses — this theme's own --surface-0 sits at the same hue. */
+  --scrim: oklch(.13 .015 250 / .35); /* raise alpha here, nothing else, if a contrast audit fails */
+
+  /* Glass edge system + orb halo + shell ambient — see theme.safe-one.css
+     for the rationale. This theme keeps its existing look: opaque fill,
+     no gradient edge, no sheen/shadow, the original single-colour halo, no
+     ambient light. */
+  --glass-fill: var(--surface-1);
+  --glass-fill-clear: var(--surface-1);
+  --glass-sheen: none;
+  --glass-edge: none;
+  --glass-edge-accent: none;
+  --glass-shadow: none;
+  --halo-fill: radial-gradient(ellipse at bottom, var(--accent-signal), transparent 70%);
+  --shell-ambient: none;
 
   /* Glass material — off, per this theme's own register ("matte, dense,
      precise. Nothing floats, nothing glows except signal states").

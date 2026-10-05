@@ -28,7 +28,7 @@ test('complete flow keeps the selected destination and user messages', async ({ 
   await expect(conversation(page)).toBeVisible();
   await expect(conversation(page)).toContainText('Show my holdings.');
   await expect(conversation(page)).toContainText('Compare them over the past week.');
-  await expect(conversation(page).getByRole('button', { name: 'Microphone unavailable in preview', exact: true })).toBeDisabled();
+  await expect(conversation(page).getByRole('button', { name: /voice recognition|Speech recognition unavailable/ })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Primary navigation', exact: true })).toHaveCount(0);
   await page.getByRole('button', { name: 'Close conversation', exact: true }).click();
   await expect(conversation(page)).not.toBeVisible();

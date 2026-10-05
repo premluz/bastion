@@ -1,0 +1,120 @@
+.root:global(.astryx-dialog) {
+  /* Matches ConversationModeOverlay's own sizing so both assistant
+     screens cover the phone identically. */
+  width: min(100%, var(--shell-frame-max-width));
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--surface-0);
+  box-shadow: none;
+}
+
+/* The slide-up is the fallback entrance only: where view transitions
+   exist the dock morph (theme/dock-morph.css) is the entrance, and toggling
+   this animation off just for the morph restarted it the moment the morph
+   ended (caught 2026-10-01: a blank frame, then a second slide-up). */
+@supports not (view-transition-name: none) {
+  .root:global(.astryx-dialog) {
+    animation-name: composer-enter;
+    animation-duration: var(--shell-overlay-enter-duration);
+    animation-timing-function: var(--shell-overlay-enter-ease);
+  }
+}
+
+.root::backdrop {
+  background: var(--scrim);
+  backdrop-filter: none;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Same halo/glow register ConversationModeOverlay's own .root::after
+   already establishes for this app's two assistant screens. */
+.root::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: var(--assistant-orb-halo-height);
+  background: var(--assistant-orb-halo);
+  opacity: var(--assistant-orb-halo-strength);
+  pointer-events: none;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--space-8);
+}
+
+/* Same bottom-anchored stacking ConversationModeOverlay's own .transcript
+   already uses — messages start at the bottom, pushed up by newer ones. */
+.transcript {
+  display: flex;
+  flex-direction: column;
+  justify-content: safe flex-end;
+  gap: var(--shell-gap);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  padding: 0 var(--shell-inset);
+  mask: var(--shell-transcript-mask);
+}
+
+/* Same padding MobileFrame.module.css's own .composerBody used before
+   this became a full-screen overlay — the actual input box, pinned to
+   the true bottom edge now instead of growing from the dock. */
+.composerBody {
+  padding: var(--shell-label-gap) var(--shell-inset) max(var(--shell-inset), env(safe-area-inset-bottom));
+}
+
+.composerBody button { min-height: var(--shell-control-size); min-width: var(--shell-control-size); }
+
+/* The rounded body, not ChatComposer's square outer wrapper, shares
+   `dock-bar` with the nav pill and orb. Its controls remain individually
+   named so they can stagger independently of the surface. */
+.root[open] .composerBody :global(.astryx-chat-composer > div) { view-transition-name: dock-bar; }
+.root[open] .composerBody :global(.astryx-chat-composer-input) { view-transition-name: dock-input-1; }
+.root[open] .composerBody [data-dock-item='mic'] { view-transition-name: dock-input-2; }
+.root[open] .composerBody [data-dock-item='voice'] { view-transition-name: dock-input-3; }
+.root[open] .composerBody :global(.astryx-chat-send-button) { view-transition-name: dock-input-4; }
+
+@keyframes composer-enter {
+  from { opacity: 0; transform: translateY(50%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Recedes straight back into depth while the sending screen is open on
+   top — smaller than the account menu's push and centred, not sideways. */
+.layout {
+  transform-origin: 50% 50%;
+  transition: scale var(--send-recede-duration) var(--send-recede-ease),
+    filter var(--send-recede-duration) var(--send-recede-ease),
+    opacity var(--send-recede-duration) var(--send-recede-ease),
+    border-radius var(--send-recede-duration) var(--send-recede-ease);
+}
+.layout[data-receded] {
+  scale: var(--send-recede-scale);
+  filter: blur(var(--send-recede-blur));
+  opacity: var(--send-recede-opacity);
+  border-radius: var(--send-recede-radius);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root:global(.astryx-dialog) { animation: none; }
+  .layout { transition: none; }
+}

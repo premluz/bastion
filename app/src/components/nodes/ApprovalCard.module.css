@@ -1,0 +1,53 @@
+.card:global(.astryx-card) { padding: var(--approval-inset); background: var(--surface-1); border: var(--approval-edge-width) solid var(--approval-edge); outline: none; box-shadow: none; border-radius: var(--approval-radius); }
+.header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--approval-gap); margin-bottom: var(--approval-gap); }
+.prompt { display: block; min-height: var(--approval-line-height); }
+.card :global(.astryx-radio-list-item) { background: var(--surface-2); border-radius: var(--approval-option-radius); padding: var(--approval-option-inset); margin-bottom: var(--approval-option-gap); cursor: pointer; }
+/* Hover state for the whole pane (2026-09-13, direct feedback: "clickable
+   pane should contain radio and text and have bg and hover state") — same
+   --color-overlay-hover token .astryx-item:hover already uses elsewhere
+   in this app (theme.default.css). That token is already semi-transparent
+   (confirmed by reading its own value: an 8-digit hex with ~5% alpha), so
+   theme.default.css's own consumers just set it as a flat
+   background-color, replacing an otherwise-transparent background. This
+   row already has an opaque --surface-2 background, so the same flat
+   replacement would discard it instead of layering over it — painted
+   as a second background image instead, so the row keeps reading as its
+   own surface while hovered rather than flattening to the raw overlay
+   color. :has(input:disabled) excludes disabled rows — RadioListItem
+   marks the disabled state on the inner <input>, not this outer div, so
+   :not([aria-disabled]) (the pattern used elsewhere) would not have
+   worked here; confirmed by reading RadioListItem.tsx before choosing
+   :has() instead. */
+.card :global(.astryx-radio-list-item:not(:has(input:disabled)):hover) {
+  background-color: var(--surface-2);
+  background-image: linear-gradient(var(--color-overlay-hover), var(--color-overlay-hover));
+}
+.card :global(.astryx-radio-list-item .astryx-item) { align-items: center; min-height: var(--approval-option-height); }
+/* The row is the only surface (2026-09-13, direct feedback: "there is
+   double — remove outer pane and only keep radio... or remove radio
+   highlight inner hover, and only keep outer pane, whatever is best
+   matching Astryx DS"). Took the second option because it is what Astryx
+   itself intends: RadioListItem renders its inner Item with
+   embeddedStyles.root (paddingBlock/Inline 0, borderRadius 0) — an Item
+   deliberately stripped of any surface of its own, sized to sit inside a
+   parent that owns the surface. The visible inner box was that Item
+   picking up theme.default.css's own project-wide .astryx-item:hover
+   overlay (measured: 382px inside the row's 398px, an 8px inset on each
+   side — the doubling in the screenshot). That global rule stays as-is,
+   it is load-bearing for the Discover strip rows it was written for; this
+   only opts these embedded Items out of it, leaving the row pane below as
+   the single hover + hit surface. */
+.card :global(.astryx-radio-list-item .astryx-item:hover) { background-color: transparent; }
+.card :global(.astryx-radio) { flex-shrink: 0; }
+:global([data-approval-card='send-recipient']) .card :global(.astryx-radio-list-item div:has(> input[type='radio'])) { position: absolute; width: var(--space-2); height: var(--space-2); overflow: hidden; }
+:global([data-approval-card='send-recipient']) .card :global(.astryx-radio-list-item .astryx-radio) { display: none; }
+:global([data-approval-card='send-recipient']) .card :global(.astryx-radio-list-item:has(input:focus-visible)) { outline: var(--shell-edge-width) solid var(--accent-signal); }
+.card :global(.astryx-radio-list-item label) { white-space: normal; }
+.footer { display: flex; align-items: center; justify-content: space-between; gap: var(--approval-gap); flex-wrap: wrap; margin-top: var(--approval-footer-gap); }
+.pagination, .actions { display: flex; align-items: center; gap: var(--approval-option-gap); }
+.pagination { margin-right: auto; }
+.actions { margin-left: auto; }
+.footer button { min-height: var(--approval-control-size); }
+.actions button { border-radius: var(--approval-round); }
+.actions .continueButton { min-height: var(--space-48); padding-inline: var(--space-24); }
+.preview { width: min(100%, var(--approval-preview-width)); margin: auto; padding: var(--approval-inset); }

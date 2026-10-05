@@ -21,6 +21,13 @@ export default meta;
 type Story = StoryObj<typeof MobileFrame>;
 
 export const Default: Story = {};
+export const ClassicNavigation: Story = { args: { navigationVariant: 'classic' } };
+export const BuyEth: Story = { args: { initialPurchaseQuery: 'I want to buy ETH for $800.' } };
+export const AccountMenu: Story = { args: { initialAccountView: 'menu' } };
+export const YourAccounts: Story = { args: { initialAccountView: 'accounts' } };
+export const EditAccount: Story = { args: { initialAccountView: 'edit' } };
+export const AddAccount: Story = { args: { initialAccountView: 'add' } };
+export const History: Story = { args: { initialAccountView: 'history' } };
 
 // Entry-state variants, not page variants — each opens the shell in one of
 // its three assistant modes so the composer/conversation transitions are
@@ -30,3 +37,6 @@ export const ComposerOpen: Story = { args: { initialMode: 'composer' } };
 export const ConversationMode: Story = {
   args: { initialMode: 'conversation', initialMessages: ['Show my holdings.'] },
 };
+
+export const SendToDaniel: Story = { args: { initialMode: 'composer', initialMessages: ['Send $50 to Daniel for coffee'] } };
+export const SendToDanielOverlay: Story = { args: { initialMode: 'composer', initialMessages: ['Send $50 to Daniel for coffee'], sendPresentation: 'overlay' } };

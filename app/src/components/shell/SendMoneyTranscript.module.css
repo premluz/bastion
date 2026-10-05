@@ -1,0 +1,5 @@
+.root { display: flex; flex-direction: column; gap: var(--space-16); padding-block: var(--space-16); }
+.followUp { display: grid; gap: var(--space-12); }
+.agentReply { font-family: var(--face-voice); }
+.choices { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+.choices .choice { border-radius: var(--radius-full); background: var(--surface-2); }

@@ -36,6 +36,8 @@
 
   /* Accents — identical values to ops-dark, plus a derived glow (signal only, never on ink) */
   --accent-signal: oklch(.78 .14 225);
+  --orb-liquid-blue: oklch(.82 .16 210);
+  --orb-liquid-ice: oklch(.94 .055 220);
   --accent-alert: oklch(.68 .19 25);
   --accent-warn: oklch(.78 .16 75);
   --accent-ok: oklch(.76 .15 165);
@@ -72,6 +74,19 @@
   --surface-blur: 24px;
   --glow: 0 0 12px oklch(from var(--accent-signal) l c h / .35);
   --scrim: oklch(.13 .015 250 / .35); /* raise alpha here, nothing else, if a contrast audit fails */
+
+  /* Glass edge system + orb halo + shell ambient — see theme.safe-one.css
+     for the rationale. This theme keeps its existing look: opaque fill,
+     no gradient edge, no sheen/shadow, the original single-colour halo, no
+     ambient light. */
+  --glass-fill: var(--surface-1);
+  --glass-fill-clear: var(--surface-1);
+  --glass-sheen: none;
+  --glass-edge: none;
+  --glass-edge-accent: none;
+  --glass-shadow: none;
+  --halo-fill: radial-gradient(ellipse at bottom, var(--accent-signal), transparent 70%);
+  --shell-ambient: none;
 
   /* Neumorphic shading (see tokens.base.css) — deliberately near-zero here,
      unlike every other theme. Direct order, 2026-08-07: pull glass back

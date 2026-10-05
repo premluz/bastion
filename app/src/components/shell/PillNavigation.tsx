@@ -1,10 +1,12 @@
-import { Fragment, useId, type ReactNode, type Ref } from 'react';
+import { Fragment, useRef, type Ref } from 'react';
 import { Button } from '@astryxdesign/core/Button';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Popover } from '@astryxdesign/core/Popover';
+import { Tooltip } from '@astryxdesign/core/Tooltip';
 import { HomeIcon, MagnifyingGlassIcon, WalletIcon, SparklesIcon, PlusIcon,
   BanknotesIcon, ArrowUpRightIcon, ArrowDownLeftIcon, ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
+import { PROTOTYPE_NOTICE, notifyPrototypeUnavailable } from './PrototypeNotice';
 import '../../theme/pill-navigation.css';
 import styles from './PillNavigation.module.css';
 
@@ -18,18 +20,34 @@ const actions = [
 ] as const;
 export type PillDestination = (typeof destinations)[number]['id'];
 export type PillAction = (typeof actions)[number]['id'];
+
+function PrototypeAction({ id, label, icon, onActionsOpenChange, onAction }: {
+  id: PillAction; label: string; icon: (typeof actions)[number]['icon'];
+  onActionsOpenChange: (open: boolean) => void; onAction: (action: PillAction) => void;
+}) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  return <>
+    <Button ref={buttonRef} label={label} endContent={<Icon icon={icon} size="lg" />} variant="ghost" className={styles.action}
+      onClick={() => { onActionsOpenChange(false); notifyPrototypeUnavailable(); onAction(id); }} />
+    <Tooltip anchorRef={buttonRef} content={PROTOTYPE_NOTICE} placement="above" hasHoverIndication={false} />
+  </>;
+}
+
 export interface PillNavigationProps {
   assistantRef?: Ref<HTMLButtonElement>;
-  composer?: ReactNode; isComposerOpen?: boolean;
+  // Still meaningful even though the composer's own UI now lives in a
+  // separate full-screen overlay (ComposerModeOverlay.tsx, 2026-09-16
+  // follow-up) — drives the dock's own halo glow and the nav pill's
+  // fade-out, both real visual cues that composer mode is active
+  // elsewhere on screen.
+  isComposerOpen?: boolean;
   activeItem: PillDestination; onNavigate: (destination: PillDestination) => void;
   isActionsOpen: boolean; onActionsOpenChange: (open: boolean) => void; onAction: (action: PillAction) => void;
 }
 
-export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onActionsOpenChange, onAction, composer, isComposerOpen = false, assistantRef }: PillNavigationProps) {
-  const composerId = useId();
+export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onActionsOpenChange, onAction, isComposerOpen = false, assistantRef }: PillNavigationProps) {
   const menu = <div className={styles.menu}>{actions.map(({ id, label, icon }) =>
-    <Button key={id} label={label} endContent={<Icon icon={icon} size="lg" />} variant="ghost" className={styles.action}
-      onClick={() => { onActionsOpenChange(false); onAction(id); }} />)}</div>;
+    <PrototypeAction key={id} id={id} label={label} icon={icon} onActionsOpenChange={onActionsOpenChange} onAction={onAction} />)}</div>;
   return <Fragment>
     {/* Modal scrim, not alpha-dimming the nav itself (2026-09-16, direct
         feedback: "the menu when opened via + in the nav sets alpha
@@ -56,7 +74,6 @@ export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onAction
       </span></span>
       {destinations.map(({ id, label, icon }) => <IconButton key={id} label={label} variant="ghost" className={styles.destination}
         {...(id === 'assistant' && assistantRef ? { ref: assistantRef } : {})}
-        {...(id === 'assistant' && composer ? { 'aria-expanded': isComposerOpen, 'aria-controls': composerId } : {})}
         icon={<Icon icon={icon} size="lg" />} aria-current={activeItem === id ? 'page' : undefined} onClick={() => onNavigate(id)} />)}
     </nav>
     <Popover label="Quick actions" placement="above" alignment="end" width="var(--pill-menu-width)"
@@ -65,9 +82,6 @@ export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onAction
         className={styles.toggle} icon={<span className={styles.plus}><Icon icon={PlusIcon} size="lg" /></span>} />}
     </Popover>
     </div>
-    <section id={composerId} className={styles.composer} aria-label="Assistant composer" inert={!isComposerOpen} aria-hidden={!isComposerOpen}>
-      <div className={styles.composerClip}><div className={styles.composerBody}>{composer}</div></div>
-    </section>
     </div>
   </Fragment>;
 }

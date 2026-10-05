@@ -16,7 +16,8 @@
   flex-shrink: 0;
   padding: var(--space-8) var(--space-12);
   border-radius: var(--shell-radius);
-  background: var(--surface-2);
+  border: var(--shell-edge-width) solid transparent;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--glass-edge) border-box;
 }
 
 .logo {

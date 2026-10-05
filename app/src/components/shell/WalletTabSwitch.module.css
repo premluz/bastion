@@ -8,9 +8,45 @@
   grid-template-columns: repeat(var(--wallet-tab-count), minmax(0, 1fr));
   height: var(--space-40);
   padding: var(--space-4);
+  border: var(--shell-edge-width) solid transparent;
   border-radius: var(--radius-full);
-  background: var(--surface-2);
 }
+
+/* The glass pane is its own layer so it can morph independently of the
+   tabs (2026-09-30, direct feedback: island-style entrance). It drops from
+   the top edge at the island's footprint, then — as the drop settles —
+   widens both ways on a gentle spring. The animations only name their
+   `from` state, so each settles on the pane's real geometry. */
+.root::before {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--shell-edge-width));
+  border: var(--shell-edge-width) solid transparent;
+  border-radius: inherit;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--glass-fill), var(--glass-fill)) padding-box, var(--glass-edge) border-box;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--surface-blur));
+  animation:
+    morph-drop var(--morph-drop-duration) var(--morph-drop-ease) backwards,
+    morph-width var(--morph-width-duration) var(--morph-width-ease) var(--morph-expand-delay) backwards,
+    morph-height var(--morph-height-duration) var(--morph-height-ease) var(--morph-expand-delay) backwards,
+    morph-fade var(--morph-fade-duration) linear backwards;
+}
+
+/* Tabs and the highlight track settle in once the pane is mostly open, so
+   labels never float outside a narrow pane. */
+.tab,
+.track {
+  animation:
+    morph-content-grow var(--morph-content-duration) var(--motion-enter-ease) var(--morph-content-delay) backwards,
+    morph-fade var(--morph-content-duration) var(--motion-enter-ease) var(--morph-content-delay) backwards;
+}
+
+@keyframes morph-width { from { inset-inline: calc(50% - var(--morph-from-width) / 2); } }
+@keyframes morph-height { from { inset-block: calc(50% - var(--morph-from-height) / 2); } }
+@keyframes morph-drop { from { translate: 0 calc(-1 * var(--morph-drop-distance)); } }
+@keyframes morph-fade { from { opacity: 0; } }
+@keyframes morph-content-grow { from { scale: var(--morph-content-from-scale); } }
 
 .tab {
   position: relative;
@@ -57,7 +93,13 @@
   width: 100%;
   height: 100%;
   border-radius: var(--radius-full);
-  background: var(--surface-0);
+  background: var(--glass-sheen), var(--surface-3);
+}
+
+/* Squash-stretch only answers a real switch — on first mount the
+   highlight simply arrives with the morph (2026-09-30, direct feedback:
+   "on entrance the active bg bounces but shouldn't"). */
+.root[data-switched] .highlight {
   animation: wallet-tab-stretch var(--duration-480) var(--motion-enter-ease) both;
 }
 
@@ -68,5 +110,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .indicator { transition: none; }
-  .highlight { animation: none; }
+  .root::before, .tab, .track, .root[data-switched] .highlight { animation: none; }
 }

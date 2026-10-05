@@ -13,6 +13,7 @@ import { groupAccountHistory } from './accountHistory';
 import { MONEY_HISTORY } from './moneyHistoryData';
 import { MONEY_PLACEHOLDER } from './moneySummary';
 import { WALLET_CARDS } from './cardData';
+import { notifyPrototypeUnavailable } from './PrototypeNotice';
 import heroBalanceStyles from '../../theme/heroBalance.module.css';
 import styles from './MoneyPage.module.css';
 
@@ -102,7 +103,12 @@ export function MoneyPage({ tab, onTabChange, onCardOpen }: MoneyPageProps) {
           <WalletActionRow variant="money" shape="circle" />
           <div className={styles.section}>
             <CardDeck aria-label="Cards"
-              renderDetails={(activeIndex) => <WalletCardTile card={WALLET_CARDS[activeIndex]!} />}
+              renderDetails={(activeIndex) => <WalletCardTile card={WALLET_CARDS[activeIndex]!}
+                {...(onCardOpen ? { onManage: () => {
+                  const front = document.querySelector<HTMLElement>('[data-front="true"][role="button"]');
+                  if (front) onCardOpen(WALLET_CARDS[activeIndex]!.id, front.getBoundingClientRect());
+                  else notifyPrototypeUnavailable();
+                } } : {})} />}
               {...(onCardOpen ? { onCardOpen: (index: number, rect: DOMRect) => onCardOpen(WALLET_CARDS[index]!.id, rect) } : {})}>
               {WALLET_CARDS.map((card) => (
                 <VirtualCardPlaceholder key={card.id} lastFourDigits={card.lastFourDigits} />

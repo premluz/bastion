@@ -1,0 +1,11 @@
+:root {
+  --purchase-inset: var(--space-12);
+  --purchase-card-inset: var(--space-16);
+  --purchase-gap: var(--space-12);
+  --purchase-option-gap: var(--space-4);
+  --purchase-radius: calc(var(--radius-8) * 2);
+  --purchase-option-height: var(--space-48);
+  --purchase-edge-width: calc(var(--space-2) / 2);
+  --purchase-coin-size: var(--space-32);
+  --purchase-choice-exit-duration: var(--duration-320);
+}

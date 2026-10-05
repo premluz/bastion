@@ -7,6 +7,7 @@ import { z } from "zod";
 // be wrong. Authored directly, same register as metric/status-tag's
 // literal props per the Phase 3 binding-mapping ruling.
 export const SparklinePropsSchema = z.object({
+  variant: z.enum(['inline', 'block']).optional(),
   points: z.array(z.object({ x: z.string().min(1), y: z.number() })),
 });
 export type SparklineProps = z.infer<typeof SparklinePropsSchema>;

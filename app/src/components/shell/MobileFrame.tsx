@@ -1,5 +1,8 @@
 import { useSendMoneyFlows } from '../../engine/useSendMoneyFlows';
+import { parseSendVoiceChoice } from '../../engine/sendMoneyVoiceChoice';
 import { SendMoneyTranscript } from './SendMoneyTranscript';
+import { SendingScreenMount, isSendingScreenOpen } from './SendingScreenMount';
+import { TouchIndicators } from './TouchIndicators';
 import { Avatar } from '@astryxdesign/core/Avatar';
 import { Button } from '@astryxdesign/core/Button';
 import { AccountExperience } from './AccountExperience';
@@ -12,6 +15,8 @@ import { MoneyPage } from './MoneyPage';
 import { CardDetailPage } from './CardDetailPage';
 import { WALLET_CARDS } from './cardData';
 import { ConversationModeOverlay } from './ConversationModeOverlay';
+import { ComposerModeOverlay } from './ComposerModeOverlay';
+import { MobileFrameComposer } from './MobileFrameComposer';
 import { MobileFrameDock } from './MobileFrameDock';
 import { useExploreNavigation } from './useExploreNavigation';
 import { useMobileFrame, type MobileFrameProps } from './useMobileFrame';
@@ -19,6 +24,10 @@ import { SceneRenderer } from '../../renderer/SceneRenderer';
 import { ThinkingTrail } from '../trail/ThinkingTrail';
 import { useTrailStore } from '../../engine/stores/trailStore';
 import { useAutoScrollBottom } from './useAutoScrollBottom';
+import { useSpeechRecognition } from './useSpeechRecognition';
+import { useSendVoicePlayback } from './useSendVoicePlayback';
+import { useAssistantSounds } from './useAssistantSounds';
+import { PrototypeNoticeProvider } from './PrototypeNotice';
 import styles from './MobileFrame.module.css';
 
 // Bastion's mobile app shell — the counterpart to Merlin's Frame.tsx, and
@@ -28,8 +37,32 @@ import styles from './MobileFrame.module.css';
 // is local (useMobileFrame) until ScreenStack/pageStore lands in Phase 3.
 export function MobileFrame(props: MobileFrameProps) {
   const state = useMobileFrame(props);
-  const explore = useExploreNavigation();
   const send = useSendMoneyFlows(state.messages);
+  const voiceChoice = (text: string) => {
+    for (const message of [...state.messages].reverse()) {
+      const flow = send.flows[message.id];
+      if (flow?.stage === 'options') {
+        const action = parseSendVoiceChoice(text, flow);
+        return action ? { id: message.id, action } : null;
+      }
+    }
+    return null;
+  };
+  const speech = useSpeechRecognition(state.mode === 'conversation', (text) => {
+    const choice = voiceChoice(text);
+    if (choice) send.dispatch(choice.id, choice.action);
+    else state.submit(text, 'voice');
+  }, async (text) => Boolean(voiceChoice(text)) || state.recognizesVoiceScenario(text));
+  const voicePlayback = useSendVoicePlayback(state.mode === 'conversation', state.messages, send.flows, speech, send.dispatch);
+  const startConversationVoice = () => {
+    state.openConversation();
+    speech.start();
+    voicePlayback.playWelcome();
+  };
+  const explore = useExploreNavigation();
+  useAssistantSounds(state.mode, speech.isListening, speech.isSuspended);
+  const sendPresentation = props.sendPresentation ?? 'inline';
+  const sendingOpen = sendPresentation === 'overlay' && isSendingScreenOpen(send.flows);
   // Live trail state (2026-09-13) — subscribed via the hook, not
   // getState(), so this component re-renders as playTrail advances
   // activeIndex/elapsedMs. Read unconditionally (cheap, a handful of
@@ -57,11 +90,12 @@ export function MobileFrame(props: MobileFrameProps) {
   // desktop: the trail plays first, the scene attaches once it settles.
   // A message with neither a live trail nor a settled one (still
   // resolving, or the resolver found no match) renders as plain text.
-  const transcript = state.messages.map(({ id, text, scene, trail, trailElapsedMs, buyAmount }) => {
+  const transcript = state.messages.map(({ id, text, scene, trail, trailElapsedMs, buyAmount, voiceFeedback }) => {
     const isLive = state.liveTrailMessageId === id;
     return (
       <div key={id}>
         <ChatMessage sender="user"><ChatMessageBubble>{text}</ChatMessageBubble></ChatMessage>
+        {voiceFeedback && <ChatMessage sender="assistant"><ChatMessageBubble>{voiceFeedback}</ChatMessageBubble></ChatMessage>}
         {isLive && (
           <ThinkingTrail steps={liveSteps} activeIndex={liveActiveIndex} isComplete={liveIsComplete}
             elapsedMs={liveElapsedMs} skip={liveSkip} />
@@ -70,7 +104,9 @@ export function MobileFrame(props: MobileFrameProps) {
           <ThinkingTrail steps={trail} activeIndex={trail.length - 1} isComplete elapsedMs={trailElapsedMs ?? 0} skip={null} />
         )}
         {scene && <SceneRenderer scene={scene} />}
-        {send.flows[id] && <SendMoneyTranscript state={send.flows[id]} dispatch={(action) => send.dispatch(id, action)} />}
+        {send.flows[id] && <SendMoneyTranscript state={send.flows[id]} presentation={sendPresentation}
+          interactionMode={state.mode === 'conversation' ? 'voice' : 'chat'}
+          dispatch={(action) => send.dispatch(id, action)} />}
         {/* Buy flow renders inline, as one more result under its own
             message (2026-09-13, direct feedback: "inline — for all
             scenarios entering into composer just runs the scenario in
@@ -110,12 +146,13 @@ export function MobileFrame(props: MobileFrameProps) {
   const composerScrollRef = useAutoScrollBottom();
   const conversationScrollRef = useAutoScrollBottom();
   return (
+    <PrototypeNoticeProvider>
     <div className={styles.stage}>
       <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode}>
         <AccountExperience initialView={props.initialAccountView ?? 'closed'}>{(openAccounts) => (
-        <div className={styles.chrome} inert={state.mode === 'conversation'} aria-hidden={state.mode === 'conversation'}>
+        <div className={styles.chrome} inert={state.mode !== 'idle'} aria-hidden={state.mode !== 'idle'}>
           <header className={styles.header} aria-label="Asset search">
-            <Button label="Open account menu" variant="ghost" onClick={openAccounts}><Avatar name="Preview user" size="small" /></Button>
+            <Button label="Open account menu" variant="ghost" icon={<Avatar name="Preview user" size="small" />} isIconOnly onClick={openAccounts} />
             <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />
           </header>
           {/* Independent overlay elements, not .header/.dock pseudo-elements
@@ -126,40 +163,35 @@ export function MobileFrame(props: MobileFrameProps) {
               page and the header/dock's own z-index. */}
           <div className={styles.topFade} aria-hidden="true" />
           {isHome ? (
-            <main className={styles.page} aria-label="Home" tabIndex={0}>
+            <main key="home" className={styles.page} aria-label="Home" tabIndex={0}>
               <AssetsHomePage onSelectMoney={state.openMoney} />
             </main>
           ) : state.activeTab === 'assets' ? (
-            <main className={styles.page} aria-label="Wallet" tabIndex={0}>
+            <main key="assets" className={styles.page} aria-label="Wallet" tabIndex={0}>
               <MoneyPage tab={state.walletTab} onTabChange={state.setWalletTab} onCardOpen={state.openCard} />
             </main>
           ) : state.activeTab === 'markets' ? (
-            <main className={styles.page} aria-label="Explore" tabIndex={0} onClick={explore.onClick}>
+            <main key="markets" className={styles.page} aria-label="Explore" tabIndex={0} onClick={explore.onClick} data-scene-page>
               <SceneRenderer scene={explore.scene} />
             </main>
           ) : (
             <main className={styles.content} aria-label="Preview transcript" tabIndex={0}>{transcript}</main>
           )}
-          {/* Composer-mode transcript (2026-09-13): the same messages the
-              conversation overlay renders, shown over the fully receded
-              page so typing in the composer has somewhere to land — until
-              now a submitted message only appeared after entering voice
-              mode. Its own foreground layer, not .content: that element IS
-              one of the receded background layers, so putting the
-              transcript there would blur and fade the very thing this is
-              meant to surface. */}
-          <div ref={composerScrollRef} className={styles.composerTranscript} role="log" aria-label="Assistant transcript"
-            inert={state.mode !== 'composer'} aria-hidden={state.mode !== 'composer'}>
-            {transcript}
-          </div>
           <div className={styles.bottomFade} aria-hidden="true" />
           <MobileFrameDock state={state} variant={props.navigationVariant ?? 'pill'} />
           {selectedCardData && <CardDetailPage card={selectedCardData} sourceRect={state.selectedCard!.sourceRect} onClose={state.closeCard} />}
           </div> )}</AccountExperience></div>
-      <ConversationModeOverlay isOpen={state.mode === 'conversation'} onClose={() => state.setMode('composer')} sharedOrb={props.navigationVariant === 'classic'}
-        scrollRef={conversationScrollRef}>
+      <ComposerModeOverlay isOpen={state.mode === 'composer'} onClose={state.closeComposer} scrollRef={composerScrollRef} isReceded={sendingOpen}
+        composer={<MobileFrameComposer state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />}>
+        {transcript}
+      </ComposerModeOverlay>
+      <ConversationModeOverlay isOpen={state.mode === 'conversation'} onClose={state.closeConversation} sharedOrb={props.navigationVariant === 'classic'}
+        scrollRef={conversationScrollRef} isReceded={sendingOpen} speech={speech} audioError={voicePlayback.error}>
         {transcript}
       </ConversationModeOverlay>
+      {sendPresentation === 'overlay' && <SendingScreenMount flows={send.flows} dispatch={send.dispatch} />}
+      <TouchIndicators />
     </div>
+    </PrototypeNoticeProvider>
   );
 }

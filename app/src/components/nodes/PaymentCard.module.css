@@ -1,0 +1,66 @@
+.root { display: flex; flex-direction: column; gap: var(--space-16); min-width: 0; color: var(--ink-primary); }
+.card:global(.astryx-card) { overflow: hidden; border: var(--approval-edge-width) solid var(--approval-edge); outline: none; box-shadow: none; border-radius: var(--approval-radius); }
+.header { padding: var(--space-16); }
+.route { position: relative; display: flex; align-items: center; justify-content: center; min-height: calc(var(--space-64) * 2); overflow: hidden; background: var(--send-glow); }
+.route[data-success] { background: var(--send-glow-done); }
+.ripple { position: absolute; width: calc(var(--space-64) * 2 - var(--space-16)); height: calc(var(--space-64) * 2 - var(--space-16)); border: var(--shell-edge-width) solid var(--send-ripple-color); border-radius: var(--radius-full); opacity: 0; animation: payment-ripple var(--send-ripple-period) var(--ease-decel) infinite; }
+.ripple + .ripple { animation-delay: calc(var(--send-ripple-period) / -3); }
+.ripple + .ripple + .ripple { animation-delay: calc(var(--send-ripple-period) / -1.5); }
+.party { position: relative; z-index: 1; display: grid; place-items: center; width: var(--send-avatar-size); height: var(--send-avatar-size); border: var(--shell-edge-width) solid transparent; border-radius: var(--radius-full); background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--glass-edge) border-box; transition: translate var(--send-converge-duration) var(--send-converge-ease), scale var(--send-converge-duration) var(--send-converge-ease), opacity var(--send-converge-duration) var(--send-converge-ease); }
+.chevrons { display: flex; justify-content: center; gap: var(--space-4); width: var(--send-lane-width); color: var(--ink-primary); transition: opacity var(--send-color-duration) var(--motion-exit-ease); }
+.chevron { width: var(--space-20); height: var(--space-20); opacity: var(--send-chevron-rest); }
+.route[data-pending] .chevron { animation: payment-chevron var(--send-chevron-period) var(--motion-enter-ease) infinite; }
+.route[data-pending] .chevron + .chevron { animation-delay: var(--send-chevron-step); }
+.route[data-pending] .chevron + .chevron + .chevron { animation-delay: calc(var(--send-chevron-step) * 2); }
+.mark { position: absolute; z-index: 2; display: grid; place-items: center; width: var(--send-mark-size); height: var(--send-mark-size); border-radius: var(--radius-full); background: var(--accent-ok); box-shadow: var(--send-mark-glow); color: var(--surface-0); }
+.route[data-inline][data-success] .chevrons { opacity: 0; }
+.route[data-inline][data-success] .party { scale: var(--send-mark-from-scale); opacity: 0; }
+.route[data-inline][data-success] .party[data-side='from'] { translate: calc((var(--send-lane-width) + var(--send-avatar-size)) / 2) 0; }
+.route[data-inline][data-success] .party[data-side='to'] { translate: calc((var(--send-lane-width) + var(--send-avatar-size)) / -2) 0; }
+.route[data-inline][data-success] .mark { animation: payment-mark-in var(--send-mark-duration) var(--send-mark-ease) var(--send-mark-delay) backwards; }
+.check { width: var(--send-check-size); height: var(--send-check-size); }
+.check path { fill: none; stroke: var(--surface-0); stroke-width: var(--send-check-width); stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+.route[data-inline][data-success] .check path { animation: payment-check-draw var(--send-check-duration) var(--ease-decel) var(--send-check-delay) backwards; }
+.inlineLabel { display: flex; justify-content: center; padding: var(--space-16) var(--space-16) 0; }
+.inlineLabelText { display: inline-block; background-image: linear-gradient(90deg, var(--ink-primary) 0%, var(--ink-primary) 35%, var(--payment-label-highlight, var(--accent-signal)) 50%, var(--ink-primary) 65%, var(--ink-primary) 100%); background-size: 250% 100%; background-clip: text; -webkit-background-clip: text; color: transparent; animation: payment-label-reveal var(--duration-480) var(--ease-standard) both, payment-label-shimmer var(--duration-480) linear both; }
+.root[data-payment-card='sent'] .inlineLabelText { --payment-label-highlight: var(--accent-ok); }
+.inlineLabelText[data-pending] { animation: payment-label-reveal var(--duration-480) var(--ease-standard) both, payment-label-shimmer var(--motion-shimmer-duration) linear infinite; }
+.summary { display: grid; gap: var(--space-16); padding: var(--space-16); text-align: center; }
+.meta { display: grid; gap: var(--space-8); text-align: start; }
+.metaRow { display: flex; justify-content: space-between; gap: var(--space-16); }
+.fields { display: grid; gap: var(--space-16); padding: var(--space-16); }
+.actionsViewport { display: grid; grid-template-rows: minmax(0, 1fr); transition: grid-template-rows var(--duration-480) var(--ease-float), opacity var(--duration-200) var(--motion-exit-ease); }
+.actionsViewport[data-hidden] { grid-template-rows: minmax(0, 0fr); opacity: 0; pointer-events: none; }
+.actions { display: flex; gap: var(--space-8); flex-wrap: wrap; padding: var(--space-16); border-top: var(--shell-edge-width) solid var(--approval-edge); }
+.actionsViewport .actions { min-height: 0; overflow: hidden; }
+.actions .chip { border-radius: var(--radius-full); min-height: var(--space-48); padding-inline: var(--space-24); }
+
+@keyframes payment-ripple {
+  from { scale: var(--send-ripple-from-scale); opacity: 0; }
+  25% { opacity: 1; }
+  to { scale: 1; opacity: 0; }
+}
+
+@keyframes payment-chevron {
+  0%, 60%, 100% { opacity: var(--send-chevron-rest); translate: 0 0; }
+  25% { opacity: 1; translate: var(--space-2) 0; }
+}
+
+@keyframes payment-mark-in { from { opacity: 0; scale: var(--send-mark-from-scale); } }
+@keyframes payment-check-draw { from { stroke-dashoffset: 1; } }
+
+@keyframes payment-label-reveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes payment-label-shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ripple, .chevron, .mark, .check path, .inlineLabelText { animation: none; }
+  .party, .chevrons, .actionsViewport { transition: none; }
+  .inlineLabelText { clip-path: none; background-image: none; color: var(--ink-primary); }
+}

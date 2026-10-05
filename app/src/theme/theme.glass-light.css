@@ -73,6 +73,8 @@
      so each still carries against a light surface. The dark themes' .78 L
      signal would wash out here; this is the same colour, correctly lit. */
   --accent-signal: oklch(.55 .15 225);
+  --orb-liquid-blue: oklch(.55 .17 220);
+  --orb-liquid-ice: oklch(.72 .10 220);
   --accent-alert: oklch(.52 .21 25);
   --accent-warn: oklch(.58 .16 75);
   --accent-ok: oklch(.52 .14 165);
@@ -118,6 +120,19 @@
   --surface-opacity: 1;
   --glow: 0 0 12px oklch(from var(--accent-signal) l c h / .28);
   --scrim: oklch(1 0 0 / .40); /* raise alpha here, nothing else, if a contrast audit fails */
+
+  /* Glass edge system + orb halo + shell ambient — see theme.safe-one.css
+     for the rationale. This theme keeps its existing look: opaque fill,
+     no gradient edge, no sheen/shadow, the original single-colour halo, no
+     ambient light. */
+  --glass-fill: var(--surface-1);
+  --glass-fill-clear: var(--surface-1);
+  --glass-sheen: none;
+  --glass-edge: none;
+  --glass-edge-accent: none;
+  --glass-shadow: none;
+  --halo-fill: radial-gradient(ellipse at bottom, var(--accent-signal), transparent 70%);
+  --shell-ambient: none;
 
   /* Neumorphic shading (see tokens.base.css) — near-zero, same reasoning as
      theme.glass.css's own entry: this session's Linear reference shows

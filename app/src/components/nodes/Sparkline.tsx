@@ -1,4 +1,5 @@
 import { useId } from 'react';
+import { AssetTrendGlyph, seriesIsUp } from './AssetTrendGlyph';
 import { scaleLinear } from 'd3-scale';
 import { line as d3line } from 'd3-shape';
 import { area as d3area } from 'd3-shape';
@@ -29,10 +30,11 @@ const INSET = 2;
 // attribute reads CSS custom properties via style, not the numeric
 // stopOpacity prop (same constraint TimeSeries.tsx's own bleed path
 // already worked around).
-export function Sparkline({ points }: SparklineProps) {
+export function Sparkline({ points, variant }: SparklineProps) {
   const gradientId = useId();
 
   if (points.length < 2) return null;
+  if (variant === 'block') return <AssetTrendGlyph points={points} isUp={seriesIsUp(points)} variant="block" />;
 
   const xScale = scaleLinear().domain([0, points.length - 1]).range([INSET, WIDTH - INSET]);
   const yValues = points.map((point) => point.y);

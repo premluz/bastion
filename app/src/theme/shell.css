@@ -16,6 +16,7 @@
   --shell-gap: var(--space-20);
   --shell-label-gap: var(--space-4);
   --shell-control-size: var(--space-48);
+  --shell-muted-mic-angle: -45deg;
   --shell-nav-height: calc(var(--space-64) + var(--space-24));
   /* Header's own rendered height (2026-09-14, live-measured: 64px at
      414px width) — needed once .header became an absolute overlay
@@ -27,7 +28,70 @@
      --shell-control-size). Not derived from --shell-control-size
      itself — the header's content row measures shorter than the 48px
      control size token, so reusing that token here would overstate it. */
-  --shell-header-height: calc(var(--shell-inset) * 2 + var(--space-32));
+  --shell-header-height: calc(var(--shell-inset) * 2 + var(--shell-search-height));
+  /* 2026-09-30, direct feedback: "search on top should be larger" — the
+     full control size, up from Astryx's 32px md field. The header row's
+     height (above) now follows it. */
+  --shell-search-height: var(--shell-control-size);
+  /* Header glass (2026-09-30, direct feedback: search and avatar "should
+     have bg blur") — the shared 12px surface blur read as tint, not glass.
+     A deeper blur with a saturation lift is the liquid-glass read. */
+  --shell-header-backdrop: blur(var(--blur-24)) saturate(1.4);
+  /* Liquid-glass press (2026-09-30): hover presses in, a click presses
+     further and fast, release springs back on the bounciest spring so it
+     swells past rest before settling — larger, then smaller. */
+  --press-hover-scale: .95;
+  /* Show touches (Settings): a 44px fingertip — Apple's minimum touch
+     target — washed in primary ink at 16% with a 2px ring at 50%, so it reads
+     on dark and light themes alike. Down: 150ms in from 80%; release: 250ms
+     out while growing to 125%. */
+  --touch-dot-size: calc(var(--space-48) - var(--space-4));
+  --touch-fill: color-mix(in oklab, var(--ink-primary) 16%, transparent);
+  --touch-ring: color-mix(in oklab, var(--ink-primary) 50%, transparent);
+  --touch-ring-width: var(--space-2);
+  --touch-down-duration: var(--duration-150);
+  --touch-down-from-scale: .8;
+  --touch-release-duration: var(--duration-250);
+  --touch-release-to-scale: 1.25;
+  /* Dock ⇄ composer morph (theme/dock-morph.css): icons stagger out one
+     table-stagger apart, the glass bar starts once the first has gone and
+     rides the soft spring, the other side's icons stagger in as it settles
+     (nav returns earlier, while the bar is still contracting). */
+  --dock-morph-duration: var(--duration-480);
+  --dock-morph-ease: var(--ease-spring-soft);
+  --dock-morph-blur: var(--blur-8);
+  --dock-item-duration: var(--duration-120);
+  --dock-item-in-duration: var(--duration-200);
+  --dock-item-stagger: var(--motion-table-stagger);
+  --dock-item-scale: .8;
+  /* Composer ⇄ orb (conversation mode): the bar rounds fully and drops
+     into the sphere on a decisive deceleration, no bounce; the orb itself
+     surfaces late in that travel. */
+  --orb-morph-duration: var(--duration-480);
+  --orb-morph-ease: var(--ease-float);
+  /* Surfaces from a quarter of the travel and finishes with it, so it
+     overlaps the bar's fade — a later start left an empty frame between. */
+  --orb-reveal-delay: calc(var(--dock-bar-delay) + var(--orb-morph-duration) / 4);
+  --orb-reveal-duration: calc(var(--orb-morph-duration) * 3 / 4);
+  --dock-bar-delay: var(--dock-item-duration);
+  --dock-input-in-delay: calc(var(--dock-bar-delay) + var(--dock-morph-duration) / 2);
+  --dock-nav-in-delay: calc(var(--dock-bar-delay) + var(--dock-morph-duration) / 3);
+  --press-active-scale: .88;
+  --press-in-duration: var(--duration-120);
+  --press-in-ease: var(--ease-decel);
+  --press-release-duration: var(--duration-550);
+  --press-release-ease: var(--ease-spring-pop);
+  /* Shade under the header that page content scrolls beneath, the top
+     twin of the dock's own fade (2026-09-30). Translucent rather than a
+     solid --shell-fade so the glass search still has content to blur. */
+  --shell-header-shade-height: calc(var(--shell-header-height) + var(--shell-fade-height));
+  --shell-header-shade: linear-gradient(to bottom,
+    color-mix(in oklab, var(--surface-0) 88%, transparent),
+    color-mix(in oklab, var(--surface-0) 72%, transparent) 55%,
+    transparent);
+  /* Corner glow painted above that shade — tall enough that the theme's
+     --shell-ambient ellipses keep their proportions. */
+  --shell-ambient-height: calc(var(--shell-header-shade-height) * 2);
   /* Composer mode's own occupied bottom height (2026-09-14, direct
      feedback: last transcript message sat behind the nav/quick-actions
      row and the expanded composer input — screenshot showed "Paul
@@ -160,11 +224,16 @@
   --assistant-orb-size: calc(var(--space-48) + var(--space-8));
   --assistant-orb-expanded-size: var(--space-64);
   --assistant-orb-fill: radial-gradient(circle at 35% 25%,
-    var(--ink-primary), var(--accent-signal) 35%, var(--surface-3) 85%);
+    var(--orb-liquid-ice), var(--orb-liquid-blue) 35%, var(--surface-3) 85%);
+  --assistant-orb-color-a: var(--orb-liquid-blue);
+  --assistant-orb-color-b: var(--orb-liquid-ice);
+  --assistant-orb-aura:
+    0 0 var(--space-16) oklch(from var(--orb-liquid-blue) l c h / var(--opacity-70)),
+    0 0 var(--space-48) oklch(from var(--orb-liquid-blue) l c h / var(--opacity-40)),
+    0 0 var(--space-64) oklch(from var(--orb-liquid-blue) l c h / var(--opacity-20));
   --assistant-orb-ring: var(--edge-highlight);
   --assistant-orb-glow: var(--glow);
-  --assistant-orb-halo: radial-gradient(ellipse at bottom,
-    var(--accent-signal), transparent 70%);
+  --assistant-orb-halo: var(--halo-fill);
   --assistant-orb-halo-strength: var(--tint-strong);
   /* *4 → *6 → *3 (2026-09-13). Raised to *6 earlier the same day on
      "the shadow is larger", then brought back down on the follow-up:
@@ -181,6 +250,55 @@
   --shell-mode-duration: var(--duration-480);
   --shell-mode-ease: var(--motion-enter-ease);
   --shell-controls-delay: var(--motion-enter-duration);
+  /* Assistant overlay entrance (2026-09-17, direct feedback: "modals
+     should slide up motion, confident, decisive, dynamic, eased...
+     applied to clicking AI assistant also"; follow-up: "more decisive,
+     could start from middle to feel more dynamic") — ComposerModeOverlay
+     and ConversationModeOverlay both previously nudged in from
+     translateY(--shell-inset), a bare 16px fade-slide. --ease-decel
+     (strong deceleration, starts fast and settles) reads as decisive
+     where --motion-enter-ease's balanced in-out reads as gentle.
+     Duration dropped from --shell-mode-duration (480ms, this token's own
+     first pass) to --duration-320 — a full-height 480ms traverse read as
+     a slow climb, not decisive. Travel distance is 50% (the consuming
+     keyframes' own translateY), not 100%: starting already at the
+     screen's vertical middle rather than fully off-screen is what "start
+     from middle" asked for — the surface arrives already in motion
+     instead of crossing the whole height. */
+  /* Page landing (2026-09-30, direct feedback: "modern motion page
+     landing stagger fade ins, decisive, subtle"). Each tab arrives as a
+     short rise out of a soft blur, its sections following one stagger
+     step apart — decisive deceleration, short travel, nothing bouncy. */
+  --shell-page-enter-duration: var(--duration-480);
+  --shell-page-enter-ease: var(--ease-float);
+  --shell-page-enter-rise: var(--space-12);
+  --shell-page-enter-blur: var(--blur-8);
+  --shell-page-stagger: var(--motion-assembly-stagger);
+  /* Island morph (2026-09-30, revised same day on direct feedback: "too
+     cartoony, too abrupt, just stretches to the sides — should come down
+     and expand both sides as if from under the notch"). Two beats, no
+     scale pop: an island-sized pill (~126×36) drops from the top edge on a
+     decisive deceleration, and as it settles it widens both ways on the
+     gentle spring (~1% overshoot). Tabs fade in once it is mostly open.
+     Drop distance assumes the switch is the page's first section, sitting
+     directly under the header. Whole entrance ≈ 0.65s. */
+  --morph-from-width: calc(var(--space-64) * 2 - var(--space-2));
+  --morph-from-height: calc(var(--space-32) + var(--space-4));
+  --morph-notch-top: var(--space-12);
+  --morph-drop-distance: calc(var(--shell-header-height) - var(--morph-notch-top));
+  --morph-drop-duration: var(--duration-320);
+  --morph-drop-ease: var(--ease-float);
+  --morph-expand-delay: var(--duration-200);
+  --morph-width-duration: var(--duration-480);
+  --morph-width-ease: var(--ease-spring-soft);
+  --morph-height-duration: var(--duration-320);
+  --morph-height-ease: var(--ease-spring-soft);
+  --morph-fade-duration: var(--duration-120);
+  --morph-content-from-scale: .96;
+  --morph-content-delay: calc(var(--morph-expand-delay) + var(--duration-200));
+  --morph-content-duration: var(--duration-200);
+  --shell-overlay-enter-duration: var(--duration-320);
+  --shell-overlay-enter-ease: var(--ease-decel);
   /* Page recede: opening the assistant pushes the current page back in
      depth rather than just dimming it — the page shrinks slightly toward
      its own centre, blurs, and fades, so the composer reads as a layer in

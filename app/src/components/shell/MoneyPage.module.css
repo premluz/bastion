@@ -6,12 +6,22 @@
   flex-direction: column;
   gap: var(--shell-gap);
   padding: var(--space-8) var(--shell-inset) var(--shell-inset);
+  /* Publishes this page's own inline inset for bleed.module.css's
+     contract (see its own doc comment) — lets InvestmentsTab's TrendChart
+     cancel this padding and reach the true screen edge, the same way
+     Panel/PageShell publish --pane-inset for their own content. */
+  --pane-inset: var(--shell-inset);
 }
 
 .tabRow {
   display: flex;
   align-items: center;
   gap: var(--shell-gap);
+}
+
+.tabRow > * {
+  flex: 1;
+  min-width: 0;
 }
 
 .balanceBlock {

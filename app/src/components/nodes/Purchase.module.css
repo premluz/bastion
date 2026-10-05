@@ -1,0 +1,11 @@
+.purchase:global(.astryx-card) { padding: var(--purchase-card-inset); border-radius: var(--purchase-radius); background: var(--surface-1); }
+.cardHeader { display: flex; align-items: center; justify-content: space-between; gap: var(--purchase-gap); margin-bottom: var(--purchase-card-inset); }
+.cardHeader h2 { margin: 0; }
+.coins { display: flex; align-items: center; gap: var(--purchase-option-gap); flex-shrink: 0; }
+.coins img { width: var(--purchase-coin-size); height: var(--purchase-coin-size); }
+.details { display: flex; flex-direction: column; gap: var(--purchase-gap); }
+.detail { display: flex; align-items: baseline; justify-content: space-between; gap: var(--purchase-gap); }
+.detail > :last-child { text-align: right; overflow-wrap: anywhere; }
+.detail[data-kind='amount'] { padding-block: var(--purchase-inset); border-bottom: var(--purchase-edge-width) solid var(--edge); }
+.confirm { display: flex; flex-direction: column; gap: var(--purchase-option-gap); text-align: center; }
+.confirm button { min-height: var(--purchase-option-height); border-radius: var(--shell-round); }

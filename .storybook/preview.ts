@@ -9,6 +9,7 @@ import '../app/src/theme/theme.ops-dark.css';
 import '../app/src/theme/theme.glass.css';
 import '../app/src/theme/theme.glass-light.css';
 import '../app/src/theme/theme.safe-one.css';
+import '../app/src/theme/theme.bastion.css';
 // Theme-agnostic mobile shell tokens (sizing/motion aliases shared by every
 // registered theme) — loaded here rather than from a component so the shell
 // has its chrome tokens regardless of which components a story mounts.
@@ -30,6 +31,7 @@ const preview: Preview = {
           { value: 'glass', title: 'glass' },
           { value: 'glass-light', title: 'glass-light' },
           { value: 'safe-one', title: 'safe-one' },
+          { value: 'bastion', title: 'bastion' },
         ],
         dynamicTitle: true,
       },

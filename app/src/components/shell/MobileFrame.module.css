@@ -54,7 +54,33 @@
   padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--shell-inset);
 }
 
-.header > :last-child { flex: 1; min-width: 0; }
+.header > :last-child {
+  flex: 1;
+  min-width: 0;
+  --radius-element: var(--radius-full);
+  --size-element-md: var(--shell-search-height);
+  --field-glass-fill: var(--glass-fill-clear);
+  --field-backdrop: var(--shell-header-backdrop);
+}
+
+/* The header search is a disabled preview field, and Astryx dims disabled
+   fields with opacity .5 on the same wrapper that carries the glass
+   backdrop-filter — which draws the blur at half strength over the sharp
+   content, so text read straight through (2026-09-30, measured). Full
+   opacity here; the placeholder ink already reads as muted. Specificity
+   matches Astryx's own inflated wrapper rules. */
+.header :global(.astryx-text-input):not(#\#):not(#\#):not(#\#) { opacity: 1; }
+
+/* The avatar is the same elevated glass as the search beside it (2026-10-01,
+   direct feedback): top-lit edge, sheen, clear fill over the header's
+   deep blur, and the glass shadow. */
+.header > :first-child {
+  --_button-radius: var(--radius-full);
+  border: var(--shell-edge-width) solid transparent;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--glass-fill-clear), var(--glass-fill-clear)) padding-box, var(--glass-edge) border-box;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--shell-header-backdrop);
+}
 
 /* Independent overlay elements, not .header/.dock pseudo-elements
    (2026-09-14, direct feedback: header painted under its own shadow,
@@ -89,9 +115,25 @@
    of what's underneath — that's what was washing out AssetsHomeHeader's
    ambient glow near the top. Still needed for .content (the true
    transcript view), which has no mask of its own. */
-.chrome:has(.page) .topFade,
 .chrome:has(.page) .bottomFade {
   display: none;
+}
+
+/* Pages get the top band back as a translucent shade that content scrolls
+   under, the top twin of the dock's fade (2026-09-30, direct feedback).
+   The corner glow the 09-16 note above protected is now painted ABOVE the
+   shade by .topFade::after, so the shade no longer washes it out. */
+.chrome:has(.page) .topFade {
+  height: var(--shell-header-shade-height);
+  background: var(--shell-header-shade);
+}
+
+.topFade::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--shell-ambient-height);
+  background: var(--shell-ambient);
 }
 
 /* The dock's fade band is opaque --surface-0 at its top edge, so once the
@@ -141,6 +183,45 @@
   mask: var(--shell-transcript-mask);
 }
 
+/* Page landing: each tab's sections rise out of a soft blur one stagger
+   step apart (the <main> is keyed per tab, so this replays on every tab
+   switch). Sections are the page root's children — or its grandchildren
+   when the root wraps everything in a single body element, as Home does.
+   Animates the sections, never .page itself, so it cannot fight the
+   recede transition below. */
+/* A section carrying its own entrance ([data-entrance]) is skipped so the
+   two motions never stack. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Scene-rendered content inside a page reveals with the same rise and
+     blur as the sections, staggered by each node's `reveal` order. */
+  .page {
+    --reveal-rise: var(--shell-page-enter-rise);
+    --reveal-blur: var(--shell-page-enter-blur);
+    --reveal-duration: var(--shell-page-enter-duration);
+    --reveal-ease: var(--shell-page-enter-ease);
+  }
+  /* A page that is a whole scene ([data-scene-page]) is staggered by the
+     renderer alone, so the section rise stays off it. */
+  .page:not([data-scene-page]) > * > :not(:only-child):not([data-entrance], :has([data-entrance])),
+  .page:not([data-scene-page]) > * > :only-child > :not([data-entrance], :has([data-entrance])) {
+    animation: shell-page-enter var(--shell-page-enter-duration) var(--shell-page-enter-ease) backwards;
+    animation-delay: calc(var(--shell-page-stagger) * var(--page-section-index, 0));
+  }
+}
+.page > * > :nth-child(2), .page > * > :only-child > :nth-child(2) { --page-section-index: 1; }
+.page > * > :nth-child(3), .page > * > :only-child > :nth-child(3) { --page-section-index: 2; }
+.page > * > :nth-child(4), .page > * > :only-child > :nth-child(4) { --page-section-index: 3; }
+.page > * > :nth-child(5), .page > * > :only-child > :nth-child(5) { --page-section-index: 4; }
+.page > * > :nth-child(n + 6), .page > * > :only-child > :nth-child(n + 6) { --page-section-index: 5; }
+
+@keyframes shell-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--shell-page-enter-rise));
+    filter: blur(var(--shell-page-enter-blur));
+  }
+}
+
 /* Opening the assistant recedes whatever is behind it: the page scales down
    toward its own centre, blurs, and fades, reading as depth rather than a
    flat dim. transform-origin is centre so it pulls back evenly instead of
@@ -169,47 +250,6 @@
   overflow-y: hidden;
 }
 
-/* Messages over the receded page in composer mode. Lives in normal flow
-   between the page and the dock rather than absolutely positioned: an
-   absolute layer anchored to .phone's own bottom put flex-end BEHIND the
-   dock, stacking bubbles on top of the composer's mic/send buttons
-   (caught in a screenshot — the message count assertion passed while the
-   picture was wrong). In flow it ends where the dock begins, so bubbles
-   stack up from just above the composer the way a chat does. Masked with
-   the same --shell-transcript-mask the conversation overlay's transcript
-   uses, so both modes read alike as messages pass the top edge. */
-.composerTranscript {
-  display: flex;
-  flex-direction: column;
-  justify-content: safe flex-end;
-  gap: var(--shell-gap);
-  /* .header/.dock are absolute overlays now, so .chrome no longer
-     reserves flex space for this layer — it's its own full-height
-     overlay too, ending its bottom padding at --shell-nav-height so
-     messages stack up clear of the dock instead of running behind it. */
-  position: absolute;
-  inset: 0;
-  padding-top: var(--shell-nav-height);
-  padding-bottom: var(--shell-nav-height);
-  overflow-y: auto;
-  overflow-wrap: anywhere;
-  mask: var(--shell-transcript-mask);
-  opacity: 0;
-  pointer-events: none;
-  padding-inline: var(--shell-inset);
-  transition: opacity var(--shell-mode-duration) var(--shell-mode-ease);
-}
-
-.phone[data-mode='composer'] .composerTranscript {
-  opacity: 1;
-  pointer-events: auto;
-  /* Composer mode grows the pill quick-actions row and the composer
-     input above the collapsed dock height .composerTranscript's own
-     base padding assumes — without this the last message sits behind
-     both (2026-09-14, direct feedback, ~200px hidden). */
-  padding-bottom: var(--shell-composer-height);
-}
-
 .dock {
   /* Overlays the page instead of sitting in flow below it, matching
      .header — .page/.content run the full phone height and the dock
@@ -229,18 +269,6 @@
    dock (PillNavigation.module.css's own .dock, a DIFFERENT class in a
    different CSS module — pill has no shared-orb concept) gets its own
    conversation-mode fade there instead, see its own comment. */
-.composer {
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  transition: grid-template-rows var(--shell-mode-duration) var(--shell-mode-ease),
-    opacity var(--motion-exit-duration) var(--motion-exit-ease);
-}
-.phone[data-mode='composer'] .composer { grid-template-rows: 1fr; opacity: 1; }
-.composerClip { min-height: 0; overflow: hidden; }
-.composerBody { padding: var(--shell-label-gap) var(--shell-inset) max(var(--shell-inset), env(safe-area-inset-bottom)); }
-.composer button { min-height: var(--shell-control-size); min-width: var(--shell-control-size); }
-
 .header {
   transition: opacity var(--motion-enter-duration) var(--motion-enter-ease),
     transform var(--motion-enter-duration) var(--motion-enter-ease);
@@ -258,5 +286,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .header, .composer, .phone::before, .page, .content, .composerTranscript { transition: none; }
+  .header, .phone::before, .page, .content { transition: none; }
 }

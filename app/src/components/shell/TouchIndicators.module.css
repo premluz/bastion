@@ -1,0 +1,44 @@
+/* Full-viewport, invisible, never hit-tested: undoes the UA popover box. */
+.layer {
+  position: fixed;
+  inset: 0;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* A flat fingertip: faint ink wash with a firmer ring, no shadow or blur so
+   it never competes with the app's glass. Centred on the pointer via
+   translate (compositor-only) from the coordinates the script sets. */
+.dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: var(--touch-dot-size);
+  height: var(--touch-dot-size);
+  border: var(--touch-ring-width) solid var(--touch-ring);
+  border-radius: var(--radius-full);
+  background: var(--touch-fill) padding-box;
+  translate: calc(var(--touch-x) - 50%) calc(var(--touch-y) - 50%);
+  pointer-events: none;
+  animation: touch-down var(--touch-down-duration) var(--ease-decel) both;
+}
+
+/* Release grows as it fades, so even a quick tap registers visibly. */
+.dot[data-released] {
+  animation: touch-release var(--touch-release-duration) var(--ease-decel) forwards;
+}
+
+@keyframes touch-down { from { opacity: 0; scale: var(--touch-down-from-scale); } }
+@keyframes touch-release { to { opacity: 0; scale: var(--touch-release-to-scale); } }
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes touch-down { from { opacity: 0; } }
+  @keyframes touch-release { to { opacity: 0; } }
+}

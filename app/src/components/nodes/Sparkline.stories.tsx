@@ -37,3 +37,5 @@ export const Partial: Story = {
 export const Empty: Story = {
   args: { points: [] },
 };
+
+export const CardGradient: Story = { args: { ...Happy.args, variant: 'block' } };

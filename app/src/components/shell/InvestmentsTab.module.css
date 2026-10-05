@@ -29,27 +29,24 @@
   gap: var(--space-8);
 }
 
-/* Separate pills, not one shared track with a sliding highlight rail
-   (2026-09-16, direct feedback: "make as pill tabs not tabs with rail")
-   — SegmentedControl's own container paints a single --color-neutral
-   background behind every item alike (that's the "rail"); each
-   SegmentedControlItem is transparent until aria-checked, so removing
-   the shared background and giving every item its OWN resting
-   background (matching Discover's own unselected chip, --surface-2)
-   is what turns one track into independent pills. aria-checked, not a
-   stylex-internal "selected" class name, since that's the one public,
-   stable marker SegmentedControlItem exposes for its own active state. */
-.periodTabs {
-  background: transparent;
-  gap: var(--space-8);
-}
-
-.periodTabs :global(.astryx-segmented-control-item) {
-  background: var(--surface-2);
+/* Single-value dropdown trigger, not a row of pills (2026-09-16 follow-up,
+   direct feedback: "should actually be a dropdown popover with options
+   so single value showing... style of dropdown also rounded") —
+   DropdownMenu's own trigger renders as a Button; --radius-full matches
+   the category chips' own pill radius (ExploreComponents.module.css's
+   .chip[aria-current]) rather than Button's own default corner.
+   align-self: flex-end (2026-09-16 follow-up, direct feedback: "should
+   be content size not full width and should be right aligned") —
+   .chartBlock's own flex-direction: column stretches every item to its
+   own cross-axis width by default; this opts the trigger back out to its
+   own content size instead, pinned to the row's right edge.
+   margin-bottom widens the gap below just this trigger (2026-09-16,
+   same feedback: "not enough gap between chart and options") —
+   .chartBlock's own --space-8 gap read fine against the old full-width
+   SegmentedControl row; collapsed to a small pill, that same 8px reads
+   as too tight against the chart below. */
+.periodTrigger {
+  align-self: flex-end;
+  margin-bottom: var(--space-8);
   border-radius: var(--radius-full);
-}
-
-.periodTabs :global(.astryx-segmented-control-item[aria-checked='true']) {
-  background: var(--ink-primary);
-  color: var(--surface-0);
 }

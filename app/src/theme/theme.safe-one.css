@@ -30,20 +30,25 @@
      SAME hues as every other theme (principle 8: alert/warn/ok are
      semantic-tone tokens, not a per-theme taste dial — only the
      interactive-accent hue is this theme's own register). */
-  --accent-signal: oklch(.72 .17 285);
-  --accent-alert: oklch(.68 .19 25);
-  --accent-warn: oklch(.78 .16 75);
-  --accent-ok: oklch(.76 .15 165);
+  /* Toned down 2026-09-30 (direct feedback: "too bright, too neon — more
+     restrained but modern"): same hues, chroma roughly halved, lightness
+     eased, so accents read as ink with a tint rather than glowing. */
+  --accent-signal: oklch(.7 .11 285);
+  --orb-liquid-blue: oklch(.82 .16 210);
+  --orb-liquid-ice: oklch(.94 .055 220);
+  --accent-alert: oklch(.66 .12 25);
+  --accent-warn: oklch(.76 .1 75);
+  --accent-ok: oklch(.73 .1 165);
 
   /* Delta indicators — unchanged from every other theme (principle 8: no
      red/green performance-direction reinterpretation per-theme). */
-  --delta-up: oklch(.78 .26 165);
-  --delta-down: oklch(.72 .29 25);
+  --delta-up: oklch(.75 .12 162);
+  --delta-down: oklch(.69 .14 22);
 
   /* Muted companions for large-AREA delta fills (2026-08-16 — see
      theme.default.css's own comment for the full reasoning). */
-  --delta-up-bg: oklch(.78 .26 165 / .2);
-  --delta-down-bg: oklch(.72 .29 25 / .2);
+  --delta-up-bg: oklch(.75 .12 162 / .2);
+  --delta-down-bg: oklch(.69 .14 22 / .2);
 
   /* Tint strength — see theme.default.css's own comment for the full
      reasoning. Same values every theme uses (a structural opacity
@@ -67,12 +72,14 @@
      ONE section for the full reasoning and the 2026-08-15 ruling to ship
      --accent-signal purple everywhere, including chart primaries, rather
      than add a new --chart-primary-class token this phase. */
-  --viz-1: oklch(.75 .14 225);
-  --viz-2: oklch(.75 .14 165);
-  --viz-3: oklch(.75 .14 75);
-  --viz-4: oklch(.75 .14 285);
-  --viz-5: oklch(.75 .14 25);
-  --viz-6: oklch(.75 .14 115);
+  /* Allocation/series colours muted with the accents (2026-09-30): lower
+     chroma and lightness so a full allocation bar reads calm, not candy. */
+  --viz-1: oklch(.68 .08 225);
+  --viz-2: oklch(.68 .08 165);
+  --viz-3: oklch(.7 .08 75);
+  --viz-4: oklch(.66 .09 285);
+  --viz-5: oklch(.66 .08 25);
+  --viz-6: oklch(.68 .08 115);
 
   /* Structure — glass's own thin-border mechanics (reference's
      glass-panel cards read as a hairline edge + subtle elevation, not a
@@ -91,6 +98,44 @@
 
   --glow: 0 0 12px oklch(from var(--accent-signal) l c h / .35);
   --scrim: oklch(.11 .02 285 / .35);
+
+  /* Glass edge system (2026-09-30, direct feedback: "refine UI borders
+     towards glass morphism with top lightened gradient that fades at
+     bottom"). Light falls from above: the edge and a faint sheen are
+     brightest at the top and nearly gone by the lower half, so surfaces
+     read as lit glass rather than outlined boxes. Consumers paint these
+     as layered backgrounds (edge on border-box, fill + sheen on
+     padding-box) behind a transparent border, the only way a gradient
+     border keeps its border-radius. */
+  --glass-fill: oklch(.17 .02 285 / .82);
+  /* Header glass: frosted enough that scrolled content reads as blur, not
+     text — raised from .38 (2026-09-30): near a small pane's edges the
+     backdrop blur samples mirrored pixels, so the fill must do the rest. */
+  --glass-fill-clear: oklch(.17 .02 285 / .62);
+  --glass-sheen: linear-gradient(to bottom, oklch(1 0 0 / .06), oklch(1 0 0 / .015) 40%, oklch(1 0 0 / 0) 70%);
+  --glass-edge: linear-gradient(to bottom, oklch(1 0 0 / .2), oklch(1 0 0 / .07) 40%, oklch(1 0 0 / .035));
+  /* Composer's own edge: same top-lit falloff, tinted with the accent's
+     hue family so the assistant's input reads as charged, not outlined. */
+  --glass-edge-accent: linear-gradient(to bottom, oklch(.84 .06 295 / .5), oklch(.7 .11 285 / .24) 45%, oklch(.62 .09 260 / .1));
+  --glass-shadow: inset 0 1px 0 oklch(1 0 0 / .05), 0 12px 32px -14px oklch(0 0 0 / .7);
+
+  /* Assistant halo as an orb, not a flat wash: a pale hot core over two
+     offset lobes (violet left, indigo right) and a wide low bloom, so the
+     glow has the colour depth of a lit sphere seen from its bottom edge.
+     Overall intensity still gated by --assistant-orb-halo-strength. */
+  --halo-fill:
+    radial-gradient(40% 72% at 50% 100%, oklch(.88 .05 305 / .6), transparent 72%),
+    radial-gradient(60% 100% at 26% 100%, oklch(.6 .14 292 / .8), transparent 72%),
+    radial-gradient(58% 95% at 76% 100%, oklch(.58 .11 258 / .65), transparent 72%),
+    radial-gradient(100% 130% at 50% 100%, oklch(.38 .1 285 / .55), transparent 78%);
+
+  /* Ambient light pooled in the top corners, like the reference's purple
+     field, painted above the header shade (sized against
+     --shell-ambient-height) — faint enough that --surface-0 still reads
+     near-black. */
+  --shell-ambient:
+    radial-gradient(85% 90% at 100% 0%, oklch(.4 .1 292 / .28), transparent 72%),
+    radial-gradient(65% 70% at 0% 0%, oklch(.4 .12 262 / .14), transparent 72%);
 
   /* Neumorphic shading — near-zero, same restraint ruling as glass's own
      "stacking a second soft-light cue on an already-soft surface reads
@@ -188,8 +233,10 @@
   border: none solid var(--edge);
   box-shadow: none;
 }
+/* Glass edge + sheen, still zero elevation (no shadow) per principle 2. */
 [data-theme='safe-one'] .astryx-card.panelFlat {
-  background-color: var(--surface-2);
+  border: var(--shell-edge-width) solid transparent;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--glass-edge) border-box;
 }
 [data-theme='safe-one'] .astryx-item.panelFlat:not(:hover) {
   background-color: var(--surface-2);
@@ -210,8 +257,8 @@
    rationale (Discover Assets grid card, --surface-1, subtle --edge
    border). */
 [data-theme='safe-one'] .astryx-card.cardSurface1 {
-  background-color: var(--surface-1);
-  border: 1px solid var(--edge);
+  border: var(--shell-edge-width) solid transparent;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-1), var(--surface-1)) padding-box, var(--glass-edge) border-box;
   box-shadow: none;
 }
 
@@ -224,8 +271,34 @@
 /* Composer surface separation — same rule as ops-dark/glass's own
    entries: AppShell's elevated content sits on --surface-1, one step up
    is --surface-2. */
+/* Composer as charged glass (2026-09-30, direct feedback: "more coloured
+   border but still subtle", "composer glow from bottom feel more like cool
+   AI orb"): accent-tinted top-lit edge, a translucent fill so the orb halo
+   rising behind it shows through the blur, and a faint accent bloom. */
 [data-theme='safe-one'] .astryx-chat-composer > div {
-  background-color: var(--surface-2);
+  border: var(--shell-edge-width) solid transparent;
+  background: var(--glass-sheen) padding-box,
+    linear-gradient(oklch(from var(--surface-2) l c h / .72), oklch(from var(--surface-2) l c h / .72)) padding-box,
+    var(--glass-edge-accent) border-box;
+  box-shadow: var(--glass-shadow), 0 0 32px -8px oklch(from var(--accent-signal) l c h / .22);
+  backdrop-filter: blur(var(--surface-blur));
+}
+
+/* Text inputs share the glass edge. Specificity inflated to match
+   Astryx's own field-wrapper rules (same :not(#\#) trick as the segmented
+   control below). Focus swaps to the accent edge plus a ring, replacing
+   the Astryx focus shadow this rule's box-shadow overrides.
+   --field-glass-fill lets a placement (the header search) pass a clearer
+   fill down by inheritance without another selector here. */
+[data-theme='safe-one'] .astryx-text-input:not(#\#):not(#\#):not(#\#) {
+  border-color: transparent;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--field-glass-fill, var(--glass-fill)), var(--field-glass-fill, var(--glass-fill))) padding-box, var(--glass-edge) border-box;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--field-backdrop, blur(var(--surface-blur)));
+}
+[data-theme='safe-one'] .astryx-text-input:focus-within:not(#\#):not(#\#):not(#\#) {
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--field-glass-fill, var(--glass-fill)), var(--field-glass-fill, var(--glass-fill))) padding-box, var(--glass-edge-accent) border-box;
+  box-shadow: var(--glass-shadow), 0 0 0 var(--shell-edge-width) oklch(from var(--accent-signal) l c h / .45);
 }
 
 /* Surface consistency — same rule as ops-dark/glass's own entries. */

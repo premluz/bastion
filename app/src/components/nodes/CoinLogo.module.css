@@ -1,0 +1,8 @@
+.mark { composes: mark from '../shell/CoinLogo.module.css'; }
+.fallback {
+  composes: fallback from '../shell/CoinLogo.module.css';
+  display: grid;
+  place-items: center;
+  color: var(--ink-secondary);
+  font-size: var(--text-12);
+}

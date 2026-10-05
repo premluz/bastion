@@ -55,6 +55,10 @@
   /* Motion */
   --duration-120: 120ms;
   --duration-200: 200ms;
+  /* 150/250 added 2026-10-01 for the Show-touches dot's spec'd touch-down
+     and release timings. */
+  --duration-150: 150ms;
+  --duration-250: 250ms;
   --duration-320: 320ms;
   --duration-480: 480ms;
   /* 1600 added 2026-09-06 — every existing step covers a UI transition
@@ -67,6 +71,12 @@
   --ease-standard: cubic-bezier(.2, 0, 0, 1);
   --ease-decel: cubic-bezier(0, 0, .2, 1);
   --ease-float: cubic-bezier(.16, 1, .3, 1);
+  /* Springs (2026-09-30): sampled damped-spring curves (damping ratio
+     .82 / .5), so a glass pane can overshoot and settle without an
+     animation library. Values past 1 are the overshoot. */
+  --ease-spring-soft: linear(0, 0.045, 0.152, 0.284, 0.421, 0.549, 0.661, 0.755, 0.829, 0.887, 0.93, 0.961, 0.982, 0.996, 1.004, 1.009, 1.011, 1.011, 1.01, 1.009, 1.007, 1.006, 1.005, 1.003, 1);
+  --ease-spring-pop: linear(0, 0.121, 0.385, 0.675, 0.915, 1.074, 1.15, 1.161, 1.132, 1.086, 1.04, 1.004, 0.983, 0.974, 0.975, 0.981, 0.988, 0.995, 1.001, 1.003, 1.004, 1.004, 1.003, 1.002, 1);
+  --duration-550: 550ms;
 
   /* Z-depth: shadow paired with blur step */
   --shadow-z0: none;

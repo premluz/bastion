@@ -1,0 +1,35 @@
+:root {
+  --pill-inset: var(--space-16);
+  --pill-detached-gap: var(--space-16);
+  --pill-padding: var(--space-4);
+  --pill-radius: var(--radius-full);
+  --pill-item-size: var(--space-48);
+  --pill-toggle-size: calc(var(--space-48) + var(--space-8));
+  --pill-edge-width: calc(var(--space-2) / 2);
+  --pill-edge: color-mix(in srgb, var(--ink-muted) 20%, transparent);
+  --pill-muted-opacity: var(--opacity-40);
+  --pill-menu-width: min(calc(100vw - var(--space-32)), calc(var(--space-64) * 4 + var(--space-16)));
+  --pill-menu-padding: var(--space-8);
+  --pill-menu-inset: var(--space-12);
+  --pill-menu-icon-size: var(--space-24);
+  --pill-menu-inset-end: calc((var(--pill-toggle-size) - var(--pill-menu-icon-size)) / 2 - var(--pill-menu-padding));
+  /* Quick-actions panel (2026-10-01): rounder liquid-glass card whose items
+     keep concentric corners; it pops from the + corner on the bounciest
+     spring (overshoot, settle, land) and its items rise in bottom-up. */
+  --pill-menu-panel-radius: calc(var(--shell-radius) * 2);
+  --pill-menu-item-radius: calc(var(--pill-menu-panel-radius) - var(--pill-menu-padding));
+  --pill-menu-from-scale: .6;
+  --pill-menu-pop-duration: var(--duration-550);
+  --pill-menu-pop-ease: var(--ease-spring-pop);
+  --pill-menu-item-delay: var(--duration-120);
+  --pill-menu-item-stagger: var(--motion-table-stagger);
+  /* Two steps up this app's own type ramp from Astryx Button's default
+     14px label (2026-09-13, direct feedback: "make nav item labels in this
+     menu larger, 2 scales up") — 14 -> 16 -> 20. */
+  --pill-menu-label-size: var(--text-20);
+  --pill-duration: var(--duration-200);
+  --pill-ease: var(--motion-enter-ease);
+  --pill-slide-duration: var(--duration-480);
+  --pill-slide-ease: var(--motion-enter-ease);
+  --pill-stretch: 1.18;
+}

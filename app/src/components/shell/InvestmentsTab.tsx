@@ -2,7 +2,7 @@ import { useState, type MouseEvent } from 'react';
 import { Heading } from '@astryxdesign/core/Heading';
 import { Text } from '@astryxdesign/core/Text';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
-import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
+import { DropdownMenu } from '@astryxdesign/core/DropdownMenu';
 import { TrendChart } from '../nodes/TrendChart';
 import { TrendDelta } from '../nodes/TrendDelta';
 import { LinkChips } from '../nodes/LinkChips';
@@ -14,7 +14,6 @@ import {
   resolveInvestmentsSeries,
   resolveInvestmentsPeriodDelta,
   investmentsPeriodHasCoverage,
-  isInvestmentsPeriod,
   densifyForDisplay,
   INVESTMENTS_PERIODS,
   type InvestmentsPeriod,
@@ -32,8 +31,10 @@ import styles from './InvestmentsTab.module.css';
 //    rows (BTC/ETH/SOL/etc.), never a separately-fetched or fabricated
 //    Crypto/Stablecoins/Yield split — that mismatch (allocation totaling
 //    more than the headline balance) is exactly the bug being fixed.
-// 3. TrendChart's quiet mode (no glow pane) + a short bleedHeight, so the
-//    chart supports the balance rather than dominating the screen.
+// 3. TrendChart with its normal glow/gradient (2026-09-16 follow-up:
+//    quiet mode read as flat next to Explore's own gradient charts) and a
+//    short bleedHeight, so the chart supports the balance rather than
+//    dominating the screen.
 // 4. Compact WalletActionRow + a smaller allocation summary, holdings
 //    pulled up in the reading order: value+return → chart+timeframe →
 //    actions → allocation → holdings (this order was a direct request).
@@ -101,10 +102,6 @@ export function InvestmentsTab() {
 
   return (
     <>
-      <div onClick={onCategoryClick}>
-        <LinkChips label="Investment categories" variant="tabs" active={category} links={[...CATEGORY_CHIPS]} />
-      </div>
-
       <div className={styles.balanceBlock}>
         <Heading level={1} type="display-1" className={heroBalanceStyles.heroBalance}>
           ${summary.totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -127,13 +124,14 @@ export function InvestmentsTab() {
             renders in controlled mode (its own doc comment: "the caller is
             expected to render the SegmentedControl itself, elsewhere") —
             same pattern AssetOverviewTab.tsx already uses for its price
-            header's period row. */}
-        <SegmentedControl label="Period" value={period} className={styles.periodTabs}
-          onChange={(value) => { if (isInvestmentsPeriod(value)) setPeriod(value); }}>
-          {INVESTMENTS_PERIODS.map((candidate) => (
-            <SegmentedControlItem key={candidate} value={candidate} label={candidate} />
-          ))}
-        </SegmentedControl>
+            header's period row.
+            Dropdown, not a segmented row of pills (2026-09-16 follow-up,
+            direct feedback: "should actually be a dropdown popover with
+            options so single value showing") — DropdownMenu's own trigger
+            button shows the one selected period, hasChevron's default
+            true renders the indicator this needs with no extra markup. */}
+        <DropdownMenu button={{ label: period, variant: 'secondary', className: styles.periodTrigger }}
+          items={INVESTMENTS_PERIODS.map((candidate) => ({ label: candidate, onClick: () => setPeriod(candidate) }))} />
         {/* TrendChart's own internal day-count slicer (sliceByPeriod,
             DAYS_BACK) assumes roughly one point per day — densifyForDisplay
             above turns 7 real points into dozens, which '7D''s own
@@ -148,7 +146,7 @@ export function InvestmentsTab() {
             decouples TrendChart's own slicing from OUR OWN period buttons
             above, which already decide what `displaySeries` even contains
             before it gets here. */}
-        <TrendChart series={displaySeries} periods={['YTD']} activePeriod="YTD" onPeriodChange={() => {}} bleedHeight={120} quiet />
+        <TrendChart series={displaySeries} periods={['YTD']} activePeriod="YTD" onPeriodChange={() => {}} bleedHeight={120} />
       </div>
 
       <WalletActionRow variant="wallet" shape="circle" size="compact" />
@@ -156,6 +154,14 @@ export function InvestmentsTab() {
       {summary.rows.length > 0 && (
         <AllocationBar segments={summary.rows.map((row) => ({ id: row.entityId, label: row.symbol, value: row.value }))} />
       )}
+
+      {/* Moved below Allocation (2026-09-16 follow-up, direct feedback:
+          "these should be under allocation") — previously opened the
+          page above the balance; same local category-filter behavior,
+          just relocated in the reading order. */}
+      <div onClick={onCategoryClick}>
+        <LinkChips label="Investment categories" variant="tabs" active={category} links={[...CATEGORY_CHIPS]} />
+      </div>
 
       {summary.rows.length > 0 ? (
         <AssetsHomeList rows={summary.rows} selectedAssetId={selectedAssetId} onSelectAsset={setSelectedAssetId} />

@@ -2,10 +2,14 @@
    motion tokens only (CLAUDE.md rule 15) — no animation library, no
    per-component mount animation. SceneRenderer applies this to every
    node via inline style, delay computed from reveal * assembly-stagger. */
+/* --reveal-* hooks (2026-09-30) let a host restyle the assembly — shell
+   pages feed it their landing rise/blur so scene-built pages stagger like
+   hand-built ones. Unset, every value falls back to the original reveal. */
 @keyframes merlin-reveal {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(var(--reveal-rise, 4px));
+    filter: blur(var(--reveal-blur, 0px));
   }
   to {
     opacity: 1;
@@ -27,8 +31,8 @@
 .nodeWrapper {
   --reveal-index: 0;
   animation-name: merlin-reveal;
-  animation-duration: var(--motion-enter-duration);
-  animation-timing-function: var(--motion-enter-ease);
+  animation-duration: var(--reveal-duration, var(--motion-enter-duration));
+  animation-timing-function: var(--reveal-ease, var(--motion-enter-ease));
   animation-delay: calc(var(--motion-assembly-stagger) * var(--reveal-index));
   animation-fill-mode: backwards;
   /* min-width: 0 (2026-08-28 direct feedback: "portfolio artifact...

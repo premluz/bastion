@@ -1,0 +1,16 @@
+:root {
+  --approval-inset: var(--space-12);
+  --approval-gap: var(--space-12);
+  --approval-option-gap: var(--space-4);
+  --approval-option-inset: var(--space-8);
+  --approval-footer-gap: var(--space-24);
+  --approval-option-height: var(--space-48);
+  --approval-control-size: var(--space-32);
+  --approval-line-height: var(--space-24);
+  --approval-edge-width: calc(var(--space-2) / 2);
+  --approval-edge: color-mix(in srgb, var(--ink-muted) 25%, transparent);
+  --approval-radius: calc(var(--radius-8) * 2);
+  --approval-option-radius: var(--radius-8);
+  --approval-round: var(--radius-full);
+  --approval-preview-width: calc(var(--space-64) * 7);
+}

@@ -634,3 +634,28 @@ to change.
 `KeyIssuesCard`'s own bullish/bearish glow is UNCHANGED — still
 `--tint-strong` (the new default), since only the chart's own glow/
 gradient was reported as too strong, not that pane.
+
+## 2026-09-30 — Glass edge system; header avatar/search radius
+
+Astryx cascade variables overridden locally (component CSS, not theme files):
+- `--_button-radius: var(--radius-full)` on the header's avatar Button
+  (`MobileFrame.module.css`, `.header > :first-child`). Astryx default is
+  `var(--radius-element)` (8px); the avatar button is `isIconOnly` and must
+  hover as a circle matching the avatar.
+- `--radius-element: var(--radius-full)` on the header search's wrapper
+  (`.header > :last-child`). Astryx field wrappers resolve
+  `--_field-radius: var(--radius-element)`, so this makes the search pill
+  fully round without touching any other field.
+
+safe-one rules on Astryx stable classes (theme.safe-one.css):
+- `.astryx-chat-composer > div` (composer body): `background` shorthand
+  replaces Astryx's `--color-background-popover` fill with layered
+  `--glass-sheen` / translucent `--surface-2` / `--glass-edge-accent`,
+  transparent border, `--glass-shadow` + accent bloom replacing Astryx's
+  `--shadow-low`/`--shadow-med` (focus-within shadow no longer changes).
+- `.astryx-text-input` (field wrapper), `:not(#\#)` x3 inflation to beat the
+  atomic wrapper rules: `--color-border-emphasized` border → transparent,
+  `--color-background-surface` fill → glass layers; its hover inset shadow
+  is replaced by `--glass-shadow`, focus-within by an accent edge + ring.
+- `.astryx-card.panelFlat` / `.cardSurface1`: glass edge + sheen via the
+  same layered background; still no elevation.

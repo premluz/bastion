@@ -1,0 +1,12 @@
+.root:global(.astryx-item) {
+  width: 100%;
+  min-height: var(--shell-control-size);
+  background: var(--surface-2);
+  border-radius: var(--shell-radius);
+  padding: var(--account-row-inset);
+}
+.asset { display: grid; place-items: center; width: var(--shell-control-size); flex-shrink: 0; color: var(--accent-signal); }
+.value { display: flex; flex-direction: column; align-items: flex-end; gap: var(--shell-label-gap); }
+.amount { color: var(--ink-primary); }
+.incoming { color: var(--delta-up); }
+.amount, .incoming { white-space: nowrap; text-align: right; }

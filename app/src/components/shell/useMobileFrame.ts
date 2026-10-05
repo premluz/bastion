@@ -7,12 +7,14 @@ import { createKeywordResolver } from '../../engine/resolver/keywordResolver';
 import { playTrail } from '../../engine/trailPlayer';
 import { useTrailStore } from '../../engine/stores/trailStore';
 import type { HydratedScene } from '../../contracts/scene';
+import { morphDock } from './dockMorph';
 import type { ThinkingStep } from '../../contracts/thinking';
 
 export type ShellPreviewMode = 'idle' | 'composer' | 'conversation';
 
 export interface MobileFrameProps {
   navigationVariant?: 'pill' | 'classic';
+  sendPresentation?: 'inline' | 'overlay';
   initialPurchaseQuery?: string;
   initialAccountView?: import('./accountTypes').AccountInitialView;
   initialMode?: ShellPreviewMode;
@@ -51,14 +53,18 @@ export interface TranscriptMessage {
   // gone.
   buyAmount?: number;
   sendRequest?: SendRequest;
+  source?: 'voice';
+  voiceFeedback?: string;
 }
+
+const VOICE_UNAVAILABLE_REPLY = 'I can’t help with that yet. Try saying, “Send 50 dollars to Daniel for coffee.”';
 
 // Storybook-local state, now with live scene resolution and a real
 // thinking-trail playback — the resolver and trail player calls are real
 // (same keywordResolver/manifest.json/trailPlayer ChatBar.tsx and
 // presentScene.ts already use on desktop), but there is still no page
-// store, session/artifact store, or microphone access; those remain out
-// of scope until Phase 4/6 (CLAUDE.md).
+// store or session/artifact store; those remain out of scope until Phase 4/6
+// (CLAUDE.md). Final voice utterances use the same submission path as typed input.
 export function useMobileFrame({ initialMode = 'idle', initialMessages = [], initialPurchaseQuery = '' }: MobileFrameProps) {
   const [mode, setMode] = useState<ShellPreviewMode>(initialMode);
   const [activeTab, setActiveTab] = useState<TabDestination>('home');
@@ -109,6 +115,8 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   // keeps ids unique whether or not it did.
   const nextId = useRef(messages.length);
   const resolver = useMemo(() => createKeywordResolver(), []);
+  const recognizesVoiceScenario = async (text: string) => parseSendRequest(text) !== null
+    || parseBuyEthAmount(text) !== null || (await resolver.resolve(text)) !== null;
   const inputRef = useRef<ChatComposerInputHandle>(null);
   const assistantRef = useRef<HTMLButtonElement>(null);
   const conversationRef = useRef<HTMLButtonElement>(null);
@@ -121,7 +129,7 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
     }
     previousMode.current = mode;
   }, [mode]);
-  const submit = (text: string) => {
+  const submit = (text: string, source?: 'voice') => {
     if (!text.trim()) return;
     const trimmed = text.trim();
     const id = nextId.current++;
@@ -131,7 +139,8 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
     // manifest intent today, so it stays a plain message plus this flow.
     const buyAmount = parseBuyEthAmount(trimmed);
     const sendRequest = parseSendRequest(trimmed);
-    setMessages((current) => [...current, { id, text: trimmed, ...(sendRequest ? { sendRequest } : {}), ...(buyAmount !== null ? { buyAmount } : {}) }]);
+    setMessages((current) => [...current, { id, text: trimmed, ...(sendRequest ? { sendRequest } : {}),
+      ...(buyAmount !== null ? { buyAmount } : {}), ...(source ? { source } : {}) }]);
     setValue('');
     if (sendRequest) return;
     // Fire-and-attach: the message is already in the transcript by the time
@@ -139,7 +148,11 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
     // documents — a null result just leaves the message plain text, no
     // trail and no scene attached, never a crash or a stuck loading state.
     void resolver.resolve(trimmed).then((resolved) => {
-      if (!resolved) return;
+      if (!resolved) {
+        if (source === 'voice' && buyAmount === null) setMessages((current) => current.map((message) =>
+          message.id === id ? { ...message, voiceFeedback: VOICE_UNAVAILABLE_REPLY } : message));
+        return;
+      }
       setLiveTrailMessageId(id);
       playTrail(resolved.scene.thinking, () => {
         // playTrail's own finishNow() calls useTrailStore.getState().finish()
@@ -155,14 +168,15 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
     });
   };
   const selectTab = (tab: TabDestination) => { setActiveTab(tab); setMode('idle'); };
-  const openConversation = () => { submit(value); setMode('conversation'); };
-  const toggleComposer = () => setMode((current) => current === 'idle' ? 'composer' : 'idle');
-  const closeComposer = () => { setMode('idle'); assistantRef.current?.focus(); };
+  const openConversation = () => morphDock(() => { submit(value); setMode('conversation'); }, ['to-orb']);
+  const closeConversation = () => morphDock(() => setMode('composer'), ['from-orb']);
+  const toggleComposer = () => morphDock(() => setMode((current) => current === 'idle' ? 'composer' : 'idle'));
+  const closeComposer = () => { morphDock(() => setMode('idle')); assistantRef.current?.focus(); };
   // Home's "Money" card jumps straight to the assets tab, preset to Money
   // (2026-09-15) — a real navigation, not just a tab preselect, since
   // Money currently only opens from Home or the nav's own Wallet icon.
   const openMoney = () => { setActiveTab('assets'); setWalletTab('money'); setMode('idle'); };
-  return { mode, setMode, activeTab, value, setValue, messages, liveTrailMessageId, inputRef, submit,
-    selectTab, openConversation, toggleComposer, assistantRef, closeComposer, conversationRef,
+  return { mode, setMode, activeTab, value, setValue, messages, liveTrailMessageId, inputRef, submit, recognizesVoiceScenario,
+    selectTab, openConversation, closeConversation, toggleComposer, assistantRef, closeComposer, conversationRef,
     walletTab, setWalletTab, openMoney, selectedCard, openCard, closeCard };
 }

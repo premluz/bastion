@@ -20,13 +20,12 @@ export interface TabBarProps {
   onTabChange: (tab: TabDestination) => void;
   isComposerOpen: boolean;
   onAssistantPress: () => void;
-  composerId: string;
   assistantRef?: Ref<HTMLButtonElement>;
   isConversation?: boolean;
 }
 
 // Mixed destinations and a composer action are intentionally not ARIA tabs.
-export function TabBar({ activeTab, onTabChange, isComposerOpen, onAssistantPress, composerId, assistantRef, isConversation = false }: TabBarProps) {
+export function TabBar({ activeTab, onTabChange, isComposerOpen, onAssistantPress, assistantRef, isConversation = false }: TabBarProps) {
   const destinations = DESTINATIONS.map(({ id, label, icon }) => (
     <Button key={id} label={label} variant="ghost" className={styles.item}
       aria-current={activeTab === id ? 'page' : undefined} onClick={() => onTabChange(id)}>
@@ -40,7 +39,7 @@ export function TabBar({ activeTab, onTabChange, isComposerOpen, onAssistantPres
     <nav aria-label="Primary navigation" className={styles.root} data-conversation={isConversation}>
       {destinations.slice(0, 2)}
       <Button label="Assistant" variant="ghost" className={`${styles.item} ${styles.assistant}`}
-        aria-expanded={isComposerOpen} aria-controls={composerId} onClick={onAssistantPress} {...(assistantRef ? { ref: assistantRef } : {})}>
+        aria-expanded={isComposerOpen} onClick={onAssistantPress} {...(assistantRef ? { ref: assistantRef } : {})}>
         <span className={styles.itemContent}>
           <AssistantOrb activity={isComposerOpen ? 'listening' : 'idle'} expanded={isConversation} />
           <Text type="supporting" color="inherit" className={styles.assistantLabel}>Assistant</Text>

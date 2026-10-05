@@ -1,0 +1,27 @@
+.body { display: flex; flex-direction: column; gap: var(--account-section-gap); padding: var(--shell-inset); }
+.options { display: flex; flex-direction: column; gap: var(--shell-gap); padding: var(--shell-inset); }
+.group, .rows { display: flex; flex-direction: column; gap: var(--shell-label-gap); }
+.row:global(.astryx-item), .card {
+  background: var(--surface-2);
+  border-radius: var(--shell-radius);
+  padding: var(--account-row-inset);
+  min-height: var(--shell-control-size);
+}
+.card { display: flex; flex-direction: column; gap: var(--shell-gap); }
+.accountRow { display: flex; align-items: center; gap: var(--shell-label-gap); background: var(--surface-2); border-radius: var(--shell-radius); padding: var(--shell-label-gap); }
+.selectAccount:global(.astryx-button) { flex: 1; min-width: 0; justify-content: flex-start; min-height: var(--shell-control-size); }
+.identity { display: flex; align-items: center; gap: var(--shell-gap); text-align: left; }
+.stack { display: flex; flex-direction: column; gap: var(--shell-label-gap); min-width: 0; }
+.selection { color: var(--accent-signal); }
+.avatarHero { display: flex; flex-direction: column; align-items: center; gap: var(--shell-gap); padding-block: var(--shell-gap); }
+.largeAvatar { display: grid; place-items: center; width: var(--account-avatar-size); height: var(--account-avatar-size); border-radius: var(--shell-round); background: var(--surface-2); color: var(--ink-primary); }
+.actions { display: flex; justify-content: flex-end; gap: var(--shell-gap); }
+.detail { display: flex; align-items: baseline; justify-content: space-between; gap: var(--shell-gap); }
+.detail > :last-child { overflow-wrap: anywhere; text-align: right; }
+.history { display: flex; flex-direction: column; min-height: 100%; }
+.filters { position: sticky; top: 0; z-index: 1; background: var(--surface-0); padding: 0 var(--shell-inset) var(--shell-inset); overflow-x: auto; flex-shrink: 0; }
+.historyBody { display: flex; flex-direction: column; gap: var(--account-section-gap); padding: var(--shell-inset) var(--shell-inset) var(--shell-fade-height); }
+.historyGroup { display: flex; flex-direction: column; gap: var(--shell-gap); }
+.historyRows { display: flex; flex-direction: column; gap: var(--shell-label-gap); padding: var(--shell-label-gap); border-radius: var(--shell-radius); background: var(--surface-1); }
+.status { min-height: var(--shell-control-size); color: var(--ink-secondary); }
+.body button, .accountRow button { min-height: var(--shell-control-size); }

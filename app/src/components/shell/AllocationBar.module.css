@@ -3,6 +3,17 @@
   gap: var(--space-8);
 }
 
+/* Same shape as ExploreComponents.module.css's own .headingLink (the
+   Coins heading's tap target), sized down to this label's own scale
+   instead of that file's --text-20 section-heading size — this is a
+   Text type="label" (14px) promoted to a button, not a page heading. */
+.headingLink {
+  padding: 0;
+  min-height: auto;
+  color: var(--ink-secondary);
+  justify-self: start;
+}
+
 .bar {
   display: flex;
   height: 8px;
@@ -17,27 +28,4 @@
 .segment {
   width: var(--segment-percent);
   background-color: var(--segment-color);
-}
-
-.legend {
-  display: grid;
-  gap: var(--space-4);
-}
-
-.legendRow {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
-  align-items: center;
-  gap: var(--space-8);
-}
-
-.swatch {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-full);
-  background-color: var(--segment-color);
-}
-
-.legendValue {
-  justify-self: end;
 }

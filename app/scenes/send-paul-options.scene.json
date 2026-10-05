@@ -1,0 +1,135 @@
+{
+  "id": "send-funding-options",
+  "title": "Send $50 to Daniel",
+  "intents": [
+    "send $50 to daniel for coffee"
+  ],
+  "thinking": [
+    {
+      "id": "balances",
+      "kind": "retrieve",
+      "label": "Checking balances across your accounts…",
+      "detail": "You don’t have $50.00 in any single account.",
+      "durationMs": 850
+    },
+    {
+      "id": "stables",
+      "kind": "retrieve",
+      "label": "Looking at your stablecoin balances…",
+      "detail": "You have $62.00 total in USDC + USDT across accounts.",
+      "durationMs": 850
+    },
+    {
+      "id": "contacts",
+      "kind": "retrieve",
+      "label": "Looking up Daniel…",
+      "detail": "Found two contacts named Daniel. I need to confirm which one.",
+      "durationMs": 850
+    }
+  ],
+  "data": {},
+  "layout": {
+    "id": "send-questions",
+    "type": "content-group",
+    "props": {
+      "layout": "stack"
+    },
+    "children": [
+      {
+        "id": "check-findings",
+        "type": "thinking-findings",
+        "props": {
+          "label": "Checking your transfer",
+          "steps": [
+            {
+              "id": "balances",
+              "kind": "retrieve",
+              "label": "Checking balances across your accounts…",
+              "detail": "You don’t have $50.00 in any single account.",
+              "durationMs": 850
+            },
+            {
+              "id": "stables",
+              "kind": "retrieve",
+              "label": "Looking at your stablecoin balances…",
+              "detail": "You have $62.00 total in USDC + USDT across accounts.",
+              "durationMs": 850
+            },
+            {
+              "id": "contacts",
+              "kind": "retrieve",
+              "label": "Looking up Daniel…",
+              "detail": "Found two contacts named Daniel. I need to confirm which one.",
+              "durationMs": 850
+            }
+          ],
+          "activeIndex": 0,
+          "isComplete": false
+        }
+      },
+      {
+        "id": "send-message",
+        "type": "text-block",
+        "props": {
+          "text": "Understood, checking your contacts and available balances.\n\nI found two Daniels: Daniel Smith or Daniel Jones."
+        }
+      },
+      {
+        "id": "send-recipient",
+        "type": "approval-card",
+        "props": {
+          "questionId": "send-recipient",
+          "prompt": "Which Daniel did you mean?",
+          "questionIndex": 0,
+          "questionCount": 2,
+          "allowSkip": false,
+          "navigationMode": "numbered",
+          "options": [
+            {
+              "value": "daniel-smith",
+              "label": "Daniel Smith",
+              "description": "Work",
+              "avatar": true
+            },
+            {
+              "value": "daniel-jones",
+              "label": "Daniel Jones",
+              "description": "Coffee club",
+              "avatar": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "send-options",
+        "type": "approval-card",
+        "props": {
+          "questionId": "send-funding",
+          "prompt": "Where should the $50 come from?",
+          "options": [
+            {
+              "value": "consolidate",
+              "label": "Consolidate your stable USD balances"
+            },
+            {
+              "value": "swap",
+              "label": "Swap some ETH → USDT then send"
+            },
+            {
+              "value": "card",
+              "label": "Buy more USDT with your card"
+            },
+            {
+              "value": "other",
+              "label": "Something else"
+            }
+          ],
+          "questionIndex": 1,
+          "questionCount": 2,
+          "allowSkip": false,
+          "navigationMode": "numbered"
+        }
+      }
+    ]
+  }
+}

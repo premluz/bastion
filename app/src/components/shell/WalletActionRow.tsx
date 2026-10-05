@@ -12,6 +12,7 @@ import {
   PaperAirplaneIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
+import { PROTOTYPE_NOTICE, notifyPrototypeUnavailable } from './PrototypeNotice';
 import styles from './WalletActionRow.module.css';
 
 // Extracted out of AssetsHomeHeader.tsx (2026-09-13, direct feedback:
@@ -82,7 +83,11 @@ export function WalletActionRow({ variant = 'wallet', shape = 'roundedSquare', s
   return (
     <div className={styles.row} data-variant={variant} data-size={size}>
       {actions.map(({ id, label, icon }) => (
-        <div key={id} className={styles.action}>
+        // A native <label> around the button makes the whole tile — circle
+        // and caption — one rectangular hit area (2026-09-30, direct
+        // feedback) with no visible panel: a click anywhere in it activates
+        // the button through the label's own activation behaviour.
+        <label key={id} className={styles.action}>
           {/* IconButton itself is the whole clickable/hoverable surface
               (2026-09-15, direct feedback against a reference screenshot:
               "rounded action row has not got additional square rounded
@@ -92,12 +97,13 @@ export function WalletActionRow({ variant = 'wallet', shape = 'roundedSquare', s
               tile (icon + label) its own panel and hover. ghost strips
               that panel; the shape/fill/color this component already
               applied to the icon now lives directly on the real button. */}
-          <IconButton label={label} icon={<Icon icon={icon} size={size === 'compact' ? 'sm' : 'md'} />} variant="ghost"
+          <IconButton label={label} tooltip={PROTOTYPE_NOTICE} onClick={notifyPrototypeUnavailable}
+            icon={<Icon icon={icon} size={size === 'compact' ? 'sm' : 'md'} />} variant="ghost"
             className={styles.iconShape} data-shape={shape} data-size={size} />
-          <Text type="supporting" color="secondary">
+          <Text type="supporting" color="secondary" className={styles.caption}>
             {label}
           </Text>
-        </div>
+        </label>
       ))}
     </div>
   );

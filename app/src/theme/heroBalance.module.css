@@ -12,3 +12,7 @@
   font-size: var(--text-40);
   font-weight: 700;
 }
+
+:global([data-theme='bastion']) .heroBalance {
+  font-weight: 900;
+}

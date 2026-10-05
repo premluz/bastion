@@ -20,6 +20,8 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-4);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Two complete, equally real stylings (2026-09-16, direct feedback: "we
@@ -38,18 +40,38 @@
 .iconShape {
   width: var(--shell-control-size);
   height: var(--shell-control-size);
-  background: var(--surface-2);
+  border: var(--shell-edge-width) solid transparent;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--glass-edge) border-box;
   color: var(--accent-signal);
-  transition: background-color var(--motion-enter-duration) var(--motion-enter-ease);
+  transition: scale var(--press-release-duration) var(--press-release-ease);
 }
 
-/* --color-overlay-hover, not a second flat background swap: it's already
-   semi-transparent, so it layers as a highlight over --surface-2 rather
-   than replacing it outright — same token/reasoning theme.default.css's
-   own .astryx-item:hover / .astryx-list-item:hover rules already use to
-   close this identical "Astryx element has no hover of its own" gap. */
-.iconShape:hover {
-  background-color: var(--color-overlay-hover);
+/* Liquid-glass press (2026-09-30, direct feedback): hover presses in, a
+   click presses further and fast; release rides the base transition's
+   spring back, overshooting before it settles. --color-overlay-hover is
+   semi-transparent, so it stays a highlight layered over the glass fill
+   (edge and sheen kept underneath) rather than replacing it. */
+@media (hover: hover) {
+  .action:hover .iconShape {
+    scale: var(--press-hover-scale);
+    background: linear-gradient(var(--color-overlay-hover), var(--color-overlay-hover)) padding-box, var(--glass-sheen) padding-box,
+      linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--glass-edge) border-box;
+  }
+}
+
+.caption { transition: color var(--motion-enter-duration) var(--motion-enter-ease); }
+
+/* The caption lifts to primary ink with the press, so the whole tile
+   reads as one control. */
+@media (hover: hover) {
+  .action:hover .caption { color: var(--ink-primary); }
+}
+.action:active .caption { color: var(--ink-primary); }
+
+.action:active .iconShape {
+  scale: var(--press-active-scale);
+  transition-duration: var(--press-in-duration);
+  transition-timing-function: var(--press-in-ease);
 }
 
 .iconShape[data-shape='circle'] {

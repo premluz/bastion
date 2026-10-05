@@ -1,0 +1,12 @@
+{
+  "id": "buy-eth-funding", "title": "Buy ETH", "intents": ["I want to buy ETH", "Buy Ethereum"],
+  "thinking": [{ "id": "thinking", "kind": "plan", "label": "Thinking...", "durationMs": 800 }],
+  "data": {},
+  "layout": { "id": "funding", "type": "approval-card", "props": {
+    "questionId": "eth-funding", "prompt": "Got it. Which would you like to fund it with?",
+    "options": [
+      { "value": "USDC", "label": "USDC", "description": "Your balance is 812.22 USDC" },
+      { "value": "USDT", "label": "USDT", "description": "Your balance is 912.76 USDT" }
+    ]
+  } }
+}
