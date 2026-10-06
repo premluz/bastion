@@ -1,12 +1,14 @@
 .root { display: flex; flex-direction: column; gap: var(--space-16); min-width: 0; color: var(--ink-primary); }
-.card:global(.astryx-card) { overflow: hidden; border: var(--approval-edge-width) solid var(--approval-edge); outline: none; box-shadow: none; border-radius: var(--approval-radius); }
+.card:global(.astryx-card) { overflow: hidden; border: var(--approval-edge-width) solid var(--approval-edge); outline: none; box-shadow: none; border-radius: var(--approval-radius); background: var(--send-pane-wash); }
+.root[data-payment-card='sent'] .card:global(.astryx-card) { background: var(--send-pane-wash-done); }
 .header { padding: var(--space-16); }
-.route { position: relative; display: flex; align-items: center; justify-content: center; min-height: calc(var(--space-64) * 2); overflow: hidden; background: var(--send-glow); }
-.route[data-success] { background: var(--send-glow-done); }
+/* No clipping here: the success mark's glow must fall off into the card,
+   which clips at its own rounded edge (2026-10-06: a hard cut-off showed). */
+.route { position: relative; display: flex; align-items: center; justify-content: center; min-height: calc(var(--space-64) * 2); }
 .ripple { position: absolute; width: calc(var(--space-64) * 2 - var(--space-16)); height: calc(var(--space-64) * 2 - var(--space-16)); border: var(--shell-edge-width) solid var(--send-ripple-color); border-radius: var(--radius-full); opacity: 0; animation: payment-ripple var(--send-ripple-period) var(--ease-decel) infinite; }
 .ripple + .ripple { animation-delay: calc(var(--send-ripple-period) / -3); }
 .ripple + .ripple + .ripple { animation-delay: calc(var(--send-ripple-period) / -1.5); }
-.party { position: relative; z-index: 1; display: grid; place-items: center; width: var(--send-avatar-size); height: var(--send-avatar-size); border: var(--shell-edge-width) solid transparent; border-radius: var(--radius-full); background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--glass-edge) border-box; transition: translate var(--send-converge-duration) var(--send-converge-ease), scale var(--send-converge-duration) var(--send-converge-ease), opacity var(--send-converge-duration) var(--send-converge-ease); }
+.party { position: relative; z-index: 1; display: grid; place-items: center; width: var(--send-avatar-size); height: var(--send-avatar-size); border-radius: var(--radius-full); background: var(--surface-2); transition: translate var(--send-converge-duration) var(--send-converge-ease), scale var(--send-converge-duration) var(--send-converge-ease), opacity var(--send-converge-duration) var(--send-converge-ease); }
 .chevrons { display: flex; justify-content: center; gap: var(--space-4); width: var(--send-lane-width); color: var(--ink-primary); transition: opacity var(--send-color-duration) var(--motion-exit-ease); }
 .chevron { width: var(--space-20); height: var(--space-20); opacity: var(--send-chevron-rest); }
 .route[data-pending] .chevron { animation: payment-chevron var(--send-chevron-period) var(--motion-enter-ease) infinite; }

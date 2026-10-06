@@ -17,3 +17,10 @@
   padding: 0 var(--shell-inset) var(--shell-inset);
 }
 
+
+.cardStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--shell-card-gap);
+  min-width: 0;
+}

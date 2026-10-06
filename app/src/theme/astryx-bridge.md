@@ -659,3 +659,7 @@ safe-one rules on Astryx stable classes (theme.safe-one.css):
   is replaced by `--glass-shadow`, focus-within by an accent edge + ring.
 - `.astryx-card.panelFlat` / `.cardSurface1`: glass edge + sheen via the
   same layered background; still no elevation.
+
+## 2026-10-06 — Bastion typeface
+
+`[data-theme='bastion']` overrides Astryx's `--font-family-body` and `--font-family-heading` to `var(--font-geist)` (Astryx default: its own UI sans stack) so Astryx Text/Heading render in Geist like `--face-ui`. Other themes do not define them and inherit Astryx's stack; lint-theme-parity.mjs treats `--font-family-*` as an asymmetric bridge, like `--color-*`. `--font-family-code` untouched. Eyebrows use `--font-geist-mono` via the theme's `[data-eyebrow]` rule (inflated specificity over Astryx's atomic text rules).

@@ -100,10 +100,16 @@
      actions row and the composer input above it, which --shell-nav-
      height was never sized for. */
   --shell-composer-height: calc(var(--shell-nav-height) + var(--space-64) + var(--space-48));
-  --shell-edge-width: calc(var(--space-2) / 2);
+  --shell-edge-width: var(--hairline-width);
   --shell-focus-width: var(--space-2);
   --shell-focus-offset: var(--space-4);
   --shell-radius: var(--radius-12);
+  /* Content cards (balance tiles, promo, asset pane): a tighter corner than
+     the shell's own controls (2026-10-05, direct feedback: reduce rounding). */
+  --shell-card-radius: var(--radius-8);
+  /* Gap between side-by-side cards — tighter than --shell-gap's section
+     rhythm (2026-10-05, direct feedback). */
+  --shell-card-gap: var(--space-12);
   --shell-round: var(--radius-full);
   /* Card-deck geometry (2026-09-16). The per-card throw's own timing/
      easing/offsets are ported as literal constants inside CardDeck.tsx
@@ -242,7 +248,7 @@
      screen. Shared by both halo consumers — MobileFrame's composer/
      conversation halo and ConversationModeOverlay's standalone one —
      which are the same visual in the same two modes. */
-  --assistant-orb-halo-height: calc(var(--space-64) * 3);
+  --assistant-orb-halo-height: var(--halo-height);
   --assistant-orb-rest-opacity: var(--opacity-70);
   --assistant-orb-rest-scale: 0.92;
   --assistant-orb-duration: var(--motion-shimmer-duration);

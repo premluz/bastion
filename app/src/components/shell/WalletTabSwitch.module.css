@@ -93,7 +93,7 @@
   width: 100%;
   height: 100%;
   border-radius: var(--radius-full);
-  background: var(--glass-sheen), var(--surface-3);
+  background: var(--glass-sheen), var(--surface-selected);
 }
 
 /* Squash-stretch only answers a real switch — on first mount the

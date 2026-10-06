@@ -7,6 +7,7 @@
 /* Three actions, not four (2026-09-16 follow-up, direct feedback:
    "Manage card" moved up into the new 'card' variant's own row under the
    card art — Money's own row is now Add money/Send/Withdraw only). */
+.row[data-variant='wallet'],
 .row[data-variant='money'],
 .row[data-variant='card'] {
   grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -8,10 +8,24 @@
   --send-ripple-period: calc(var(--duration-1600) * 2);
   --send-ripple-from-scale: .3;
   --send-ripple-rest-scale: .7;
-  --send-ripple-color: color-mix(in oklab, var(--accent-signal) 45%, transparent);
+  --send-ripple-color: color-mix(in oklab, var(--presence) 35%, transparent);
   --send-ripple-color-done: color-mix(in oklab, var(--accent-ok) 45%, transparent);
-  --send-glow: radial-gradient(closest-side, color-mix(in oklab, var(--accent-signal) 30%, transparent), transparent);
-  --send-glow-done: radial-gradient(closest-side, color-mix(in oklab, var(--accent-ok) 32%, transparent), transparent);
+  /* Agent presence, not the action accent (2026-10-06): a soft luminance
+     falloff rather than a coloured disc. */
+  --send-glow: radial-gradient(closest-side, color-mix(in oklab, var(--presence) 18%, transparent), color-mix(in oklab, var(--presence) 6%, transparent) 55%, transparent);
+  /* Full-pane wash for the in-transcript transfer card (2026-10-06, direct
+     feedback: the radial glow squashed into an ellipse on the wide header;
+     the reference lights the whole pane). A broad light from the top-left
+     corner, sized to the card so it never squashes, over a top-to-bottom
+     surface fall-off. Confirm carries the brand accent tint (direct
+     feedback: "the original confirm colour was ok"); sage once it lands. */
+  --send-pane-wash:
+    radial-gradient(130% 100% at 15% 0%, color-mix(in oklab, var(--accent-signal) 16%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--surface-1), var(--surface-0));
+  --send-pane-wash-done:
+    radial-gradient(130% 100% at 15% 0%, color-mix(in oklab, var(--accent-ok) 18%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--surface-1), var(--surface-0));
+  --send-glow-done: radial-gradient(closest-side, color-mix(in oklab, var(--accent-ok) 22%, transparent), color-mix(in oklab, var(--accent-ok) 7%, transparent) 55%, transparent);
   --send-color-duration: var(--duration-480);
   --send-chevron-period: calc(var(--duration-480) * 3);
   --send-chevron-step: var(--duration-200);

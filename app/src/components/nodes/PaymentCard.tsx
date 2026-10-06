@@ -13,6 +13,10 @@ import styles from './PaymentCard.module.css';
 
 const SENDER_NAME = 'Preview user';
 
+// Fills the 64px route disc (--send-avatar-size) so no band of the disc
+// shows around it as a darker ring (2026-10-06, direct feedback).
+const AVATAR_SIZE = 64;
+
 function TransferRoute({ recipient, isSuccess, isPending, inline }: {
   recipient: string; isSuccess: boolean; isPending: boolean; inline: boolean;
 }) {
@@ -24,13 +28,13 @@ function TransferRoute({ recipient, isSuccess, isPending, inline }: {
       <span className={styles.ripple} />
     </>}
     {(!isSuccess || inline) && <>
-      <span className={styles.party} data-side="from"><Avatar name={SENDER_NAME} size="medium" /></span>
+      <span className={styles.party} data-side="from"><Avatar name={SENDER_NAME} size={AVATAR_SIZE} /></span>
       <span className={styles.chevrons}>
         <ChevronRightIcon className={styles.chevron} />
         <ChevronRightIcon className={styles.chevron} />
         <ChevronRightIcon className={styles.chevron} />
       </span>
-      <span className={styles.party} data-side="to"><Avatar name={recipient} size="medium" /></span>
+      <span className={styles.party} data-side="to"><Avatar name={recipient} size={AVATAR_SIZE} /></span>
     </>}
     {isSuccess && <span className={styles.mark}>
       <svg viewBox="0 0 24 24" className={styles.check}><path d="M6.5 12.5l3.5 3.5 7.5-8" pathLength={1} /></svg>

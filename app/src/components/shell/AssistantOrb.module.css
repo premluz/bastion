@@ -86,3 +86,11 @@
   .core::before, .liquid { transition: none; }
   .root:not([data-activity='idle']) .core:not([data-liquid-supported='true']) { animation: none; }
 }
+
+/* Voice states through luminance (2026-10-06): each theme sets how bright the
+   orb sits per state (constant 1 outside bastion); reasoning swaps the
+   liquid's secondary colour for the theme's seam tone. */
+.root[data-activity='idle'] .core { filter: brightness(var(--orb-luminance-idle)); }
+.root[data-activity='listening'] .core { filter: brightness(var(--orb-luminance-listening)); }
+.root[data-activity='thinking'] .core { filter: brightness(var(--orb-luminance-thinking)); }
+.root[data-activity='thinking'] { --assistant-orb-color-b: var(--orb-seam); }

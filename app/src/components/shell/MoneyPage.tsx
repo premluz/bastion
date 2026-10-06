@@ -86,17 +86,8 @@ export function MoneyPage({ tab, onTabChange, onCardOpen }: MoneyPageProps) {
             <div className={styles.apyRow}>
               <Text type="supporting" weight="semibold" className={styles.apy}>{MONEY_PLACEHOLDER.apy}% APY</Text>
               <Text type="supporting" color="secondary">· mUSD</Text>
-              <Icon icon="info" size="sm" color="secondary" />
-              {/* Estimated earnings section removed (2026-09-15, direct
-                  feedback: "hide Estimated earnings section... add to
-                  line 4%... 4% APY Est. annual $139.02") — the annual
-                  figure now lives inline on the APY row instead of its
-                  own card; Monthly is dropped, not folded in, since the
-                  request only asked for the annual number here. */}
-              <Text type="supporting" color="secondary">· Est. annual</Text>
-              <Text type="supporting" weight="semibold" hasTabularNumbers className={styles.apy}>
-                ${MONEY_PLACEHOLDER.annualEarnings.toFixed(2)}
-              </Text>
+              {/* Info icon and the Est. annual figure removed (2026-10-06, direct
+                  feedback: "just keep 4% APY · mUSD"). */}
             </div>
           </div>
           <ContributingBalanceRow balances={CONTRIBUTING_BALANCES} />
@@ -124,7 +115,9 @@ export function MoneyPage({ tab, onTabChange, onCardOpen }: MoneyPageProps) {
               {groups.map((group) => (
                 <div key={group.day} className={styles.activityGroup}>
                   <Text type="supporting" color="secondary">{group.label}</Text>
-                  {group.items.map((entry) => <HistoryItem key={entry.id} entry={entry} />)}
+                  <div className={styles.activityPane}>
+                    {group.items.map((entry) => <HistoryItem key={entry.id} entry={entry} />)}
+                  </div>
                 </div>
               ))}
             </div>

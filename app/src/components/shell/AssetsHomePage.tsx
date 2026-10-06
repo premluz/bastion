@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import { resolveAssetsHomeSummary } from '../../engine/assetsHome';
 import { AssetsHomeHeader } from './AssetsHomeHeader';
@@ -38,9 +37,9 @@ const PROMOS = [
 // "remove tabs crypto earn etc.") — the list always shows crypto holdings
 // now, the only real data this page has; Earn/NFTs had no real data
 // either and only ever rendered an empty state.
-export interface AssetsHomePageProps { onSelectMoney?: () => void }
+export interface AssetsHomePageProps { onSelectMoney?: () => void; onSelectInvestments?: () => void }
 
-export function AssetsHomePage({ onSelectMoney }: AssetsHomePageProps) {
+export function AssetsHomePage({ onSelectMoney, onSelectInvestments }: AssetsHomePageProps) {
   // Tracks which row is open — real state, not a stub, but with nowhere
   // to route yet (2026-09-13): Bastion's mobile shell has no ScreenStack
   // or asset-detail screen built (Phase 3/5, both still open per CLAUDE.md
@@ -49,19 +48,23 @@ export function AssetsHomePage({ onSelectMoney }: AssetsHomePageProps) {
   // onClick would be the exact "clickable but does nothing" bug this was
   // built to fix — but its destination is a placeholder honestly scoped
   // to this page until a real asset-detail screen exists to open instead.
-  const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const summary = resolveAssetsHomeSummary();
 
   return (
     <div className={styles.root}>
       <div className={styles.body}>
-        <AssetsHomeHeader totalValue={summary.totalValue} changeAbs={summary.changeAbs} changePercent={summary.changePercent}
-          {...(onSelectMoney ? { onSelectMoney } : {})} />
-        <PromoCarousel aria-label="Promotions">
-          {PROMOS.map((promo) => (
-            <PromoCardFull key={promo.id} title={promo.title} {...('icon' in promo ? { icon: promo.icon } : {})} />
-          ))}
-        </PromoCarousel>
+        {/* Balance tiles and the promo share the tiles' own 12px card gap
+            (2026-10-06, direct feedback: "these 3 panes should have the same
+            spacing") — the page's larger section gap starts at Coins. */}
+        <div className={styles.cardStack}>
+          <AssetsHomeHeader totalValue={summary.totalValue} changeAbs={summary.changeAbs} changePercent={summary.changePercent}
+            {...(onSelectMoney ? { onSelectMoney } : {})} {...(onSelectInvestments ? { onSelectInvestments } : {})} />
+          <PromoCarousel aria-label="Promotions">
+            {PROMOS.map((promo) => (
+              <PromoCardFull key={promo.id} title={promo.title} {...('icon' in promo ? { icon: promo.icon } : {})} />
+            ))}
+          </PromoCarousel>
+        </div>
         {/* Same heading treatment as Discover's own sections (2026-09-16
             follow-up, direct feedback: "Coins header on homepage should
             be with link and chevron as Perps etc on Discover") —
@@ -73,7 +76,7 @@ export function AssetsHomePage({ onSelectMoney }: AssetsHomePageProps) {
             (2026-09-16 ruling, unchanged). */}
         <ContentGroup title="Coins" href="#home/coins" layout="stack">
           {summary.rows.length > 0 ? (
-            <AssetsHomeList rows={summary.rows} selectedAssetId={selectedAssetId} onSelectAsset={setSelectedAssetId} />
+            <AssetsHomeList rows={summary.rows} />
           ) : (
             <EmptyState title="No assets yet" description="Connect a wallet to see your crypto holdings here." />
           )}

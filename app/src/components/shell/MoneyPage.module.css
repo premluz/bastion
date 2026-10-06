@@ -64,3 +64,19 @@
   flex-direction: column;
   gap: var(--space-8);
 }
+
+/* One pane per day (2026-10-06, direct feedback: activity items connected
+   into a pane, not individual panes) — same card recipe as the Home asset
+   pane; the day's rows sit flush inside it, losing their own fill and
+   rounding (fill only while not hovered, so the row hover still shows). */
+.activityPane {
+  display: flex;
+  flex-direction: column;
+  border: var(--shell-edge-width) solid transparent;
+  border-radius: var(--shell-card-radius);
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box, var(--glass-edge) border-box;
+  backdrop-filter: blur(var(--surface-blur));
+  overflow: hidden;
+}
+.activityPane > :global(.astryx-item):not(#\#):not(#\#):not(#\#) { border-radius: 0; }
+.activityPane > :global(.astryx-item):not(:hover):not(#\#):not(#\#):not(#\#) { background: transparent; }

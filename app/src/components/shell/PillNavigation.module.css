@@ -15,11 +15,13 @@
   transition-duration: var(--motion-exit-duration);
   transition-timing-function: var(--motion-exit-ease);
 }
-.pill { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: var(--pill-padding); border: var(--pill-edge-width) solid transparent; border-radius: var(--pill-radius); transition: opacity var(--pill-duration) var(--pill-ease); }
-/* Glass body on a pseudo layer (2026-09-30): a top-lit gradient edge needs
-   layered backgrounds, which can't transition — as its own layer it can
-   still fade out when the quick-actions menu opens. */
-.pill::before { content: ''; position: absolute; inset: calc(-1 * var(--pill-edge-width)); border: var(--pill-edge-width) solid transparent; border-radius: inherit; background: var(--glass-sheen) padding-box, linear-gradient(var(--glass-fill), var(--glass-fill)) padding-box, var(--glass-edge) border-box; box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--surface-blur)); pointer-events: none; transition: opacity var(--pill-duration) var(--pill-ease); }
+.pill { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: var(--pill-padding); border: var(--shell-edge-width) solid transparent; border-radius: var(--pill-radius); background: var(--glass-sheen) padding-box, linear-gradient(var(--glass-fill-clear), var(--glass-fill-clear)) padding-box, var(--glass-edge) border-box; box-shadow: var(--glass-shadow); backdrop-filter: var(--shell-header-backdrop); transition: opacity var(--pill-duration) var(--pill-ease); }
+/* Nav pill and + toggle share the header search's material (2026-10-06,
+   direct feedback: no visible blur, the + read as opaque): clear glass fill
+   over the header's deep blur. The glass is painted on .pill itself, not a
+   ::before — the pill carries a view-transition-name (dock morph), which
+   makes it a backdrop root, so a blur on a child layer could only ever see
+   the pill's own empty interior, never the page (measured). */
 .pill .destination { width: 100%; min-width: 0; min-height: var(--pill-item-size); padding: 0; border-radius: var(--pill-radius); color: var(--ink-secondary); box-shadow: none; border-color: transparent; }
 .pill .destination[aria-current='page'] { color: var(--ink-primary); background: transparent; }
 /* While the quick-actions menu is open the pill keeps its glass pane and
@@ -27,7 +29,7 @@
    below), exactly like the page behind (2026-10-01, direct feedback: the
    pane faded out as well as being scrimmed). */
 .root[data-open='true'] .destination { background: transparent; }
-.root .toggle { width: var(--pill-toggle-size); height: var(--pill-toggle-size); min-width: var(--pill-toggle-size); padding: 0; border-radius: var(--pill-radius); background: var(--glass-sheen) padding-box, linear-gradient(var(--glass-fill), var(--glass-fill)) padding-box, var(--glass-edge) border-box; border: var(--pill-edge-width) solid transparent; color: var(--ink-primary); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--surface-blur)); }
+.root .toggle { width: var(--pill-toggle-size); height: var(--pill-toggle-size); min-width: var(--pill-toggle-size); padding: 0; border-radius: var(--pill-radius); background: var(--glass-sheen) padding-box, linear-gradient(var(--glass-fill-clear), var(--glass-fill-clear)) padding-box, var(--glass-edge) border-box; border: var(--shell-edge-width) solid transparent; color: var(--ink-primary); box-shadow: var(--glass-shadow); backdrop-filter: var(--shell-header-backdrop); }
 .plus { display: grid; place-items: center; transition: transform var(--pill-duration) var(--pill-ease); }
 .root[data-open='true'] .plus { transform: rotate(45deg); }
 /* Liquid-glass press (2026-09-30, direct feedback: "same for main nav"),
@@ -86,7 +88,7 @@
    which is what keeps the close toggle clickable), so it carries its own
    scrim layer — the icons dim exactly like the page behind; only the
    toggle stays bright. */
-.root[data-open='true'] .pill::after { content: ''; position: absolute; inset: calc(-1 * var(--pill-edge-width)); z-index: 2; border-radius: inherit; background: var(--scrim); pointer-events: none; animation: pill-scrim-in var(--duration-200) var(--motion-enter-ease) both; }
+.root[data-open='true'] .pill::after { content: ''; position: absolute; inset: calc(-1 * var(--shell-edge-width)); z-index: 2; border-radius: inherit; background: var(--scrim); pointer-events: none; animation: pill-scrim-in var(--duration-200) var(--motion-enter-ease) both; }
 .menu { display: flex; flex-direction: column; gap: var(--pill-padding); }
 .menu .action { min-height: var(--pill-item-size); width: 100%; justify-content: flex-end; text-align: right; padding-inline: var(--pill-menu-inset) calc(var(--pill-menu-inset-end) - var(--pill-edge-width) * 2); border-radius: var(--pill-menu-item-radius); border: 0; box-shadow: none; }
 /* Astryx's Button sets its label size on an inner span via its own stylex
@@ -150,6 +152,6 @@
 .indicator[data-active='explore'] { transform: translateX(100%); }
 .indicator[data-active='assets'] { transform: translateX(200%); }
 .indicator[data-active='assistant'] { transform: translateX(300%); }
-.highlight { display: block; width: 100%; height: 100%; border-radius: var(--pill-radius); background: var(--glass-sheen), var(--surface-3); animation: pill-stretch var(--pill-slide-duration) var(--pill-slide-ease) both; }
+.highlight { display: block; width: 100%; height: 100%; border-radius: var(--pill-radius); background: var(--glass-sheen), var(--surface-selected); animation: pill-stretch var(--pill-slide-duration) var(--pill-slide-ease) both; }
 @keyframes pill-stretch { 0%, 100% { transform: scaleX(1); } 40% { transform: scaleX(var(--pill-stretch)); } }
 @media (prefers-reduced-motion: reduce) { .indicator, .root, .dock::before { transition: none; } .highlight { animation: none; } }

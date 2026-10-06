@@ -27,12 +27,12 @@ interface BalanceCategoryCardProps {
 export function BalanceCategoryCard({ label, value, changeAbs, changePercent, onClick }: BalanceCategoryCardProps) {
   const isUp = changeAbs >= 0;
   return (
-    <Card className={`${styles.root}`} padding={4} {...(onClick ? { onClick } : {})}>
+    <Card className={`${styles.root}`} padding={5} {...(onClick ? { onClick } : {})}>
       <div className={styles.labelRow}>
         {/* supporting, not label (2026-09-13 follow-up, direct feedback:
             "crypto and money labels in balances smaller") — one step down
             on the type ramp. */}
-        <Text type="supporting" color="secondary">
+        <Text type="supporting" color="secondary" data-eyebrow>
           {label}
         </Text>
         <Icon icon={ChevronRightIcon} size="sm" color="secondary" />

@@ -11,7 +11,7 @@ import styles from './ExploreComponents.module.css';
 export function ContentGroup({ title, href, layout, children }: ContentGroupProps & { children?: ReactNode }) {
   const headingRef = useRef<HTMLButtonElement>(null);
   return <section className={layout === 'page' ? styles.page : styles.group} aria-label={title}>
-    {title && <h2 className={styles.heading}>{href ? <Button label={title} href={href} data-explore-link={href}
+    {title && <h2 className={styles.heading} data-eyebrow>{href ? <Button label={title} href={href} data-explore-link={href}
       ref={headingRef} onClick={(event) => { event.preventDefault(); notifyPrototypeUnavailable(); }}
       variant="ghost" className={styles.headingLink} endContent={<Icon icon={ChevronRightIcon} size="sm" />} /> : title}</h2>}
     {href && <Tooltip anchorRef={headingRef} content={PROTOTYPE_NOTICE} placement="above" hasHoverIndication={false} />}

@@ -9,6 +9,7 @@ import { AccountExperience } from './AccountExperience';
 import { BuyEthTranscriptView } from './BuyEthTranscript';
 import { useBuyEthFlow } from '../../engine/useBuyEthFlow';
 import { ChatMessage, ChatMessageBubble } from '@astryxdesign/core/Chat';
+import { Text } from '@astryxdesign/core/Text';
 import { TextInput } from '@astryxdesign/core/TextInput';
 import { AssetsHomePage } from './AssetsHomePage';
 import { MoneyPage } from './MoneyPage';
@@ -95,7 +96,7 @@ export function MobileFrame(props: MobileFrameProps) {
     return (
       <div key={id}>
         <ChatMessage sender="user"><ChatMessageBubble>{text}</ChatMessageBubble></ChatMessage>
-        {voiceFeedback && <ChatMessage sender="assistant"><ChatMessageBubble>{voiceFeedback}</ChatMessageBubble></ChatMessage>}
+        {voiceFeedback && <ChatMessage sender="assistant"><Text type="body" as="p" className={styles.agentReply}>{voiceFeedback}</Text></ChatMessage>}
         {isLive && (
           <ThinkingTrail steps={liveSteps} activeIndex={liveActiveIndex} isComplete={liveIsComplete}
             elapsedMs={liveElapsedMs} skip={liveSkip} />
@@ -152,7 +153,7 @@ export function MobileFrame(props: MobileFrameProps) {
         <AccountExperience initialView={props.initialAccountView ?? 'closed'}>{(openAccounts) => (
         <div className={styles.chrome} inert={state.mode !== 'idle'} aria-hidden={state.mode !== 'idle'}>
           <header className={styles.header} aria-label="Asset search">
-            <Button label="Open account menu" variant="ghost" icon={<Avatar name="Preview user" size="small" />} isIconOnly onClick={openAccounts} />
+            <Button label="Open account menu" variant="ghost" icon={<Avatar name="Preview user" size="medium" />} isIconOnly onClick={openAccounts} />
             <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />
           </header>
           {/* Independent overlay elements, not .header/.dock pseudo-elements
@@ -164,7 +165,7 @@ export function MobileFrame(props: MobileFrameProps) {
           <div className={styles.topFade} aria-hidden="true" />
           {isHome ? (
             <main key="home" className={styles.page} aria-label="Home" tabIndex={0}>
-              <AssetsHomePage onSelectMoney={state.openMoney} />
+              <AssetsHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments} />
             </main>
           ) : state.activeTab === 'assets' ? (
             <main key="assets" className={styles.page} aria-label="Wallet" tabIndex={0}>

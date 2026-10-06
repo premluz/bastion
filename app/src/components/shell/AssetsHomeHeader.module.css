@@ -43,11 +43,11 @@
 }
 
 /* Crypto/Money side by side (2026-09-13) — replaces the action row, which
-   moved to its own WalletActionRow.tsx component. Gap matches
-   --shell-gap (2026-09-16, direct feedback: "gap between crypto and
-   money same as shell gap"), not its own independent --space-8. */
+   moved to its own WalletActionRow.tsx component. Gap tightened from
+   --shell-gap to --shell-card-gap (2026-10-05, direct feedback: "tighten
+   gaps between cards", superseding the 2026-09-16 shell-gap ruling). */
 .categoryRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--shell-gap);
+  gap: var(--shell-card-gap);
 }

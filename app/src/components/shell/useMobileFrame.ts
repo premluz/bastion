@@ -176,7 +176,8 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   // (2026-09-15) — a real navigation, not just a tab preselect, since
   // Money currently only opens from Home or the nav's own Wallet icon.
   const openMoney = () => { setActiveTab('assets'); setWalletTab('money'); setMode('idle'); };
+  const openInvestments = () => { setActiveTab('assets'); setWalletTab('crypto'); setMode('idle'); };
   return { mode, setMode, activeTab, value, setValue, messages, liveTrailMessageId, inputRef, submit, recognizesVoiceScenario,
     selectTab, openConversation, closeConversation, toggleComposer, assistantRef, closeComposer, conversationRef,
-    walletTab, setWalletTab, openMoney, selectedCard, openCard, closeCard };
+    walletTab, setWalletTab, openMoney, openInvestments, selectedCard, openCard, closeCard };
 }

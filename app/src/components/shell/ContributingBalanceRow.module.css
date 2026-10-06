@@ -1,6 +1,6 @@
 .track {
   display: flex;
-  gap: var(--space-8);
+  gap: var(--shell-card-gap);
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -12,12 +12,13 @@
 .card {
   display: flex;
   align-items: center;
-  gap: var(--space-8);
+  gap: var(--space-12);
   flex-shrink: 0;
-  padding: var(--space-8) var(--space-12);
-  border-radius: var(--shell-radius);
+  padding: var(--space-20);
+  border-radius: var(--shell-card-radius);
   border: var(--shell-edge-width) solid transparent;
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--glass-edge) border-box;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box, var(--glass-edge) border-box;
+  backdrop-filter: blur(var(--surface-blur));
 }
 
 .logo {

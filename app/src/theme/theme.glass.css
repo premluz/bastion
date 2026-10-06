@@ -10,6 +10,22 @@
   --surface-1: oklch(.19 .015 250 / .40);
   --surface-2: oklch(.22 .015 250 / .55);
   --surface-3: oklch(.26 .015 250 / .70);
+  /* Selected-tab fill (2026-10-05): this theme keeps its --surface-3 lift. */
+  --surface-selected: var(--surface-3);
+  /* Card fill (2026-10-05): this theme's cards keep their --surface-2 fill. */
+  --card-fill: var(--surface-2);
+  /* Line weight (2026-10-06): this theme keeps whole-pixel hairlines. */
+  --hairline-width: calc(var(--space-2) / 2);
+  /* Agent presence + orb state luminance (2026-10-06): this theme keeps its
+     accent-coloured glows and a constant-luminance orb. */
+  --presence: var(--accent-signal);
+  --orb-luminance-idle: 1;
+  --orb-luminance-listening: 1;
+  --orb-luminance-thinking: 1;
+  --orb-seam: var(--orb-liquid-ice);
+  /* Height of the assistant's bottom glow (2026-10-06): this theme keeps
+     the shell's original band. */
+  --halo-height: calc(var(--space-64) * 3);
 
   /* Opaque twin of --surface-1, for anything that must OCCLUDE rather than
      tint (e.g. content painted on top of a surface that should not show what

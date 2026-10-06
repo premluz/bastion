@@ -81,7 +81,6 @@ const CATEGORY_CHIPS = [
 ] as const;
 
 export function InvestmentsTab() {
-  const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const [period, setPeriod] = useState<InvestmentsPeriod>(DEFAULT_PERIOD);
   const [category, setCategory] = useState('all');
   const summary = resolveAssetsHomeSummary();
@@ -149,7 +148,7 @@ export function InvestmentsTab() {
         <TrendChart series={displaySeries} periods={['YTD']} activePeriod="YTD" onPeriodChange={() => {}} bleedHeight={120} />
       </div>
 
-      <WalletActionRow variant="wallet" shape="circle" size="compact" />
+      <WalletActionRow variant="wallet" shape="circle" />
 
       {summary.rows.length > 0 && (
         <AllocationBar segments={summary.rows.map((row) => ({ id: row.entityId, label: row.symbol, value: row.value }))} />
@@ -164,7 +163,7 @@ export function InvestmentsTab() {
       </div>
 
       {summary.rows.length > 0 ? (
-        <AssetsHomeList rows={summary.rows} selectedAssetId={selectedAssetId} onSelectAsset={setSelectedAssetId} />
+        <AssetsHomeList rows={summary.rows} />
       ) : (
         <EmptyState title="No assets yet" description="Connect a wallet to see your crypto holdings here." />
       )}

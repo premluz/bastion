@@ -9,7 +9,6 @@ import {
   EyeIcon,
   LockClosedIcon,
   PauseCircleIcon,
-  PaperAirplaneIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
 import { PROTOTYPE_NOTICE, notifyPrototypeUnavailable } from './PrototypeNotice';
@@ -25,10 +24,10 @@ import styles from './WalletActionRow.module.css';
 // mockup's action row repeats "Stake" twice, its own copy error rather
 // than a spec — Swap replaces the duplicate as a real, distinct wallet
 // action a crypto app's home screen plausibly needs.
+// Trimmed to Buy / Stake / Swap (2026-10-06, direct feedback: "on portfolio
+// only Buy, Stake, Swap") — Send/Receive live on Money's own row.
 const WALLET_ACTIONS = [
   { id: 'buy', label: 'Buy', icon: PlusIcon },
-  { id: 'send', label: 'Send', icon: PaperAirplaneIcon },
-  { id: 'receive', label: 'Receive', icon: ArrowDownTrayIcon },
   { id: 'stake', label: 'Stake', icon: LockClosedIcon },
   { id: 'swap', label: 'Swap', icon: ArrowsRightLeftIcon },
 ] as const;

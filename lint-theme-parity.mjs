@@ -26,7 +26,10 @@ function customPropertyNames(path) {
   return new Set(Array.from(matches, (match) => match[1]));
 }
 
-const isBridgeOverride = (prop) => prop.startsWith('--color-');
+// --font-family-* (2026-10-06) is the same direction-B bridge: a theme with
+// its own typeface (bastion → Geist) overrides Astryx's family variables,
+// the rest inherit Astryx's stack untouched.
+const isBridgeOverride = (prop) => prop.startsWith('--color-') || prop.startsWith('--font-family-');
 
 // Deliberate, ratified exceptions — asymmetry here is a decision on record,
 // not an omission. Only the exact documented files may skip the token;

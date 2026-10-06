@@ -30,6 +30,7 @@ interface AssetsHomeHeaderProps {
   changeAbs: number;
   changePercent: number;
   onSelectMoney?: () => void;
+  onSelectInvestments?: () => void;
 }
 
 // Balance glow (2026-09-12): reuses theme/glow.module.css's existing
@@ -54,7 +55,7 @@ interface AssetsHomeHeaderProps {
 // level up in AssetsHomePage.tsx). Crypto uses the same real totals as the
 // hero figure above it (one summary, two presentations); Money is the
 // placeholder documented above.
-export function AssetsHomeHeader({ totalValue, changeAbs, changePercent, onSelectMoney }: AssetsHomeHeaderProps) {
+export function AssetsHomeHeader({ totalValue, changeAbs, changePercent, onSelectMoney, onSelectInvestments }: AssetsHomeHeaderProps) {
   const isUp = changeAbs >= 0;
   // unclipped, not clipped (2026-09-13): .clipped puts overflow:hidden on
   // the glow host, and that host is only as tall as the balance block
@@ -64,14 +65,17 @@ export function AssetsHomeHeader({ totalValue, changeAbs, changePercent, onSelec
   return (
     <div
       className={`${styles.root} ${glowStyles.root} ${glowStyles.topLeft} ${glowStyles.topRight} ${glowStyles.unclipped}`}
+      // Accent, not the gain/loss colour (2026-10-05, direct feedback: the
+      // green aura should be a subtle copper accent) — the delta row below
+      // still carries the direction.
       style={{
-        '--glow-color': isUp ? 'var(--delta-up)' : 'var(--delta-down)',
+        '--glow-color': 'var(--accent-signal)',
         '--glow-strength': 'var(--tint-subtle)',
       } as React.CSSProperties}
     >
       <div className={glowStyles.content}>
         <div className={styles.portfolio}>
-          <Text type="label" color="secondary">
+          <Text type="label" color="secondary" data-eyebrow>
             Total balance
           </Text>
           <Heading level={1} type="display-1" className={heroBalanceStyles.heroBalance}>
@@ -86,9 +90,13 @@ export function AssetsHomeHeader({ totalValue, changeAbs, changePercent, onSelec
           </div>
         </div>
         <div className={styles.categoryRow}>
-          <BalanceCategoryCard label="Crypto" value={totalValue} changeAbs={changeAbs} changePercent={changePercent} />
+          {/* Money first, then Investments (2026-10-06, direct feedback: swap
+              them; "Crypto" renamed to Investments and opens Portfolio's
+              Investments tab). */}
           <BalanceCategoryCard label="Money" value={MONEY_PLACEHOLDER.value} changeAbs={MONEY_PLACEHOLDER.changeAbs}
             changePercent={MONEY_PLACEHOLDER.changePercent} {...(onSelectMoney ? { onClick: onSelectMoney } : {})} />
+          <BalanceCategoryCard label="Investments" value={totalValue} changeAbs={changeAbs} changePercent={changePercent}
+            {...(onSelectInvestments ? { onClick: onSelectInvestments } : {})} />
         </div>
       </div>
     </div>

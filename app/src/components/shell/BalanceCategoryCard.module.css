@@ -1,4 +1,4 @@
-/* Padding comes from Card's own padding={4} prop, not here — avoids
+/* Padding comes from Card's own padding={5} prop, not here — avoids
    doubling it on top of Card's own layout. Filled background, not
    panelFlat's border-only outline (2026-09-16, direct feedback: "make
    it fill not just outline") — same --surface-2 fill
@@ -11,13 +11,14 @@
   flex-direction: column;
   gap: var(--space-4);
   min-width: 0;
-  border-radius: var(--shell-radius);
+  border-radius: var(--shell-card-radius);
   /* Card's own default variant draws a themed border unconditionally
      (2026-09-16, direct feedback: "no border") — overridden here rather
      than switching Card to variant="transparent", which would also
      strip the background this component just added. */
   border: var(--shell-edge-width) solid transparent;
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--glass-edge) border-box;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box, var(--glass-edge) border-box;
+  backdrop-filter: blur(var(--surface-blur));
 }
 
 .labelRow {

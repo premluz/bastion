@@ -1,5 +1,15 @@
+/* One pane wrapping all asset rows (2026-10-05, direct feedback): same
+   card fill and hairline edge as the Crypto/Money tiles, rows flush with no
+   gap and no separators. Rows lose their own rounding so hover fills meet
+   the pane's clipped corners squarely. */
 .list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  border: var(--shell-edge-width) solid transparent;
+  border-radius: var(--shell-card-radius);
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box, var(--glass-edge) border-box;
+  backdrop-filter: blur(var(--surface-blur));
+  overflow: hidden;
 }
+.list section > div { gap: 0; }
+.list :global(.astryx-item):not(#\#):not(#\#):not(#\#) { border-radius: 0; padding-inline: var(--space-16); }

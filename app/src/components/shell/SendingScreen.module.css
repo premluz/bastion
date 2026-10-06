@@ -62,12 +62,11 @@
 .party {
   position: relative;
   z-index: 1;
-  border: var(--shell-edge-width) solid transparent;
   border-radius: var(--radius-full);
-  /* Opaque glass disc: the avatar's own fill is translucent, so without
+  /* Opaque flat disc, no edge (2026-10-06: the edge read as a darker ring): the avatar's own fill is translucent, so without
      this the ripples read straight through it (2026-10-01, direct
      feedback: "avatars on top of ripples"). */
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--glass-edge) border-box;
+  background: var(--surface-2);
   display: grid;
   place-items: center;
   width: var(--send-avatar-size);

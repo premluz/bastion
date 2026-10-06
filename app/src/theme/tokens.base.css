@@ -37,8 +37,15 @@
      genuine safety net (a blocked/slow font request), not the only
      thing actually rendering. */
   --font-voice: "Merriweather", Georgia, "Times New Roman", serif;
+  /* Geist / Geist Mono (2026-10-06): loaded in .storybook/preview-head.html,
+     the same sanctioned web-font injection point as Merriweather. */
+  --font-geist: "Geist", system-ui, sans-serif;
+  --font-geist-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
 
   /* Type ramp — dense-data bias, 13 is body */
+  /* 10 added 2026-10-06 for bastion's eyebrow labels (direct feedback:
+     "still smaller" after 11). */
+  --text-10: 10px;
   --text-11: 11px;
   --text-12: 12px;
   --text-13: 13px;

@@ -73,9 +73,11 @@
 
 /* The avatar is the same elevated glass as the search beside it (2026-10-01,
    direct feedback): top-lit edge, sheen, clear fill over the header's
-   deep blur, and the glass shadow. */
+   deep blur, and the glass shadow. Same height as the search (2026-10-06,
+   direct feedback), with a medium (48px) avatar filling it. */
 .header > :first-child {
   --_button-radius: var(--radius-full);
+  --size-element-md: var(--shell-search-height);
   border: var(--shell-edge-width) solid transparent;
   background: var(--glass-sheen) padding-box, linear-gradient(var(--glass-fill-clear), var(--glass-fill-clear)) padding-box, var(--glass-edge) border-box;
   box-shadow: var(--glass-shadow);
@@ -288,3 +290,7 @@
 @media (prefers-reduced-motion: reduce) {
   .header, .phone::before, .page, .content { transition: none; }
 }
+
+/* Agent replies speak in the voice face, like the send flow's own replies
+   (2026-10-06, direct feedback). */
+.agentReply { font-family: var(--face-voice); }

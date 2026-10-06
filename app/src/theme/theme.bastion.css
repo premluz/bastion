@@ -1,27 +1,52 @@
 /* Bastion — Safe One's component contract in a matte, architectural register.
-   Charcoal carries the surfaces; soft apricot warms interactions and reflected
-   light without reading as gilded metal. Status colours retain their meaning. */
+   Warm charcoal carries the surfaces; copper warms interactions and reflected
+   light without reading as gilded metal. Status colours retain their meaning.
+   2026-10-05 refinement (direct feedback against a reference): surfaces
+   warmed toward brown-black (hue 60), accent deepened from apricot to copper,
+   cards flat — uniform hairline edge, no sheen, no shadow — and the selected
+   tab a concrete grey rather than a near-white lift. */
 [data-theme='bastion'] {
   color-scheme: dark;
 
-  --surface-0: oklch(.12 .006 80);
-  --surface-1: oklch(.16 .007 80);
-  --surface-2: oklch(.20 .008 80);
-  --surface-3: oklch(.24 .009 80);
-  --ink-primary: oklch(.88 .01 85);
-  --ink-secondary: oklch(.70 .012 85);
-  --ink-muted: oklch(.51 .012 85);
+  /* 2026-10-06 reference values (supplied as hex 0B0B0A page, 0F0F0F raised
+     surface, 111110 @ 72% panes), converted exactly to OKLCH. Panes are
+     translucent so the page's ambient light reads through their blur. */
+  --surface-0: oklch(.149 .002 107);
+  --surface-1: oklch(.168 0 0);
+  --surface-2: oklch(.195 .003 100);
+  --surface-3: oklch(.23 .004 100);
+  --surface-selected: oklch(.3 .005 90);
+  --card-fill: oklch(.177 .002 107 / .72);
+  /* Lines: half-pixel hairlines, very subtle (2026-10-06). */
+  --hairline-width: .5px;
+  --ink-primary: oklch(.88 .01 70);
+  --ink-secondary: oklch(.70 .012 70);
+  --ink-muted: oklch(.51 .012 70);
 
-  --accent-signal: oklch(.82 .075 58);
-  --orb-liquid-blue: oklch(.8 .13 210);
-  --orb-liquid-ice: oklch(.94 .055 220);
-  --accent-alert: oklch(.66 .12 25);
-  --accent-warn: oklch(.76 .1 75);
-  --accent-ok: oklch(.73 .1 165);
-  --delta-up: oklch(.75 .12 162);
-  --delta-down: oklch(.69 .14 22);
-  --delta-up-bg: oklch(.75 .12 162 / .2);
-  --delta-down-bg: oklch(.69 .14 22 / .2);
+  /* Semantic split (2026-10-06, direct feedback): copper = action /
+     selection / brand; sage = positive; red-ochre = risk; champagne-white =
+     intelligence / agent presence. Copper is the supplied hex D78A4A; the orb
+     is the supplied champagne core E8DED0 and active glow D8C5AC (exact). */
+  --accent-signal: oklch(.701 .123 58.5);
+  --orb-liquid-blue: oklch(.833 .04 74.7);
+  --orb-liquid-ice: oklch(.905 .022 76.5);
+  --presence: oklch(.833 .04 74.7);
+  /* Voice states speak through luminance, not hue: idle dim ivory, listening
+     brighter, reasoning a touch lower with a faint copper seam. */
+  --orb-luminance-idle: .72;
+  --orb-luminance-listening: 1.08;
+  --orb-luminance-thinking: .94;
+  --orb-seam: oklch(.701 .123 58.5 / .55);
+  /* A taller, broader glow rising from the orb (2026-10-06, direct
+     feedback: "larger gradient from bottom where the orb is"). */
+  --halo-height: calc(var(--space-64) * 6);
+  --accent-alert: oklch(.64 .12 33);
+  --accent-warn: oklch(.74 .1 70);
+  --accent-ok: oklch(.74 .06 145);
+  --delta-up: oklch(.76 .07 145);
+  --delta-down: oklch(.66 .12 33);
+  --delta-up-bg: oklch(.76 .07 145 / .2);
+  --delta-down-bg: oklch(.66 .12 33 / .2);
   --tint-subtle: var(--opacity-12);
   --tint-medium: var(--opacity-18);
   --tint-strong: var(--opacity-40);
@@ -32,36 +57,40 @@
   --viz-4: oklch(.66 .09 285);
   --viz-5: oklch(.66 .08 25);
   --viz-6: oklch(.68 .08 115);
-  --edge: oklch(.72 .012 70 / .12);
-  --edge-highlight: oklch(.83 .018 70 / .22);
-  --surface-1-solid: oklch(.16 .007 80);
-  --pane-surface: oklch(.16 .007 80 / .92);
-  --glow: 0 0 12px oklch(from var(--orb-liquid-blue) l c h / .22);
-  --scrim: oklch(.09 .006 80 / .62);
+  --edge: oklch(.8 .01 80 / .09);
+  --edge-highlight: oklch(.85 .012 80 / .18);
+  --surface-1-solid: oklch(.168 0 0);
+  --pane-surface: oklch(.168 0 0 / .92);
+  --glow: 0 0 12px oklch(from var(--presence) l c h / .14);
+  --scrim: oklch(.09 .002 107 / .62);
 
-  /* Top-lit edges give the flat panels the depth of cut stone, not glass. */
-  --glass-fill: oklch(.16 .007 80 / .94);
-  --glass-fill-clear: oklch(.16 .007 80 / .84);
-  --glass-sheen: linear-gradient(to bottom, oklch(.9 .015 70 / .035), transparent 58%);
-  --glass-edge: linear-gradient(to bottom, oklch(.83 .015 70 / .19), oklch(.7 .012 70 / .07) 45%, oklch(.7 .012 70 / .04));
-  --glass-edge-accent: linear-gradient(to bottom, oklch(.85 .045 60 / .3), oklch(.82 .075 58 / .16) 48%, oklch(.82 .075 58 / .05));
-  --glass-shadow: inset 0 1px 0 oklch(.9 .02 80 / .04), 0 14px 32px -18px oklch(0 0 0 / .8);
+  /* Flat panels: a uniform hairline, no top-lit sheen or cast shadow. */
+  --glass-fill: oklch(.168 0 0 / .84);
+  --glass-fill-clear: oklch(.168 0 0 / .72);
+  --glass-sheen: none;
+  --glass-edge: linear-gradient(var(--edge), var(--edge));
+  --glass-edge-accent: linear-gradient(to bottom, oklch(.78 .07 52 / .32), oklch(.72 .095 52 / .16) 48%, oklch(.72 .095 52 / .06));
+  --glass-shadow: none;
+  /* Seamless glow rising from the bottom edge (2026-10-06, direct feedback:
+     no visible egg/radial; then "slightly more curve, lower, more blur"):
+     a broad low light just wider than the screen — a gentle curve, no hard
+     edge. Then "subtler, more blend into the background": lower peak and a
+     long multi-stop falloff that only reaches transparent at the very edge. */
   --halo-fill:
-    radial-gradient(42% 72% at 50% 100%, oklch(.94 .055 220 / .3), transparent 72%),
-    radial-gradient(62% 100% at 28% 100%, oklch(.72 .12 210 / .34), transparent 74%),
-    radial-gradient(58% 95% at 74% 100%, oklch(.5 .08 225 / .25), transparent 74%);
+    radial-gradient(130% 85% at 50% 100%, oklch(.905 .022 76.5 / .2), oklch(.905 .022 76.5 / .1) 35%, oklch(.905 .022 76.5 / .04) 65%, transparent 100%),
+    linear-gradient(to top, oklch(.833 .04 74.7 / .1), oklch(.833 .04 74.7 / .03) 40%, transparent 65%);
   --shell-ambient:
-    radial-gradient(72% 84% at 100% 0%, oklch(.45 .05 60 / .09), transparent 72%),
-    radial-gradient(55% 68% at 0% 0%, oklch(.52 .02 70 / .05), transparent 72%);
-  --shading-light: oklch(.85 .025 80 / .04);
+    radial-gradient(72% 84% at 100% 0%, oklch(.45 .06 52 / .09), transparent 72%),
+    radial-gradient(55% 68% at 0% 0%, oklch(.52 .02 60 / .05), transparent 72%);
+  --shading-light: oklch(.85 .025 60 / .04);
   --shading-dark: oklch(0 0 0 / .18);
   --shadow-low: 0px 1px 1px oklch(0 0 0 / .16), 0px 1px 4px oklch(0 0 0 / .16);
-  --surface-blur: var(--blur-z0);
+  --surface-blur: var(--blur-16);
   --surface-material: none;
   --spec-alpha: 0;
   --spec-radius: var(--spec-radius-lg);
   --surface-opacity: 1;
-  --canvas-backdrop: linear-gradient(155deg, oklch(.2 .009 80 / .16), transparent 38%);
+  --canvas-backdrop: linear-gradient(155deg, oklch(.195 .003 100 / .16), transparent 38%);
 
   --motion-enter-duration: var(--duration-200);
   --motion-enter-ease: var(--ease-standard);
@@ -71,7 +100,12 @@
   --motion-table-stagger: 30ms;
   --motion-chart-reveal-duration: var(--duration-480);
   --motion-shimmer-duration: var(--duration-1600);
-  --face-ui: var(--font-ui);
+  /* Geist sans / Geist Mono eyebrows (2026-10-06, direct feedback) — this
+     theme's own register, so --face-ui and Astryx's family variables are
+     overridden here only (logged in astryx-bridge.md). */
+  --face-ui: var(--font-geist);
+  --font-family-body: var(--font-geist);
+  --font-family-heading: var(--font-geist);
   --face-data: var(--font-data);
   --face-voice: var(--font-voice);
 
@@ -103,7 +137,8 @@
 }
 [data-theme='bastion'] .astryx-card.panelFlat {
   border: var(--shell-edge-width) solid transparent;
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--glass-edge) border-box;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box, var(--glass-edge) border-box;
+  backdrop-filter: blur(var(--surface-blur));
 }
 [data-theme='bastion'] .astryx-item.panelFlat:not(:hover) {
   background-color: var(--surface-2);
@@ -151,4 +186,19 @@
 }
 [data-theme='bastion'] .astryx-tooltip {
   color: var(--surface-1-solid);
+}
+
+/* Eyebrows (2026-10-06, direct feedback: titles like ASSETS and pane titles
+   like CRYPTO/CASH): Geist Mono, uppercase, wide tracking, small, secondary
+   ink. Elements opt in with the `data-eyebrow` role marker; other themes
+   leave them as they were. Descendants included so a heading's link label
+   follows; specificity matches Astryx's inflated text rules. */
+[data-theme='bastion'] [data-eyebrow]:not(#\#):not(#\#):not(#\#),
+[data-theme='bastion'] [data-eyebrow] :is(span, a, button):not(#\#):not(#\#):not(#\#) {
+  font-family: var(--font-geist-mono);
+  font-size: var(--text-10);
+  font-weight: 400;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
 }
