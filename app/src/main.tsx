@@ -18,10 +18,12 @@ import { MobileFrame } from './components/shell/MobileFrame';
 // (CLAUDE.md §2.1). Theme is set statically on <html> in index.html
 // (data-theme="bastion"); every other registered theme stays loaded so a
 // theme switch remains a pure attribute change.
+// The deployed app opens on the agent home (2026-10-09, direct feedback); the
+// assets home stays available as MobileFrame's default for Storybook.
 const root = document.getElementById('root');
 if (!root) throw new Error('index.html is missing its #root mount point.');
 createRoot(root).render(
   <StrictMode>
-    <MobileFrame />
+    <MobileFrame homeVariant="agent" />
   </StrictMode>,
 );
