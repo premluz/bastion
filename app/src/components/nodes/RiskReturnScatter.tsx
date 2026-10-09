@@ -1,4 +1,4 @@
-import { Cell, LabelList, ResponsiveContainer, Scatter, ScatterChart, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+import { Cell, LabelList, ResponsiveContainer, Scatter, ScatterChart, CartesianGrid, XAxis, YAxis, Tooltip, type TooltipContentProps } from 'recharts';
 import { Text } from '@astryxdesign/core/Text';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import type { RiskReturnScatterProps } from '../../contracts/props/risk-return-scatter';
@@ -13,9 +13,18 @@ import styles from './RiskReturnScatter.module.css';
 // --accent-signal; every other point renders in the shared --viz-2 peer
 // hue, same "the subject reads as itself, peers read as a set" register
 // TrendChart's own primary-series convention already establishes.
-function ScatterTooltip({ active, payload }: { active?: boolean; payload?: { payload: { label: string; x: number; y: number } }[] }) {
+interface ScatterPoint { label: string; x: number; y: number }
+
+// recharts hands the tooltip a readonly payload whose inner `payload` is
+// untyped, so the point is narrowed at runtime rather than asserted.
+function isScatterPoint(value: unknown): value is ScatterPoint {
+  return typeof value === 'object' && value !== null && 'label' in value && typeof value.label === 'string'
+    && 'x' in value && typeof value.x === 'number' && 'y' in value && typeof value.y === 'number';
+}
+
+function ScatterTooltip({ active, payload }: TooltipContentProps) {
   const point = payload?.[0]?.payload;
-  if (!active || !point) return null;
+  if (!active || !isScatterPoint(point)) return null;
   return (
     <div className={styles.tooltip}>
       <Text type="supporting" weight="semibold">
