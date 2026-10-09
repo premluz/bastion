@@ -74,5 +74,5 @@ test('transfer card shrinks smoothly into sending and stays settled on completio
   const completed = flow.locator('[data-payment-card="sent"]');
   await expect(completed).toBeVisible();
   expect(await completed.evaluate((element, settledHeight) => Math.abs(element.getBoundingClientRect().height - settledHeight), last)).toBeLessThan(1);
-  await expect(completed.getByRole('button', { name: 'Accept', exact: true })).toHaveCount(0);
+  await expect(completed.getByRole('button', { name: 'Confirm', exact: true })).toHaveCount(0);
 });

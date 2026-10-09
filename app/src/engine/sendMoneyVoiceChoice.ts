@@ -1,4 +1,5 @@
 import type { SendAction, SendState } from './sendMoneyState';
+import { parseConfirmation } from './voiceConfirmation';
 
 const recipients = [
   { word: /\bsmith\b/i, value: 'daniel-smith' },
@@ -11,6 +12,12 @@ const funding = [
 ] as const;
 
 export function parseSendVoiceChoice(text: string, state: SendState): SendAction | null {
+  // On the review card, yes / confirm / accept sends — deferred, as a voice
+  // Confirm tap is, so the confirmation clip plays before the money moves.
+  if (state.stage === 'review') {
+    const answer = parseConfirmation(text);
+    return answer === 'confirm' ? { type: 'accept', deferSending: true } : answer === 'cancel' ? { type: 'cancel' } : null;
+  }
   if (state.stage !== 'options') return null;
   if (state.questionIndex === 0) {
     const matches = recipients.filter(({ word }) => word.test(text));

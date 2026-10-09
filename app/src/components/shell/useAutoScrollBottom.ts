@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 // Keeps a scrollable transcript pinned to its latest content (2026-09-14,
 // direct feedback: a settled scene/question card rendered below the fold
@@ -17,16 +17,20 @@ import { useEffect, useRef } from 'react';
 // new content's layout was not yet committed at that point; MutationObserver
 // instead fires once the DOM mutation it is reacting to has already
 // landed, so scrollHeight is always current by the time it runs).
+//
+// A callback ref, not a mount-time effect (2026-10-09): the agent home's
+// thread mounts only once there is a command, long after this hook first ran,
+// so an effect reading ref.current on mount never saw it. The observer now
+// attaches whenever an element arrives and detaches when it leaves.
 export function useAutoScrollBottom() {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const scrollToBottom = () => el.scrollTo({ top: el.scrollHeight });
+  const observer = useRef<MutationObserver | null>(null);
+  return useCallback((element: HTMLDivElement | null) => {
+    observer.current?.disconnect();
+    observer.current = null;
+    if (!element) return;
+    const scrollToBottom = () => element.scrollTo({ top: element.scrollHeight });
     scrollToBottom();
-    const observer = new MutationObserver(scrollToBottom);
-    observer.observe(el, { childList: true, subtree: true, characterData: true });
-    return () => observer.disconnect();
+    observer.current = new MutationObserver(scrollToBottom);
+    observer.current.observe(element, { childList: true, subtree: true, characterData: true });
   }, []);
-  return ref;
 }

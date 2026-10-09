@@ -1,0 +1,98 @@
+/* Bottom-anchored stacking unit above the menus' scrim (z 5), like the pill
+   dock, so the triggers stay bright and clickable while a menu is open. */
+.dock {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 6;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.dock::before {
+  content: '';
+  position: absolute;
+  inset: calc(var(--space-32) * -1) 0 0;
+  z-index: -1;
+  background: var(--agent-dock-shade);
+  pointer-events: none;
+}
+
+/* The orb overlaps the row below it, so the two side triggers sit level
+   with its lower half and the greeting tucks under it. */
+.orb {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  margin-bottom: calc(var(--space-32) * -1);
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  --assistant-orb-expanded-size: var(--agent-dock-orb-size);
+  --assistant-orb-color-a: var(--agent-orb-color-a);
+  --assistant-orb-color-b: var(--agent-orb-color-b);
+  --assistant-orb-aura: var(--agent-orb-aura);
+  view-transition-name: agent-orb;
+  transition: scale var(--press-release-duration) var(--press-release-ease);
+}
+.orb:focus-visible { outline: var(--shell-edge-width) solid var(--presence); outline-offset: var(--space-4); }
+/* No surface disc behind the liquid: the orb is light, not an object. */
+.dock .orb [data-liquid-supported] { background: transparent; border: 0; box-shadow: none; }
+/* Only one orb may own the voice-morph names; the conversation overlay's. */
+.dock .orb [class] { view-transition-name: none; }
+
+.dock:not([data-awake='true']) .orb > * {
+  opacity: var(--agent-orb-sleep-opacity);
+  animation: agent-orb-sleep var(--agent-orb-sleep-period) var(--ease-standard) infinite alternate;
+}
+@media (hover: hover) { .dock:not([data-awake='true']) .orb:hover { scale: var(--press-hover-scale); } }
+.dock:not([data-awake='true']) .orb:active { scale: var(--press-active-scale); transition-duration: var(--press-in-duration); transition-timing-function: var(--press-in-ease); }
+.row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  pointer-events: none;
+}
+.row > * { pointer-events: auto; }
+.greeting:not(#\#):not(#\#):not(#\#) {
+  align-self: end;
+  padding-bottom: var(--space-4);
+  text-align: center;
+  color: var(--presence);
+}
+
+/* The conversation, in place: once the home's contents have faded out
+   (AgentHomePage, bottom-up), the thread rises where they were — same
+   backdrop, no new screen. */
+.thread {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: safe flex-end;
+  gap: var(--shell-gap);
+  padding: var(--shell-header-height) var(--shell-inset) var(--agent-dock-height);
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  mask: var(--shell-transcript-mask);
+  animation: agent-thread-in var(--agent-thread-duration) var(--motion-enter-ease) var(--agent-thread-delay) both;
+}
+
+/* Dock morph names (theme/dock-morph.css): the nav trigger becomes the stop
+   button and the greeting the live caption, each on its own clock; the +
+   leaves. The orb holds its place throughout. */
+.navToggle { view-transition-name: dock-nav-1; }
+.greeting { view-transition-name: dock-nav-2; }
+.plusToggle { view-transition-name: dock-nav-5; }
+
+@keyframes agent-orb-sleep { to { opacity: var(--agent-orb-sleep-breath); } }
+@keyframes agent-thread-in { from { opacity: 0; translate: 0 var(--space-16); } }
+@media (prefers-reduced-motion: reduce) {
+  .dock:not([data-awake='true']) .orb > *, .thread { animation: none; }
+  .orb { transition: none; }
+}

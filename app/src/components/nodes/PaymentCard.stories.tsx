@@ -12,6 +12,5 @@ export const Insufficient: Story = { args: { mode: 'editing', amount: '70.00', e
 export const Sent: Story = { args: { title: 'Transfer to Daniel Smith', mode: 'sent', balance: '$11.92' } };
 const inlineArgs = { presentation: 'inline' as const, title: 'Transfer to Daniel Jones', recipient: 'Daniel Jones' };
 export const InlineConfirm: Story = { args: inlineArgs };
-export const VoiceConfirm: Story = { args: { ...inlineArgs, interaction: 'voice' } };
 export const InlinePending: Story = { args: { ...inlineArgs, mode: 'sending' } };
 export const InlineResult: Story = { args: { ...inlineArgs, mode: 'sent', balance: '$11.92' } };

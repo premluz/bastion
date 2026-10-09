@@ -1,17 +1,13 @@
-import { useSendMoneyFlows } from '../../engine/useSendMoneyFlows';
-import { parseSendVoiceChoice } from '../../engine/sendMoneyVoiceChoice';
-import { SendMoneyTranscript } from './SendMoneyTranscript';
 import { SendingScreenMount, isSendingScreenOpen } from './SendingScreenMount';
 import { TouchIndicators } from './TouchIndicators';
 import { Avatar } from '@astryxdesign/core/Avatar';
 import { Button } from '@astryxdesign/core/Button';
 import { AccountExperience } from './AccountExperience';
-import { BuyEthTranscriptView } from './BuyEthTranscript';
-import { useBuyEthFlow } from '../../engine/useBuyEthFlow';
-import { ChatMessage, ChatMessageBubble } from '@astryxdesign/core/Chat';
-import { Text } from '@astryxdesign/core/Text';
 import { TextInput } from '@astryxdesign/core/TextInput';
 import { AssetsHomePage } from './AssetsHomePage';
+import { AgentHomePage } from './AgentHomePage';
+import { AgentDock } from './AgentDock';
+import { useAgentHome } from './useAgentHome';
 import { MoneyPage } from './MoneyPage';
 import { CardDetailPage } from './CardDetailPage';
 import { WALLET_CARDS } from './cardData';
@@ -22,11 +18,12 @@ import { MobileFrameDock } from './MobileFrameDock';
 import { useExploreNavigation } from './useExploreNavigation';
 import { useMobileFrame, type MobileFrameProps } from './useMobileFrame';
 import { SceneRenderer } from '../../renderer/SceneRenderer';
-import { ThinkingTrail } from '../trail/ThinkingTrail';
-import { useTrailStore } from '../../engine/stores/trailStore';
 import { useAutoScrollBottom } from './useAutoScrollBottom';
+import { useTranscriptNodes } from './useTranscriptNodes';
 import { useSpeechRecognition } from './useSpeechRecognition';
-import { useSendVoicePlayback } from './useSendVoicePlayback';
+import { useVoiceNarration } from './useVoiceNarration';
+import { useScenarioThread } from './useScenarioThread';
+import { useAgentAgenda } from './useAgentAgenda';
 import { useAssistantSounds } from './useAssistantSounds';
 import { PrototypeNoticeProvider } from './PrototypeNotice';
 import styles from './MobileFrame.module.css';
@@ -38,23 +35,18 @@ import styles from './MobileFrame.module.css';
 // is local (useMobileFrame) until ScreenStack/pageStore lands in Phase 3.
 export function MobileFrame(props: MobileFrameProps) {
   const state = useMobileFrame(props);
-  const send = useSendMoneyFlows(state.messages);
-  const voiceChoice = (text: string) => {
-    for (const message of [...state.messages].reverse()) {
-      const flow = send.flows[message.id];
-      if (flow?.stage === 'options') {
-        const action = parseSendVoiceChoice(text, flow);
-        return action ? { id: message.id, action } : null;
-      }
-    }
-    return null;
-  };
+  const thread = useScenarioThread(state);
+  const { send } = thread;
+  // A final utterance answers whatever is waiting on the user, else it is a new request.
   const speech = useSpeechRecognition(state.mode === 'conversation', (text) => {
-    const choice = voiceChoice(text);
-    if (choice) send.dispatch(choice.id, choice.action);
+    const answer = thread.routeVoice(text);
+    if (answer) answer();
     else state.submit(text, 'voice');
-  }, async (text) => Boolean(voiceChoice(text)) || state.recognizesVoiceScenario(text));
-  const voicePlayback = useSendVoicePlayback(state.mode === 'conversation', state.messages, send.flows, speech, send.dispatch);
+  }, async (text) => Boolean(thread.routeVoice(text)) || state.recognizesVoiceScenario(text));
+  const voicePlayback = useVoiceNarration(state.mode === 'conversation', thread.narrationTargets, speech);
+  const agent = useAgentHome(state, speech, voicePlayback);
+  const isAgentHome = props.homeVariant === 'agent';
+  useAgentAgenda(state, thread.isFinished, isAgentHome && agent.isAwake, agent.threadStart);
   const startConversationVoice = () => {
     state.openConversation();
     speech.start();
@@ -64,64 +56,7 @@ export function MobileFrame(props: MobileFrameProps) {
   useAssistantSounds(state.mode, speech.isListening, speech.isSuspended);
   const sendPresentation = props.sendPresentation ?? 'inline';
   const sendingOpen = sendPresentation === 'overlay' && isSendingScreenOpen(send.flows);
-  // Live trail state (2026-09-13) — subscribed via the hook, not
-  // getState(), so this component re-renders as playTrail advances
-  // activeIndex/elapsedMs. Read unconditionally (cheap, a handful of
-  // primitives) and applied only to the one message useMobileFrame marks
-  // as liveTrailMessageId — the same "one turn in flight" model
-  // useTrailStore's own single-slot shape assumes on desktop.
-  const liveSteps = useTrailStore((trail) => trail.steps);
-  const liveActiveIndex = useTrailStore((trail) => trail.activeIndex);
-  const liveIsComplete = useTrailStore((trail) => trail.isComplete);
-  const liveElapsedMs = useTrailStore((trail) => trail.elapsedMs);
-  const liveSkip = useTrailStore((trail) => trail.skip);
-  // One flow for the whole shell, not one per rendered transcript
-  // (2026-09-13): the same transcript array mounts in both the composer
-  // surface and the conversation overlay, so a flow owned inside the
-  // transcript ran twice, with two independent timer sets. Hooks cannot
-  // run per-item inside the map below, so this keys off the most recent
-  // buy message — the only one whose flow is actually in play.
-  const latestBuyAmount = [...state.messages].reverse().find((message) => message.buyAmount != null)?.buyAmount ?? 0;
-  const buyFlow = useBuyEthFlow(latestBuyAmount);
-  // Resolved scenes render right after their own message and its thinking
-  // trail (2026-09-13) — same shape BuyEthTranscript.tsx already
-  // established for the buy-flow's own hand-built scenes (<ChatMessage>
-  // for the query, content beneath it for the result), and the same
-  // trail-before-scene sequencing presentScene.ts already establishes on
-  // desktop: the trail plays first, the scene attaches once it settles.
-  // A message with neither a live trail nor a settled one (still
-  // resolving, or the resolver found no match) renders as plain text.
-  const transcript = state.messages.map(({ id, text, scene, trail, trailElapsedMs, buyAmount, voiceFeedback }) => {
-    const isLive = state.liveTrailMessageId === id;
-    return (
-      <div key={id}>
-        <ChatMessage sender="user"><ChatMessageBubble>{text}</ChatMessageBubble></ChatMessage>
-        {voiceFeedback && <ChatMessage sender="assistant"><Text type="body" as="p" className={styles.agentReply}>{voiceFeedback}</Text></ChatMessage>}
-        {isLive && (
-          <ThinkingTrail steps={liveSteps} activeIndex={liveActiveIndex} isComplete={liveIsComplete}
-            elapsedMs={liveElapsedMs} skip={liveSkip} />
-        )}
-        {!isLive && trail && (
-          <ThinkingTrail steps={trail} activeIndex={trail.length - 1} isComplete elapsedMs={trailElapsedMs ?? 0} skip={null} />
-        )}
-        {scene && <SceneRenderer scene={scene} />}
-        {send.flows[id] && <SendMoneyTranscript state={send.flows[id]} presentation={sendPresentation}
-          interactionMode={state.mode === 'conversation' ? 'voice' : 'chat'}
-          dispatch={(action) => send.dispatch(id, action)} />}
-        {/* Buy flow renders inline, as one more result under its own
-            message (2026-09-13, direct feedback: "inline — for all
-            scenarios entering into composer just runs the scenario in
-            that view, unless the conversation icon is clicked"). This
-            replaces a whole-shell early return that unmounted the entire
-            frame, which is why Enter looked like it jumped to
-            conversation mode: the nav and composer were not hidden, the
-            shell itself was gone. hideQuery suppresses BuyEthTranscript's
-            own user bubble — the loop above already drew one for this
-            same message. */}
-        {buyAmount != null && <BuyEthTranscriptView query={text} amount={buyAmount} hideQuery flow={buyFlow} />}
-      </div>
-    );
-  });
+  const transcript = useTranscriptNodes(state, thread, sendPresentation);
   // Home tab (2026-09-12, revised 2026-09-13): renders AssetsHomePage below
   // the SAME shared avatar/search header every other tab uses, rather than
   // a second copy of it — direct feedback clarified the fixed region is
@@ -138,6 +73,9 @@ export function MobileFrame(props: MobileFrameProps) {
   // had nothing left to animate and the content vanished outright
   // instead of scaling and blurring back.
   const isHome = state.activeTab === 'home';
+  // Agent home (2026-10-09): voice mode runs in place inside the shell, so
+  // neither assistant overlay opens and the page stays live under the dock.
+  const chromeInert = !isAgentHome && state.mode !== 'idle';
   const selectedCardData = state.selectedCard && WALLET_CARDS.find((candidate) => candidate.id === state.selectedCard!.id);
   // Pinned to the latest content (2026-09-14, direct feedback: a settled
   // question card rendered below the fold with no way to see it besides
@@ -149,12 +87,14 @@ export function MobileFrame(props: MobileFrameProps) {
   return (
     <PrototypeNoticeProvider>
     <div className={styles.stage}>
-      <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode}>
+      <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode} data-home={props.homeVariant ?? 'assets'}>
         <AccountExperience initialView={props.initialAccountView ?? 'closed'}>{(openAccounts) => (
-        <div className={styles.chrome} inert={state.mode !== 'idle'} aria-hidden={state.mode !== 'idle'}>
+        <div className={styles.chrome} inert={chromeInert} aria-hidden={chromeInert}>
           <header className={styles.header} aria-label="Asset search">
             <Button label="Open account menu" variant="ghost" icon={<Avatar name="Preview user" size="medium" />} isIconOnly onClick={openAccounts} />
-            <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />
+            {/* Agent home moves Explore into the dock's menu; the spacer keeps the avatar its own size. */}
+            {isAgentHome ? <span aria-hidden="true" />
+              : <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />}
           </header>
           {/* Independent overlay elements, not .header/.dock pseudo-elements
               (2026-09-14, direct feedback: header painted under its own
@@ -165,7 +105,9 @@ export function MobileFrame(props: MobileFrameProps) {
           <div className={styles.topFade} aria-hidden="true" />
           {isHome ? (
             <main key="home" className={styles.page} aria-label="Home" tabIndex={0}>
-              <AssetsHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments} />
+              {isAgentHome ? <AgentHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments}
+                onSuggestion={agent.ask} isReceding={agent.isWorking} />
+                : <AssetsHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments} />}
             </main>
           ) : state.activeTab === 'assets' ? (
             <main key="assets" className={styles.page} aria-label="Wallet" tabIndex={0}>
@@ -179,14 +121,17 @@ export function MobileFrame(props: MobileFrameProps) {
             <main className={styles.content} aria-label="Preview transcript" tabIndex={0}>{transcript}</main>
           )}
           <div className={styles.bottomFade} aria-hidden="true" />
-          <MobileFrameDock state={state} variant={props.navigationVariant ?? 'pill'} />
+          {isAgentHome ? <AgentDock isAwake={agent.isAwake} activeTab={state.activeTab} onWake={agent.wake} onSleep={agent.sleep}
+            onNavigate={state.selectTab} thread={transcript.slice(agent.threadStart)} isWorking={agent.isWorking} caption={agent.caption}
+            activity={agent.activity} speaking={voicePlayback.isSpeaking} threadRef={conversationScrollRef} orbRef={state.assistantRef} />
+            : <MobileFrameDock state={state} variant={props.navigationVariant ?? 'pill'} />}
           {selectedCardData && <CardDetailPage card={selectedCardData} sourceRect={state.selectedCard!.sourceRect} onClose={state.closeCard} />}
           </div> )}</AccountExperience></div>
       <ComposerModeOverlay isOpen={state.mode === 'composer'} onClose={state.closeComposer} scrollRef={composerScrollRef} isReceded={sendingOpen}
         composer={<MobileFrameComposer state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />}>
         {transcript}
       </ComposerModeOverlay>
-      <ConversationModeOverlay isOpen={state.mode === 'conversation'} onClose={state.closeConversation} sharedOrb={props.navigationVariant === 'classic'}
+      <ConversationModeOverlay isOpen={state.mode === 'conversation' && !isAgentHome} onClose={state.closeConversation} sharedOrb={props.navigationVariant === 'classic'}
         scrollRef={conversationScrollRef} isReceded={sendingOpen} speech={speech} audioError={voicePlayback.error}
         assistantSpeaking={voicePlayback.isSpeaking}>
         {transcript}

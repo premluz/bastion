@@ -23,4 +23,12 @@ describe('send voice choices', () => {
   it('does not select after the questions finish', () => {
     expect(parseSendVoiceChoice('Smith', { ...recipient, stage: 'review' })).toBeNull();
   });
+  it('confirms or cancels the review card by voice, like the mortgage top-up', () => {
+    const review = { ...recipient, stage: 'review' as const };
+    for (const said of ['Yes', 'Confirm', 'accept it', 'yeah go ahead'])
+      expect(parseSendVoiceChoice(said, review)).toEqual({ type: 'accept', deferSending: true });
+    expect(parseSendVoiceChoice('No, cancel', review)).toEqual({ type: 'cancel' });
+    expect(parseSendVoiceChoice('yes, no', review)).toBeNull();
+    expect(parseSendVoiceChoice('yes', { ...recipient, stage: 'editing' })).toBeNull();
+  });
 });

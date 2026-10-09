@@ -1,0 +1,116 @@
+{
+  "id": "mortgage-top-up",
+  "title": "Top up mortgage account",
+  "intents": [],
+  "thinking": [
+    {
+      "id": "mortgage",
+      "kind": "retrieve",
+      "label": "Checking your mortgage account…",
+      "detail": "Balance $1,050.00 · repayment of $1,240.00 due today.",
+      "durationMs": 850
+    },
+    {
+      "id": "shortfall",
+      "kind": "correlate",
+      "label": "Working out the shortfall…",
+      "detail": "It’s $190.00 short.",
+      "durationMs": 850
+    },
+    {
+      "id": "sources",
+      "kind": "retrieve",
+      "label": "Looking for funds to cover it…",
+      "detail": "Your Money balance or USDC can cover it.",
+      "durationMs": 850
+    }
+  ],
+  "data": {},
+  "layout": {
+    "id": "root",
+    "type": "content-group",
+    "props": {
+      "layout": "stack"
+    },
+    "children": [
+      {
+        "id": "top-up-findings",
+        "type": "thinking-findings",
+        "props": {
+          "label": "Checking your mortgage",
+          "steps": [
+            {
+              "id": "mortgage",
+              "kind": "retrieve",
+              "label": "Checking your mortgage account…",
+              "detail": "Balance $1,050.00 · repayment of $1,240.00 due today.",
+              "durationMs": 850
+            }
+          ],
+          "activeIndex": 0,
+          "isComplete": false
+        }
+      },
+      {
+        "id": "top-up-message",
+        "type": "text-block",
+        "props": {
+          "text": "Your mortgage account is $190 short for today’s $1,240 repayment."
+        }
+      },
+      {
+        "id": "top-up-source",
+        "type": "approval-card",
+        "props": {
+          "questionId": "top-up-source",
+          "prompt": "Where should the $190 come from?",
+          "questionIndex": 0,
+          "questionCount": 1,
+          "allowSkip": false,
+          "navigationMode": "continue-only",
+          "options": [
+            {
+              "value": "money",
+              "label": "Money balance",
+              "description": "$3,475.45 available"
+            },
+            {
+              "value": "usdc",
+              "label": "USDC",
+              "description": "950 USDC, converted to USD at no fee"
+            }
+          ]
+        }
+      },
+      {
+        "id": "top-up-acknowledgement",
+        "type": "text-block",
+        "props": {
+          "text": "Got it. Here’s the top-up."
+        }
+      },
+      {
+        "id": "top-up-payment",
+        "type": "payment-card",
+        "props": {
+          "title": "Top up Mortgage account",
+          "recipient": "Mortgage account",
+          "amount": "190.00",
+          "purpose": "Today’s repayment",
+          "from": "Money balance",
+          "fee": "No fees",
+          "arrival": "Instantly",
+          "balance": "$3,475.45",
+          "note": "Simulated transfer."
+        }
+      },
+      {
+        "id": "top-up-outcome",
+        "type": "text-block",
+        "props": {
+          "text": "Done. Your mortgage account now covers today’s repayment."
+        }
+      }
+    ]
+  }
+}

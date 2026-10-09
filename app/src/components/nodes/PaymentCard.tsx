@@ -50,18 +50,18 @@ function InlineStateLabel({ label, pending }: { label: string; pending: boolean 
   </div>;
 }
 
-function PaymentActions({ mode, error, interaction }: Pick<PaymentCardProps, 'mode' | 'error' | 'interaction'>) {
+function PaymentActions({ mode, error }: Pick<PaymentCardProps, 'mode' | 'error'>) {
   const editing = mode === 'editing';
   const terminal = mode === 'confirming' || mode === 'sending' || mode === 'sent' || mode === 'cancelled';
-  const primary = <span data-payment-action={editing ? 'save' : 'accept'}><Button label={editing ? 'Review changes' : 'Accept'}
+  const primary = <span data-payment-action={editing ? 'save' : 'accept'}><Button label={editing ? 'Review changes' : 'Confirm'}
     variant="primary" className={styles.chip} isDisabled={Boolean(error)} /></span>;
   const edit = !editing && mode !== 'funding' && <span data-payment-action="edit"><Button label="Edit" className={styles.chip} /></span>;
   const cancel = <span data-payment-action="cancel"><Button label="Cancel" variant="ghost" className={styles.chip} /></span>;
-  // Voice mode (2026-10-07, direct feedback): Cancel · Edit · Accept, pushed
-  // right so the primary sits under the thumb; DOM order matches visual order.
+  // Cancel · Edit · Confirm, pushed right so the primary sits under the thumb
+  // (2026-10-07 voice, extended to chat 2026-10-09); DOM order matches visual.
   return <div className={styles.actionsViewport} data-hidden={terminal ? '' : undefined} inert={terminal} aria-hidden={terminal}>
-    <div className={styles.actions} data-interaction={interaction}>
-      {interaction === 'voice' ? <>{cancel}{edit}{primary}</> : <>{primary}{edit}{cancel}</>}
+    <div className={styles.actions}>
+      {cancel}{edit}{primary}
     </div>
   </div>;
 }
@@ -96,7 +96,7 @@ export function PaymentCard(props: PaymentCardProps) {
       </>}
       {editing && <Text type="supporting" color="secondary">Main balance: {props.balance}</Text>}
       {props.error && <Text role="alert">{props.error}</Text>}
-      <PaymentActions mode={props.mode} error={props.error} interaction={props.interaction} />
+      <PaymentActions mode={props.mode} error={props.error} />
     </Card>
     {props.note && <Text type="supporting" color="secondary">{props.note}</Text>}
   </div>;

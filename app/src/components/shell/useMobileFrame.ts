@@ -1,5 +1,8 @@
 import { parseSendRequest, type SendRequest } from '../../engine/sendMoneyState';
+import { parseTopUpRequest, type TopUpRequest } from '../../engine/mortgageTopUpState';
+import type { AgendaItemId } from '../../engine/agentAgenda';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import type { TranscriptMessage } from './transcriptMessage';
 import type { ChatComposerInputHandle } from '@astryxdesign/core/Chat';
 import type { TabDestination } from './TabBar';
 import { parseBuyEthAmount } from '../../engine/buyEthScenes';
@@ -14,6 +17,8 @@ export type ShellPreviewMode = 'idle' | 'composer' | 'conversation';
 
 export interface MobileFrameProps {
   navigationVariant?: 'pill' | 'classic';
+  /** 'agent': assistant suggestions on Home and a persistent orb dock that wakes in place. */
+  homeVariant?: 'assets' | 'agent';
   sendPresentation?: 'inline' | 'overlay';
   initialPurchaseQuery?: string;
   initialAccountView?: import('./accountTypes').AccountInitialView;
@@ -21,41 +26,6 @@ export interface MobileFrameProps {
   initialMessages?: readonly string[];
 }
 
-export interface TranscriptMessage {
-  id: number;
-  text: string;
-  // Settled trail (2026-09-13): only present once playTrail's own
-  // onComplete has fired for this message — mirrors Transcript.tsx's own
-  // settled-vs-live split (a past turn's frozen turn.trail/
-  // trailElapsedMs vs. the one turn currently in flight, read live from
-  // useTrailStore). Bastion has no sessionStore turn to freeze this onto,
-  // so it lives on the message itself instead.
-  trail?: ThinkingStep[];
-  trailElapsedMs?: number;
-  // Set once the trail completes (undefined while pending/no match) —
-  // same manifest/keywordResolver ChatBar.tsx already uses on desktop,
-  // resolved directly rather than through submitQuery/presentScene: those
-  // orchestrate sessionStore/artifactStore, Merlin's desktop artifact-
-  // stack overlay model that CLAUDE.md §3 says does not carry over to a
-  // single-column mobile shell. playTrail/useTrailStore themselves carry
-  // no such coupling (a plain zustand store, pure-props ThinkingTrail) —
-  // reused as-is, same sequencing presentScene.ts already establishes:
-  // trail plays first, scene attaches only once it completes.
-  scene?: HydratedScene;
-  // Set when the query parses as a buy-ETH request (2026-09-13, direct
-  // feedback: "inline — for all scenarios entering into composer just
-  // runs the scenario in that view, unless the conversation icon is
-  // clicked"). Lives on the message so the buy flow renders inside the
-  // transcript like any other scenario result, rather than through the
-  // whole-shell takeover this replaces — that early return unmounted the
-  // entire shell, which is why pressing Enter looked like a jump to
-  // conversation mode: the nav and composer were not hidden, they were
-  // gone.
-  buyAmount?: number;
-  sendRequest?: SendRequest;
-  source?: 'voice';
-  voiceFeedback?: string;
-}
 
 const VOICE_UNAVAILABLE_REPLY = 'I can’t help with that yet. Try saying, “Send 50 dollars to Daniel for coffee.”';
 
@@ -65,6 +35,7 @@ const VOICE_UNAVAILABLE_REPLY = 'I can’t help with that yet. Try saying, “Se
 // presentScene.ts already use on desktop), but there is still no page
 // store or session/artifact store; those remain out of scope until Phase 4/6
 // (CLAUDE.md). Final voice utterances use the same submission path as typed input.
+export type { TranscriptMessage } from './transcriptMessage';
 export function useMobileFrame({ initialMode = 'idle', initialMessages = [], initialPurchaseQuery = '' }: MobileFrameProps) {
   const [mode, setMode] = useState<ShellPreviewMode>(initialMode);
   const [activeTab, setActiveTab] = useState<TabDestination>('home');
@@ -115,7 +86,7 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   // keeps ids unique whether or not it did.
   const nextId = useRef(messages.length);
   const resolver = useMemo(() => createKeywordResolver(), []);
-  const recognizesVoiceScenario = async (text: string) => parseSendRequest(text) !== null
+  const recognizesVoiceScenario = async (text: string) => parseSendRequest(text) !== null || parseTopUpRequest(text) !== null
     || parseBuyEthAmount(text) !== null || (await resolver.resolve(text)) !== null;
   const inputRef = useRef<ChatComposerInputHandle>(null);
   const assistantRef = useRef<HTMLButtonElement>(null);
@@ -129,7 +100,9 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
     }
     previousMode.current = mode;
   }, [mode]);
-  const submit = (text: string, source?: 'voice') => {
+  // `intent`: what the turn asks for when it differs from what was said — a
+  // "yes" to an agenda offer runs that offer's prompt.
+  const submit = (text: string, source?: 'voice', intent = text) => {
     if (!text.trim()) return;
     const trimmed = text.trim();
     const id = nextId.current++;
@@ -137,17 +110,18 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
     // transcript, exactly like a resolver-matched scene does below. The
     // resolver still runs for these too — "buy eth" simply matches no
     // manifest intent today, so it stays a plain message plus this flow.
-    const buyAmount = parseBuyEthAmount(trimmed);
-    const sendRequest = parseSendRequest(trimmed);
-    setMessages((current) => [...current, { id, text: trimmed, ...(sendRequest ? { sendRequest } : {}),
+    const buyAmount = parseBuyEthAmount(intent);
+    const sendRequest = parseSendRequest(intent);
+    const topUpRequest = sendRequest ? null : parseTopUpRequest(intent);
+    setMessages((current) => [...current, { id, text: trimmed, ...(sendRequest ? { sendRequest } : {}), ...(topUpRequest ? { topUpRequest } : {}),
       ...(buyAmount !== null ? { buyAmount } : {}), ...(source ? { source } : {}) }]);
     setValue('');
-    if (sendRequest) return;
+    if (sendRequest || topUpRequest) return;
     // Fire-and-attach: the message is already in the transcript by the time
     // this settles, same "honest non-match" contract submitQuery.ts
     // documents — a null result just leaves the message plain text, no
     // trail and no scene attached, never a crash or a stuck loading state.
-    void resolver.resolve(trimmed).then((resolved) => {
+    void resolver.resolve(intent.trim()).then((resolved) => {
       if (!resolved) {
         if (source === 'voice' && buyAmount === null) setMessages((current) => current.map((message) =>
           message.id === id ? { ...message, voiceFeedback: VOICE_UNAVAILABLE_REPLY } : message));
@@ -167,6 +141,14 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
       });
     });
   };
+  const say = (text: string, agendaOffer?: AgendaItemId) => {
+    const id = nextId.current++;
+    setMessages((current) => [...current, { id, text, role: 'assistant', ...(agendaOffer ? { agendaOffer } : {}) }]);
+  };
+  const decline = (text: string, declinedOffer: AgendaItemId) => {
+    const id = nextId.current++;
+    setMessages((current) => [...current, { id, text: text.trim(), source: 'voice', declinedOffer }]);
+  };
   const selectTab = (tab: TabDestination) => { setActiveTab(tab); setMode('idle'); };
   const openConversation = () => morphDock(() => { submit(value); setMode('conversation'); }, ['to-orb']);
   const closeConversation = () => morphDock(() => setMode('composer'), ['from-orb']);
@@ -178,6 +160,6 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   const openMoney = () => { setActiveTab('assets'); setWalletTab('money'); setMode('idle'); };
   const openInvestments = () => { setActiveTab('assets'); setWalletTab('crypto'); setMode('idle'); };
   return { mode, setMode, activeTab, value, setValue, messages, liveTrailMessageId, inputRef, submit, recognizesVoiceScenario,
-    selectTab, openConversation, closeConversation, toggleComposer, assistantRef, closeComposer, conversationRef,
+    say, decline, selectTab, openConversation, closeConversation, toggleComposer, assistantRef, closeComposer, conversationRef,
     walletTab, setWalletTab, openMoney, openInvestments, selectedCard, openCard, closeCard };
 }

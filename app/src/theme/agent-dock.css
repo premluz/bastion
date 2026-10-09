@@ -1,0 +1,27 @@
+/* Agent home dock (2026-10-09): structural aliases over primitives and
+   semantic tokens only, so every theme gets it without a parity entry. */
+:root {
+  --agent-dock-orb-size: calc(var(--space-64) + var(--space-24));
+  --agent-dock-gap: var(--space-8);
+  /* Room the in-place thread leaves for the dock beneath it. */
+  --agent-dock-height: calc(var(--space-64) * 2 + var(--space-32));
+  --agent-suggestion-icon-size: calc(var(--space-32) + var(--space-12));
+  /* Asleep: the orb sits dim and breathes slowly; awake it is full light. */
+  --agent-orb-sleep-opacity: var(--opacity-55);
+  --agent-orb-sleep-breath: var(--opacity-70);
+  --agent-orb-sleep-period: calc(var(--duration-1600) * 3);
+  /* The dock orb burns copper (the reference's warm wisp) over no disc. */
+  --agent-orb-color-a: var(--accent-signal);
+  --agent-orb-color-b: oklch(from var(--accent-signal) calc(l + .12) calc(c * .8) h);
+  --agent-orb-aura:
+    0 0 var(--space-24) oklch(from var(--accent-signal) l c h / var(--opacity-40)),
+    0 0 var(--space-64) oklch(from var(--accent-signal) l c h / var(--opacity-20));
+  /* Content scrolls under the dock into the page colour. */
+  --agent-dock-shade: linear-gradient(to bottom, transparent, var(--surface-0) 45%);
+  /* Waking on a command: the home's contents leave bottom-up, one stagger
+     apart, then the thread rises in their place. */
+  --agent-recede-duration: var(--duration-320);
+  --agent-recede-stagger: var(--motion-assembly-stagger);
+  --agent-thread-duration: var(--duration-480);
+  --agent-thread-delay: calc(var(--agent-recede-stagger) * 6);
+}

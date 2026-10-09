@@ -95,6 +95,11 @@
    classes, so this has to reach that descendant — sizing .action alone
    leaves the label at Button's default 14px. */
 .menu .action span { font-size: var(--pill-menu-label-size); }
+/* A menu opened from the dock's left edge (agent home) mirrors the + menu:
+   it pops from its bottom-left corner, icons lead and labels align left. */
+:global(div):has(> .popover.popoverStart:global(.astryx-popover)):not(#\#):not(#\#):not(#\#) { transform-origin: 0 100%; }
+.menu[data-alignment='start'] .action { flex-direction: row-reverse; justify-content: flex-end; text-align: left; padding-inline: calc(var(--pill-menu-inset-end) - var(--pill-edge-width) * 2) var(--pill-menu-inset); }
+.menu .action[aria-current='page'] { background: var(--surface-selected); }
 .stage { display: grid; place-items: center; height: 100dvh; background: var(--surface-1); }
 .phone { width: min(100%, var(--shell-frame-max-width)); height: 100%; display: flex; flex-direction: column; background: var(--surface-0); }
 .content { flex: 1; padding: var(--pill-inset); display: grid; place-items: center; }

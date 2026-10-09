@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { assembleTranscript } from './assembleTranscript';
 
 interface RecognitionEngine {
   continuous: boolean;
@@ -96,7 +97,7 @@ export function useSpeechRecognition(isOpen: boolean, onFinal: (text: string) =>
     engine.lang = navigator.language || 'en-US';
     engine.onresult = (event) => {
       if (session.current !== current || current.engine !== engine || current.stopping) return;
-      const recognized = Array.from(event.results).map((result) => result[0]?.transcript ?? '').join(' ');
+      const recognized = assembleTranscript(Array.from(event.results).map((result) => ({ transcript: result[0]?.transcript ?? '', isFinal: result.isFinal })));
       const next = [current.prefix, recognized].filter(Boolean).join(' ').trim();
       if (next !== current.text) {
         current.text = next;

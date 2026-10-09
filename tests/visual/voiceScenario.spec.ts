@@ -45,11 +45,13 @@ test.beforeEach(async ({ page }) => {
     class FakeAudio extends EventTarget {
       constructor(readonly src: string) {
         super();
-        document.addEventListener('voice-test-end', () => this.dispatchEvent(new Event('ended')), { once: true });
+        // The app keeps one audio element for every clip (iOS unlock), so each
+        // end signal finishes whichever clip that element is playing.
+        document.addEventListener('voice-test-end', () => this.dispatchEvent(new Event('ended')));
       }
       play() {
         const played = document.documentElement.getAttribute('data-audio-played');
-        const clip = this.src.match(/how-can-i-help\.mp3|0[1-5]\.mp3|06[abc]\.mp3/)?.[0];
+        const clip = this.src.match(/how-can-i-help\.mp3|0[1-5]\.mp3|06[abc]\.mp3|07\.mp3/)?.[0];
         if (!clip) throw new Error(`Unexpected voice clip: ${this.src}`);
         if (clip === 'how-can-i-help.mp3') document.documentElement.setAttribute('data-welcome-played', 'true');
         else document.documentElement.setAttribute('data-audio-played', [played, clip].filter(Boolean).join(','));
@@ -57,8 +59,29 @@ test.beforeEach(async ({ page }) => {
       }
       pause() { document.documentElement.setAttribute('data-audio-paused', 'true'); }
     }
+    // Replies without a recorded clip are spoken by speech synthesis; the fake
+    // records them and finishes at once, as headless Chromium has no voices.
+    class FakeUtterance {
+      onstart: (() => void) | null = null;
+      onend: (() => void) | null = null;
+      onerror: ((event: { error: string }) => void) | null = null;
+      lang = '';
+      voice: object | null = null;
+      constructor(readonly text: string) {}
+    }
+    const synthesis = {
+      getVoices: () => [], addEventListener() {}, removeEventListener() {}, cancel() {},
+      speak(utterance: FakeUtterance) {
+        if (!utterance.text) return;
+        const root = document.documentElement;
+        root.setAttribute('data-spoken', [root.getAttribute('data-spoken'), utterance.text].filter(Boolean).join('|'));
+        queueMicrotask(() => { utterance.onstart?.(); utterance.onend?.(); });
+      },
+    };
     Object.defineProperty(window, 'SpeechRecognition', { configurable: true, value: FakeRecognition });
     Object.defineProperty(window, 'Audio', { configurable: true, value: FakeAudio });
+    Object.defineProperty(window, 'SpeechSynthesisUtterance', { configurable: true, value: FakeUtterance });
+    Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: synthesis });
   });
   await page.goto(STORY);
   await page.getByRole('button', { name: 'Assistant', exact: true }).click();
@@ -81,6 +104,7 @@ test('two seconds of silence submits each turn, gives a useful fallback, and kee
   await emitSpeech(page, 'Tell me a joke', true);
   await page.clock.runFor(500);
   await expect(dialog.getByText('I can’t help with that yet. Try saying, “Send 50 dollars to Daniel for coffee.”')).toBeVisible();
+  await expect(page.locator('html')).toHaveAttribute('data-spoken', 'I can’t help with that yet. Try saying, “Send 50 dollars to Daniel for coffee.”');
   const bottomGap = await dialog.getByRole('log', { name: 'Conversation transcript' }).evaluate((element) => {
     const styles = getComputedStyle(element);
     return [styles.paddingBottom, styles.getPropertyValue('--space-32').trim()];
@@ -181,17 +205,21 @@ test('voice transfer narrates each milestone in order and stops when closed', as
   await finishClip();
   await expect(played).toHaveAttribute('data-audio-played', '01.mp3,02.mp3,03.mp3,04.mp3,05.mp3');
   await expect(played).toHaveAttribute('data-recognition-active', 'false');
-  await flow.getByRole('button', { name: 'Accept', exact: true }).click();
+  await flow.getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(flow).toHaveAttribute('data-send-stage', 'confirming');
   await finishClip();
   await expect(played).toHaveAttribute('data-audio-played', '01.mp3,02.mp3,03.mp3,04.mp3,05.mp3,06a.mp3');
   await finishClip();
   await expect(flow).toHaveAttribute('data-send-stage', 'sending');
+  // The in-progress clip (07) narrates the send; the mic waits for it.
+  await expect(played).toHaveAttribute('data-audio-played', '01.mp3,02.mp3,03.mp3,04.mp3,05.mp3,06a.mp3,07.mp3');
+  await expect(played).toHaveAttribute('data-recognition-active', 'false');
+  await finishClip();
   await expect(played).toHaveAttribute('data-recognition-active', 'true');
   await conversation(page).getByRole('button', { name: 'Close conversation', exact: true }).click();
   await expect(played).toHaveAttribute('data-recognition-active', 'false');
   await page.getByRole('button', { name: 'Start conversation mode', exact: true }).click();
   await expect(conversation(page)).toBeVisible();
   await expect(played).toHaveAttribute('data-welcome-played', 'true');
-  await expect(played).toHaveAttribute('data-audio-played', '01.mp3,02.mp3,03.mp3,04.mp3,05.mp3,06a.mp3');
+  await expect(played).toHaveAttribute('data-audio-played', '01.mp3,02.mp3,03.mp3,04.mp3,05.mp3,06a.mp3,07.mp3');
 });

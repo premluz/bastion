@@ -33,14 +33,14 @@ test('visible checks, internal consolidation, then explicit transfer approval', 
   await expect(card).toContainText('$50.00');
   await expect(card).toContainText('$0.08');
   await expect(card).toHaveScreenshot('send-paul-review.png');
-  await card.getByRole('button', { name: 'Accept', exact: true }).click();
+  await card.getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(flow(page).locator('[data-payment-card="sent"]').getByRole('status')).toHaveText('Transfer complete.');
   const reply = flow(page).getByText('$50 was sent to Daniel Smith. Anything else, Prem?', { exact: true });
   await expect(reply).toBeVisible();
   const replyFace = await reply.evaluate((element) => getComputedStyle(element).fontFamily);
   const agentFace = await reply.evaluate((element) => getComputedStyle(element).getPropertyValue('--face-voice').trim());
   expect(replyFace.replaceAll('"', '')).toBe(agentFace.replaceAll('"', ''));
-  await expect(flow(page).getByRole('button', { name: 'Accept', exact: true })).toHaveCount(0);
+  await expect(flow(page).getByRole('button', { name: 'Confirm', exact: true })).toHaveCount(0);
 });
 
 test('edit validates amount plus fee and returns to review; cancel keeps consolidation', async ({ page }) => {
@@ -77,7 +77,7 @@ test('alternate card funding is reviewed separately from sending', async ({ page
   await flow(page).getByRole('radio', { name: 'Buy more USDT with your card', exact: true }).click();
   await flow(page).getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(flow(page).locator('[data-payment-card="funding"]')).toContainText('Buy USDT with your card');
-  await flow(page).getByRole('button', { name: 'Accept', exact: true }).click();
+  await flow(page).getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(flow(page).locator('[data-payment-card="review"]')).toBeVisible();
   await expect(flow(page)).toContainText('Transfer to Daniel Smith');
   await expect(flow(page)).toHaveAttribute('data-send-stage', 'review');
@@ -120,7 +120,7 @@ test('payment component fits 320px and preserves readable details and action chi
   await page.setViewportSize({ width: 320, height: 850 });
   await page.goto('/iframe.html?id=nodes-paymentcard--review&globals=theme:safe-one');
   const card = page.locator('[data-payment-card="review"]');
-  await expect(card.getByRole('button', { name: 'Accept', exact: true })).toBeVisible();
+  await expect(card.getByRole('button', { name: 'Confirm', exact: true })).toBeVisible();
   expect(await card.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
   await expect(card).toHaveScreenshot('payment-card-narrow.png');
 });

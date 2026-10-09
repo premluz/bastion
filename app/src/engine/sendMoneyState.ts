@@ -37,6 +37,8 @@ export function createSendState(request: SendRequest, now: number, duration: num
 }
 export type SendAction = { type: 'choose'; funding: SendFunding; advance?: boolean } | { type: 'accept'; deferSending?: boolean }
   | { type: 'edit' | 'save' | 'cancel' | 'continue' | 'previous' | 'next' | 'skip' | 'done' | 'beginSending' | 'narrationFailed' }
+  // Voice narration of the in-progress stage (its real clip length) holds the transfer in `sending` until the clip has been spoken.
+  | { type: 'holdSending'; ms: number }
   | { type: 'followUp'; value: SendFollowUp }
   | { type: 'recipient'; value: string; advance?: boolean }
   | { type: 'change'; field: 'amount' | 'purpose'; value: string };
@@ -52,6 +54,7 @@ export function applySendAction(state: SendState, action: SendAction, now: numbe
   if (action.type === 'cancel') return { ...state, stage: 'cancelled', dueAt: 0, error: '' };
   if (action.type === 'beginSending' && state.stage === 'confirming') return { ...state, stage: 'sending', dueAt: now + SEND_DEMO.sendingMs };
   if (action.type === 'narrationFailed' && state.stage === 'confirming') return { ...state, stage: 'review' };
+  if (action.type === 'holdSending' && state.stage === 'sending' && Number.isFinite(action.ms)) return { ...state, dueAt: now + Math.max(action.ms, SEND_DEMO.sendingMs) };
   if (state.stage === 'options') return applyQuestionAction(state, action, now, moveDuration);
   if (action.type === 'accept' && state.stage === 'funding') return { ...state, preparationStarted: true, stage: 'moving', step: 0, dueAt: now + moveDuration };
   if (action.type === 'accept' && state.stage === 'review' && state.recipient && state.amountCents + SEND_DEMO.feeCents <= state.balanceCents)

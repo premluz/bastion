@@ -25,10 +25,10 @@ export function buildSendQuestionScene(state: SendState, interactionMode: SendIn
   }
   return { ...sendOptions, layout: { ...sendOptions.layout, children } };
 }
-export function buildSendTransferScene(state: SendState, presentation: PaymentCardProps['presentation'], interactionMode: SendInteractionMode = 'chat') {
+export function buildSendTransferScene(state: SendState, presentation: PaymentCardProps['presentation']) {
   const children = [authored(sendReview, 'send-acknowledgement')];
   if (state.preparationStarted) children.push(findings(state, 'moving'));
-  if (state.stage !== 'moving') children.push(buildPaymentScene(state, presentation, interactionMode).layout);
+  if (state.stage !== 'moving') children.push(buildPaymentScene(state, presentation).layout);
   if (state.stage === 'cancelled') {
     const text = state.consolidated ? 'Transfer cancelled. Consolidated funds remain in Main.' : `Transfer cancelled. No money sent to ${recipientName(state)}.`;
     children.push({ id: 'send-outcome', type: 'text-block', props: { text } });

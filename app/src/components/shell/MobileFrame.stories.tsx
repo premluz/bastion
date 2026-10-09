@@ -21,6 +21,9 @@ export default meta;
 type Story = StoryObj<typeof MobileFrame>;
 
 export const Default: Story = {};
+// Agent-first home (2026-10-09): assistant suggestions instead of the coin
+// list, and a sleeping orb dock that wakes in place.
+export const AgentHome: Story = { args: { homeVariant: 'agent' } };
 export const ClassicNavigation: Story = { args: { navigationVariant: 'classic' } };
 export const BuyEth: Story = { args: { initialPurchaseQuery: 'I want to buy ETH for $800.' } };
 export const AccountMenu: Story = { args: { initialAccountView: 'menu' } };

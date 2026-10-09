@@ -1,0 +1,61 @@
+.suggestions { display: flex; flex-direction: column; gap: var(--space-12); }
+
+/* The assistant's own voice: champagne presence, not the action accent. */
+.title:not(#\#):not(#\#):not(#\#) { margin: 0; color: var(--presence); }
+
+/* Same pane as the coin list: card fill, hairline glass edge, rows flush. */
+.pane {
+  display: flex;
+  flex-direction: column;
+  border: var(--shell-edge-width) solid transparent;
+  border-radius: var(--shell-card-radius);
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box, var(--glass-edge) border-box;
+  backdrop-filter: blur(var(--surface-blur));
+  overflow: hidden;
+}
+.pane .item:not(#\#):not(#\#):not(#\#) { border-radius: 0; padding: var(--space-16) var(--shell-pane-inset); gap: var(--space-16); }
+.pane .item:first-child:not(#\#):not(#\#):not(#\#) { border-start-start-radius: var(--shell-card-radius); border-start-end-radius: var(--shell-card-radius); }
+.pane .item:last-child:not(#\#):not(#\#):not(#\#) { border-end-start-radius: var(--shell-card-radius); border-end-end-radius: var(--shell-card-radius); }
+
+.icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--agent-suggestion-icon-size);
+  height: var(--agent-suggestion-icon-size);
+  border-radius: var(--radius-full);
+  border: var(--shell-edge-width) solid var(--edge);
+  color: var(--presence);
+}
+
+/* Receding (2026-10-09, direct feedback): when the assistant takes a request,
+   the contents leave from the bottom up, one stagger apart; waking with
+   nothing said leaves the page as it is. Coming back runs top-down. Index 0
+   is the lowest element on the page. */
+.root .pane > *, .title, .top > :nth-child(2), .top > :first-child > * {
+  transition: opacity var(--agent-recede-duration) var(--motion-enter-ease) calc((7 - var(--recede-index, 0)) * var(--agent-recede-stagger)),
+    translate var(--agent-recede-duration) var(--motion-enter-ease) calc((7 - var(--recede-index, 0)) * var(--agent-recede-stagger)),
+    filter var(--agent-recede-duration) var(--motion-enter-ease) calc((7 - var(--recede-index, 0)) * var(--agent-recede-stagger));
+}
+.pane > :nth-last-child(1) { --recede-index: 0; }
+.pane > :nth-last-child(2) { --recede-index: 1; }
+.pane > :nth-last-child(3) { --recede-index: 2; }
+.pane > :nth-last-child(4) { --recede-index: 3; }
+.title { --recede-index: 4; }
+.top > :nth-child(2) { --recede-index: 5; }
+.top > :first-child > :nth-child(2) { --recede-index: 6; }
+.top > :first-child > :first-child { --recede-index: 7; }
+.root[data-receding] .pane, .root[data-receding] .pane > *, .root[data-receding] .title, .root[data-receding] .top > :nth-child(2), .root[data-receding] .top > :first-child > * {
+  opacity: 0;
+  translate: 0 calc(var(--space-12) * -1);
+  filter: blur(var(--blur-8));
+  transition-timing-function: var(--motion-exit-ease);
+  transition-delay: calc(var(--recede-index, 0) * var(--agent-recede-stagger));
+}
+/* The pane's glass leaves with its last row. */
+.root[data-receding] .pane { --recede-index: 3; translate: none; filter: none; }
+.pane { transition: opacity var(--agent-recede-duration) var(--motion-enter-ease) calc(4 * var(--agent-recede-stagger)); }
+@media (prefers-reduced-motion: reduce) {
+  .root .pane, .root .pane > *, .title, .top > :nth-child(2), .top > :first-child > * { transition-property: opacity; transition-delay: 0s; }
+  .root[data-receding] .pane > *, .root[data-receding] .title, .root[data-receding] .top > :nth-child(2), .root[data-receding] .top > :first-child > * { translate: none; filter: none; }
+}

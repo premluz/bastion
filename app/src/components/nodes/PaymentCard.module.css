@@ -35,7 +35,7 @@
 .actionsViewport[data-hidden] { grid-template-rows: minmax(0, 0fr); opacity: 0; pointer-events: none; }
 .actions { display: flex; gap: var(--space-8); flex-wrap: wrap; padding: var(--space-16); border-top: var(--shell-edge-width) solid var(--approval-edge); }
 .actionsViewport .actions { min-height: 0; overflow: hidden; }
-.actions[data-interaction='voice'] { justify-content: flex-end; }
+.actionsViewport .actions { justify-content: flex-end; }
 .actions .chip { border-radius: var(--radius-full); min-height: var(--space-48); padding-inline: var(--space-24); }
 
 @keyframes payment-ripple {

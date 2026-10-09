@@ -19,6 +19,18 @@ const PROMOS = [
   { id: 'lounge', title: 'Free premium lounge at airports', icon: '🎁' },
 ] as const;
 
+// Shared with AgentHomePage (2026-10-09): both homes carry the same promos.
+export function HomePromos() {
+  return (
+    <PromoCarousel aria-label="Promotions">
+      {PROMOS.map((promo) => (
+        <PromoCardFull key={promo.id} title={promo.title} {...('icon' in promo ? { icon: promo.icon } : {})}
+          {...('backgroundImage' in promo ? { backgroundImage: promo.backgroundImage, eyebrow: promo.eyebrow } : {})} />
+      ))}
+    </PromoCarousel>
+  );
+}
+
 // New page, not a HoldingsPage.tsx replacement or restyle (2026-09-12 call,
 // stated per the phase brief): HoldingsPage renders a DataTable keyed off
 // CONNECTED wallets (empty-state gated on walletConnectionStore — "connect
@@ -59,12 +71,7 @@ export function AssetsHomePage({ onSelectMoney, onSelectInvestments }: AssetsHom
         <div className={styles.cardStack}>
           <AssetsHomeHeader totalValue={summary.totalValue} changeAbs={summary.changeAbs} changePercent={summary.changePercent}
             {...(onSelectMoney ? { onSelectMoney } : {})} {...(onSelectInvestments ? { onSelectInvestments } : {})} />
-          <PromoCarousel aria-label="Promotions">
-            {PROMOS.map((promo) => (
-              <PromoCardFull key={promo.id} title={promo.title} {...('icon' in promo ? { icon: promo.icon } : {})}
-                {...('backgroundImage' in promo ? { backgroundImage: promo.backgroundImage, eyebrow: promo.eyebrow } : {})} />
-            ))}
-          </PromoCarousel>
+          <HomePromos />
         </div>
         {/* Same heading treatment as Discover's own sections (2026-09-16
             follow-up, direct feedback: "Coins header on homepage should

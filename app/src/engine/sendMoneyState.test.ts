@@ -32,7 +32,7 @@ describe('send money simulation', () => {
     expect(parseSendRequest('Send 50.123 dollars')).toBeNull();
     expect(parseSendRequest('Send now. I have 50 dollars.')).toBeNull();
   });
-  it('consolidation only moves internal funds; final Accept debits once including the fee', () => {
+  it('consolidation only moves internal funds; final Confirm debits once including the fee', () => {
     const review = consolidated();
     expect(review.stage).toBe('review');
     expect(review.balanceCents).toBe(stableTotal);
@@ -152,5 +152,16 @@ describe('send money simulation', () => {
     const sent = settle(sending);
     expect(sent.acknowledged).toBe(false);
     expect(applySendAction(sent, { type: 'done' }, 0, 850).acknowledged).toBe(true);
+  });
+  it('holdSending stretches the in-progress stage to the narration length, never shortens it', () => {
+    const sending = applySendAction(consolidated(), { type: 'accept' }, 1000, 850);
+    expect(sending.dueAt).toBe(1000 + SEND_DEMO.sendingMs);
+    const held = applySendAction(sending, { type: 'holdSending', ms: 6766 }, 1200, 850);
+    expect(held.dueAt).toBe(1200 + 6766);
+    expect(tickSend(held, 1200 + 6765).stage).toBe('sending');
+    expect(tickSend(held, 1200 + 6766).stage).toBe('sent');
+    expect(applySendAction(sending, { type: 'holdSending', ms: 500 }, 1200, 850).dueAt).toBe(1200 + SEND_DEMO.sendingMs);
+    expect(applySendAction(sending, { type: 'holdSending', ms: Number.NaN }, 1200, 850)).toEqual(sending);
+    expect(applySendAction(consolidated(), { type: 'holdSending', ms: 6766 }, 1200, 850).stage).toBe('review');
   });
 });

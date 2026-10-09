@@ -18,11 +18,13 @@ test.beforeEach(async ({ page }) => {
     class FakeAudio extends EventTarget {
       constructor(readonly src: string) {
         super();
-        document.addEventListener('voice-audio-end', () => this.dispatchEvent(new Event('ended')), { once: true });
+        // The app keeps one audio element for every clip (iOS unlock), so each
+        // end signal finishes whichever clip that element is playing.
+        document.addEventListener('voice-audio-end', () => this.dispatchEvent(new Event('ended')));
       }
       play() {
         const played = document.documentElement.getAttribute('data-audio-played');
-        const clip = this.src.match(/how-can-i-help\.mp3|0[1-5]\.mp3|06[abc]\.mp3/)?.[0];
+        const clip = this.src.match(/how-can-i-help\.mp3|0[1-5]\.mp3|06[abc]\.mp3|07\.mp3/)?.[0];
         if (!clip) throw new Error(`Unexpected voice clip: ${this.src}`);
         document.documentElement.setAttribute('data-audio-played', [played, clip].filter(Boolean).join(','));
         return Promise.resolve();
@@ -103,7 +105,7 @@ test('a chat transfer switched to voice waits for its confirmation clip without 
   await expect(voiceFlow).toBeVisible();
   await page.evaluate(() => document.dispatchEvent(new Event('voice-audio-end')));
   await expect(page.locator('html')).toHaveAttribute('data-audio-played', 'how-can-i-help.mp3');
-  await voiceFlow.getByRole('button', { name: 'Accept', exact: true }).click();
+  await voiceFlow.getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(voiceFlow).toHaveAttribute('data-send-stage', 'confirming');
   await expect(page.locator('html')).toHaveAttribute('data-audio-played', 'how-can-i-help.mp3,06a.mp3');
   await page.evaluate(() => document.dispatchEvent(new Event('voice-audio-end')));

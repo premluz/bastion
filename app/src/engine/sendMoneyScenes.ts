@@ -38,7 +38,7 @@ export function buildSendOptions(state: SendState, interactionMode: SendInteract
     navigationMode: interactionMode === 'voice' ? 'hidden' : 'numbered',
     options: props.options.map((option) => ({ ...option, isDisabled: option.value === 'consolidate' && state.amountCents + SEND_DEMO.feeCents > stableTotal })) } };
 }
-export function buildPaymentScene(state: SendState, presentation: PaymentCardProps['presentation'] = 'overlay', interactionMode: SendInteractionMode = 'chat') {
+export function buildPaymentScene(state: SendState, presentation: PaymentCardProps['presentation'] = 'overlay') {
   const funding = state.stage === 'funding';
   const name = recipientName(state);
   const amount = funding ? dollars(state.amountCents + SEND_DEMO.feeCents - state.balanceCents)
@@ -50,12 +50,11 @@ export function buildPaymentScene(state: SendState, presentation: PaymentCardPro
   return { ...sendReview, layout: { ...payment, props: { ...payment.props,
     title, amount, recipient: funding ? 'Main balance' : name, mode: state.stage,
     presentation: funding ? 'overlay' : presentation,
-    interaction: interactionMode,
     purpose: funding ? 'Fund your transfer' : state.stage === 'editing' ? state.draftPurpose : state.purpose,
     from: funding ? state.funding === 'swap' ? 'ETH balance' : 'Visa •• 4242'
       : state.consolidated ? 'Main USDT (after consolidation)' : 'Main USDT',
     fee: funding ? 'No fees' : '$0.08', balance: `$${dollars(state.balanceCents)}`, error: state.error,
-    note: funding ? `Simulated funding. Accepting this does not send money to ${name}.`
+    note: funding ? `Simulated funding. Confirming this does not send money to ${name}.`
       : state.consolidated ? '' : 'Simulated transfer.',
   } } };
 }

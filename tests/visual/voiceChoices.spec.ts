@@ -35,10 +35,12 @@ test.beforeEach(async ({ page }) => {
     class FakeAudio extends EventTarget {
       constructor(readonly src: string) {
         super();
-        document.addEventListener('voice-test-end', () => this.dispatchEvent(new Event('ended')), { once: true });
+        // The app keeps one audio element for every clip (iOS unlock), so each
+        // end signal finishes whichever clip that element is playing.
+        document.addEventListener('voice-test-end', () => this.dispatchEvent(new Event('ended')));
       }
       play() {
-        const clip = this.src.match(/how-can-i-help\.mp3|0[1-5]\.mp3|06[abc]\.mp3/)?.[0];
+        const clip = this.src.match(/how-can-i-help\.mp3|0[1-5]\.mp3|06[abc]\.mp3|07\.mp3/)?.[0];
         if (!clip) throw new Error(`Unexpected voice clip: ${this.src}`);
         const root = document.documentElement;
         root.setAttribute('data-audio-played', [root.getAttribute('data-audio-played'), clip].filter(Boolean).join(','));
@@ -83,12 +85,12 @@ for (const [recipient, funding, clip] of [
     await finishClip(page);
     await expect(page.locator('html')).toHaveAttribute('data-audio-played', /04\.mp3$/);
     await finishClip(page);
-    if (funding !== 'Consolidate') await flow(page).getByRole('button', { name: 'Accept', exact: true }).click();
+    if (funding !== 'Consolidate') await flow(page).getByRole('button', { name: 'Confirm', exact: true }).click();
     await page.clock.runFor(5000);
     await expect(flow(page)).toHaveAttribute('data-send-stage', 'review');
     await expect(page.locator('html')).toHaveAttribute('data-audio-played', /05\.mp3$/);
     await finishClip(page);
-    await flow(page).getByRole('button', { name: 'Accept', exact: true }).click();
+    await flow(page).getByRole('button', { name: 'Confirm', exact: true }).click();
     await expect(flow(page)).toHaveAttribute('data-send-stage', 'confirming');
     await expect(page.locator('html')).toHaveAttribute('data-audio-played', new RegExp(`${clip.replace('.', '\\.')}$`));
     await page.clock.runFor(10000);
