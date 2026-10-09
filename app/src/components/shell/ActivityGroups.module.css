@@ -1,0 +1,33 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--shell-gap);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* One pane per day (2026-10-06, direct feedback: activity items connected
+   into a pane, not individual panes) — same card recipe as the Home asset
+   pane. Rows sit flush inside it and lose their own fill and rounding (fill
+   only while not hovered, so the row hover still shows); the first and last
+   rows carry the pane's own corners so their hover follows the container
+   (2026-10-07, direct feedback: hover rounding differed from the container). */
+.pane {
+  display: flex;
+  flex-direction: column;
+  border: var(--shell-edge-width) solid transparent;
+  border-radius: var(--shell-card-radius);
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box, var(--glass-edge) border-box;
+  backdrop-filter: blur(var(--surface-blur));
+  overflow: hidden;
+}
+.pane :global(.astryx-item):not(#\#):not(#\#):not(#\#) { border-radius: 0; padding-inline: var(--shell-pane-inset); }
+.pane :global(.astryx-item):not(:hover):not(#\#):not(#\#):not(#\#) { background: transparent; }
+/* HistoryItem renders its row plus a tooltip sibling, so first/last are
+   marked per row (not :first-child/:last-child, which land on the tooltip). */
+.row[data-first] :global(.astryx-item):not(#\#):not(#\#):not(#\#) { border-start-start-radius: var(--shell-card-radius); border-start-end-radius: var(--shell-card-radius); }
+.row[data-last] :global(.astryx-item):not(#\#):not(#\#):not(#\#) { border-end-start-radius: var(--shell-card-radius); border-end-end-radius: var(--shell-card-radius); }

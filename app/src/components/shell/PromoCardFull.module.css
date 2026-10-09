@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   gap: var(--shell-gap);
-  padding: var(--space-20);
+  padding: var(--shell-pane-inset);
   border-radius: var(--shell-card-radius);
 }
 
@@ -43,17 +43,49 @@
    landing on the plain-property form, which works. Fills the card's
    own padding:0 box edge-to-edge; the title sits over it with a scrim
    so it stays legible on any image. */
-.withBackground {
-  display: flex;
-  align-items: flex-end;
+
+/* Hero variant (2026-10-06, direct feedback with a reference): a real image
+   full-bleed behind the copy, a left-side scrim for legibility, eyebrow +
+   larger regular-weight title + copper arrow. */
+.hero {
+  position: relative;
+  align-items: stretch;
+  height: var(--promo-hero-height);
+  padding: 0;
+  overflow: hidden;
+}
+.heroImage {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  padding: var(--space-20);
-  background-size: cover;
-  background-position: center;
+  object-fit: cover;
 }
-
-.backgroundBody {
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--promo-hero-scrim);
+  pointer-events: none;
+}
+.heroBody {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-8);
+  padding: var(--shell-pane-inset);
+}
+.heroTitle {
+  max-width: 12ch;
+  font-size: var(--text-24);
+  font-weight: 400;
+  line-height: 1.2;
   color: var(--ink-primary);
-  text-shadow: 0 1px 3px var(--scrim);
+}
+.heroArrow {
+  width: var(--space-24);
+  height: var(--space-24);
+  color: var(--accent-signal);
 }

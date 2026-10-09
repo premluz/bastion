@@ -12,4 +12,9 @@
   overflow: hidden;
 }
 .list section > div { gap: 0; }
-.list :global(.astryx-item):not(#\#):not(#\#):not(#\#) { border-radius: 0; padding-inline: var(--space-16); }
+.list :global(.astryx-item):not(#\#):not(#\#):not(#\#) { border-radius: 0; padding: var(--space-16) var(--shell-pane-inset); }
+/* No separate pane padding at the top/bottom (2026-10-07, direct feedback):
+   the first and last rows meet the pane's edges and carry its corners, so
+   their hover fill follows the rounding. */
+.list section > div > :first-child :global(.astryx-item):not(#\#):not(#\#):not(#\#) { border-start-start-radius: var(--shell-card-radius); border-start-end-radius: var(--shell-card-radius); }
+.list section > div > :last-child :global(.astryx-item):not(#\#):not(#\#):not(#\#) { border-end-start-radius: var(--shell-card-radius); border-end-end-radius: var(--shell-card-radius); }

@@ -56,6 +56,9 @@ const DEFAULT_PERIOD: InvestmentsPeriod = '7D';
 // real `series`, never the densified one.
 const CHART_DISPLAY_SEED = 'investments-chart';
 
+// Plot 108px (+20% over the prior 90) plus the 44px airy X band (2026-10-09).
+const AIRY_CHART_HEIGHT = 152;
+
 // Same category set as Discover's own "Explore Categories" row (2026-09-16,
 // direct feedback: "we need tabs on crypto portfolio same as on discover —
 // All Crypto Stocks Perps Commodities") — visual-only for now, confirmed:
@@ -145,10 +148,12 @@ export function InvestmentsTab() {
             decouples TrendChart's own slicing from OUR OWN period buttons
             above, which already decide what `displaySeries` even contains
             before it gets here. */}
-        <TrendChart series={displaySeries} periods={['YTD']} activePeriod="YTD" onPeriodChange={() => {}} bleedHeight={120} />
+        <TrendChart series={displaySeries} periods={['YTD']} activePeriod="YTD" onPeriodChange={() => {}} bleedHeight={AIRY_CHART_HEIGHT} airy />
       </div>
 
-      <WalletActionRow variant="wallet" shape="circle" />
+      <div className={styles.actions}>
+        <WalletActionRow variant="wallet" shape="circle" />
+      </div>
 
       {summary.rows.length > 0 && (
         <AllocationBar segments={summary.rows.map((row) => ({ id: row.entityId, label: row.symbol, value: row.value }))} />

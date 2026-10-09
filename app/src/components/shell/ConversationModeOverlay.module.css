@@ -150,3 +150,41 @@
   .layout { transition: none; }
   .root[open] .controls button { animation: none; }
 }
+
+/* The halo paints BEHIND the content (2026-10-06, measured): as a later
+   ::after it used to paint over the composer, lightening it live — but the
+   dock morph lifts the composer above everything, so the bar visibly
+   jumped a shade when the morph ended. Glow behind the glass, both ways. */
+.layout { z-index: 2; }
+.root::after { z-index: 0; }
+
+/* The user's voice: a second, subtler wash over the bottom glow that only
+   wakes while they speak, flickering like a voice level (2026-10-06). */
+.root::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset-inline: 0;
+  bottom: 0;
+  height: var(--assistant-orb-halo-height);
+  background: var(--voice-user-fill);
+  transform-origin: 50% 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-enter-duration) var(--motion-enter-ease);
+}
+.root[data-user-speaking]::before {
+  opacity: 1;
+  animation: voice-user-level var(--voice-talk-duration) var(--ease-standard) infinite;
+}
+@keyframes voice-user-level {
+  0%, 100% { opacity: var(--voice-level-low); scale: 1 var(--voice-level-rest); }
+  18% { opacity: 1; scale: 1 1; }
+  34% { opacity: var(--voice-level-mid); scale: 1 var(--voice-level-mid); }
+  52% { opacity: 1; scale: 1 1; }
+  70% { opacity: var(--voice-level-low); scale: 1 var(--voice-level-rest); }
+  84% { opacity: var(--voice-level-mid); scale: 1 var(--voice-level-mid); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .root[data-user-speaking]::before { animation: none; }
+}

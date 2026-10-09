@@ -51,7 +51,8 @@ export function TimeSeries({
   yAutoScale,
   xTicks,
   xTickFormatter,
-}: TimeSeriesProps & { xTicks?: string[]; xTickFormatter?: (value: string, index: number) => string }) {
+  airy,
+}: TimeSeriesProps & { xTicks?: string[]; xTickFormatter?: (value: string, index: number) => string; airy?: boolean }) {
   const gradientId = useId();
   // Read once per mount, not per-render — the theme value doesn't change
   // mid-render, and this is a real (if cheap) DOM style read. See
@@ -132,6 +133,7 @@ export function TimeSeries({
             yAutoScale={yAutoScale}
             {...(xTicks ? { xTicks } : {})}
             {...(xTickFormatter ? { xTickFormatter } : {})}
+            {...(airy ? { airy } : {})}
           />
           <Tooltip content={TokenTooltip} cursor={{ stroke: 'var(--edge)' }} />
 

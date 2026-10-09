@@ -92,18 +92,25 @@ function formatAxisLabel(t: string): string {
 // span-aware: a YTD/1Y/MAX window under ~1 real year gets month
 // granularity instead, regardless of period name; day/month periods
 // (7D/1M/24H/1H) are unaffected, always exactly as before.
-type AxisGranularity = 'day' | 'month' | 'year';
+// 'date' (2026-10-09) labels every tick with its own month + day ("Sep 3"):
+// a window of only days must not repeat one bare month name across the axis.
+type AxisGranularity = 'day' | 'date' | 'month' | 'year';
 
 const YEAR_GRANULARITY_MIN_SPAN_DAYS = 366;
+// Under this many real days, a YTD/1Y/MAX window is labelled by date, not by
+// a month name that would repeat on every tick.
+const DATE_GRANULARITY_MAX_SPAN_DAYS = 31;
 
 function granularityForPeriod(period: TrendChartProps['periods'][number], realSpanDays: number): AxisGranularity {
   if (HAS_FINE_PERIOD[period] || HAS_INTRADAY_PERIOD[period]) return 'day';
   if (period === '7D' || period === '1M') return 'month';
+  if (realSpanDays < DATE_GRANULARITY_MAX_SPAN_DAYS) return 'date';
   return realSpanDays >= YEAR_GRANULARITY_MIN_SPAN_DAYS ? 'year' : 'month';
 }
 
 function unitLabel(date: Date, granularity: AxisGranularity): string {
   if (granularity === 'day') return String(date.getUTCDate());
+  if (granularity === 'date') return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', timeZone: 'UTC' });
   if (granularity === 'month') return date.toLocaleDateString(undefined, { month: 'short', timeZone: 'UTC' });
   return String(date.getUTCFullYear());
 }
@@ -115,6 +122,9 @@ function unitLabel(date: Date, granularity: AxisGranularity): string {
 // data spanned few real unit-boundaries, e.g. 7D crossing only a single
 // month).
 const TARGET_TICK_COUNT = 7;
+// Airy charts label fewer, roomier ticks: a month + day label is wider than a
+// bare unit, and at 7 ticks recharts hid the ones that touched (2026-10-09).
+const AIRY_TICK_COUNT = 5;
 
 // EXPLICIT ticks, not a tickFormatter alone (2026-08-22 fourth follow-up
 // — three formatter-only approaches were each tried and caught as real
@@ -150,17 +160,30 @@ const TARGET_TICK_COUNT = 7;
 function buildExplicitTicks(
   orderedPoints: { x: string; date: Date }[],
   granularity: AxisGranularity,
+  targetCount: number = TARGET_TICK_COUNT,
 ): { ticks: string[]; shortLabels: Map<string, string> } {
-  const count = orderedPoints.length;
+  // The category axis places a tick at the FIRST row carrying its label, and
+  // a densified daily series repeats each date label on many rows (2026-10-09).
+  // So tick targets are evenly spaced row indices, but each is snapped to the
+  // distinct label whose first row lies nearest to it — evenly spaced on
+  // screen, never a repeated label, and nothing for recharts to hide as a
+  // collision.
+  const firstRow = new Map<string, number>();
+  orderedPoints.forEach((point, index) => { if (!firstRow.has(point.x)) firstRow.set(point.x, index); });
+  const unique = orderedPoints.filter((point, index) => firstRow.get(point.x) === index);
   const picked: { x: string; date: Date }[] = [];
-  if (count <= TARGET_TICK_COUNT) {
-    picked.push(...orderedPoints);
+  if (unique.length <= targetCount) {
+    picked.push(...unique);
   } else {
-    const step = (count - 1) / (TARGET_TICK_COUNT - 1);
-    for (let i = 0; i < TARGET_TICK_COUNT; i += 1) {
-      const point = orderedPoints[Math.round(i * step)];
-      if (point) picked.push(point);
+    const step = (orderedPoints.length - 1) / (targetCount - 1);
+    for (let i = 0; i < targetCount; i += 1) {
+      const target = i * step;
+      const nearest = unique
+        .filter((point) => !picked.includes(point))
+        .reduce((best, point) => (Math.abs((firstRow.get(point.x) ?? 0) - target) < Math.abs((firstRow.get(best.x) ?? 0) - target) ? point : best));
+      picked.push(nearest);
     }
+    picked.sort((a, b) => (firstRow.get(a.x) ?? 0) - (firstRow.get(b.x) ?? 0));
   }
   return {
     ticks: picked.map((point) => point.x),
@@ -258,9 +281,14 @@ export function TrendChart({
   quiet,
   activePeriod: controlledPeriod,
   onPeriodChange,
+  airy,
 }: TrendChartProps & {
   activePeriod?: TrendChartProps['periods'][number];
   onPeriodChange?: (period: TrendChartProps['periods'][number]) => void;
+  // Airy presentation (2026-10-09, Portfolio chart): no Y values, X labels
+  // outside the plot, and the bottom glow falls off softly past the chart
+  // instead of ending on a clipped edge.
+  airy?: boolean;
 }) {
   const isControlled = controlledPeriod !== undefined && onPeriodChange !== undefined;
   const [internalPeriod, setInternalPeriod] = useState(periods.at(-1) ?? DEFAULT_PERIOD);
@@ -293,7 +321,7 @@ export function TrendChart({
   const firstDate = orderedPoints[0]?.date;
   const lastDate = orderedPoints[orderedPoints.length - 1]?.date;
   const realSpanDays = firstDate && lastDate ? (lastDate.getTime() - firstDate.getTime()) / 86_400_000 : 0;
-  const { ticks: xTicks, shortLabels } = buildExplicitTicks(orderedPoints, granularityForPeriod(activePeriod, realSpanDays));
+  const { ticks: xTicks, shortLabels } = buildExplicitTicks(orderedPoints, granularityForPeriod(activePeriod, realSpanDays), airy ? AIRY_TICK_COUNT : TARGET_TICK_COUNT);
   const xTickFormatter = (value: string) => shortLabels.get(value) ?? value;
 
   const data: SeriesDataSet = {
@@ -339,7 +367,7 @@ export function TrendChart({
     // opaque than glow.module.css's own --tint-strong default (KeyIssues-
     // Card's badges/panes are untouched, still --tint-strong).
     <div
-      className={`${styles.root} ${bleedStyles.inline} ${bleedStyles.blockEnd}${quiet ? '' : ` ${glowStyles.root} ${glowStyles.bottom} ${glowStyles.clipped}`}`}
+      className={`${styles.root} ${bleedStyles.inline} ${bleedStyles.blockEnd}${quiet ? '' : ` ${glowStyles.root} ${glowStyles.bottom} ${airy ? glowStyles.unclipped : glowStyles.clipped}`}`}
       {...(quiet ? {} : { style: { '--glow-color': trendColor, '--glow-strength': 'var(--tint-subtle)' } as React.CSSProperties })}
     >
       <div className={glowStyles.content}>
@@ -383,6 +411,7 @@ export function TrendChart({
             yAutoScale={isZoomedPeriod}
             xTicks={xTicks}
             xTickFormatter={xTickFormatter}
+            {...(airy ? { airy } : {})}
           />
         </div>
       </div>

@@ -118,3 +118,10 @@
   .root:global(.astryx-dialog) { animation: none; }
   .layout { transition: none; }
 }
+
+/* The halo paints BEHIND the content (2026-10-06, measured): as a later
+   ::after it used to paint over the composer, lightening it live — but the
+   dock morph lifts the composer above everything, so the bar visibly
+   jumped a shade when the morph ended. Glow behind the glass, both ways. */
+.layout { z-index: 1; }
+.root::after { z-index: 0; }

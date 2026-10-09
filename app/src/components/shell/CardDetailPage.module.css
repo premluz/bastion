@@ -95,14 +95,3 @@
   color: var(--delta-up);
 }
 
-.activityList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--shell-gap);
-}
-
-.activityGroup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}

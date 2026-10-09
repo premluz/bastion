@@ -7,9 +7,8 @@ import { EmptyState } from '@astryxdesign/core/EmptyState';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { VirtualCardPlaceholder } from './VirtualCardPlaceholder';
 import { WalletActionRow } from './WalletActionRow';
-import { HistoryItem } from './HistoryItem';
+import { ActivityGroups } from './ActivityGroups';
 import { LinkChips } from '../nodes/LinkChips';
-import { groupAccountHistory } from './accountHistory';
 import { MONEY_HISTORY } from './moneyHistoryData';
 import { MONEY_PLACEHOLDER } from './moneySummary';
 import { WALLET_CARDS, type WalletCard } from './cardData';
@@ -68,7 +67,6 @@ export function CardDetailPage({ card, sourceRect, onClose }: CardDetailPageProp
   const [tab, setTab] = useState<DetailTab>('transactions');
   const [isClosing, setIsClosing] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-  const groups = groupAccountHistory(MONEY_HISTORY, 'all');
   const cardIndex = WALLET_CARDS.findIndex((candidate) => candidate.id === card.id);
 
   function onTabClick(event: MouseEvent<HTMLElement>) {
@@ -126,7 +124,7 @@ export function CardDetailPage({ card, sourceRect, onClose }: CardDetailPageProp
       </header>
       <div className={styles.body}>
         <div ref={cardRef} className={styles.cardStage}>
-          <VirtualCardPlaceholder lastFourDigits={card.lastFourDigits} />
+          <VirtualCardPlaceholder lastFourDigits={card.lastFourDigits} {...(card.image ? { image: card.image } : {})} />
         </div>
         {WALLET_CARDS.length > 1 && (
           <div className={styles.dots} role="tablist" aria-label="Cards">
@@ -168,14 +166,7 @@ export function CardDetailPage({ card, sourceRect, onClose }: CardDetailPageProp
         </div>
 
         {tab === 'transactions' ? (
-          <div className={styles.activityList}>
-            {groups.map((group) => (
-              <div key={group.day} className={styles.activityGroup}>
-                <Text type="supporting" color="secondary">{group.label}</Text>
-                {group.items.map((entry) => <HistoryItem key={entry.id} entry={entry} />)}
-              </div>
-            ))}
-          </div>
+          <ActivityGroups entries={MONEY_HISTORY} />
         ) : (
           // No real card-benefits content exists in the universe seed
           // (cashbackPercent is the only authored benefit, already shown

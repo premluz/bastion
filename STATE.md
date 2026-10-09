@@ -359,3 +359,63 @@ Direct feedback: slightly more curve, lower, more blur. `--halo-fill` radial 160
 ### 2026-10-06 (cont.) — Bastion orb glow: subtler, blended
 
 Direct feedback: more blur into the background, subtler overall. `--halo-fill` radial 130%×85% at bottom centre, champagne .2 → .1 (35%) → .04 (65%) → transparent at 100%; vertical fade .1 → .03 (40%) → transparent 65%. Screenshot reviewed: soft warm lift at the bottom, no visible boundary.
+
+### 2026-10-06 (cont.) — Hero promo image; premium spacing register
+
+Direct feedback (reference + `app/public/images/hero-promo.jpg`): assets and other components need a more spacious, premium register; use the new image in the promo.
+
+PromoCardFull hero variant rebuilt: the image renders as a real `<img>` (object-fit cover) behind a left-side legibility scrim (`--promo-hero-scrim`), with an optional `eyebrow` (data-eyebrow), a 24px regular-weight title and a copper ArrowLongRight. This replaces the inline `background-image` style, which the 09-16 KNOWN ISSUE recorded as never reaching the DOM (and inline styles are banned anyway); the issue comment was removed. The carousel now leads with the DeFi hero ("Lend Earn Grow / Explore DeFi opportunities", `/images/hero-promo.jpg`, `--promo-hero-height` 192px).
+
+Spacing (all themes): `--shell-gap` 20 → 24; new `--shell-pane-inset` 24 used for BalanceCategoryCard (Card `padding={6}`), promo, ContributingBalanceRow tiles, asset rows (16/24 + 8px pane padding-block) and activity rows. Measured: hero image loaded (naturalWidth 1448), hero 192px, card padding 24, asset rows 16/24 at a 76px pitch; no page errors; Home screenshot reviewed. vitest passing, parity OK, lint:tokens clean apart from pre-existing rgb().
+
+### 2026-10-06 (cont.) — Home: no balance delta/glow; top texture; header shade only on scroll
+
+Direct feedback. AssetsHomeHeader: removed the change row under the total balance and the accent glow (glow.module.css wrapper + inline style); dead imports (TrendDelta, glowStyles) and rules (changeRow/deltaUp/deltaDown) removed. New top texture: `.root::before` paints `--home-texture` (`url('/images/bg-texture.jpg')`, app/public/images) at `--opacity-20`, bled to the screen edges and up under the fixed header, `--home-texture-height` 384px, masked to fade into the content. Header shade (MobileFrame `.topFade` on pages) moved to `::before` and fades in over the first header-height of scroll via a scroll-driven animation: `.page { scroll-timeline: --shell-page-scroll y }`, lifted with `.chrome { timeline-scope }`; `@supports not` keeps the old always-on shade; the ambient `::after` is unaffected. Verified: texture loads (801px) at opacity .2 with mask; no glow; header balance has no delta (the Investments card keeps its own); shade opacity 0 at top → 1 after scrolling 200px; no page errors; screenshot reviewed. vitest passing.
+
+### 2026-10-06 (cont.) — Home Money tile "Earning 6.4%"; real card photos
+
+Direct feedback. BalanceCategoryCard gained optional `earningRate` — renders a copper-tinted pill (CircleStackIcon + "Earning N%") in place of the change row; Home's Money tile passes `MONEY_PLACEHOLDER.earningRate` (new, 6.4 — note: differs from the Money page's 4% APY, flagged to the user). Card photos `app/public/images/card01–03.jpg` mapped to WALLET_CARDS (Metal / Virtual / Travel) via a new optional `image` field; VirtualCardPlaceholder renders it as a full-bleed `<img>` under the existing brand/digits overlay (gradient kept as fallback); MoneyPage deck and CardDetailPage pass it. Verified: Money tile text "Earning 6.4%"; all three card images loaded (1448px); no page errors; screenshots reviewed. vitest passing, tsc baseline-only.
+
+### 2026-10-06 (cont.) — Composer morph end jump fixed; voice activity visuals (orb talks, user wash)
+
+Direct feedback: the composer bar changed shade abruptly at the end of the nav → composer morph; in voice mode the orb should pulse as if talking during voice playback, and the user's speech should move a second subtle bottom gradient — bottom = user, orb = assistant.
+
+Morph jump, root cause (measured by sampling a composer pixel per frame): the overlays' halo is `.root::after`, which painted OVER the content, lightening the live composer (28) — the view transition lifts the composer above everything (18), so it jumped when the morph ended. Both overlays now stack halo (z 0) behind content (`.layout` z 1 composer / z 2 conversation); verified the pixel stays 18–19 through and after the transition end.
+
+Voice: `useSendVoicePlayback` exposes `isSpeaking` (true on the clip's `playing` event, false on drain/stop/failure — after the stale-clip guard). New `useUserSpeaking(isListening, text)` infers speech from the live interim transcript (700ms hold) — no second mic stream/permission. ConversationModeOverlay sets `data-user-speaking` and passes `speaking` to AssistantOrb (`data-speaking`). CSS: orb `.core` + aura run an irregular `orb-talk` scale rhythm; `.root::before` (z 1, between halo and content) is the user wash — `--voice-user-fill` (presence-based radial) flickering opacity/scaleY via `voice-user-level`; both off under reduced motion. Tokens in shell.css (`--voice-*`, `--orb-talk-*`). Verified by toggling the same attributes in-page: orb-talk running (scale varies), user layer live; screenshot reviewed; real audio/mic not exercisable headless. MobileFrame.tsx at 199 lines (budget edge). vitest passing, parity OK.
+
+### 2026-10-06 (cont.) — Voice visuals toned: faint user wash, orb glow-only pulse
+
+Direct feedback: user gradient much subtler; orb shouldn't scale, only its gradient. `--voice-user-fill` presence stops 24%/8% → 9%/3%. AssistantOrb: the `.core` talk animation and its `orb-talk` keyframes removed (unused `--orb-talk-mid/-dip` tokens dropped); only the aura glow pulses (`orb-talk-aura`). Verified in-page: core 0 animations / no scale, aura animating, user fill .09/.03.
+
+### 2026-10-06 (cont.) — Orb talk pulse: opacity only
+
+Direct feedback: dark black visibly sized up around the orb while talking. Cause: the aura is a box-shadow (paints only outside its box); scaling it 1.14 moved the glow's start outward, opening a dark ring between sphere and glow. `orb-talk-aura` is now opacity-only (.55 ↔ 1 irregular); `--orb-talk-peak/-aura-peak` removed. Verified: aura scale none, opacity varying .55–.99; screenshot shows the glow hugging the sphere.
+
+### 2026-10-07 — Home banner image capped at 160px
+
+Direct feedback: "Home banner with image 160px max width" (read as: image width capped at 160px; height-cap alternative offered to the user). PromoCardFull hero: image now right-aligned, `--promo-hero-image-width` 160px, full card height, left edge masked into the card fill; the left-side scrim token `--promo-hero-scrim` removed (unused); title max-width follows the remaining space. Measured: image 160px; card 382×209 (title wraps to 3 lines in the narrower column).
+
+### 2026-10-07 (cont.) — Banner reversal: height 160px
+
+Direct feedback: the 160px-wide-image reading was wrong; "height 160". Reverted to the full-bleed image with the left scrim (`--promo-hero-scrim` restored; `--promo-hero-image-width` removed) and `--promo-hero-height` 192 → 160 (now a fixed `height`, not min-height); body gap 12 → 8 and the arrow's extra top margin dropped so eyebrow + two-line title + arrow fit inside 160 with the 24px inset. Measured: card 382×160, image full width, content 158px (no overflow); screenshot reviewed.
+
+### 2026-10-07 (cont.) — Voice-mode confirmation actions: Cancel · Edit · Accept, right
+
+Direct feedback. PaymentCard contract gains `interaction: 'chat' | 'voice'` (default chat); buildPaymentScene / buildSendTransferScene take the interaction mode and SendMoneyTranscript passes it through (voice = conversation mode). In voice the actions render Cancel, Edit, Accept in that DOM order (tab order matches the visual) with `justify-content: flex-end`; chat is unchanged (Accept, Edit, Cancel, left). New story Nodes/PaymentCard VoiceConfirm. Verified: voice order [cancel, edit, accept] with a 16px right gap, chat order unchanged; screenshot reviewed. vitest passing, tsc baseline-only.
+
+### 2026-10-07 (cont.) — Home assets pane: no pane padding, rounded first/last rows
+
+Direct feedback. AssetsHomeList `.list` loses its `padding-block` (8px); the first row carries the pane's top corners and the last row its bottom corners (`--shell-card-radius`, via `:first-child`/`:last-child` on the scene wrappers), so the hover fill follows the rounding. Verified: pane padding 0, rows flush to the 1px border, first row radii 8/0, last row 0/8, middle rows square; hover screenshot reviewed.
+
+### 2026-10-07 (cont.) — Shared ActivityGroups; hover rounding follows the pane
+
+Direct feedback: transaction-row hover rounding differed from the container's; Card details has the same transaction list and both must use the same component. New `ActivityGroups` (+ module CSS) renders the per-day connected panes and is now the single implementation in MoneyPage (Activity) and CardDetailPage (Transactions tab) — their duplicated `activityList/Group/Pane` CSS removed; Card details thereby gains the per-day panes. Rounding: rows lose their own radius/fill, and the first/last row of each day carries the pane's corners (`--shell-card-radius`) so hover follows the container. First/last are marked per row (`data-first`/`data-last` on a wrapper) — `:first-child`/`:last-child` don't work here because HistoryItem (changed outside this session) now renders a row wrapper plus a tooltip sibling; my earlier child-selector attempt silently matched nothing and my first probe sampled the wrong elements, caught by listing each child. Verified on both pages: pane 8px, first row 8/0, middle 0, last 0/8, row bg transparent; screenshot of Card details reviewed. tsc baseline-only, vitest passing.
+
+### 2026-10-09 — Portfolio Investments chart: taller, soft glow, outside X labels, no Y axis
+
+Direct feedback (screenshot): hard colour ending under the chart; taller (~20%); more space to the Buy/Stake/Swap row; month labels outside the plot, not so close; "different months"; remove Y-axis values.
+
+Root cause of the hard edge (found, not guessed): TrendChart's bottom glow sits in a `glow.module.css .clipped` container (`overflow: hidden`), so the blurred glow was sliced flat at the chart's bottom. New plain-TS prop `airy` on TrendChart (→ TimeSeries → ChartBleedAxes, same precedent as xTicks/xTickFormatter, not part of the Zod schema): glow switches to `.unclipped` so it falls off softly past the chart; Y axis `hide`; X band 44px (`AIRY_X_AXIS_HEIGHT`) with labels 16px below the plot. InvestmentsTab: `AIRY_CHART_HEIGHT` 152 (plot 90 → 108px = +20%, plus the band), `.actions` wrapper with 24px top margin. Measured: svg 414×152, plot bottom 108, labels at 122, chart → actions gap 8 → 32px, Y text gone, no page errors.
+
+Labels: the real window is 7 days of one month, and TrendChart labelled such YTD/1Y/MAX windows with the bare month name ("Sep" ×6 — the 09-01 note already recorded this bug class for >1-month windows). New `'date'` granularity for spans under 31 days ("Sep 7"). Also fixed tick selection: a densified daily series repeats each date label on many rows and the category axis places a tick at the label's FIRST row, so index-picked ticks landed unevenly and recharts hid colliding ones; ticks are now snapped to the distinct label nearest each evenly spaced target row (identical to the old picks when labels are unique). Airy charts use 5 target ticks. Result: Sep 7 / 9 / 10 / 12 (the seed's real, uneven dates). Other TrendChart stories unchanged (Feb/Mar/Apr + Y axis). Literal different MONTHS is not possible without longer data: the series covers one week — flagged to the user. TrendChart.tsx is 391+ lines (already over the 200 budget before this change; not split here). vitest 71 passing, tsc baseline-only.

@@ -120,15 +120,25 @@ export function TabularTick({
 // part of TimeSeriesProps. undefined here is simply recharts' own
 // default (auto-select ticks; render each one's raw category value), so
 // every existing caller that doesn't pass either is unaffected.
+// Airy X band: height of the axis strip under the plot, and how far its labels
+// sit below the plot's bottom edge.
+export const AIRY_X_AXIS_HEIGHT = 44;
+const AIRY_X_TICK_DY = 16;
+
 export function ChartBleedAxes({
   bleed,
   rightAxisSeriesId,
   yAutoScale,
   xTicks,
   xTickFormatter,
+  airy,
 }: Pick<TimeSeriesProps, 'bleed' | 'rightAxisSeriesId' | 'yAutoScale'> & {
   xTicks?: string[];
   xTickFormatter?: (value: string, index: number) => string;
+  // Airy axes (2026-10-09, direct feedback on the Portfolio chart): no Y
+  // values at all, and a taller X band whose labels sit well below the plot
+  // instead of hugging its edge.
+  airy?: boolean;
 }) {
   return (
     <Fragment>
@@ -143,12 +153,14 @@ export function ChartBleedAxes({
               // dy 8 (2026-08-22 direct feedback: "bottom scale... numbers
               // should be 16px lower") — was -8; +16 from that value per
               // the ask, not a re-derived number.
-              tick: <TabularTick textAnchor="middle" dx={0} dy={8} fill="var(--ink-primary)" />,
+              tick: <TabularTick textAnchor="middle" dx={0} dy={airy ? AIRY_X_TICK_DY : 8} fill="var(--ink-primary)" />,
+              ...(airy ? { height: AIRY_X_AXIS_HEIGHT } : {}),
             }
           : { tick: <TabularTick textAnchor="middle" dx={0} dy={12} /> })}
       />
       <YAxis
         yAxisId="left"
+        {...(airy ? { hide: true } : {})}
         {...(bleed
           ? {
               width: 1,

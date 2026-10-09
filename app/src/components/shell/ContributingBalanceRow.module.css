@@ -14,7 +14,7 @@
   align-items: center;
   gap: var(--space-12);
   flex-shrink: 0;
-  padding: var(--space-20);
+  padding: var(--shell-pane-inset);
   border-radius: var(--shell-card-radius);
   border: var(--shell-edge-width) solid transparent;
   background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box, var(--glass-edge) border-box;

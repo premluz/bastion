@@ -50,3 +50,9 @@
   margin-bottom: var(--space-8);
   border-radius: var(--radius-full);
 }
+
+/* More room between the chart and the Buy / Stake / Swap row (2026-10-09,
+   direct feedback). */
+.actions {
+  margin-block-start: var(--space-24);
+}

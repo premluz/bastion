@@ -1,7 +1,7 @@
 import { Card } from '@astryxdesign/core/Card';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
-import { ChevronRightIcon } from '@heroicons/react/24/outline';
+import { ChevronRightIcon, CircleStackIcon } from '@heroicons/react/24/outline';
 import { TrendDelta } from '../nodes/TrendDelta';
 import styles from './BalanceCategoryCard.module.css';
 
@@ -10,6 +10,9 @@ interface BalanceCategoryCardProps {
   value: number;
   changeAbs: number;
   changePercent: number;
+  // When set, an "Earning N%" pill replaces the change row (2026-10-06,
+  // direct feedback, Money tile on Home).
+  earningRate?: number;
   onClick?: () => void;
 }
 
@@ -24,10 +27,10 @@ interface BalanceCategoryCardProps {
 // className/padding/onClick actually apply as a real interactive
 // surface (confirmed earlier this session Card spreads ...props,
 // unlike RadioList).
-export function BalanceCategoryCard({ label, value, changeAbs, changePercent, onClick }: BalanceCategoryCardProps) {
+export function BalanceCategoryCard({ label, value, changeAbs, changePercent, earningRate, onClick }: BalanceCategoryCardProps) {
   const isUp = changeAbs >= 0;
   return (
-    <Card className={`${styles.root}`} padding={5} {...(onClick ? { onClick } : {})}>
+    <Card className={`${styles.root}`} padding={6} {...(onClick ? { onClick } : {})}>
       <div className={styles.labelRow}>
         {/* supporting, not label (2026-09-13 follow-up, direct feedback:
             "crypto and money labels in balances smaller") — one step down
@@ -46,13 +49,16 @@ export function BalanceCategoryCard({ label, value, changeAbs, changePercent, on
       <Text type="large" weight="semibold" hasTabularNumbers className={styles.value}>
         ${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
       </Text>
-      <div className={styles.changeRow}>
+      {earningRate !== undefined ? <span className={styles.earning}>
+        <Icon icon={CircleStackIcon} size="sm" />
+        <Text type="supporting" hasTabularNumbers className={styles.earningText}>Earning {earningRate}%</Text>
+      </span> : <div className={styles.changeRow}>
         <Text type="supporting" hasTabularNumbers className={isUp ? styles.deltaUp : styles.deltaDown}>
           {isUp ? '+' : ''}
           {changeAbs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </Text>
         <TrendDelta value={changePercent} />
-      </div>
+      </div>}
     </Card>
   );
 }

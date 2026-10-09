@@ -13,7 +13,7 @@
      20px") — this token drives spacing across the shell (header, action
      rows, Money/wallet page sections, and more), so this is a global
      increase, not scoped to any one screen. */
-  --shell-gap: var(--space-20);
+  --shell-gap: var(--space-24);
   --shell-label-gap: var(--space-4);
   --shell-control-size: var(--space-48);
   --shell-muted-mic-angle: -45deg;
@@ -110,6 +110,19 @@
   /* Gap between side-by-side cards — tighter than --shell-gap's section
      rhythm (2026-10-05, direct feedback). */
   --shell-card-gap: var(--space-12);
+  /* Premium register (2026-10-06, direct feedback: "more spacious, more
+     breathing"): one inner inset for content panes — balance tiles, promo,
+     stablecoin tiles, asset/activity rows — and a 24px section rhythm. */
+  --shell-pane-inset: var(--space-24);
+  /* Home's top texture (AssetsHomeHeader .root::before), served from
+     app/public/images. */
+  --home-texture: url('/images/bg-texture.jpg');
+  --home-texture-height: calc(var(--space-64) * 6);
+  --promo-hero-height: calc(var(--space-64) * 2 + var(--space-32));
+  /* Banner height capped at 160px (2026-10-07, direct feedback, after a
+     160px-wide-image reading was reversed): the full-bleed photo keeps a
+     left-side scrim for legibility. */
+  --promo-hero-scrim: linear-gradient(100deg, color-mix(in oklab, var(--surface-0) 72%, transparent), color-mix(in oklab, var(--surface-0) 30%, transparent) 45%, transparent 70%);
   --shell-round: var(--radius-full);
   /* Card-deck geometry (2026-09-16). The per-card throw's own timing/
      easing/offsets are ported as literal constants inside CardDeck.tsx
@@ -249,6 +262,15 @@
      conversation halo and ConversationModeOverlay's standalone one —
      which are the same visual in the same two modes. */
   --assistant-orb-halo-height: var(--halo-height);
+  /* Voice activity (2026-10-06): the user's speech lights a second bottom
+     wash, the assistant's speech pulses the orb's glow (not the sphere) —
+     same irregular talking rhythm for both. User wash kept faint (2026-10-06:
+     "much subtler"). */
+  --voice-user-fill: radial-gradient(130% 70% at 50% 100%, color-mix(in oklab, var(--presence) 9%, transparent), color-mix(in oklab, var(--presence) 3%, transparent) 45%, transparent 90%);
+  --voice-talk-duration: calc(var(--duration-480) * 2);
+  --voice-level-low: .55;
+  --voice-level-mid: .8;
+  --voice-level-rest: .9;
   --assistant-orb-rest-opacity: var(--opacity-70);
   --assistant-orb-rest-scale: 0.92;
   --assistant-orb-duration: var(--motion-shimmer-duration);

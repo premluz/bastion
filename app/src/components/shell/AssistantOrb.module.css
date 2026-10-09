@@ -94,3 +94,22 @@
 .root[data-activity='listening'] .core { filter: brightness(var(--orb-luminance-listening)); }
 .root[data-activity='thinking'] .core { filter: brightness(var(--orb-luminance-thinking)); }
 .root[data-activity='thinking'] { --assistant-orb-color-b: var(--orb-seam); }
+
+/* Talking (2026-10-06): while the assistant's voice plays, only the orb's
+   glow (its aura) pulses on an irregular, speech-like rhythm — the sphere
+   itself holds its size (follow-up direct feedback: "orb not scaling, just
+   the gradient"). Opacity only, never scale: the aura is a box-shadow, which
+   paints outside its box — scaling it opened a dark, glowless ring between
+   the sphere and the glow. */
+.root[data-speaking] .aura { animation: orb-talk-aura var(--voice-talk-duration) var(--ease-standard) infinite; }
+@keyframes orb-talk-aura {
+  0%, 100% { opacity: var(--voice-level-low); }
+  14% { opacity: 1; }
+  30% { opacity: var(--voice-level-mid); }
+  44% { opacity: var(--voice-level-low); }
+  58% { opacity: 1; }
+  78% { opacity: var(--voice-level-mid); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .root[data-speaking] .aura { animation: none; }
+}

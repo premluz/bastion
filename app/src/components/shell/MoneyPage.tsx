@@ -7,9 +7,8 @@ import { ContributingBalanceRow } from './ContributingBalanceRow';
 import { CardDeck } from './CardDeck';
 import { VirtualCardPlaceholder } from './VirtualCardPlaceholder';
 import { WalletCardTile } from './WalletCardTile';
-import { HistoryItem } from './HistoryItem';
+import { ActivityGroups } from './ActivityGroups';
 import { InvestmentsTab } from './InvestmentsTab';
-import { groupAccountHistory } from './accountHistory';
 import { MONEY_HISTORY } from './moneyHistoryData';
 import { MONEY_PLACEHOLDER } from './moneySummary';
 import { WALLET_CARDS } from './cardData';
@@ -62,7 +61,6 @@ const WALLET_TAB_ITEMS = [
 ] as const;
 
 export function MoneyPage({ tab, onTabChange, onCardOpen }: MoneyPageProps) {
-  const groups = groupAccountHistory(MONEY_HISTORY, 'all');
 
   return (
     <div className={styles.root}>
@@ -102,7 +100,7 @@ export function MoneyPage({ tab, onTabChange, onCardOpen }: MoneyPageProps) {
                 } } : {})} />}
               {...(onCardOpen ? { onCardOpen: (index: number, rect: DOMRect) => onCardOpen(WALLET_CARDS[index]!.id, rect) } : {})}>
               {WALLET_CARDS.map((card) => (
-                <VirtualCardPlaceholder key={card.id} lastFourDigits={card.lastFourDigits} />
+                <VirtualCardPlaceholder key={card.id} lastFourDigits={card.lastFourDigits} {...(card.image ? { image: card.image } : {})} />
               ))}
             </CardDeck>
           </div>
@@ -111,16 +109,7 @@ export function MoneyPage({ tab, onTabChange, onCardOpen }: MoneyPageProps) {
               <Text type="label" weight="semibold">Activity</Text>
               <Icon icon="chevronRight" size="sm" color="secondary" />
             </div>
-            <div className={styles.activityList}>
-              {groups.map((group) => (
-                <div key={group.day} className={styles.activityGroup}>
-                  <Text type="supporting" color="secondary">{group.label}</Text>
-                  <div className={styles.activityPane}>
-                    {group.items.map((entry) => <HistoryItem key={entry.id} entry={entry} />)}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <ActivityGroups entries={MONEY_HISTORY} />
           </div>
         </>
       ) : (

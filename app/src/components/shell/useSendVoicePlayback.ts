@@ -46,6 +46,9 @@ type SpeechPlaybackControl = Pick<ReturnType<typeof useSpeechRecognition>, 'paus
 
 export function useSendVoicePlayback(isVoiceMode: boolean, messages: readonly TranscriptMessage[], flows: Record<number, SendState>, speech: SpeechPlaybackControl, dispatch: (id: number, action: SendAction) => void) {
   const [error, setError] = useState('');
+  // True while a voice clip is audibly playing — drives the orb's talking
+  // pulse (2026-10-06).
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const speechRef = useRef(speech);
   speechRef.current = speech;
   const dispatchRef = useRef(dispatch);
@@ -61,6 +64,7 @@ export function useSendVoicePlayback(isVoiceMode: boolean, messages: readonly Tr
     const audio = audioRef.current;
     audioRef.current = null;
     audio?.pause();
+    setIsSpeaking(false);
     queueRef.current = [];
     playedRef.current.clear();
     activeId.current = null;
@@ -74,6 +78,7 @@ export function useSendVoicePlayback(isVoiceMode: boolean, messages: readonly Tr
     if (audioRef.current) return;
     const cue = queueRef.current.shift();
     if (!cue) {
+      setIsSpeaking(false);
       if (suspendedRef.current) {
         suspendedRef.current = false;
         speechRef.current.resumeAfterPlayback();
@@ -87,6 +92,7 @@ export function useSendVoicePlayback(isVoiceMode: boolean, messages: readonly Tr
       suspendedRef.current = true;
       speechRef.current.pauseForPlayback();
     }
+    audio.addEventListener('playing', () => { if (audioRef.current === audio) setIsSpeaking(true); });
     audio.addEventListener('ended', () => {
       if (audioRef.current !== audio) return;
       audioRef.current = null;
@@ -96,6 +102,7 @@ export function useSendVoicePlayback(isVoiceMode: boolean, messages: readonly Tr
     const failPlayback = (cause: unknown) => {
       if (audioRef.current !== audio) return;
       audioRef.current = null;
+      setIsSpeaking(false);
       queueRef.current = [];
       playedRef.current.delete(cue);
       suspendedRef.current = false;
@@ -139,5 +146,5 @@ export function useSendVoicePlayback(isVoiceMode: boolean, messages: readonly Tr
   }, [isVoiceMode, messages, flows, playNext, stop]);
 
   useEffect(() => stop, [stop]);
-  return { error, playWelcome };
+  return { error, playWelcome, isSpeaking };
 }

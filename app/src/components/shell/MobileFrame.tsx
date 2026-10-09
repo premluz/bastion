@@ -187,7 +187,8 @@ export function MobileFrame(props: MobileFrameProps) {
         {transcript}
       </ComposerModeOverlay>
       <ConversationModeOverlay isOpen={state.mode === 'conversation'} onClose={state.closeConversation} sharedOrb={props.navigationVariant === 'classic'}
-        scrollRef={conversationScrollRef} isReceded={sendingOpen} speech={speech} audioError={voicePlayback.error}>
+        scrollRef={conversationScrollRef} isReceded={sendingOpen} speech={speech} audioError={voicePlayback.error}
+        assistantSpeaking={voicePlayback.isSpeaking}>
         {transcript}
       </ConversationModeOverlay>
       {sendPresentation === 'overlay' && <SendingScreenMount flows={send.flows} dispatch={send.dispatch} />}

@@ -3,7 +3,7 @@ import { Text } from '@astryxdesign/core/Text';
 import { ShieldCheckIcon } from '@heroicons/react/24/outline';
 import styles from './VirtualCardPlaceholder.module.css';
 
-export interface VirtualCardPlaceholderProps { lastFourDigits: string }
+export interface VirtualCardPlaceholderProps { lastFourDigits: string; image?: string }
 
 // Placeholder card art (2026-09-15, direct feedback: "Card asset will
 // have bg logo (bastion) logo (visa) and 3 last digits (as text) virtual
@@ -12,9 +12,12 @@ export interface VirtualCardPlaceholderProps { lastFourDigits: string }
 // "VISA" is set as plain text rather than a fabricated network logo. All
 // of this is meant to be swapped for real art/logos once provided; no
 // numbers here are real card data.
-export function VirtualCardPlaceholder({ lastFourDigits }: VirtualCardPlaceholderProps) {
+// With `image` (2026-10-06, real card photos) the art is a full-bleed <img>
+// under the same brand/digits overlay; the gradient remains the fallback.
+export function VirtualCardPlaceholder({ lastFourDigits, image }: VirtualCardPlaceholderProps) {
   return (
     <div className={styles.root}>
+      {image && <img className={styles.art} src={image} alt="" />}
       <div className={styles.content}>
         <div className={styles.design}>
           <div className={styles.topRow}>

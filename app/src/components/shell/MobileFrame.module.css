@@ -127,8 +127,30 @@
    shade by .topFade::after, so the shade no longer washes it out. */
 .chrome:has(.page) .topFade {
   height: var(--shell-header-shade-height);
+  background: none;
+}
+
+/* The shade only appears once content scrolls under the header (2026-10-06,
+   direct feedback): it lives on ::before and fades in over the first
+   header-height of scroll, driven by the active page's own scroll timeline
+   (lifted to .chrome with timeline-scope — .topFade is the page's sibling).
+   Browsers without scroll-driven animations keep the always-on shade. */
+.chrome { timeline-scope: --shell-page-scroll; }
+.page { scroll-timeline: --shell-page-scroll y; }
+.chrome:has(.page) .topFade::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   background: var(--shell-header-shade);
 }
+@supports (animation-timeline: scroll()) {
+  .chrome:has(.page) .topFade::before {
+    animation: shell-shade-in linear both;
+    animation-timeline: --shell-page-scroll;
+    animation-range: 0 var(--shell-header-height);
+  }
+}
+@keyframes shell-shade-in { from { opacity: 0; } }
 
 .topFade::after {
   content: '';

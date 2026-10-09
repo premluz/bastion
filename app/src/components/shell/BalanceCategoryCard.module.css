@@ -1,4 +1,4 @@
-/* Padding comes from Card's own padding={5} prop, not here — avoids
+/* Padding comes from Card's own padding={6} prop (24px = --shell-pane-inset), not here — avoids
    doubling it on top of Card's own layout. Filled background, not
    panelFlat's border-only outline (2026-09-16, direct feedback: "make
    it fill not just outline") — same --surface-2 fill
@@ -44,3 +44,17 @@
 .deltaDown {
   color: var(--delta-down);
 }
+
+/* Earning pill (Money tile on Home): copper-tinted, brand accent — the
+   reference's "Earning 6.4%" chip. */
+.earning {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--space-8);
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-full);
+  background: color-mix(in oklab, var(--accent-signal) 14%, transparent);
+  color: var(--accent-signal);
+}
+.earningText:not(#\#):not(#\#):not(#\#) { color: var(--accent-signal); }

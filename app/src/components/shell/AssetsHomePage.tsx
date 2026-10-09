@@ -14,7 +14,7 @@ import styles from './AssetsHomePage.module.css';
 // the tiles themselves are still a stand-in for a real promotions feed,
 // not real offers).
 const PROMOS = [
-  { id: 'offers', title: 'Explore offers and earn' },
+  { id: 'defi', eyebrow: 'Lend Earn Grow', title: 'Explore DeFi opportunities', backgroundImage: '/images/hero-promo.jpg' },
   { id: 'idle-cash', title: 'Put your idle cash to work at 6.4%' },
   { id: 'lounge', title: 'Free premium lounge at airports', icon: '🎁' },
 ] as const;
@@ -61,7 +61,8 @@ export function AssetsHomePage({ onSelectMoney, onSelectInvestments }: AssetsHom
             {...(onSelectMoney ? { onSelectMoney } : {})} {...(onSelectInvestments ? { onSelectInvestments } : {})} />
           <PromoCarousel aria-label="Promotions">
             {PROMOS.map((promo) => (
-              <PromoCardFull key={promo.id} title={promo.title} {...('icon' in promo ? { icon: promo.icon } : {})} />
+              <PromoCardFull key={promo.id} title={promo.title} {...('icon' in promo ? { icon: promo.icon } : {})}
+                {...('backgroundImage' in promo ? { backgroundImage: promo.backgroundImage, eyebrow: promo.eyebrow } : {})} />
             ))}
           </PromoCarousel>
         </div>

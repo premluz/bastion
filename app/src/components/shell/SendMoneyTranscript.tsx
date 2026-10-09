@@ -29,7 +29,7 @@ export function SendMoneyTranscript({ state, presentation, interactionMode, disp
       else if (type === 'edit' || type === 'save' || type === 'cancel') dispatch({ type });
     }}>
     <SceneRenderer scene={buildSendQuestionScene(state, interactionMode)} />
-    {state.stage !== 'checking' && state.stage !== 'options' && <SceneRenderer scene={buildSendTransferScene(state, presentation)} />}
+    {state.stage !== 'checking' && state.stage !== 'options' && <SceneRenderer scene={buildSendTransferScene(state, presentation, interactionMode)} />}
     {state.stage === 'sent' && <div className={styles.followUp}>
       <ChatMessage sender="assistant"><Text type="body" as="p" className={styles.agentReply}>
         {displayDollars(state.amountCents)} was sent to {recipientName(state)}. Anything else, Prem?

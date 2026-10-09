@@ -1,8 +1,6 @@
 import { Heading } from '@astryxdesign/core/Heading';
 import { Text } from '@astryxdesign/core/Text';
-import { TrendDelta } from '../nodes/TrendDelta';
 import { BalanceCategoryCard } from './BalanceCategoryCard';
-import glowStyles from '../../theme/glow.module.css';
 import heroBalanceStyles from '../../theme/heroBalance.module.css';
 import styles from './AssetsHomeHeader.module.css';
 
@@ -56,48 +54,28 @@ interface AssetsHomeHeaderProps {
 // hero figure above it (one summary, two presentations); Money is the
 // placeholder documented above.
 export function AssetsHomeHeader({ totalValue, changeAbs, changePercent, onSelectMoney, onSelectInvestments }: AssetsHomeHeaderProps) {
-  const isUp = changeAbs >= 0;
-  // unclipped, not clipped (2026-09-13): .clipped puts overflow:hidden on
-  // the glow host, and that host is only as tall as the balance block
-  // (measured: 253px), so the blurred ::before was sliced flat at that
-  // boundary — a hard rectangular edge below the balance. Unclipped lets
-  // the 40px blur fall off naturally instead.
+  // No glow and no change row under the balance (2026-10-06, direct
+  // feedback): the top of Home carries a faint texture instead (.root's
+  // ::before), and the Investments card below still shows the change.
   return (
-    <div
-      className={`${styles.root} ${glowStyles.root} ${glowStyles.topLeft} ${glowStyles.topRight} ${glowStyles.unclipped}`}
-      // Accent, not the gain/loss colour (2026-10-05, direct feedback: the
-      // green aura should be a subtle copper accent) — the delta row below
-      // still carries the direction.
-      style={{
-        '--glow-color': 'var(--accent-signal)',
-        '--glow-strength': 'var(--tint-subtle)',
-      } as React.CSSProperties}
-    >
-      <div className={glowStyles.content}>
-        <div className={styles.portfolio}>
-          <Text type="label" color="secondary" data-eyebrow>
-            Total balance
-          </Text>
-          <Heading level={1} type="display-1" className={heroBalanceStyles.heroBalance}>
-            ${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </Heading>
-          <div className={styles.changeRow}>
-            <Text type="supporting" hasTabularNumbers className={isUp ? styles.deltaUp : styles.deltaDown}>
-              {isUp ? '+' : ''}
-              {changeAbs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-            </Text>
-            <TrendDelta value={changePercent} />
-          </div>
-        </div>
-        <div className={styles.categoryRow}>
-          {/* Money first, then Investments (2026-10-06, direct feedback: swap
-              them; "Crypto" renamed to Investments and opens Portfolio's
-              Investments tab). */}
-          <BalanceCategoryCard label="Money" value={MONEY_PLACEHOLDER.value} changeAbs={MONEY_PLACEHOLDER.changeAbs}
-            changePercent={MONEY_PLACEHOLDER.changePercent} {...(onSelectMoney ? { onClick: onSelectMoney } : {})} />
-          <BalanceCategoryCard label="Investments" value={totalValue} changeAbs={changeAbs} changePercent={changePercent}
-            {...(onSelectInvestments ? { onClick: onSelectInvestments } : {})} />
-        </div>
+    <div className={styles.root}>
+      <div className={styles.portfolio}>
+        <Text type="label" color="secondary" data-eyebrow>
+          Total balance
+        </Text>
+        <Heading level={1} type="display-1" className={heroBalanceStyles.heroBalance}>
+          ${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </Heading>
+      </div>
+      <div className={styles.categoryRow}>
+        {/* Money first, then Investments (2026-10-06, direct feedback: swap
+            them; "Crypto" renamed to Investments and opens Portfolio's
+            Investments tab). */}
+        <BalanceCategoryCard label="Money" value={MONEY_PLACEHOLDER.value} changeAbs={MONEY_PLACEHOLDER.changeAbs}
+          changePercent={MONEY_PLACEHOLDER.changePercent} earningRate={MONEY_PLACEHOLDER.earningRate}
+          {...(onSelectMoney ? { onClick: onSelectMoney } : {})} />
+        <BalanceCategoryCard label="Investments" value={totalValue} changeAbs={changeAbs} changePercent={changePercent}
+          {...(onSelectInvestments ? { onClick: onSelectInvestments } : {})} />
       </div>
     </div>
   );
