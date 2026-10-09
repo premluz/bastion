@@ -5,6 +5,7 @@ import { useShowTouchesStore } from '../../engine/stores/showTouchesStore';
 import type { HistoryEntry } from '../../contracts/props/history-item';
 import type { AccountScreen, PreviewAccount } from './accountTypes';
 import { formatHistoryAmount } from './accountHistory';
+import { InstallAppRow } from './InstallAppRow';
 import styles from './AccountPages.module.css';
 
 const copy: Partial<Record<AccountScreen, [string, string]>> = {
@@ -28,6 +29,7 @@ export function AccountInfoPage({ screen, account, entry, update }: {
         onChange={(notifications) => update({ notifications })} />
       <Switch label="Show touches" description="Draw a dot under each finger, for demos and recordings."
         value={showTouches.enabled} onChange={showTouches.setEnabled} />
+      <InstallAppRow />
     </>}
     {screen === 'transaction' && entry && <>
       <Text type="display-1">{formatHistoryAmount(entry) || entry.title}</Text>
