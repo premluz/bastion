@@ -1,0 +1,10 @@
+/* Full-bleed promo banner (2026-10-10). Structural aliases over primitives
+   only. The top/bottom fades themselves are the page's own --shell-fade
+   gradient (background colour → transparent), not a copy of it. */
+:root {
+  --promo-bleed-height: calc(var(--space-64) * 3 + var(--space-32));
+  --promo-bleed-fade-height: calc(var(--space-64) + var(--space-16));
+  /* How far the banner rides up under the balance tiles above it (agent home). */
+  --promo-bleed-overlap: var(--space-48);
+  --promo-bleed-dot: color-mix(in oklab, var(--ink-primary) 28%, transparent);
+}

@@ -10,7 +10,9 @@
     "lint:tokens": "! grep -rInE \"#[0-9a-fA-F]{3,8}\\b|rgba?\\(|hsla?\\(\" app/src --exclude=astryx-bridge.md --exclude=*.svg && ! grep -rInE \"oklch\\(|oklab\\(|[^-a-z]lab\\(|[^-a-z]lch\\(\" app/src --exclude-dir=theme --exclude=astryx-bridge.md && node lint-theme-parity.mjs",
     "verify": "pnpm lint:tokens && pnpm test:visual",
     "storybook": "storybook dev -c .storybook -p 6006",
-    "build-storybook": "storybook build -c .storybook -o storybook-static"
+    "build-storybook": "storybook build -c .storybook -o storybook-static",
+    "ios:sync": "pnpm --filter app build && pnpm --filter app exec cap sync ios",
+    "ios:open": "pnpm --filter app exec cap open ios"
   },
   "devDependencies": {
     "@astryxdesign/cli": "0.1.4",

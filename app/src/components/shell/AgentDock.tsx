@@ -2,7 +2,7 @@ import { useState, type ReactNode, type Ref } from 'react';
 import { Icon } from '@astryxdesign/core/Icon';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Text } from '@astryxdesign/core/Text';
-import { HomeIcon, MagnifyingGlassIcon, Squares2X2Icon, WalletIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, MagnifyingGlassIcon, Squares2X2Icon, WalletIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { AssistantOrb, type AssistantActivity } from './AssistantOrb';
 import { DockMenu, type DockMenuItem } from './DockMenu';
 import { PLUS_TRIGGER_ICON, QUICK_ACTIONS } from './PillNavigation';
@@ -12,7 +12,15 @@ import '../../theme/agent-dock.css';
 import styles from './AgentDock.module.css';
 
 const USER_FIRST_NAME = 'Prem';
-const NAV_ICON = <Icon icon={Squares2X2Icon} size="lg" />;
+
+// The left trigger turns into an X while its menu is open, as the right one's +
+// does (2026-10-10, direct feedback): the grid turns away as the X turns in.
+function NavTriggerIcon({ isOpen }: { isOpen: boolean }) {
+  return <span className={styles.navIcon} data-open={isOpen}>
+    <span className={styles.navIconGrid}><Icon icon={Squares2X2Icon} size="lg" /></span>
+    <span className={styles.navIconClose}><Icon icon={XMarkIcon} size="lg" /></span>
+  </span>;
+}
 const DESTINATIONS = [
   { id: 'home', label: 'Home', icon: HomeIcon }, { id: 'markets', label: 'Explore', icon: MagnifyingGlassIcon },
   { id: 'assets', label: 'Wallet', icon: WalletIcon },
@@ -49,12 +57,14 @@ export interface AgentDockProps {
 export function AgentDock({ isAwake, activeTab, onWake, onSleep, onNavigate, thread, isWorking, caption, activity, speaking, threadRef, orbRef }: AgentDockProps) {
   const [navOpen, setNavOpen] = useState(false);
   const [actionsOpen, setActionsOpen] = useState(false);
-  const destinations: DockMenuItem[] = DESTINATIONS.map((item) => ({ ...item, isCurrent: item.id === activeTab }));
+  // Listed bottom-up: the menu opens above its button, so the last item sits nearest it
+  // and Home ends up at the bottom (2026-10-10, direct feedback).
+  const destinations: DockMenuItem[] = DESTINATIONS.map((item) => ({ ...item, isCurrent: item.id === activeTab })).reverse();
   return <>
     {(navOpen || actionsOpen) && <button type="button" className={pillStyles.scrim} aria-hidden="true" tabIndex={-1}
       onClick={() => { setNavOpen(false); setActionsOpen(false); }} />}
     {isWorking && <div ref={threadRef} className={styles.thread} role="log" aria-label="Assistant transcript" tabIndex={0}>{thread}</div>}
-    <div className={styles.dock} data-awake={isAwake}>
+    <div className={styles.dock} data-awake={isAwake} data-menu-open={navOpen || actionsOpen}>
       <button ref={orbRef} type="button" className={styles.orb} onClick={isAwake ? undefined : onWake}
         aria-label={isAwake ? 'Assistant is listening' : 'Wake the assistant'} aria-disabled={isAwake}>
         <AssistantOrb activity={isAwake ? activity : 'listening'} expanded speaking={isAwake && speaking} />
@@ -66,7 +76,7 @@ export function AgentDock({ isAwake, activeTab, onWake, onSleep, onNavigate, thr
           <span aria-hidden="true" />
         </> : <>
           <DockMenu label="Navigation" items={destinations} isOpen={navOpen} onOpenChange={setNavOpen} alignment="start"
-            onSelect={(id) => { if (isDestination(id)) onNavigate(id); }} triggerIcon={NAV_ICON} className={styles.navToggle} />
+            onSelect={(id) => { if (isDestination(id)) onNavigate(id); }} triggerIcon={<NavTriggerIcon isOpen={navOpen} />} className={styles.navToggle} />
           <Text type="body" className={styles.greeting}>{greeting(new Date().getHours())} {USER_FIRST_NAME}</Text>
           <DockMenu label="Quick actions" items={QUICK_ACTIONS} isOpen={actionsOpen} onOpenChange={setActionsOpen} alignment="end"
             onSelect={() => undefined} triggerIcon={PLUS_TRIGGER_ICON} className={styles.plusToggle} />

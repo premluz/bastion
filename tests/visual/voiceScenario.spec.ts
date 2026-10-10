@@ -67,12 +67,14 @@ test.beforeEach(async ({ page }) => {
       onerror: ((event: { error: string }) => void) | null = null;
       lang = '';
       voice: object | null = null;
+      volume = 1;
       constructor(readonly text: string) {}
     }
     const synthesis = {
       getVoices: () => [], addEventListener() {}, removeEventListener() {}, cancel() {},
       speak(utterance: FakeUtterance) {
-        if (!utterance.text) return;
+        // The silent one-space unlock used inside taps is not speech.
+        if (!utterance.text.trim() || utterance.volume === 0) return;
         const root = document.documentElement;
         root.setAttribute('data-spoken', [root.getAttribute('data-spoken'), utterance.text].filter(Boolean).join('|'));
         queueMicrotask(() => { utterance.onstart?.(); utterance.onend?.(); });
@@ -100,11 +102,11 @@ test('two seconds of silence submits each turn, gives a useful fallback, and kee
   await page.clock.runFor(1000);
   await emitSpeech(page, 'Tell me a joke', true);
   await page.clock.runFor(1500);
-  expect(await dialog.getByText('I can’t help with that yet. Try saying, “Send 50 dollars to Daniel for coffee.”').count()).toBe(0);
+  expect(await dialog.getByText('I heard “Tell me a joke”, but I can’t help with that yet. Try saying, “Top up the mortgage account” or “Send 50 dollars to Daniel for coffee.”').count()).toBe(0);
   await emitSpeech(page, 'Tell me a joke', true);
   await page.clock.runFor(500);
-  await expect(dialog.getByText('I can’t help with that yet. Try saying, “Send 50 dollars to Daniel for coffee.”')).toBeVisible();
-  await expect(page.locator('html')).toHaveAttribute('data-spoken', 'I can’t help with that yet. Try saying, “Send 50 dollars to Daniel for coffee.”');
+  await expect(dialog.getByText('I heard “Tell me a joke”, but I can’t help with that yet. Try saying, “Top up the mortgage account” or “Send 50 dollars to Daniel for coffee.”')).toBeVisible();
+  await expect(page.locator('html')).toHaveAttribute('data-spoken', 'I heard “Tell me a joke”, but I can’t help with that yet. Try saying, “Top up the mortgage account” or “Send 50 dollars to Daniel for coffee.”');
   const bottomGap = await dialog.getByRole('log', { name: 'Conversation transcript' }).evaluate((element) => {
     const styles = getComputedStyle(element);
     return [styles.paddingBottom, styles.getPropertyValue('--space-32').trim()];

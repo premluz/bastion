@@ -24,8 +24,11 @@ export type TopUpAction = { type: 'source'; value: TopUpSource; advance?: boolea
 const isSource = (value: string): value is TopUpSource => value in TOP_UP_DEMO.sources;
 const dollars = (cents: number) => (cents / 100).toFixed(2);
 
+// Speech engines write "top-up", "top up", "topup" and mishear "up" as "of",
+// so any action word beside "mortgage" counts; "mortgage" alone (a question
+// about it) does not.
 export function parseTopUpRequest(text: string): TopUpRequest | null {
-  return /\bmortgage\b/i.test(text) && /\b(top(?:\s|-)?up|cover|fund|short|pay)\b/i.test(text) ? { kind: 'mortgage-top-up' } : null;
+  return /\bmortgage\b/i.test(text) && /\b(top|topup|top-up|up|of|cover|fund|short|pay|repay|add|deposit|transfer|move|put)\b/i.test(text) ? { kind: 'mortgage-top-up' } : null;
 }
 
 export function createTopUpState(now: number, firstStepMs: number): TopUpState {

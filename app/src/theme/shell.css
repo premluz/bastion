@@ -28,7 +28,11 @@
      --shell-control-size). Not derived from --shell-control-size
      itself — the header's content row measures shorter than the 48px
      control size token, so reusing that token here would overstate it. */
-  --shell-header-height: calc(var(--shell-inset) * 2 + var(--shell-search-height));
+  /* The header's top padding grows to the status bar / notch (max(inset,
+     safe-area-top), MobileFrame.module.css), so this must too (2026-10-09,
+     found in the iOS wrapper: the page slid under the header). 0 in a plain
+     browser tab, where the browser chrome already sits above. */
+  --shell-header-height: calc(max(var(--shell-inset), env(safe-area-inset-top)) + var(--shell-inset) + var(--shell-search-height));
   /* 2026-09-30, direct feedback: "search on top should be larger" — the
      full control size, up from Astryx's 32px md field. The header row's
      height (above) now follows it. */

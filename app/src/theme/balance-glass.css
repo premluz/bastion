@@ -1,0 +1,11 @@
+/* Smoked glass for the balance tiles (2026-10-10, direct feedback: "still
+   can't see transparency... needs stronger glass and opacity"). Derived from
+   each theme's own clear-glass fill, so no theme needs its own entry: the fill
+   keeps under half its alpha (the header search's glass lets only ~28% of what
+   is behind it through; this lets over half), the blur deepens to the top of
+   the blur scale, and a bright top lip gives the pane an edge to catch light. */
+:root {
+  --balance-glass-fill: color-mix(in oklab, var(--glass-fill-clear) 45%, transparent);
+  --balance-glass-backdrop: blur(var(--blur-40)) saturate(1.8);
+  --balance-glass-lip: inset 0 var(--shell-edge-width) 0 color-mix(in oklab, var(--ink-primary) 22%, transparent);
+}

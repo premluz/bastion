@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import '../../theme/promo-bleed.css';
 import styles from './PromoCarousel.module.css';
 
 export interface PromoCarouselProps {
   children: ReactNode[];
   'aria-label': string;
+  /** `bleed` runs the slides edge to edge of the screen, with the dots over the image. */
+  variant?: 'card' | 'bleed';
 }
 
 // One-at-a-time carousel with dot navigation (2026-09-15, direct feedback:
@@ -18,7 +21,7 @@ export interface PromoCarouselProps {
 // breaks under RTL, zoom, and sub-pixel snap rounding, where
 // IntersectionObserver's own visibility ratio does not. A slide crossing
 // the 50% visibility threshold is the one snapped into view.
-export function PromoCarousel({ children, 'aria-label': ariaLabel }: PromoCarouselProps) {
+export function PromoCarousel({ children, 'aria-label': ariaLabel, variant = 'card' }: PromoCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   useEffect(() => {
@@ -40,7 +43,7 @@ export function PromoCarousel({ children, 'aria-label': ariaLabel }: PromoCarous
     slide?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
   };
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-variant={variant}>
       <div ref={trackRef} className={styles.track} role="region" aria-label={ariaLabel}>
         {children}
       </div>

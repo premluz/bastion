@@ -3,33 +3,8 @@ import { resolveAssetsHomeSummary } from '../../engine/assetsHome';
 import { AssetsHomeHeader } from './AssetsHomeHeader';
 import { AssetsHomeList } from './AssetsHomeList';
 import { ContentGroup } from '../nodes/ContentGroup';
-import { PromoCardFull } from './PromoCardFull';
-import { PromoCarousel } from './PromoCarousel';
+import { HomePromos } from './HomePromos';
 import styles from './AssetsHomePage.module.css';
-
-// Placeholder tiles (2026-09-13) — no real promo/offers content exists in
-// this fork's universe seed; authored copy only, same "never fabricate
-// DATA" line this page already draws for Earn/NFTs (fabricating promo
-// COPY carries no such risk — there's no number here to get wrong — but
-// the tiles themselves are still a stand-in for a real promotions feed,
-// not real offers).
-const PROMOS = [
-  { id: 'defi', eyebrow: 'Lend Earn Grow', title: 'Explore DeFi opportunities', backgroundImage: '/images/hero-promo.jpg' },
-  { id: 'idle-cash', title: 'Put your idle cash to work at 6.4%' },
-  { id: 'lounge', title: 'Free premium lounge at airports', icon: '🎁' },
-] as const;
-
-// Shared with AgentHomePage (2026-10-09): both homes carry the same promos.
-export function HomePromos() {
-  return (
-    <PromoCarousel aria-label="Promotions">
-      {PROMOS.map((promo) => (
-        <PromoCardFull key={promo.id} title={promo.title} {...('icon' in promo ? { icon: promo.icon } : {})}
-          {...('backgroundImage' in promo ? { backgroundImage: promo.backgroundImage, eyebrow: promo.eyebrow } : {})} />
-      ))}
-    </PromoCarousel>
-  );
-}
 
 // New page, not a HoldingsPage.tsx replacement or restyle (2026-09-12 call,
 // stated per the phase brief): HoldingsPage renders a DataTable keyed off

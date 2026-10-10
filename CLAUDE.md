@@ -140,6 +140,7 @@ Same closed list Merlin used, inherited unchanged — no mobile-wallet-specific 
 - storybook (react-vite)
 - `@modelcontextprotocol/sdk` (mcp-server package only)
 - `@types/node` (mcp-server package only, types-only)
+- `@capacitor/core`, `@capacitor/ios` (exact pins) and `@capacitor/cli` (dev) — the iOS TestFlight wrapper in `app/ios/`, a thin native shell around the same Vite build. Approved by Prem 2026-10-09; the native project lives inside `app/`, not as a new top-level directory.
 - vitest (contracts + bindings + resolver tests)
 - @playwright/test + @storybook/test-runner (visual regression only)
 

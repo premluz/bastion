@@ -1,0 +1,57 @@
+.root {
+  position: relative;
+  isolation: isolate;
+  height: var(--promo-bleed-height);
+  overflow: hidden;
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The page's own shade, twice: --shell-fade is background → transparent, so
+   the bottom one is turned over exactly as MobileFrame's .bottomFade is. */
+.root::before,
+.root::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  height: var(--promo-bleed-fade-height);
+  background: var(--shell-fade);
+  pointer-events: none;
+  z-index: 1;
+}
+.root::before { top: 0; }
+.root::after { bottom: 0; transform: rotate(180deg); }
+
+/* Same left-side scrim as the framed hero card, so copy stays legible on any photo. */
+.body {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: var(--space-8);
+  padding: var(--shell-inset);
+  padding-block-end: var(--space-32);
+  background: var(--promo-hero-scrim);
+}
+
+.title {
+  max-width: 12ch;
+  font-size: var(--text-24);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--ink-primary);
+}
+
+.cta:global(.astryx-button):not(#\#):not(#\#):not(#\#) {
+  margin-block-start: var(--space-4);
+  border-radius: var(--radius-full);
+}

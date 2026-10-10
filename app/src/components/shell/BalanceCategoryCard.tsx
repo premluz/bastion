@@ -3,6 +3,7 @@ import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
 import { ChevronRightIcon, CircleStackIcon } from '@heroicons/react/24/outline';
 import { TrendDelta } from '../nodes/TrendDelta';
+import '../../theme/balance-glass.css';
 import styles from './BalanceCategoryCard.module.css';
 
 interface BalanceCategoryCardProps {

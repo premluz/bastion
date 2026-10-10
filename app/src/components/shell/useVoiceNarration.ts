@@ -2,6 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { useSpeechRecognition } from './useSpeechRecognition';
 import welcomeClip from '../../../scenes/how-can-i-help.mp3?url';
 import { pickNarrationVoice } from './narrationVoice';
+import { speechLanguage } from './speechLanguage';
+import { canSpeak, speakText, unlockSpeech } from './speakText';
+import { hasNativeVoice, speakNatively } from './nativeVoice';
 
 // One line the assistant says: a recorded clip, or text for the browser's
 // speech synthesis when no clip exists yet (2026-10-09, Prem: "browser TTS
@@ -19,7 +22,6 @@ export interface NarrationTarget { id: number; line: NarrationLine | null }
 interface Queued { key: string; line: NarrationLine }
 
 type SpeechPlaybackControl = Pick<ReturnType<typeof useSpeechRecognition>, 'pauseForPlayback' | 'resumeAfterPlayback'>;
-const canSynthesize = () => typeof window !== 'undefined' && 'speechSynthesis' in window;
 
 // The assistant's voice for every scenario. Lines play one at a time, never
 // twice, with the microphone paused while it speaks.
@@ -44,9 +46,10 @@ export function useVoiceNarration(isVoiceMode: boolean, targets: readonly Narrat
   // asynchronously, so the voice is picked again when it changes.
   const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const synthesisRef = useRef<(() => void) | null>(null);
+  const cancelSpeechRef = useRef<(() => void) | null>(null);
   const startSynthesis = () => {
-    if (synthesisRef.current || !canSynthesize()) return;
-    const choose = () => { voiceRef.current = pickNarrationVoice(window.speechSynthesis.getVoices(), navigator.language || 'en-US'); };
+    if (synthesisRef.current || !canSpeak()) return;
+    const choose = () => { voiceRef.current = pickNarrationVoice(window.speechSynthesis.getVoices(), speechLanguage(navigator.language)); };
     choose();
     window.speechSynthesis.addEventListener('voiceschanged', choose);
     synthesisRef.current = () => window.speechSynthesis.removeEventListener('voiceschanged', choose);
@@ -73,7 +76,8 @@ export function useVoiceNarration(isVoiceMode: boolean, targets: readonly Narrat
     releaseMicrophone();
     item.line.onFail?.();
     console.error(`Voice narration failed at ${item.key}`, cause);
-    setError(`Couldn't play the ${item.line.key} voice response. Check your browser's audio permissions.`);
+    setError(item.line.clip ? `Couldn't play the ${item.line.key} voice response. Check your browser's audio permissions.`
+      : 'Couldn’t speak the reply. Check the volume and that silent mode is off.');
   };
 
   const getElement = () => {
@@ -92,19 +96,17 @@ export function useVoiceNarration(isVoiceMode: boolean, targets: readonly Narrat
   };
 
   const speak = (item: Queued, text: string) => {
-    if (!canSynthesize()) { fail(item, new Error('Speech synthesis is unavailable in this browser.')); return; }
-    startSynthesis();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = voiceRef.current?.lang ?? (navigator.language || 'en-US');
-    if (voiceRef.current) utterance.voice = voiceRef.current;
-    utterance.onstart = () => { if (currentRef.current === item) setIsSpeaking(true); };
-    utterance.onend = () => finish(item);
-    utterance.onerror = (event) => {
-      // stop() cancels synthesis on purpose; that is not a failure.
-      if (event.error === 'interrupted' || event.error === 'canceled') return;
-      fail(item, new Error(`Speech synthesis error: ${event.error}`));
+    const callbacks = {
+      onStart: () => { if (currentRef.current === item) setIsSpeaking(true); },
+      onEnd: () => finish(item),
+      onError: (cause: Error) => fail(item, cause),
     };
-    window.speechSynthesis.speak(utterance);
+    if (hasNativeVoice()) { cancelSpeechRef.current = speakNatively(text, speechLanguage(navigator.language), callbacks); return; }
+    if (!canSpeak()) { fail(item, new Error('Speech synthesis is unavailable in this browser.')); return; }
+    startSynthesis();
+    cancelSpeechRef.current = speakText(text, {
+      voice: voiceRef.current, lang: speechLanguage(navigator.language), ...callbacks,
+    });
   };
 
   function playNext() {
@@ -123,11 +125,11 @@ export function useVoiceNarration(isVoiceMode: boolean, targets: readonly Narrat
   }
   // Audio listeners and the stable callbacks below outlive this render; they
   // reach the current helpers through this ref.
-  // Inside a tap: an empty utterance unlocks speech synthesis on iOS.
+  // Inside a tap: unlocks speech synthesis on iOS (see unlockSpeech).
   const unlockSynthesis = () => {
-    if (!canSynthesize()) return;
+    if (hasNativeVoice() || !canSpeak()) return;
     startSynthesis();
-    window.speechSynthesis.speak(new SpeechSynthesisUtterance(''));
+    unlockSpeech();
   };
   const actions = useRef({ finish, fail, playNext, getElement, unlockSynthesis });
   actions.current = { finish, fail, playNext, getElement, unlockSynthesis };
@@ -138,7 +140,8 @@ export function useVoiceNarration(isVoiceMode: boolean, targets: readonly Narrat
     if (currentRef.current) elementRef.current?.pause();
     currentRef.current = null;
     queueRef.current = [];
-    if (synthesisRef.current) window.speechSynthesis.cancel();
+    cancelSpeechRef.current?.();
+    cancelSpeechRef.current = null;
     setIsSpeaking(false);
     suspendedRef.current = false;
   }, []);

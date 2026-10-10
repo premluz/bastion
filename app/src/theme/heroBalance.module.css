@@ -7,12 +7,21 @@
    above display-1's own --text-32 ("1 scale larger, extra large" — no
    larger size existed on the ramp, so this size was added alongside
    this class); 700 is thicker than Heading's own default weight. */
+/* Size cut 20% (2026-10-10, direct feedback: "reduce the font size of the
+   main balance by 20%"): 40px → 32px, one token step down the ramp. */
 .heroBalance {
   font-variant-numeric: tabular-nums;
-  font-size: var(--text-40);
+  font-size: var(--text-32);
   font-weight: 700;
 }
 
 :global([data-theme='bastion']) .heroBalance {
   font-weight: 900;
+}
+
+/* The transfer card's amount (PaymentCard) is a hero figure but not a balance,
+   so it keeps the size the balances had before the cut. */
+.heroAmount {
+  composes: heroBalance;
+  font-size: var(--text-40);
 }

@@ -26,7 +26,7 @@
   z-index: 1;
   display: grid;
   place-items: center;
-  margin-bottom: calc(var(--space-32) * -1);
+  margin-bottom: calc(var(--agent-dock-orb-sink) * -1);
   padding: 0;
   border: 0;
   background: none;
@@ -37,7 +37,7 @@
   --assistant-orb-color-b: var(--agent-orb-color-b);
   --assistant-orb-aura: var(--agent-orb-aura);
   view-transition-name: agent-orb;
-  transition: scale var(--press-release-duration) var(--press-release-ease);
+  transition: scale var(--press-release-duration) var(--press-release-ease), opacity var(--duration-200) var(--motion-enter-ease);
 }
 .orb:focus-visible { outline: var(--shell-edge-width) solid var(--presence); outline-offset: var(--space-4); }
 /* No surface disc behind the liquid: the orb is light, not an object. */
@@ -63,7 +63,21 @@
   padding-bottom: var(--space-4);
   text-align: center;
   color: var(--presence);
+  transition: opacity var(--duration-200) var(--motion-enter-ease);
 }
+
+/* Covered by the scrim while a menu is open (2026-10-10, direct feedback: "the
+   agent and the text below should be covered by scrim"). The dock sits above
+   the page scrim as one unit, which keeps the two buttons bright and clickable
+   — and left the orb and greeting bright with them. They fade to the scrim's
+   darkness instead (opacity, so the orb's glow goes too and any theme works),
+   and stop catching taps, so touching them reaches the scrim and dismisses the
+   menu; only the two buttons (and the open menu) stay live. */
+.dock[data-menu-open='true'] .orb,
+.dock[data-menu-open='true'] .greeting:not(#\#):not(#\#):not(#\#) { opacity: var(--opacity-40); }
+.dock[data-menu-open='true'],
+.dock[data-menu-open='true'] .greeting:not(#\#):not(#\#):not(#\#) { pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .orb, .greeting:not(#\#):not(#\#):not(#\#) { transition: none; } }
 
 /* The conversation, in place: once the home's contents have faded out
    (AgentHomePage, bottom-up), the thread rises where they were — same
@@ -87,6 +101,17 @@
    button and the greeting the live caption, each on its own clock; the +
    leaves. The orb holds its place throughout. */
 .navToggle { view-transition-name: dock-nav-1; }
+.navIcon { display: grid; place-items: center; }
+.navIcon > * {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  transition: transform var(--pill-duration) var(--pill-ease), opacity var(--pill-duration) var(--pill-ease);
+}
+.navIconClose { opacity: 0; transform: rotate(-90deg); }
+.navIcon[data-open='true'] .navIconGrid { opacity: 0; transform: rotate(90deg); }
+.navIcon[data-open='true'] .navIconClose { opacity: 1; transform: rotate(0deg); }
+@media (prefers-reduced-motion: reduce) { .navIcon > * { transition: none; } }
 .greeting { view-transition-name: dock-nav-2; }
 .plusToggle { view-transition-name: dock-nav-5; }
 

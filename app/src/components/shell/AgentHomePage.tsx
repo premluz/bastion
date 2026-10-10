@@ -5,7 +5,7 @@ import { ArrowTrendingUpIcon, BuildingLibraryIcon, ChartPieIcon, UserIcon } from
 import { resolveAssetsHomeSummary } from '../../engine/assetsHome';
 import { AGENT_SUGGESTIONS } from '../../engine/agentAgenda';
 import { AssetsHomeHeader } from './AssetsHomeHeader';
-import { HomePromos } from './AssetsHomePage';
+import { HomePromos } from './HomePromos';
 import homeStyles from './AssetsHomePage.module.css';
 import styles from './AgentHomePage.module.css';
 
@@ -33,7 +33,7 @@ export function AgentHomePage({ onSelectMoney, onSelectInvestments, onSuggestion
         <div className={`${homeStyles.cardStack} ${styles.top}`}>
           <AssetsHomeHeader totalValue={summary.totalValue} changeAbs={summary.changeAbs} changePercent={summary.changePercent}
             {...(onSelectMoney ? { onSelectMoney } : {})} {...(onSelectInvestments ? { onSelectInvestments } : {})} />
-          <HomePromos />
+          <HomePromos variant="bleed" />
         </div>
         <section className={styles.suggestions} aria-labelledby="agent-suggestions-title">
           <Text type="body" as="h2" id="agent-suggestions-title" className={styles.title}>Would you like to review those?</Text>

@@ -14,6 +14,10 @@ describe('mortgage top-up', () => {
     expect(parseTopUpRequest('cover my mortgage')).not.toBeNull();
     expect(parseTopUpRequest('top up my card')).toBeNull();
     expect(parseTopUpRequest('what is a mortgage')).toBeNull();
+    // what speech engines actually write
+    expect(parseTopUpRequest('top of the mortgage account')).not.toBeNull();
+    expect(parseTopUpRequest('Topup mortgage')).not.toBeNull();
+    expect(parseTopUpRequest('add money to my mortgage')).not.toBeNull();
   });
 
   it('walks the checking trail step by step, then asks for a source', () => {

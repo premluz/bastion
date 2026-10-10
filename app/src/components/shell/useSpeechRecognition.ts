@@ -1,26 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { assembleTranscript } from './assembleTranscript';
-
-interface RecognitionEngine {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  onresult: ((event: SpeechRecognitionEvent) => void) | null;
-  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
-  onend: (() => void) | null;
-  start(): void;
-  stop(): void;
-  abort(): void;
-}
-
-type RecognitionConstructor = new () => RecognitionEngine;
-
-declare global {
-  interface Window {
-    SpeechRecognition?: RecognitionConstructor;
-    webkitSpeechRecognition?: RecognitionConstructor;
-  }
-}
+import { speechLanguage } from './speechLanguage';
+import { isStaleReplay } from './staleReplay';
+import { recognitionError, resolveRecognition, type RecognitionConstructor, type RecognitionEngine } from './speechEngine';
 
 interface Session {
   Recognition: RecognitionConstructor;
@@ -35,17 +17,6 @@ interface Session {
 
 const VOICE_PAUSE_MS = 2000;
 
-function recognitionError(code: SpeechRecognitionErrorCode): string {
-  switch (code) {
-    case 'not-allowed':
-    case 'service-not-allowed': return 'Microphone permission was denied.';
-    case 'audio-capture': return 'No microphone is available.';
-    case 'network': return 'Speech recognition lost its network connection.';
-    case 'language-not-supported': return 'Speech recognition does not support this language.';
-    default: return `Speech recognition stopped: ${code}.`;
-  }
-}
-
 export function useSpeechRecognition(isOpen: boolean, onFinal: (text: string) => void, isScenario: (text: string) => Promise<boolean>) {
   const [text, setText] = useState('');
   const [error, setError] = useState('');
@@ -56,7 +27,9 @@ export function useSpeechRecognition(isOpen: boolean, onFinal: (text: string) =>
   onFinalRef.current = onFinal;
   const isScenarioRef = useRef(isScenario);
   isScenarioRef.current = isScenario;
-  const supported = typeof window !== 'undefined' && Boolean(window.SpeechRecognition ?? window.webkitSpeechRecognition);
+  // Last words handed to the app, across sessions, to recognise an engine replaying them.
+  const lastSubmitted = useRef('');
+  const supported = typeof window !== 'undefined' && Boolean(resolveRecognition());
 
   const discard = (current: Session) => {
     if (session.current !== current) return;
@@ -77,6 +50,7 @@ export function useSpeechRecognition(isOpen: boolean, onFinal: (text: string) =>
     current.text = '';
     current.prefix = '';
     setText('');
+    lastSubmitted.current = utterance;
     onFinalRef.current(utterance);
     current.stopping = true;
     try {
@@ -92,13 +66,18 @@ export function useSpeechRecognition(isOpen: boolean, onFinal: (text: string) =>
     const engine = new current.Recognition();
     current.engine = engine;
     current.stopping = false;
+    const startedAt = Date.now();
     engine.continuous = true;
     engine.interimResults = true;
-    engine.lang = navigator.language || 'en-US';
+    engine.lang = speechLanguage(navigator.language);
     engine.onresult = (event) => {
       if (session.current !== current || current.engine !== engine || current.stopping) return;
       const recognized = assembleTranscript(Array.from(event.results).map((result) => ({ transcript: result[0]?.transcript ?? '', isFinal: result.isFinal })));
       const next = [current.prefix, recognized].filter(Boolean).join(' ').trim();
+      if (isStaleReplay(next, lastSubmitted.current, startedAt, Date.now())) {
+        console.warn(`Ignoring “${next}”: the speech engine replayed the previous phrase as a new session opened.`);
+        return;
+      }
       if (next !== current.text) {
         current.text = next;
         current.checkedFinal = '';
@@ -136,7 +115,7 @@ export function useSpeechRecognition(isOpen: boolean, onFinal: (text: string) =>
   };
 
   const start = () => {
-    const Recognition = window.SpeechRecognition ?? window.webkitSpeechRecognition;
+    const Recognition = resolveRecognition();
     if (!Recognition || session.current) return;
     const current: Session = { Recognition, engine: null, text: '', prefix: '', timer: null, stopping: false, suspended: false, checkedFinal: '' };
     session.current = current;
@@ -176,7 +155,10 @@ export function useSpeechRecognition(isOpen: boolean, onFinal: (text: string) =>
     if (!current) return;
     const utterance = current.text.trim();
     discard(current);
-    if (utterance) onFinalRef.current(utterance);
+    if (utterance) {
+      lastSubmitted.current = utterance;
+      onFinalRef.current(utterance);
+    }
   };
 
   useEffect(() => {

@@ -54,6 +54,25 @@
   transform: scale(1.25);
 }
 
+/* Full-bleed (2026-10-10): the carousel breaks out of the page's side padding
+   to the screen edges, and the dots sit over the photo's lower edge. */
+.root[data-variant='bleed'] {
+  position: relative;
+  margin-inline: calc(-1 * var(--shell-inset));
+}
+.root[data-variant='bleed'] .dots {
+  position: absolute;
+  inset-inline: 0;
+  bottom: var(--space-12);
+  z-index: 3;
+  pointer-events: none;
+}
+.root[data-variant='bleed'] .dot {
+  pointer-events: auto;
+  background: var(--promo-bleed-dot);
+}
+.root[data-variant='bleed'] .dot[data-active='true'] { background: var(--accent-signal); }
+
 @media (prefers-reduced-motion: reduce) {
   .dot { transition: none; }
 }

@@ -59,3 +59,10 @@
   .root .pane, .root .pane > *, .title, .top > :nth-child(2), .top > :first-child > * { transition-property: opacity; transition-delay: 0s; }
   .root[data-receding] .pane > *, .root[data-receding] .title, .root[data-receding] .top > :nth-child(2), .root[data-receding] .top > :first-child > * { translate: none; filter: none; }
 }
+
+/* The banner rides up under the balance tiles (2026-10-10, direct feedback:
+   "pull the banner up so these two panes slightly overlap"): its top, already
+   dissolving into the page, tucks beneath the tiles' glass. The tiles' block
+   is lifted above it, since the banner comes later in the document. */
+.top > :first-child { z-index: 1; }
+.top > :nth-child(2) { margin-block-start: calc(-1 * (var(--promo-bleed-overlap) + var(--shell-card-gap))); }

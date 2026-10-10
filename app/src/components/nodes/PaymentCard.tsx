@@ -85,7 +85,7 @@ export function PaymentCard(props: PaymentCardProps) {
         <TransferRoute recipient={props.recipient} isSuccess={success} isPending={inline && pending} inline={inline} />
         {inline && <InlineStateLabel label={inlineLabel} pending={pending} />}
         <div className={styles.summary}>
-          <Text type="display-1" className={heroBalanceStyles.heroBalance} hasTabularNumbers display="block">${props.amount}</Text>
+          <Text type="display-1" className={heroBalanceStyles.heroAmount} hasTabularNumbers display="block">${props.amount}</Text>
           <div className={styles.meta}>
             <div className={styles.metaRow}><Text type="supporting" color="secondary">Arrives</Text>
               <Text type="body">{props.arrival}</Text></div>

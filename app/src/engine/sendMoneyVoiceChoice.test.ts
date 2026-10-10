@@ -25,7 +25,7 @@ describe('send voice choices', () => {
   });
   it('confirms or cancels the review card by voice, like the mortgage top-up', () => {
     const review = { ...recipient, stage: 'review' as const };
-    for (const said of ['Yes', 'Confirm', 'accept it', 'yeah go ahead'])
+    for (const said of ['Yes', 'Confirm', 'Confirmed.', 'accept it', 'Accepted', 'yeah go ahead'])
       expect(parseSendVoiceChoice(said, review)).toEqual({ type: 'accept', deferSending: true });
     expect(parseSendVoiceChoice('No, cancel', review)).toEqual({ type: 'cancel' });
     expect(parseSendVoiceChoice('yes, no', review)).toBeNull();

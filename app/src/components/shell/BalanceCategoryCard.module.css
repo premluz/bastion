@@ -17,8 +17,13 @@
      than switching Card to variant="transparent", which would also
      strip the background this component just added. */
   border: var(--shell-edge-width) solid transparent;
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box, var(--glass-edge) border-box;
-  backdrop-filter: blur(var(--surface-blur));
+  /* Smoked glass (2026-10-10, direct feedback): a translucent dark fill over a
+     deep blur, with a bright top lip — see theme/balance-glass.css — so the
+     banner that rides up under these tiles shows through, blurred, instead of
+     the flat card fill. */
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--balance-glass-fill), var(--balance-glass-fill)) padding-box, var(--glass-edge) border-box;
+  box-shadow: var(--balance-glass-lip), var(--glass-shadow);
+  backdrop-filter: var(--balance-glass-backdrop);
 }
 
 .labelRow {

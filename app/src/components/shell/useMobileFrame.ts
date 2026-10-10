@@ -27,7 +27,8 @@ export interface MobileFrameProps {
 }
 
 
-const VOICE_UNAVAILABLE_REPLY = 'I can’t help with that yet. Try saying, “Send 50 dollars to Daniel for coffee.”';
+// Quotes what was heard (2026-10-09): speech engines mishear ("top of" for "top up"), and a bare "can't help" hid that.
+const voiceUnavailableReply = (heard: string) => `I heard “${heard}”, but I can’t help with that yet. Try saying, “Top up the mortgage account” or “Send 50 dollars to Daniel for coffee.”`;
 
 // Storybook-local state, now with live scene resolution and a real
 // thinking-trail playback — the resolver and trail player calls are real
@@ -124,7 +125,7 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
     void resolver.resolve(intent.trim()).then((resolved) => {
       if (!resolved) {
         if (source === 'voice' && buyAmount === null) setMessages((current) => current.map((message) =>
-          message.id === id ? { ...message, voiceFeedback: VOICE_UNAVAILABLE_REPLY } : message));
+          message.id === id ? { ...message, voiceFeedback: voiceUnavailableReply(trimmed) } : message));
         return;
       }
       setLiveTrailMessageId(id);
