@@ -12,6 +12,8 @@
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  /* The ends of the carousel stop here instead of passing the swipe to the page. */
+  overscroll-behavior-x: contain;
   scrollbar-width: none;
 }
 

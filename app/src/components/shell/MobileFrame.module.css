@@ -32,7 +32,7 @@
   pointer-events: none;
   transition: opacity var(--shell-mode-duration) var(--shell-mode-ease);
 }
-.phone:not([data-mode='idle'])::before { opacity: var(--assistant-orb-halo-strength); }
+.phone:not([data-mode='idle']):not([data-home='glow'])::before { opacity: var(--assistant-orb-halo-strength); }
 
 .header {
   display: flex;
@@ -188,6 +188,11 @@
   position: absolute;
   inset: 0;
   overflow-y: auto;
+  /* Never scrolls sideways (2026-10-10, reported on iPhone: the left margin went
+     missing): a swipe across the full-bleed banner could chain into the page and
+     drag the whole screen sideways. */
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
   /* Reserves space for the now-transparent header/dock at rest, so
      content starts below them rather than immediately underneath —
      scrolling is what slides content under the chrome, not the initial
@@ -266,10 +271,11 @@
    visible behind the composer; it now goes all the way to the same fully
    faded state conversation already used, so both assistant modes present
    the same empty surface for the transcript to sit on. */
-/* Not on the agent home: there the page stays until a command, then
-   recedes bottom-up on its own (AgentHomePage), and the header stays. */
-.phone:not([data-mode='idle']):not([data-home='agent']) .page,
-.phone:not([data-mode='idle']):not([data-home='agent']) .content {
+/* Not on the agent or glow homes: there the page stays until a command or the
+   first question, then recedes bottom-up on its own (AgentHomePage), and the
+   header stays. */
+.phone:not([data-mode='idle']):not([data-home='agent']):not([data-home='glow']) .page,
+.phone:not([data-mode='idle']):not([data-home='agent']):not([data-home='glow']) .content {
   transform: scale(var(--shell-recede-scale-far));
   filter: blur(var(--shell-recede-blur-far));
   opacity: 0;
@@ -304,7 +310,7 @@
    feedback: "in this mode with composer, we should also hide the header as
    we do in the voice mode") — both assistant modes clear the chrome so the
    transcript and orb own the surface. */
-.phone:not([data-mode='idle']):not([data-home='agent']) .header {
+.phone:not([data-mode='idle']):not([data-home='agent']):not([data-home='glow']) .header {
   opacity: 0;
   transform: translateY(var(--shell-inset));
   transition-duration: var(--motion-exit-duration);
@@ -319,4 +325,5 @@
    (2026-10-06, direct feedback). */
 .agentReply { font-family: var(--face-voice); }
 /* The agent dock (orb + greeting) stands taller than the nav pill. */
-.phone[data-home='agent'] .page { padding-bottom: var(--agent-dock-height); }
+.phone[data-home='agent'] .page,
+.phone[data-home='glow'] .page { padding-bottom: var(--agent-dock-height); }

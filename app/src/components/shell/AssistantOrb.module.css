@@ -113,3 +113,18 @@
 @media (prefers-reduced-motion: reduce) {
   .root[data-speaking] .aura { animation: none; }
 }
+
+/* Unbounded variant (2026-10-10): the canvas is the whole orb, and it is square
+   and larger than the visible light — the shader feathers itself to nothing
+   before the canvas edge, so nothing is clipped and there is no outline. */
+.unbounded {
+  display: block;
+  width: var(--glow-orb-size);
+  height: var(--glow-orb-size);
+  pointer-events: none;
+}
+.unboundedCanvas { display: block; width: 100%; height: 100%; }
+/* Without WebGL, a plain soft glow in the same colours. */
+.unbounded[data-liquid='false'] {
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--assistant-orb-color-a) 60%, transparent), transparent);
+}

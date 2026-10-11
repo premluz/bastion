@@ -19,14 +19,14 @@
   pointer-events: none;
 }
 
-/* The orb overlaps the row below it, so the two side triggers sit level
-   with its lower half and the greeting tucks under it. */
+/* The orb sits in the middle of the button row, level with the two buttons;
+   the negative margin keeps it from making the row any taller than they are. */
 .orb {
   position: relative;
   z-index: 1;
   display: grid;
   place-items: center;
-  margin-bottom: calc(var(--agent-dock-orb-sink) * -1);
+  margin-block: calc((var(--pill-toggle-size) - var(--agent-dock-orb-size)) / 2);
   padding: 0;
   border: 0;
   background: none;
@@ -53,31 +53,37 @@
 .dock:not([data-awake='true']) .orb:active { scale: var(--press-active-scale); transition-duration: var(--press-in-duration); transition-timing-function: var(--press-in-ease); }
 .row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: start;
+  /* Both sides are button-wide even when one is empty (awake), so the orb stays centred. */
+  grid-template-columns: var(--pill-toggle-size) minmax(0, 1fr) var(--pill-toggle-size);
+  align-items: center;
   pointer-events: none;
 }
 .row > * { pointer-events: auto; }
-.greeting:not(#\#):not(#\#):not(#\#) {
-  align-self: end;
-  padding-bottom: var(--space-4);
+.center { position: relative; display: grid; place-items: center; }
+
+/* What the user is saying, live, above the orb; it grows upward so the row
+   never moves. Only rendered while awake — asleep, the slot is blank. */
+.caption:not(#\#):not(#\#):not(#\#) {
+  position: absolute;
+  inset-inline: 0;
+  bottom: calc(100% + var(--space-12));
   text-align: center;
   color: var(--presence);
-  transition: opacity var(--duration-200) var(--motion-enter-ease);
+  /* It rides over the page's content, so it carries a halo of the page colour. */
+  text-shadow: 0 0 var(--space-8) var(--surface-0), 0 0 var(--space-16) var(--surface-0);
 }
 
 /* Covered by the scrim while a menu is open (2026-10-10, direct feedback: "the
-   agent and the text below should be covered by scrim"). The dock sits above
-   the page scrim as one unit, which keeps the two buttons bright and clickable
-   — and left the orb and greeting bright with them. They fade to the scrim's
-   darkness instead (opacity, so the orb's glow goes too and any theme works),
-   and stop catching taps, so touching them reaches the scrim and dismisses the
-   menu; only the two buttons (and the open menu) stay live. */
-.dock[data-menu-open='true'] .orb,
-.dock[data-menu-open='true'] .greeting:not(#\#):not(#\#):not(#\#) { opacity: var(--opacity-40); }
+   agent ... should be covered by scrim"). The dock sits above the page scrim as
+   one unit, which keeps the two buttons bright and clickable — and left the orb
+   bright with them. It fades to the scrim's darkness instead (opacity, so its
+   glow goes too and any theme works) and stops catching taps, so touching it
+   reaches the scrim and dismisses the menu; only the two buttons (and the open
+   menu) stay live. */
+.dock[data-menu-open='true'] .orb { opacity: var(--opacity-40); }
 .dock[data-menu-open='true'],
-.dock[data-menu-open='true'] .greeting:not(#\#):not(#\#):not(#\#) { pointer-events: none; }
-@media (prefers-reduced-motion: reduce) { .orb, .greeting:not(#\#):not(#\#):not(#\#) { transition: none; } }
+.dock[data-menu-open='true'] .row > .center { pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .orb { transition: none; } }
 
 /* The conversation, in place: once the home's contents have faded out
    (AgentHomePage, bottom-up), the thread rises where they were — same
@@ -98,21 +104,10 @@
 }
 
 /* Dock morph names (theme/dock-morph.css): the nav trigger becomes the stop
-   button and the greeting the live caption, each on its own clock; the +
-   leaves. The orb holds its place throughout. */
+   button and the live caption arrives above the orb, each on its own clock;
+   the + leaves. The orb holds its place throughout. */
 .navToggle { view-transition-name: dock-nav-1; }
-.navIcon { display: grid; place-items: center; }
-.navIcon > * {
-  grid-area: 1 / 1;
-  display: grid;
-  place-items: center;
-  transition: transform var(--pill-duration) var(--pill-ease), opacity var(--pill-duration) var(--pill-ease);
-}
-.navIconClose { opacity: 0; transform: rotate(-90deg); }
-.navIcon[data-open='true'] .navIconGrid { opacity: 0; transform: rotate(90deg); }
-.navIcon[data-open='true'] .navIconClose { opacity: 1; transform: rotate(0deg); }
-@media (prefers-reduced-motion: reduce) { .navIcon > * { transition: none; } }
-.greeting { view-transition-name: dock-nav-2; }
+.caption { view-transition-name: dock-nav-2; }
 .plusToggle { view-transition-name: dock-nav-5; }
 
 @keyframes agent-orb-sleep { to { opacity: var(--agent-orb-sleep-breath); } }

@@ -107,6 +107,25 @@
     var(--shell-controls-delay) both;
 }
 .indicator { position: relative; display: grid; place-items: center; }
+/* The glow home's light (2026-10-10, direct feedback: the voice orb should be the
+   composer's): the same GlowLight, held at the open composer's reveal, low on the
+   bottom edge behind the controls; the sphere's slot stays empty. It replaces
+   the halo. While the assistant speaks the light swells and ebbs. */
+.glowLight {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  --glow-reveal: var(--glow-open-reveal);
+}
+.root[data-orb-variant='unbounded']::after { display: none; }
+.glowLight[data-speaking] { animation: plasma-talk var(--voice-talk-duration) var(--ease-standard) infinite; }
+@keyframes plasma-talk {
+  0%, 100% { opacity: var(--voice-level-low); }
+  30% { opacity: 1; }
+  60% { opacity: var(--voice-level-mid); }
+}
+@media (prefers-reduced-motion: reduce) { .glowLight[data-speaking] { animation: none; } }
 .micIcon { position: relative; display: inline-grid; place-items: center; }
 .micIcon[data-muted]::after {
   content: '';

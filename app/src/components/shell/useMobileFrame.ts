@@ -17,8 +17,11 @@ export type ShellPreviewMode = 'idle' | 'composer' | 'conversation';
 
 export interface MobileFrameProps {
   navigationVariant?: 'pill' | 'classic';
-  /** 'agent': assistant suggestions on Home and a persistent orb dock that wakes in place. */
-  homeVariant?: 'assets' | 'agent';
+  /**
+   * 'agent': assistant suggestions on Home and a persistent orb dock that wakes in place.
+   * 'glow': the same Home with a glow dock — swipe up to open the composer.
+   */
+  homeVariant?: 'assets' | 'agent' | 'glow';
   sendPresentation?: 'inline' | 'overlay';
   initialPurchaseQuery?: string;
   initialAccountView?: import('./accountTypes').AccountInitialView;

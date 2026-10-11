@@ -1,0 +1,43 @@
+/* Glow home dock (2026-10-10): structural aliases over primitives and semantic
+   tokens only, so every theme gets it without a parity entry. */
+:root {
+  /* The unbounded orb's canvas; the dock widens and flattens it into a low ellipse. */
+  --glow-orb-size: calc(var(--space-64) * 4);
+  --glow-widen: 1.25;
+  --glow-flatten: .62;
+  /* At rest the plasma's centre sits below the bottom edge: most of it is off
+     screen, only its top shows (2026-10-10, direct feedback). */
+  --glow-lift: calc(var(--glow-orb-size) * -.2);
+  /* How far a swipe pulls the light up with the finger (and the open state keeps part of it). */
+  --glow-pull: calc(var(--space-64) + var(--space-16));
+  /* The snap when the swipe commits: overshoot, settle back, land. */
+  --glow-snap-duration: var(--duration-550);
+  --glow-snap-ease: var(--ease-spring-pop);
+  --glow-snap-over: 1.14;
+  --glow-snap-under: .95;
+  /* The soft light the plasma sits in (2026-10-10, direct feedback: "a nice soft
+     glow behind, not just the orb"): a wide, low ellipse of copper. */
+  --glow-ambient:
+    radial-gradient(80% 100% at 50% 100%, color-mix(in oklab, var(--accent-signal) 36%, transparent),
+      color-mix(in oklab, var(--accent-signal) 13%, transparent) 45%, transparent 80%);
+  --glow-ambient-height: calc(var(--space-64) * 6);
+  /* The ambient light starts this far below the screen, more than the light ever
+     rises, so its bottom edge never shows (2026-10-10, direct feedback). */
+  --glow-ambient-sink: calc(var(--glow-pull) * 1.5);
+  /* The pill's morph while the finger rises: it lifts a little, its icons and the
+     + are gone by about two thirds of the way, the + slot folds into the glass. */
+  --glow-morph-lift: var(--space-8);
+  --glow-morph-fade: 1.5;
+  --glow-morph-shrink: .4;
+  /* Subtle at rest, a little stronger while open; a swipe takes it to full. */
+  --glow-rest-opacity: var(--opacity-70);
+  --glow-full-opacity: 1;
+  --glow-open-reveal: .35;
+  /* How much it grows at full reveal: a little wider, noticeably taller. */
+  --glow-reveal-grow: .2;
+  --glow-reveal-rise: .8;
+  /* The shade behind the open composer: the bar, its padding and a ramp above. */
+  --glow-composer-shade: calc(var(--space-64) * 3);
+  --glow-reveal-duration: var(--duration-480);
+  --glow-reveal-ease: var(--ease-spring-soft);
+}

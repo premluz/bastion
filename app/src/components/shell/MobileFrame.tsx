@@ -7,6 +7,8 @@ import { TextInput } from '@astryxdesign/core/TextInput';
 import { AssetsHomePage } from './AssetsHomePage';
 import { AgentHomePage } from './AgentHomePage';
 import { AgentDock } from './AgentDock';
+import { GlowDock } from './GlowDock';
+import { useGlowHome } from './useGlowHome';
 import { useAgentHome } from './useAgentHome';
 import { MoneyPage } from './MoneyPage';
 import { CardDetailPage } from './CardDetailPage';
@@ -24,6 +26,7 @@ import { useSpeechRecognition } from './useSpeechRecognition';
 import { useVoiceNarration } from './useVoiceNarration';
 import { useScenarioThread } from './useScenarioThread';
 import { useAgentAgenda } from './useAgentAgenda';
+import { useShellBack } from './useShellBack';
 import { useAssistantSounds } from './useAssistantSounds';
 import { PrototypeNoticeProvider } from './PrototypeNotice';
 import styles from './MobileFrame.module.css';
@@ -46,7 +49,12 @@ export function MobileFrame(props: MobileFrameProps) {
   const voicePlayback = useVoiceNarration(state.mode === 'conversation', thread.narrationTargets, speech);
   const agent = useAgentHome(state, speech, voicePlayback);
   const isAgentHome = props.homeVariant === 'agent';
+  // The glow home shares the agent home's page; only its dock and how it opens the assistant differ.
+  const isGlowHome = props.homeVariant === 'glow';
+  const hasAgentPage = isAgentHome || isGlowHome;
+  const glow = useGlowHome(state);
   useAgentAgenda(state, thread.isFinished, isAgentHome && agent.isAwake, agent.threadStart);
+  useShellBack(state, agent.sleep, isAgentHome);
   const startConversationVoice = () => {
     state.openConversation();
     speech.start();
@@ -75,7 +83,7 @@ export function MobileFrame(props: MobileFrameProps) {
   const isHome = state.activeTab === 'home';
   // Agent home (2026-10-09): voice mode runs in place inside the shell, so
   // neither assistant overlay opens and the page stays live under the dock.
-  const chromeInert = !isAgentHome && state.mode !== 'idle';
+  const chromeInert = !hasAgentPage && state.mode !== 'idle';
   const selectedCardData = state.selectedCard && WALLET_CARDS.find((candidate) => candidate.id === state.selectedCard!.id);
   // Pinned to the latest content (2026-09-14, direct feedback: a settled
   // question card rendered below the fold with no way to see it besides
@@ -93,7 +101,7 @@ export function MobileFrame(props: MobileFrameProps) {
           <header className={styles.header} aria-label="Asset search">
             <Button label="Open account menu" variant="ghost" icon={<Avatar name="Preview user" size="medium" />} isIconOnly onClick={openAccounts} />
             {/* Agent home moves Explore into the dock's menu; the spacer keeps the avatar its own size. */}
-            {isAgentHome ? <span aria-hidden="true" />
+            {hasAgentPage ? <span aria-hidden="true" />
               : <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />}
           </header>
           {/* Independent overlay elements, not .header/.dock pseudo-elements
@@ -105,8 +113,8 @@ export function MobileFrame(props: MobileFrameProps) {
           <div className={styles.topFade} aria-hidden="true" />
           {isHome ? (
             <main key="home" className={styles.page} aria-label="Home" tabIndex={0}>
-              {isAgentHome ? <AgentHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments}
-                onSuggestion={agent.ask} isReceding={agent.isWorking} />
+              {hasAgentPage ? <AgentHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments}
+                onSuggestion={isGlowHome ? glow.ask : agent.ask} isReceding={isAgentHome ? agent.isWorking : glow.isWorking} />
                 : <AssetsHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments} />}
             </main>
           ) : state.activeTab === 'assets' ? (
@@ -121,19 +129,21 @@ export function MobileFrame(props: MobileFrameProps) {
             <main className={styles.content} aria-label="Preview transcript" tabIndex={0}>{transcript}</main>
           )}
           <div className={styles.bottomFade} aria-hidden="true" />
-          {isAgentHome ? <AgentDock isAwake={agent.isAwake} activeTab={state.activeTab} onWake={agent.wake} onSleep={agent.sleep}
-            onNavigate={state.selectTab} thread={transcript.slice(agent.threadStart)} isWorking={agent.isWorking} caption={agent.caption}
-            activity={agent.activity} speaking={voicePlayback.isSpeaking} threadRef={conversationScrollRef} orbRef={state.assistantRef} />
-            : <MobileFrameDock state={state} variant={props.navigationVariant ?? 'pill'} />}
+          {isGlowHome ? <GlowDock state={state} onOpen={glow.open} onClose={glow.close} isWorking={glow.isWorking} threadRef={composerScrollRef}
+            thread={transcript.slice(glow.threadStart)} composer={<MobileFrameComposer state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />} />
+            : isAgentHome ? <AgentDock isAwake={agent.isAwake} activeTab={state.activeTab} onWake={agent.wake} onSleep={agent.sleep}
+              onNavigate={state.selectTab} thread={transcript.slice(agent.threadStart)} isWorking={agent.isWorking} caption={agent.caption}
+              activity={agent.activity} speaking={voicePlayback.isSpeaking} threadRef={conversationScrollRef} orbRef={state.assistantRef} />
+              : <MobileFrameDock state={state} variant={props.navigationVariant ?? 'pill'} />}
           {selectedCardData && <CardDetailPage card={selectedCardData} sourceRect={state.selectedCard!.sourceRect} onClose={state.closeCard} />}
           </div> )}</AccountExperience></div>
-      <ComposerModeOverlay isOpen={state.mode === 'composer'} onClose={state.closeComposer} scrollRef={composerScrollRef} isReceded={sendingOpen}
-        composer={<MobileFrameComposer state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />}>
-        {transcript}
+      <ComposerModeOverlay isOpen={state.mode === 'composer' && !isGlowHome} onClose={state.closeComposer} scrollRef={composerScrollRef} isReceded={sendingOpen}
+        composer={isGlowHome ? null : <MobileFrameComposer state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />}>
+        {isGlowHome ? null : transcript}
       </ComposerModeOverlay>
       <ConversationModeOverlay isOpen={state.mode === 'conversation' && !isAgentHome} onClose={state.closeConversation} sharedOrb={props.navigationVariant === 'classic'}
         scrollRef={conversationScrollRef} isReceded={sendingOpen} speech={speech} audioError={voicePlayback.error}
-        assistantSpeaking={voicePlayback.isSpeaking}>
+        assistantSpeaking={voicePlayback.isSpeaking} orbVariant={isGlowHome ? 'unbounded' : 'bounded'}>
         {transcript}
       </ConversationModeOverlay>
       {sendPresentation === 'overlay' && <SendingScreenMount flows={send.flows} dispatch={send.dispatch} />}

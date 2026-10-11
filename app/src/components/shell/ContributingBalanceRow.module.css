@@ -16,8 +16,9 @@
   flex-shrink: 0;
   padding: var(--shell-pane-inset);
   border-radius: var(--shell-card-radius);
-  border: var(--shell-edge-width) solid transparent;
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box, var(--glass-edge) border-box;
+  border: var(--shell-edge-width) solid;
+  border-color: var(--card-rim);
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box;
   backdrop-filter: blur(var(--surface-blur));
 }
 

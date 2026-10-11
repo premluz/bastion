@@ -1,9 +1,10 @@
 import { useEffect, useState, type RefObject } from 'react';
-import { createLiquidOrbRenderer, type LiquidOrbRenderer } from './liquidOrbRenderer';
+import { createLiquidOrbRenderer, type LiquidOrbOptions, type LiquidOrbRenderer } from './liquidOrbRenderer';
 
 type LiquidOrbActivity = 'listening' | 'thinking';
 
-export function useLiquidOrb(canvasRef: RefObject<HTMLCanvasElement | null>, activity: LiquidOrbActivity | null) {
+export function useLiquidOrb(canvasRef: RefObject<HTMLCanvasElement | null>, activity: LiquidOrbActivity | null, options: LiquidOrbOptions = {}) {
+  const unbounded = options.unbounded === true;
   const [supported, setSupported] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -15,7 +16,7 @@ export function useLiquidOrb(canvasRef: RefObject<HTMLCanvasElement | null>, act
 
     let renderer: LiquidOrbRenderer | null;
     try {
-      renderer = createLiquidOrbRenderer(canvas);
+      renderer = createLiquidOrbRenderer(canvas, { unbounded });
     } catch (error) {
       console.error('Liquid orb initialization failed.', error);
       setSupported(false);
@@ -67,7 +68,7 @@ export function useLiquidOrb(canvasRef: RefObject<HTMLCanvasElement | null>, act
       reducedMotion.removeEventListener('change', handleMotionChange);
       renderer?.dispose();
     };
-  }, [activity, canvasRef]);
+  }, [activity, canvasRef, unbounded]);
 
   return supported;
 }

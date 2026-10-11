@@ -13,3 +13,6 @@ type Story = StoryObj<typeof meta>;
 export const Idle: Story = {};
 export const Listening: Story = { args: { activity: 'listening', expanded: true } };
 export const Thinking: Story = { args: { activity: 'thinking', expanded: true } };
+
+// Only the morphing shader, as a soft circle of light (2026-10-10): no ring, disc or clip.
+export const Unbounded: Story = { args: { variant: 'unbounded' }, parameters: { layout: 'fullscreen' } };

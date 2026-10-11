@@ -1,0 +1,11 @@
+.icon { display: grid; place-items: center; }
+.icon > * {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  transition: transform var(--pill-duration) var(--pill-ease), opacity var(--pill-duration) var(--pill-ease);
+}
+.close { opacity: 0; transform: rotate(-90deg); }
+.icon[data-open='true'] .grid { opacity: 0; transform: rotate(90deg); }
+.icon[data-open='true'] .close { opacity: 1; transform: rotate(0deg); }
+@media (prefers-reduced-motion: reduce) { .icon > * { transition: none; } }

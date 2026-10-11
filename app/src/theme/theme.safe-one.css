@@ -130,6 +130,8 @@
   --glass-fill-clear: oklch(.17 .02 285 / .62);
   --glass-sheen: linear-gradient(to bottom, oklch(1 0 0 / .06), oklch(1 0 0 / .015) 40%, oklch(1 0 0 / 0) 70%);
   --glass-edge: linear-gradient(to bottom, oklch(1 0 0 / .2), oklch(1 0 0 / .07) 40%, oklch(1 0 0 / .035));
+  /* --glass-edge's rim as border colours (top, sides, bottom) for translucent cards. */
+  --card-rim: oklch(1 0 0 / .2) oklch(1 0 0 / .07) oklch(1 0 0 / .035);
   /* Composer's own edge: same top-lit falloff, tinted with the accent's
      hue family so the assistant's input reads as charged, not outlined. */
   --glass-edge-accent: linear-gradient(to bottom, oklch(.84 .06 295 / .5), oklch(.7 .11 285 / .24) 45%, oklch(.62 .09 260 / .1));

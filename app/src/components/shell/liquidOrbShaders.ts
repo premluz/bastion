@@ -17,6 +17,7 @@ uniform float u_time;
 uniform vec2 u_resolution;
 uniform vec3 u_colorA;
 uniform vec3 u_colorB;
+uniform float u_unbounded;
 
 const float VIEW_SCALE = 0.58;
 const float MORPH_SPEED = 1.3;
@@ -152,17 +153,23 @@ void main() {
       if (length(liquidPoint) > 1.0) break;
     }
 
-    vec3 light = normalize(vec3(0.6, 0.85, 0.6));
-    float diffuse = max(dot(normal, light), 0.0);
-    emissive += mix(u_colorA, u_colorB, 0.7 + diffuse * 0.3)
-      * (0.45 + diffuse * 0.45) * (1.0 - fresnel * 0.35);
-    emissive += liquid * (1.0 - fresnel * 0.6) * 1.25;
-    emissive += mix(u_colorB, u_colorA, 0.5 + 0.5 * (normal.x * 0.7 + normal.y * 0.45)) * fresnel * 1.3;
-    vec3 halfVector = normalize(light + view);
-    emissive += vec3(1.0) * pow(max(dot(normal, halfVector), 0.0), 140.0) * 2.0;
-    vec3 fillLight = normalize(vec3(-0.7, 0.25, 0.55));
-    vec3 fillHalf = normalize(fillLight + view);
-    emissive += u_colorB * pow(max(dot(normal, fillHalf), 0.0), 64.0) * 1.2;
+    if (u_unbounded > 0.5) {
+      // Light, not a lit ball: only the liquid's own marbling — no diffuse
+      // shading, rim or white highlights.
+      emissive += mix(u_colorA, u_colorB, 0.5) * 0.75 + liquid * 1.6;
+    } else {
+      vec3 light = normalize(vec3(0.6, 0.85, 0.6));
+      float diffuse = max(dot(normal, light), 0.0);
+      emissive += mix(u_colorA, u_colorB, 0.7 + diffuse * 0.3)
+        * (0.45 + diffuse * 0.45) * (1.0 - fresnel * 0.35);
+      emissive += liquid * (1.0 - fresnel * 0.6) * 1.25;
+      emissive += mix(u_colorB, u_colorA, 0.5 + 0.5 * (normal.x * 0.7 + normal.y * 0.45)) * fresnel * 1.3;
+      vec3 halfVector = normalize(light + view);
+      emissive += vec3(1.0) * pow(max(dot(normal, halfVector), 0.0), 140.0) * 2.0;
+      vec3 fillLight = normalize(vec3(-0.7, 0.25, 0.55));
+      vec3 fillHalf = normalize(fillLight + view);
+      emissive += u_colorB * pow(max(dot(normal, fillHalf), 0.0), 64.0) * 1.2;
+    }
   } else {
     float glow = exp(-closestDistance * 5.5);
     float angle = atan(rayDirection.y, rayDirection.x);
@@ -171,6 +178,12 @@ void main() {
   }
 
   float alpha = clamp(max(emissive.r, max(emissive.g, emissive.b)), 0.0, 1.0);
+  // Unbounded (2026-10-10): no hard sphere edge — the whole picture, glow included,
+  // dissolves radially, so the morphing liquid reads as a soft circle of light.
+  float radius = length(v_uv * 2.0 - 1.0);
+  alpha *= mix(1.0, 1.0 - smoothstep(0.12, 0.96, radius), u_unbounded);
   vec3 color = emissive / (1.0 + emissive);
+  // Unbounded keeps its hue where it is brightest: the curve above bleaches copper toward grey.
+  if (u_unbounded > 0.5) color = emissive / max(1.0, max(emissive.r, max(emissive.g, emissive.b)));
   fragColor = vec4(color, alpha);
 }`;

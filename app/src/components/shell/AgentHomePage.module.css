@@ -1,4 +1,7 @@
-.suggestions { display: flex; flex-direction: column; gap: var(--space-12); }
+/* Roomier around the heading (2026-10-10, direct feedback: bigger gaps between
+   the sentence and the sections above and below): 48px above (the page's own 24
+   plus this padding) and 24px below, up from 24 and 12. */
+.suggestions { display: flex; flex-direction: column; gap: var(--space-24); padding-block-start: var(--space-24); }
 
 /* The assistant's own voice: champagne presence, not the action accent. */
 .title:not(#\#):not(#\#):not(#\#) { margin: 0; color: var(--presence); }
@@ -7,9 +10,10 @@
 .pane {
   display: flex;
   flex-direction: column;
-  border: var(--shell-edge-width) solid transparent;
+  border: var(--shell-edge-width) solid;
+  border-color: var(--card-rim);
   border-radius: var(--shell-card-radius);
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box, var(--glass-edge) border-box;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box;
   backdrop-filter: blur(var(--surface-blur));
   overflow: hidden;
 }
@@ -63,6 +67,14 @@
 /* The banner rides up under the balance tiles (2026-10-10, direct feedback:
    "pull the banner up so these two panes slightly overlap"): its top, already
    dissolving into the page, tucks beneath the tiles' glass. The tiles' block
-   is lifted above it, since the banner comes later in the document. */
+   is lifted above it, since the banner comes later in the document.
+   The banner under the tiles reads as frosted (2026-10-11, direct feedback): the
+   tiles' own blur cannot reach it (theme/promo-bleed.css), so the banner frosts
+   its top band, as deep as the overlap, with the tiles' glass, easing out below. */
 .top > :first-child { z-index: 1; }
-.top > :nth-child(2) { margin-block-start: calc(-1 * (var(--promo-bleed-overlap) + var(--shell-card-gap))); }
+.top > :nth-child(2) {
+  margin-block-start: calc(-1 * (var(--promo-bleed-overlap) + var(--shell-card-gap)));
+  --promo-bleed-fade-top: var(--promo-bleed-overlap);
+  --promo-bleed-frost: var(--balance-glass-backdrop);
+  --promo-bleed-frost-mask: linear-gradient(var(--surface-0) 60%, transparent);
+}

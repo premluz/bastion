@@ -39,8 +39,9 @@
   --shell-search-height: var(--shell-control-size);
   /* Header glass (2026-09-30, direct feedback: search and avatar "should
      have bg blur") — the shared 12px surface blur read as tint, not glass.
-     A deeper blur with a saturation lift is the liquid-glass read. */
-  --shell-header-backdrop: blur(var(--blur-24)) saturate(1.4);
+     A deeper blur with a saturation lift is the liquid-glass read. Deepened
+     again to the cards' blur (2026-10-10, direct feedback with a reference). */
+  --shell-header-backdrop: blur(var(--blur-40)) saturate(1.4);
   /* Liquid-glass press (2026-09-30): hover presses in, a click presses
      further and fast, release springs back on the bounciest spring so it
      swells past rest before settling — larger, then smaller. */
@@ -341,4 +342,13 @@
   --shell-recede-blur: var(--blur-8);
   --shell-recede-blur-far: var(--blur-16);
   --shell-recede-opacity: var(--opacity-40);
+}
+
+/* No scroll bars on touch devices (2026-10-10, direct feedback: "remove the
+   scroll bar from mobile"): content scrolls by finger, and the overlay
+   indicator only draws over it. Desktop keeps its bars. */
+html { overscroll-behavior-x: none; }
+@media (pointer: coarse) {
+  * { scrollbar-width: none; }
+  *::-webkit-scrollbar { display: none; }
 }

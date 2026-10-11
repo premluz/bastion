@@ -34,7 +34,17 @@ function readCssColor(value: string, context: CanvasRenderingContext2D): Rgb {
   return [red / 255, green / 255, blue / 255];
 }
 
-export function createLiquidOrbRenderer(canvas: HTMLCanvasElement): LiquidOrbRenderer | null {
+// The unbounded glow is a big, soft, feathered light: a fraction of the device
+// pixels is plenty, and it makes the shader several times cheaper (it is rendered
+// 576px wide behind the composer).
+const UNBOUNDED_PIXEL_RATIO = 0.6;
+
+export interface LiquidOrbOptions {
+  /** Feather the picture into a soft circle instead of a sphere with a hard edge. */
+  unbounded?: boolean;
+}
+
+export function createLiquidOrbRenderer(canvas: HTMLCanvasElement, options: LiquidOrbOptions = {}): LiquidOrbRenderer | null {
   const context = canvas.getContext('webgl2', {
     alpha: true,
     antialias: false,
@@ -78,11 +88,12 @@ export function createLiquidOrbRenderer(canvas: HTMLCanvasElement): LiquidOrbRen
     resolution: gl.getUniformLocation(program, 'u_resolution'),
     colorA: gl.getUniformLocation(program, 'u_colorA'),
     colorB: gl.getUniformLocation(program, 'u_colorB'),
+    unbounded: gl.getUniformLocation(program, 'u_unbounded'),
   };
 
   function resize() {
     const bounds = canvas.getBoundingClientRect();
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+    const pixelRatio = options.unbounded ? UNBOUNDED_PIXEL_RATIO : Math.min(window.devicePixelRatio || 1, 1.5);
     const width = Math.max(1, Math.floor(bounds.width * pixelRatio));
     const height = Math.max(1, Math.floor(bounds.height * pixelRatio));
     if (canvas.width === width && canvas.height === height) return;
@@ -98,6 +109,7 @@ export function createLiquidOrbRenderer(canvas: HTMLCanvasElement): LiquidOrbRen
     gl.useProgram(program);
     gl.uniform3fv(uniforms.colorA, colorA);
     gl.uniform3fv(uniforms.colorB, colorB);
+    gl.uniform1f(uniforms.unbounded, options.unbounded ? 1 : 0);
   }
 
   function render(time: number) {

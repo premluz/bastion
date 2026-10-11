@@ -4,6 +4,7 @@ import { Text } from '@astryxdesign/core/Text';
 import { ArrowTrendingUpIcon, BuildingLibraryIcon, ChartPieIcon, UserIcon } from '@heroicons/react/24/outline';
 import { resolveAssetsHomeSummary } from '../../engine/assetsHome';
 import { AGENT_SUGGESTIONS } from '../../engine/agentAgenda';
+import { greetingFor, USER_FIRST_NAME } from './greeting';
 import { AssetsHomeHeader } from './AssetsHomeHeader';
 import { HomePromos } from './HomePromos';
 import homeStyles from './AssetsHomePage.module.css';
@@ -36,7 +37,9 @@ export function AgentHomePage({ onSelectMoney, onSelectInvestments, onSuggestion
           <HomePromos variant="bleed" />
         </div>
         <section className={styles.suggestions} aria-labelledby="agent-suggestions-title">
-          <Text type="body" as="h2" id="agent-suggestions-title" className={styles.title}>Would you like to review those?</Text>
+          <Text type="body" as="h2" id="agent-suggestions-title" className={styles.title}>
+            {greetingFor(new Date().getHours())} {USER_FIRST_NAME}, would you like to review those?
+          </Text>
           <div className={styles.pane}>
             {AGENT_SUGGESTIONS.map((suggestion) => (
               <Item key={suggestion.id} className={styles.item} label={suggestion.text} labelLines={2}

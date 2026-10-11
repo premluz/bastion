@@ -24,6 +24,9 @@ export const Default: Story = {};
 // Agent-first home (2026-10-09): assistant suggestions instead of the coin
 // list, and a sleeping orb dock that wakes in place.
 export const AgentHome: Story = { args: { homeVariant: 'agent' } };
+// Glow home (2026-10-10): the agent home's page over a glow dock; swipe up on the glow
+// (or tap it) and the dock morphs into the composer, the glow filling the screen.
+export const GlowHome: Story = { args: { homeVariant: 'glow' } };
 export const ClassicNavigation: Story = { args: { navigationVariant: 'classic' } };
 export const BuyEth: Story = { args: { initialPurchaseQuery: 'I want to buy ETH for $800.' } };
 export const AccountMenu: Story = { args: { initialAccountView: 'menu' } };

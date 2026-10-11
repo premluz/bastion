@@ -19,9 +19,10 @@
 .pane {
   display: flex;
   flex-direction: column;
-  border: var(--shell-edge-width) solid transparent;
+  border: var(--shell-edge-width) solid;
+  border-color: var(--card-rim);
   border-radius: var(--shell-card-radius);
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box, var(--glass-edge) border-box;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box;
   backdrop-filter: blur(var(--surface-blur));
   overflow: hidden;
 }

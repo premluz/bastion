@@ -20,7 +20,7 @@ export interface DockMenuItem {
 function DockMenuAction({ item, onSelect }: { item: DockMenuItem; onSelect: (item: DockMenuItem) => void }) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   return <>
-    <Button ref={buttonRef} label={item.label} endContent={<Icon icon={item.icon} size="lg" />} variant="ghost" className={styles.action}
+    <Button ref={buttonRef} label={item.label} endContent={<Icon icon={item.icon} size="md" color="tertiary" />} variant="ghost" className={styles.action}
       aria-current={item.isCurrent ? 'page' : undefined} onClick={() => onSelect(item)} />
     {item.isPrototype && <Tooltip anchorRef={buttonRef} content={PROTOTYPE_NOTICE} placement="above" hasHoverIndication={false} />}
   </>;

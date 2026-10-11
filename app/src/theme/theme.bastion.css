@@ -16,7 +16,10 @@
   --surface-2: oklch(.195 .003 100);
   --surface-3: oklch(.23 .004 100);
   --surface-selected: oklch(.3 .005 90);
-  --card-fill: oklch(.177 .002 107 / .72);
+  /* Smoked glass cards (2026-10-10, direct feedback with a reference card): a
+     thinner fill over a deep blur, so what is behind warms the pane. Then "much
+     darker, more transparency and blur": near-black tint, under half opaque. */
+  --card-fill: oklch(.08 .002 107 / .45);
   /* Lines: half-pixel hairlines, very subtle (2026-10-06). */
   --hairline-width: .5px;
   --ink-primary: oklch(.88 .01 70);
@@ -66,9 +69,14 @@
 
   /* Flat panels: a uniform hairline, no top-lit sheen or cast shadow. */
   --glass-fill: oklch(.168 0 0 / .84);
-  --glass-fill-clear: oklch(.168 0 0 / .72);
+  --glass-fill-clear: oklch(.168 0 0 / .6);
   --glass-sheen: none;
-  --glass-edge: linear-gradient(var(--edge), var(--edge));
+  /* A lighter rim than the hairline dividers, a touch brighter at the top. */
+  --glass-edge: linear-gradient(oklch(.85 .012 80 / .26), oklch(.85 .012 80 / .16));
+  /* Cards' rim as real border colours (top, sides, bottom), 2026-10-11: under a
+     translucent fill a background-painted rim (--glass-edge) shows through the
+     whole pane and greys it. */
+  --card-rim: oklch(.85 .012 80 / .26) oklch(.85 .012 80 / .2) oklch(.85 .012 80 / .16);
   --glass-edge-accent: linear-gradient(to bottom, oklch(.78 .07 52 / .32), oklch(.72 .095 52 / .16) 48%, oklch(.72 .095 52 / .06));
   --glass-shadow: none;
   /* Seamless glow rising from the bottom edge (2026-10-06, direct feedback:
@@ -85,7 +93,7 @@
   --shading-light: oklch(.85 .025 60 / .04);
   --shading-dark: oklch(0 0 0 / .18);
   --shadow-low: 0px 1px 1px oklch(0 0 0 / .16), 0px 1px 4px oklch(0 0 0 / .16);
-  --surface-blur: var(--blur-16);
+  --surface-blur: var(--blur-64);
   --surface-material: none;
   --spec-alpha: 0;
   --spec-radius: var(--spec-radius-lg);
@@ -136,8 +144,9 @@
   box-shadow: none;
 }
 [data-theme='bastion'] .astryx-card.panelFlat {
-  border: var(--shell-edge-width) solid transparent;
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box, var(--glass-edge) border-box;
+  border: var(--shell-edge-width) solid;
+  border-color: var(--card-rim);
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box;
   backdrop-filter: blur(var(--surface-blur));
 }
 [data-theme='bastion'] .astryx-item.panelFlat:not(:hover) {

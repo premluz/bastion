@@ -6,5 +6,16 @@
   --promo-bleed-fade-height: calc(var(--space-64) + var(--space-16));
   /* How far the banner rides up under the balance tiles above it (agent home). */
   --promo-bleed-overlap: var(--space-48);
+  /* The banner's top fade; the agent home shortens it so real photo lies under the tiles. */
+  --promo-bleed-fade-top: var(--promo-bleed-fade-height);
+  /* Opt-in frost on the banner's top band (2026-10-11): glass laid over the banner
+     cannot reliably blur it from outside — the scrolling page's mask leaves the
+     composited carousel out of their backdrop — so the banner blurs its own top. */
+  --promo-bleed-frost: none;
+  --promo-bleed-frost-mask: none;
+  /* Title: 24 → 20px, and a measure wide enough that "DeFi opportunities" holds
+     one line (it broke after "DeFi" at 12ch). */
+  --promo-bleed-title-size: var(--text-20);
+  --promo-bleed-title-measure: 22ch;
   --promo-bleed-dot: color-mix(in oklab, var(--ink-primary) 28%, transparent);
 }

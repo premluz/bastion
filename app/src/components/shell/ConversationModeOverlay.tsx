@@ -6,6 +6,8 @@ import { ChatMessage, ChatMessageBubble } from '@astryxdesign/core/Chat';
 import { AssistantOrb, type AssistantActivity } from './AssistantOrb';
 import type { useSpeechRecognition } from './useSpeechRecognition';
 import { useUserSpeaking } from './useUserSpeaking';
+import { GlowLight } from './GlowLight';
+import '../../theme/agent-dock.css';
 import styles from './ConversationModeOverlay.module.css';
 
 export interface ConversationModeOverlayProps {
@@ -21,19 +23,22 @@ export interface ConversationModeOverlayProps {
   isReceded?: boolean;
   /** The assistant's voice clip is playing — the orb talks. */
   assistantSpeaking?: boolean;
+  /** `unbounded`: the glow home's light — the open composer's glow — instead of the sphere (2026-10-10). */
+  orbVariant?: 'bounded' | 'unbounded';
 }
 
 // Native modal behavior comes from Astryx: focus containment, Escape, restoration.
-export function ConversationModeOverlay({ isOpen, onClose, speech, audioError, children, activity = 'listening', sharedOrb = false, scrollRef, isReceded = false, assistantSpeaking = false }: ConversationModeOverlayProps) {
+export function ConversationModeOverlay({ isOpen, onClose, speech, audioError, children, activity = 'listening', sharedOrb = false, scrollRef, isReceded = false, assistantSpeaking = false, orbVariant = 'bounded' }: ConversationModeOverlayProps) {
   // Two voices, two lights: the user's speech moves the bottom wash
   // (.root::before), the assistant's moves the orb (2026-10-06).
   const userSpeaking = useUserSpeaking(speech.isListening, speech.text);
   return (
     <Dialog isOpen={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}
       variant="fullscreen" purpose="form" padding={0} className={styles.root}
-      aria-label="Assistant conversation" aria-describedby="conversation-activity" data-shared-orb={String(sharedOrb)}
+      aria-label="Assistant conversation" aria-describedby="conversation-activity" data-shared-orb={String(sharedOrb)} data-orb-variant={orbVariant}
       data-user-speaking={userSpeaking ? '' : undefined}>
       <div className={styles.layout} data-receded={isReceded ? '' : undefined}>
+        {orbVariant === 'unbounded' && <div className={styles.glowLight} data-speaking={assistantSpeaking ? '' : undefined}><GlowLight isOpen /></div>}
         {/* No top header here (2026-09-16, direct feedback: "on composer
             these X and history should be on top, and in conversation mode
             we shouldn't have those on top") — the close+chat-history row
@@ -54,7 +59,8 @@ export function ConversationModeOverlay({ isOpen, onClose, speech, audioError, c
             variant="ghost" size="lg" isDisabled={!speech.supported || speech.isSuspended}
             aria-pressed={speech.isListening} onClick={speech.isListening ? speech.stop : speech.start} />
           <div className={styles.indicator}>
-            {sharedOrb ? <span className={styles.orbSpace} /> : <AssistantOrb activity={activity} expanded speaking={assistantSpeaking} />}
+            {sharedOrb || orbVariant === 'unbounded' ? <span className={styles.orbSpace} />
+              : <AssistantOrb activity={activity} expanded speaking={assistantSpeaking} />}
             <button type="button" className={styles.orbRestore} aria-label="Resume voice recognition"
               disabled={!speech.supported || speech.isListening || speech.isSuspended} onClick={speech.start} />
             <span id="conversation-activity" className={styles.srOnly} role="status">

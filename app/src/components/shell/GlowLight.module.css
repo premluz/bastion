@@ -1,0 +1,59 @@
+/* The glow home's light (GlowLight.tsx). `--glow-reveal` is inherited: the glow
+   dock's swipe layer drives it, voice mode holds it at the open reveal. */
+/* A flat ellipse of light sitting low: the square shader canvas is widened and
+   squashed, its centre on the screen's bottom edge, so only a low dome shows. */
+.glow {
+  position: absolute;
+  inset-inline-start: calc(50% - var(--glow-orb-size) / 2);
+  bottom: calc(var(--glow-orb-size) * -.5 + var(--glow-lift));
+  z-index: 4;
+  /* Light adds to light: the plasma brightens the ambient glow instead of covering it. */
+  mix-blend-mode: screen;
+  width: var(--glow-orb-size);
+  height: var(--glow-orb-size);
+  pointer-events: none;
+  --assistant-orb-color-a: var(--agent-orb-color-a);
+  --assistant-orb-color-b: var(--agent-orb-color-b);
+  scale: calc(var(--glow-widen) * (1 + var(--glow-reveal) * var(--glow-reveal-grow)))
+    calc(var(--glow-flatten) * (1 + var(--glow-reveal) * var(--glow-reveal-rise)));
+  opacity: calc(var(--glow-rest-opacity) + var(--glow-reveal) * (var(--glow-full-opacity) - var(--glow-rest-opacity)));
+  transition: scale var(--glow-reveal-duration) var(--glow-reveal-ease), opacity var(--glow-reveal-duration) var(--glow-reveal-ease);
+}
+/* The light (ambient + plasma) rises with the finger and keeps part of the rise
+   while open; when a swipe commits it snaps — overshoot, settle, land — on the
+   same beat as the nav morphing into the composer. */
+.light {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  transform-origin: 50% 100%;
+  translate: 0 calc(var(--glow-reveal) * var(--glow-pull) * -1);
+  transition: translate var(--glow-reveal-duration) var(--glow-reveal-ease);
+}
+.light[data-open] { animation: glow-snap var(--glow-snap-duration) var(--glow-snap-ease); }
+@keyframes glow-snap {
+  0% { scale: var(--glow-snap-over); }
+  45% { scale: var(--glow-snap-under); }
+  100% { scale: 1; }
+}
+
+/* The ambient light under the plasma; it strengthens with the same reveal. */
+.ambient {
+  position: absolute;
+  inset-inline: 0;
+  bottom: calc(var(--glow-ambient-sink) * -1);
+  z-index: 4;
+  height: calc(var(--glow-ambient-height) + var(--glow-ambient-sink));
+  background: var(--glow-ambient);
+  pointer-events: none;
+  transform-origin: 50% 100%;
+  opacity: calc(var(--glow-rest-opacity) + var(--glow-reveal) * (var(--glow-full-opacity) - var(--glow-rest-opacity)));
+  scale: 1 calc(1 + var(--glow-reveal) * var(--glow-reveal-rise));
+  transition: scale var(--glow-reveal-duration) var(--glow-reveal-ease), opacity var(--glow-reveal-duration) var(--glow-reveal-ease);
+}
+/* While a finger drives the reveal (useSwipeUp's attribute on an ancestor), no easing. */
+[data-dragging] :is(.glow, .ambient, .light) { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .glow, .ambient, .light { transition: none; animation: none; }
+}

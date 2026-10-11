@@ -9,8 +9,12 @@ import { AccountInfoPage } from './AccountInfoPage';
 import { ACCOUNT_TITLES, type AccountInitialView } from './accountTypes';
 import { PREVIEW_HISTORY } from './accountPreviewData';
 import { useAccountPreview } from './useAccountPreview';
+import { useBackLayer } from './useBackLayer';
 import '../../theme/accounts.css';
 import styles from './AccountExperience.module.css';
+
+// Sheet screens whose back goes to another sheet screen rather than closing the sheet.
+const SHEET_STEPS_BACK: readonly string[] = ['edit', 'add', 'setup', 'addresses', 'transaction'];
 
 export function AccountExperience({ initialView = 'closed', children }: {
   initialView?: AccountInitialView; children: (open: () => void) => ReactNode;
@@ -19,6 +23,14 @@ export function AccountExperience({ initialView = 'closed', children }: {
   const trigger = useRef<HTMLElement | null>(null);
   const [sheetPresent, setSheetPresent] = useState(state.sheetOpen);
   const close = () => { state.setMenuOpen(false); requestAnimationFrame(() => trigger.current?.focus()); };
+  // Swiping back closes the sheet (stepping back within it first, as its own back
+  // button does), then the menu (2026-10-10).
+  useBackLayer(state.menuOpen, () => { state.setMenuOpen(false); });
+  useBackLayer(state.sheetOpen, () => {
+    const stays = SHEET_STEPS_BACK.includes(state.screen);
+    state.back();
+    return stays;
+  });
   const active = state.menuOpen && !state.sheetOpen && !sheetPresent;
   const { containerRef, focusFirst } = useFocusTrap<HTMLDivElement>({ isActive: active, onEscape: close });
   useEffect(() => { if (active) focusFirst(); }, [active, focusFirst]);

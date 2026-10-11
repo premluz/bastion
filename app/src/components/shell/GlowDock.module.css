@@ -1,0 +1,109 @@
+/* The swipe layer around the pill dock: it holds the gesture's state for the glow.
+   The pill itself takes no browser panning — a vertical drag on it is the swipe. */
+.swipe {
+  display: contents;
+  --glow-progress: 0;
+  --glow-open: 0;
+  /* How revealed the glow is: the finger's progress, or held while open. */
+  --glow-reveal: min(1, var(--glow-progress) + var(--glow-open));
+}
+.swipe[data-composer-open='true'] { --glow-open: var(--glow-open-reveal); }
+.swipe [data-testid='pill-navigation'] { touch-action: none; }
+
+/* The pill morphs with the finger (2026-10-10, direct feedback: the morph starts
+   as the slide starts, the trigger only finalises it): it lifts, its icons and the
+   + fade, and the + folds under the glass so the pill widens toward the composer.
+   The commit's view transition starts from this frame. Only the icon graphics
+   fade (their wrappers are display: contents, which paints no opacity), so the
+   buttons keep their own press transitions. */
+.swipe:not([data-composer-open='true']) [data-testid='pill-navigation'] {
+  translate: 0 calc(var(--glow-progress) * var(--glow-morph-lift) * -1);
+}
+.swipe:not([data-composer-open='true']) [data-testid='pill-navigation'] :is(nav > span, button svg) {
+  opacity: calc(1 - var(--glow-progress) * var(--glow-morph-fade));
+}
+.swipe:not([data-dragging]) [data-testid='pill-navigation'] :is(nav > span, button svg) {
+  transition: opacity var(--glow-reveal-duration) var(--glow-reveal-ease);
+}
+.swipe:not([data-composer-open='true']) [data-testid='pill-navigation'] > :not(nav) {
+  margin-inline-start: calc(var(--glow-progress) * (var(--pill-toggle-size) + var(--pill-detached-gap)) * -1);
+  scale: calc(1 - var(--glow-progress) * var(--glow-morph-shrink));
+}
+.swipe:not([data-dragging]) [data-testid='pill-navigation'],
+.swipe:not([data-dragging]) [data-testid='pill-navigation'] > :not(nav) {
+  transition: translate var(--glow-reveal-duration) var(--glow-reveal-ease), margin var(--glow-reveal-duration) var(--glow-reveal-ease),
+    scale var(--glow-reveal-duration) var(--glow-reveal-ease), opacity var(--motion-enter-duration) var(--motion-enter-ease);
+}
+
+/* While open, the page fades out behind the composer — under the glow, so the
+   glow still shows through the composer's glass and below it. */
+.shade {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 3;
+  height: var(--glow-composer-shade);
+  background: var(--agent-dock-shade);
+  pointer-events: none;
+  animation: glow-shade-in var(--motion-enter-duration) var(--motion-enter-ease) both;
+}
+
+/* Taps on the page while the composer is open, before any question, close it. */
+.dismiss {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: default;
+}
+
+/* The composer at the bottom and, once asked, the thread above it — over the
+   page, no new screen. Only the thread and composer take touches. */
+.sheet {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+.sheet > * { pointer-events: auto; }
+.thread {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: safe flex-end;
+  gap: var(--shell-gap);
+  padding: var(--shell-header-height) var(--shell-inset) 0;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  mask: var(--shell-transcript-mask);
+  animation: glow-thread-in var(--agent-thread-duration) var(--motion-enter-ease) var(--agent-thread-delay) both;
+}
+.composer {
+  position: relative;
+  padding: var(--shell-label-gap) var(--shell-inset) max(var(--shell-inset), env(safe-area-inset-bottom));
+}
+/* Over the live page, not a blank screen: the composer's glass blurs what is
+   under it, as the header search does, and a shade (.shade) sits behind it. */
+.composer :global(.astryx-chat-composer > div) { backdrop-filter: var(--shell-header-backdrop); }
+.composer button { min-height: var(--shell-control-size); min-width: var(--shell-control-size); }
+
+/* The composer's names for the dock morph (theme/dock-morph.css): the pill's
+   glass stretches into the composer's, its controls arrive one by one. It only
+   exists while open, so the pill's own names never clash with these. */
+.composer :global(.astryx-chat-composer > div) { view-transition-name: dock-bar; }
+.composer :global(.astryx-chat-composer-input) { view-transition-name: dock-input-1; }
+.composer [data-dock-item='mic'] { view-transition-name: dock-input-2; }
+.composer [data-dock-item='voice'] { view-transition-name: dock-input-3; }
+.composer :global(.astryx-chat-send-button) { view-transition-name: dock-input-4; }
+
+@keyframes glow-thread-in { from { opacity: 0; translate: 0 var(--space-16); } }
+@keyframes glow-shade-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .thread, .shade { animation: none; }
+}

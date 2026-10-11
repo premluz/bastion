@@ -16,12 +16,13 @@
      (2026-09-16, direct feedback: "no border") — overridden here rather
      than switching Card to variant="transparent", which would also
      strip the background this component just added. */
-  border: var(--shell-edge-width) solid transparent;
+  border: var(--shell-edge-width) solid;
+  border-color: var(--card-rim);
   /* Smoked glass (2026-10-10, direct feedback): a translucent dark fill over a
      deep blur, with a bright top lip — see theme/balance-glass.css — so the
      banner that rides up under these tiles shows through, blurred, instead of
      the flat card fill. */
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--balance-glass-fill), var(--balance-glass-fill)) padding-box, var(--glass-edge) border-box;
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--balance-glass-fill), var(--balance-glass-fill)) padding-box;
   box-shadow: var(--balance-glass-lip), var(--glass-shadow);
   backdrop-filter: var(--balance-glass-backdrop);
 }

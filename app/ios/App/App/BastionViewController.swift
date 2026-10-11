@@ -6,5 +6,8 @@ import Capacitor
 class BastionViewController: CAPBridgeViewController {
     override open func capacitorDidLoad() {
         bridge?.registerPluginInstance(NativeVoicePlugin())
+        // The left-edge swipe goes back through the page's history, which the web
+        // app keeps one entry deep per open screen (components/shell/backStack.ts).
+        webView?.allowsBackForwardNavigationGestures = true
     }
 }

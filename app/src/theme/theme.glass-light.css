@@ -145,6 +145,7 @@
   --glass-fill-clear: var(--surface-1);
   --glass-sheen: none;
   --glass-edge: none;
+  --card-rim: transparent;
   --glass-edge-accent: none;
   --glass-shadow: none;
   --halo-fill: radial-gradient(ellipse at bottom, var(--accent-signal), transparent 70%);

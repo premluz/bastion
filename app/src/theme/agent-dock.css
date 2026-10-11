@@ -1,13 +1,11 @@
 /* Agent home dock (2026-10-09): structural aliases over primitives and
    semantic tokens only, so every theme gets it without a parity entry. */
 :root {
-  /* 30% smaller than the 88px it was (2026-10-10, direct feedback), and sunk
-     toward the bottom: its lower edge sits just above the greeting. */
+  /* 30% smaller than the 88px it was (2026-10-10, direct feedback). */
   --agent-dock-orb-size: calc((var(--space-64) + var(--space-24)) * .7);
-  --agent-dock-orb-sink: calc(var(--space-32) + var(--space-12));
   --agent-dock-gap: var(--space-8);
   /* Room the in-place thread leaves for the dock beneath it. */
-  --agent-dock-height: calc(var(--space-64) * 2);
+  --agent-dock-height: calc(var(--space-64) + var(--space-32));
   --agent-suggestion-icon-size: calc(var(--space-32) + var(--space-12));
   /* Asleep: the orb sits dim and breathes slowly; awake it is full light. */
   --agent-orb-sleep-opacity: var(--opacity-55);
