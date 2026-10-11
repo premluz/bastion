@@ -78,3 +78,22 @@
   --promo-bleed-frost: var(--balance-glass-backdrop);
   --promo-bleed-frost-mask: linear-gradient(var(--surface-0) 60%, transparent);
 }
+
+/* Hero bleed (glow home, 2026-10-11, direct feedback with a mock): the top texture
+   goes and the banner becomes the hero's backdrop — balance and tiles sit on the
+   photo, which runs from the screen's top edge down past the tiles to the banner's
+   copy, then dissolves into the page. Header block and banner share one grid cell;
+   the block reserves the copy's zone below the tiles, the banner stretches over
+   everything and reaches up under the fixed header. */
+.root[data-hero] .top { display: grid; gap: 0; }
+.root[data-hero] .top > * { grid-area: 1 / 1; min-width: 0; }
+.root[data-hero] .top > :first-child { align-self: start; padding-block-end: var(--promo-hero-text-zone); }
+.root[data-hero] .top > :first-child::before { display: none; }
+.root[data-hero] .top > :nth-child(2) {
+  margin-block-start: calc(-1 * (var(--shell-header-height) + var(--space-8)));
+  --promo-bleed-slide-height: auto;
+  --promo-bleed-fade-top: 0px;
+  --promo-bleed-frost: none;
+  --promo-bleed-frost-mask: none;
+  --promo-bleed-image-dim: .6;
+}

@@ -11,6 +11,12 @@
   /* Opt-in frost on the banner's top band (2026-10-11): glass laid over the banner
      cannot reliably blur it from outside — the scrolling page's mask leaves the
      composited carousel out of their backdrop — so the banner blurs its own top. */
+  /* The slide's height: its own, or `auto` to fill a taller carousel (hero bleed). */
+  --promo-bleed-slide-height: var(--promo-bleed-height);
+  /* Hero bleed (glow home): room under the tiles for the banner's copy and button. */
+  --promo-hero-text-zone: calc(var(--space-64) * 2);
+  /* Photo brightness: 1 as is; the hero bleed dims it so the balance reads on top. */
+  --promo-bleed-image-dim: 1;
   --promo-bleed-frost: none;
   --promo-bleed-frost-mask: none;
   /* Title: 24 → 20px, and a measure wide enough that "DeFi opportunities" holds

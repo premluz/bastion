@@ -114,7 +114,7 @@ export function MobileFrame(props: MobileFrameProps) {
           {isHome ? (
             <main key="home" className={styles.page} aria-label="Home" tabIndex={0}>
               {hasAgentPage ? <AgentHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments}
-                onSuggestion={isGlowHome ? glow.ask : agent.ask} isReceding={isAgentHome ? agent.isWorking : glow.isWorking} />
+                onSuggestion={isGlowHome ? glow.ask : agent.ask} isReceding={isAgentHome ? agent.isWorking : glow.isWorking} heroBleed={isGlowHome} />
                 : <AssetsHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments} />}
             </main>
           ) : state.activeTab === 'assets' ? (

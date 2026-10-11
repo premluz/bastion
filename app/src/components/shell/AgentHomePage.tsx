@@ -21,15 +21,17 @@ export interface AgentHomePageProps {
   onSuggestion: (text: string, prompt: string) => void;
   /** The assistant has a request to work on: the contents fade out, bottom-up. */
   isReceding?: boolean;
+  /** The banner runs behind the whole hero (balance and tiles too), with no top texture. */
+  heroBleed?: boolean;
 }
 
 // The agent-first home (2026-10-09): same balance and promos as the assets
 // home, but the coin list gives way to what the assistant suggests looking
 // at next. A suggestion is a request: it wakes the assistant on it.
-export function AgentHomePage({ onSelectMoney, onSelectInvestments, onSuggestion, isReceding = false }: AgentHomePageProps) {
+export function AgentHomePage({ onSelectMoney, onSelectInvestments, onSuggestion, isReceding = false, heroBleed = false }: AgentHomePageProps) {
   const summary = resolveAssetsHomeSummary();
   return (
-    <div className={`${homeStyles.root} ${styles.root}`} data-receding={isReceding ? '' : undefined} inert={isReceding}>
+    <div className={`${homeStyles.root} ${styles.root}`} data-receding={isReceding ? '' : undefined} data-hero={heroBleed ? '' : undefined} inert={isReceding}>
       <div className={homeStyles.body}>
         <div className={`${homeStyles.cardStack} ${styles.top}`}>
           <AssetsHomeHeader totalValue={summary.totalValue} changeAbs={summary.changeAbs} changePercent={summary.changePercent}
