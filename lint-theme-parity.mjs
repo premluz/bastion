@@ -48,7 +48,22 @@ const byFile = FILES.map((file) => ({ file, props: customPropertyNames(file) }))
 const allProps = new Set(byFile.flatMap(({ props }) => [...props]));
 const checked = [...allProps].filter((prop) => !isBridgeOverride(prop));
 
+// A multi-line value must not be split by a later insertion (2026-10-12: a
+// `--glow-blend` line dropped inside `--canvas-backdrop:`'s gradient list passed
+// every name-based check and only failed the minified production build). A
+// declaration whose value is empty on its own line, directly followed by another
+// declaration, is that break.
 let mismatches = 0;
+for (const file of FILES) {
+  const lines = readFileSync(file, 'utf-8').split('\n');
+  lines.forEach((line, index) => {
+    if (/^\s*--[\w-]+:\s*$/.test(line) && /^\s*--[\w-]+\s*:/.test(lines[index + 1] ?? '')) {
+      mismatches += 1;
+      console.error(`✗ ${file}:${index + 1} custom property has no value before the next declaration (a split multi-line value?)`);
+    }
+  });
+}
+
 for (const prop of checked) {
   const missingFrom = byFile.filter(({ props }) => !props.has(prop)).map(({ file }) => file);
   if (missingFrom.length === 0) continue;

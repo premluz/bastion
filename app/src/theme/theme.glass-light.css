@@ -191,10 +191,10 @@
      going darker risks the "dirt on light glass" failure mode noted
      elsewhere in this file. Same TASTE DIAL note — `none` removes it. */
   --canvas-backdrop:
-  --glow-blend: multiply;
     radial-gradient(60% 50% at 18% 0%, oklch(.94 .022 250) 0%, transparent 62%),
     radial-gradient(52% 46% at 88% 12%, oklch(.95 .02 285) 0%, transparent 58%),
     linear-gradient(180deg, oklch(.99 .004 250) 0%, oklch(.965 .008 250) 100%);
+  --glow-blend: multiply;
 
   /* Motion binding — identical to glass. Pacing is part of the glass
      register ("unhurried"), not part of its lighting. */
