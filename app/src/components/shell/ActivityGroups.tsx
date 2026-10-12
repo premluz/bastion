@@ -15,12 +15,7 @@ export function ActivityGroups({ entries }: { entries: readonly HistoryEntry[] }
         <div key={group.day} className={styles.group}>
           <Text type="supporting" color="secondary">{group.label}</Text>
           <div className={styles.pane}>
-            {group.items.map((entry, index) => (
-              <div key={entry.id} className={styles.row} data-first={index === 0 ? '' : undefined}
-                data-last={index === group.items.length - 1 ? '' : undefined}>
-                <HistoryItem entry={entry} />
-              </div>
-            ))}
+            {group.items.map((entry) => <HistoryItem key={entry.id} entry={entry} />)}
           </div>
         </div>
       ))}

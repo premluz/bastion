@@ -25,7 +25,7 @@ test('wallet actions and quick actions explain unavailable prototype paths', asy
   await addCash.click();
   await expect(page.getByRole('status').filter({ hasText: notice })).toBeVisible();
 
-  await page.getByRole('button', { name: 'Manage', exact: true }).click();
+  await page.getByRole('button', { name: 'Manage cards', exact: true }).click();
   const cardDetails = page.getByRole('dialog', { name: /details$/ });
   await expect(cardDetails).toBeVisible();
   await cardDetails.getByRole('button', { name: 'Back', exact: true }).click();

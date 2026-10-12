@@ -1,0 +1,18 @@
+/* Carousel (2026-10-11, direct feedback: the cards were squashed into two narrow
+   columns): one row of cards at a comfortable fixed width that scrolls across,
+   snapping card by card. The next card peeks in so it reads as scrollable. */
+.track {
+  display: flex;
+  gap: var(--space-12);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  /* The ends of the row stop here instead of passing the swipe to the transcript. */
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.track::-webkit-scrollbar { display: none; }
+.track > * {
+  flex: 0 0 var(--asset-card-carousel-width);
+  min-width: 0;
+  scroll-snap-align: start;
+}

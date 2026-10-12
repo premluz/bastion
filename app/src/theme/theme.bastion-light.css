@@ -1,0 +1,123 @@
+/* Bastion Light (2026-10-11, direct feedback: "build light mode off the Bastion
+   theme") — the same matte, architectural register lit from the other side:
+   warm paper and limestone instead of brown-black, copper deepened so it holds
+   its contrast on a light page, the agent's champagne presence darkened to a
+   bronze that reads as text. Type, motion, radii and the glass recipe are held
+   constant against theme.bastion.css, which is what keeps this a scheme of
+   Bastion rather than a new theme; its component rules are shared (selectors in
+   theme.bastion.css match both).
+
+   Light glass needs MORE opacity than dark glass (theme.glass-light.css's
+   finding): dark content behind a thin white pane drags it grey, so the fills
+   run ~.6–.8 where the dark scheme runs ~.45–.85 of near-black. Text on the
+   banner photos stays dark ink: checked on the glow hero and the framed promo,
+   the light glass and the photos' pale concrete keep it legible. */
+[data-theme='bastion-light'] {
+  color-scheme: light;
+
+  --surface-0: oklch(.972 .005 80);
+  --surface-1: oklch(.99 .003 80);
+  --surface-2: oklch(.952 .006 78);
+  --surface-3: oklch(.925 .007 76);
+  --surface-selected: oklch(.885 .009 74);
+  --card-fill: oklch(.995 .002 80 / .62);
+  --hairline-width: .5px;
+  --ink-primary: oklch(.24 .012 65);
+  --ink-secondary: oklch(.44 .014 65);
+  --ink-muted: oklch(.6 .012 68);
+
+  /* Copper deepened for contrast on paper; presence is bronze so headings in
+     the agent's voice still read; the orb's liquid keeps a warm champagne body
+     with enough chroma to show against a light page. */
+  --accent-signal: oklch(.6 .135 52);
+  --orb-liquid-blue: oklch(.72 .075 62);
+  --orb-liquid-ice: oklch(.84 .05 70);
+  --presence: oklch(.5 .07 62);
+  --orb-luminance-idle: .72;
+  --orb-luminance-listening: 1.08;
+  --orb-luminance-thinking: .94;
+  --orb-seam: oklch(.6 .135 52 / .55);
+  --halo-height: calc(var(--space-64) * 6);
+  --accent-alert: oklch(.55 .16 30);
+  --accent-warn: oklch(.62 .13 68);
+  --accent-ok: oklch(.52 .1 148);
+  --delta-up: oklch(.5 .11 148);
+  --delta-down: oklch(.55 .16 30);
+  --delta-up-bg: oklch(.5 .11 148 / .14);
+  --delta-down-bg: oklch(.55 .16 30 / .14);
+  --tint-subtle: var(--opacity-12);
+  --tint-medium: var(--opacity-18);
+  --tint-strong: var(--opacity-40);
+
+  --viz-1: oklch(.56 .1 225);
+  --viz-2: oklch(.56 .1 165);
+  --viz-3: oklch(.6 .11 75);
+  --viz-4: oklch(.54 .11 285);
+  --viz-5: oklch(.56 .11 25);
+  --viz-6: oklch(.56 .1 115);
+  --edge: oklch(.3 .012 70 / .12);
+  --edge-highlight: oklch(.3 .012 70 / .2);
+  --surface-1-solid: oklch(.99 .003 80);
+  --pane-surface: oklch(.99 .003 80 / .92);
+  --glow: 0 0 12px oklch(from var(--presence) l c h / .14);
+  --scrim: oklch(.25 .012 65 / .32);
+
+  --glass-fill: oklch(.995 .002 80 / .8);
+  --glass-fill-clear: oklch(.995 .002 80 / .66);
+  --glass-sheen: none;
+  --glass-edge: linear-gradient(oklch(.3 .012 70 / .16), oklch(.3 .012 70 / .1));
+  --card-rim: oklch(.3 .012 70 / .16) oklch(.3 .012 70 / .12) oklch(.3 .012 70 / .1);
+  --glass-edge-accent: linear-gradient(to bottom, oklch(.6 .135 52 / .45), oklch(.6 .135 52 / .22) 48%, oklch(.6 .135 52 / .08));
+  --glass-shadow: none;
+  --halo-fill:
+    radial-gradient(130% 85% at 50% 100%, oklch(.72 .075 62 / .2), oklch(.72 .075 62 / .1) 35%, oklch(.72 .075 62 / .04) 65%, transparent 100%),
+    linear-gradient(to top, oklch(.72 .075 62 / .1), oklch(.72 .075 62 / .03) 40%, transparent 65%);
+  --shell-ambient:
+    radial-gradient(72% 84% at 100% 0%, oklch(.8 .07 55 / .14), transparent 72%),
+    radial-gradient(55% 68% at 0% 0%, oklch(.85 .03 70 / .1), transparent 72%);
+  --shading-light: oklch(1 0 0 / .4);
+  --shading-dark: oklch(.2 .01 65 / .06);
+  --shadow-low: 0px 1px 1px oklch(.2 .01 65 / .06), 0px 1px 4px oklch(.2 .01 65 / .06);
+  --surface-blur: var(--blur-64);
+  --surface-material: none;
+  --spec-alpha: 0;
+  --spec-radius: var(--spec-radius-lg);
+  --surface-opacity: 1;
+  --canvas-backdrop: linear-gradient(155deg, oklch(1 0 0 / .5), transparent 38%);
+  /* Light on paper must not screen: it would wash out to nothing. */
+  --glow-blend: normal;
+
+  --motion-enter-duration: var(--duration-200);
+  --motion-enter-ease: var(--ease-standard);
+  --motion-exit-duration: var(--duration-120);
+  --motion-exit-ease: var(--ease-standard);
+  --motion-assembly-stagger: 60ms;
+  --motion-table-stagger: 30ms;
+  --motion-chart-reveal-duration: var(--duration-480);
+  --motion-shimmer-duration: var(--duration-1600);
+  --face-ui: var(--font-geist);
+  --font-family-body: var(--font-geist);
+  --font-family-heading: var(--font-geist);
+  --face-data: var(--font-data);
+  --face-voice: var(--font-voice);
+
+  --color-background-body: var(--surface-0);
+  --color-background-surface: var(--surface-1);
+  --color-background-card: var(--surface-2);
+  --color-background-popover: var(--surface-3);
+  --color-text-primary: var(--ink-primary);
+  --color-text-secondary: var(--ink-secondary);
+  --color-text-disabled: var(--ink-muted);
+  --color-icon-primary: var(--ink-primary);
+  --color-icon-secondary: var(--ink-secondary);
+  --color-icon-disabled: var(--ink-muted);
+  --color-accent: var(--accent-signal);
+  --color-text-accent: var(--accent-signal);
+  --color-icon-accent: var(--accent-signal);
+  --color-error: var(--accent-alert);
+  --color-icon-red: var(--accent-alert);
+  --color-warning: var(--accent-warn);
+  --color-success: var(--accent-ok);
+  --color-border: var(--edge);
+  --color-shadow: oklch(.2 .01 65 / .18);
+}

@@ -15,6 +15,11 @@
   animation-duration: var(--dock-morph-duration);
   animation-timing-function: var(--dock-morph-ease);
   animation-delay: var(--dock-bar-delay);
+  /* The browser copies the bar's backdrop blur onto this group, whose box is a
+     plain rectangle — over a bright backdrop (the glow home's copper light) that
+     showed as a square-cornered patch around the rounded bar (2026-10-11, direct
+     feedback). The same radius as the bar clips the blur to its shape. */
+  border-radius: var(--radius-chat);
 }
 
 /* The bar images are glass only (their contents are named elsewhere), so
@@ -131,6 +136,15 @@
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: var(--dock-morph-duration);
+}
+
+/* The group's own corners follow the image pair's, so its blur never shows past them.
+   Listed beside the browser's built-in move/resize animation (which keeps running). */
+:root:active-view-transition-type(to-orb)::view-transition-group(dock-bar) {
+  animation-name: -ua-view-transition-group-anim-dock-bar, dock-corners-to-orb;
+}
+:root:active-view-transition-type(from-orb)::view-transition-group(dock-bar) {
+  animation-name: -ua-view-transition-group-anim-dock-bar, dock-corners-from-orb;
 }
 
 @keyframes dock-item-out { to { opacity: 0; scale: var(--dock-item-scale); filter: blur(var(--dock-morph-blur)); } }

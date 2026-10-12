@@ -19,7 +19,12 @@
 .name > :first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .badge { font-size: var(--text-12); color: var(--ink-secondary); background: var(--surface-3); border-radius: var(--radius-8); padding: var(--space-2) var(--space-4); white-space: nowrap; }
 .row { width: 100%; min-width: 0; }
-.prominent.prominent { overflow: hidden; width: var(--explore-card-width); background: var(--surface-2); border-radius: var(--radius-12); box-shadow: none; border: 0; }
+/* The shared list accessory size (shell.css --list-accessory-*, 2026-10-12). */
+.accessory { display: grid; width: var(--list-accessory-size); height: var(--list-accessory-size); flex-shrink: 0; }
+.accessory > * { width: 100%; height: 100%; }
+/* Raised glass (shell.css --list-card-*, 2026-10-12, direct feedback: the Perps cards
+   too get some transparency and background blur). */
+.prominent.prominent { overflow: hidden; width: var(--explore-card-width); background: var(--list-card-fill-raised); backdrop-filter: var(--list-card-backdrop); border-radius: var(--list-card-radius); box-shadow: none; border: 0; }
 .cardContent { --pane-inset: var(--space-16); display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-12); min-height: var(--explore-card-min-height); }
 .cardContent > :first-child { width: calc(var(--space-32) + var(--space-8)); height: calc(var(--space-32) + var(--space-8)); }
 .chart { composes: inline blockEnd from '../../theme/bleed.module.css'; align-self: stretch; margin-top: auto; }

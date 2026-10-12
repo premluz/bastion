@@ -6,20 +6,17 @@
 /* The assistant's own voice: champagne presence, not the action accent. */
 .title:not(#\#):not(#\#):not(#\#) { margin: 0; color: var(--presence); }
 
-/* Same pane as the coin list: card fill, hairline glass edge, rows flush. */
+/* The shared two-line list (shell.css --list-row-*, 2026-10-12): no pane behind
+   it; every row is rounded, so a hovered row is its own rounded shape. */
 .pane {
   display: flex;
   flex-direction: column;
-  border: var(--shell-edge-width) solid;
-  border-color: var(--card-rim);
-  border-radius: var(--shell-card-radius);
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box;
-  backdrop-filter: blur(var(--surface-blur));
-  overflow: hidden;
 }
-.pane .item:not(#\#):not(#\#):not(#\#) { border-radius: 0; padding: var(--space-16) var(--shell-pane-inset); gap: var(--space-16); }
-.pane .item:first-child:not(#\#):not(#\#):not(#\#) { border-start-start-radius: var(--shell-card-radius); border-start-end-radius: var(--shell-card-radius); }
-.pane .item:last-child:not(#\#):not(#\#):not(#\#) { border-end-start-radius: var(--shell-card-radius); border-end-end-radius: var(--shell-card-radius); }
+.pane .item:not(#\#):not(#\#):not(#\#) {
+  border-radius: var(--list-row-radius);
+  padding: var(--list-row-padding-block) var(--list-row-padding-inline);
+  gap: var(--space-16);
+}
 
 .icon {
   display: grid;
@@ -28,7 +25,7 @@
   width: var(--agent-suggestion-icon-size);
   height: var(--agent-suggestion-icon-size);
   border-radius: var(--radius-full);
-  border: var(--shell-edge-width) solid var(--edge);
+  border: var(--list-accessory-ring);
   color: var(--presence);
 }
 
@@ -77,6 +74,10 @@
   --promo-bleed-fade-top: var(--promo-bleed-overlap);
   --promo-bleed-frost: var(--balance-glass-backdrop);
   --promo-bleed-frost-mask: linear-gradient(var(--surface-0) 60%, transparent);
+  /* Every slide's copy starts the same gap below the tiles, which overlap the
+     slide's top by --promo-bleed-overlap (2026-10-12, direct feedback). */
+  --promo-bleed-copy-justify: flex-start;
+  --promo-bleed-copy-top: calc(var(--promo-bleed-overlap) + var(--promo-hero-copy-gap));
 }
 
 /* Hero bleed (glow home, 2026-10-11, direct feedback with a mock): the top texture
@@ -96,4 +97,8 @@
   --promo-bleed-frost: none;
   --promo-bleed-frost-mask: none;
   --promo-bleed-image-dim: .6;
+  /* The copy starts a fixed gap below the tiles: the slide is the cell's full
+     height, and the tiles end the text zone above its bottom. */
+  --promo-bleed-copy-justify: flex-start;
+  --promo-bleed-copy-top: calc(100cqh - var(--promo-hero-text-zone) + var(--promo-hero-copy-gap));
 }

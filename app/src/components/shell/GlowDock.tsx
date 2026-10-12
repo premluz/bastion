@@ -48,7 +48,7 @@ export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, 
     <div ref={swipe.ref} className={styles.swipe} data-composer-open={isOpen} {...(isOpen ? {} : swipe.handlers)}>
       {isOpen && <div className={styles.shade} aria-hidden="true" />}
       <GlowLight isOpen={isOpen} />
-      <MobileFrameDock state={dockState} variant="pill" />
+      <MobileFrameDock state={dockState} variant="pill" destinationSet="glow" />
     </div>
     {isOpen && !isWorking && <button type="button" className={styles.dismiss} aria-label="Close assistant" onClick={onClose} />}
     {isOpen && <div className={styles.sheet}>

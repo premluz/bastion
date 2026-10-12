@@ -1,9 +1,9 @@
 import { Card } from '@astryxdesign/core/Card';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
-import { ChevronRightIcon, CircleStackIcon } from '@heroicons/react/24/outline';
+import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import { TrendDelta } from '../nodes/TrendDelta';
-import '../../theme/balance-glass.css';
+import { EarningBadge } from './EarningBadge';
 import styles from './BalanceCategoryCard.module.css';
 
 interface BalanceCategoryCardProps {
@@ -50,10 +50,7 @@ export function BalanceCategoryCard({ label, value, changeAbs, changePercent, ea
       <Text type="large" weight="semibold" hasTabularNumbers className={styles.value}>
         ${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
       </Text>
-      {earningRate !== undefined ? <span className={styles.earning}>
-        <Icon icon={CircleStackIcon} size="sm" />
-        <Text type="supporting" hasTabularNumbers className={styles.earningText}>Earning {earningRate}%</Text>
-      </span> : <div className={styles.changeRow}>
+      {earningRate !== undefined ? <EarningBadge rate={earningRate} /> : <div className={styles.changeRow}>
         <Text type="supporting" hasTabularNumbers className={isUp ? styles.deltaUp : styles.deltaDown}>
           {isUp ? '+' : ''}
           {changeAbs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

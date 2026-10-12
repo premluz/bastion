@@ -7,6 +7,7 @@ import { AGENT_SUGGESTIONS } from '../../engine/agentAgenda';
 import { greetingFor, USER_FIRST_NAME } from './greeting';
 import { AssetsHomeHeader } from './AssetsHomeHeader';
 import { HomePromos } from './HomePromos';
+import '../../theme/balance-glass.css';
 import homeStyles from './AssetsHomePage.module.css';
 import styles from './AgentHomePage.module.css';
 

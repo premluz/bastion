@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PillNavigation, type PillDestination } from './PillNavigation';
+import { PillNavigation, type PillDestination, type PillDestinationSet } from './PillNavigation';
 import { TabBar, type TabDestination } from './TabBar';
 import type { useMobileFrame } from './useMobileFrame';
 import styles from './MobileFrame.module.css';
@@ -13,13 +13,27 @@ const pillDestinations: Record<TabDestination, PillDestination> = { home: 'home'
 // screen top). Both nav variants' own dock now only ever renders the
 // destinations/tab bar itself; isComposerOpen still flows through purely
 // to drive each dock's own halo/fade cues.
-export function MobileFrameDock({ state, variant }: { state: ReturnType<typeof useMobileFrame>; variant: 'pill' | 'classic' }) {
+export interface MobileFrameDockProps {
+  state: ReturnType<typeof useMobileFrame>;
+  variant: 'pill' | 'classic';
+  /** The pill's destinations; `glow` splits the wallet into Cash and Investments and drops Assistant. */
+  destinationSet?: PillDestinationSet;
+}
+
+export function MobileFrameDock({ state, variant, destinationSet = 'standard' }: MobileFrameDockProps) {
   const [actionsOpen, setActionsOpen] = useState(false);
+  const isGlow = destinationSet === 'glow';
   const navigate = (item: PillDestination) => {
     if (item === 'assistant') state.toggleComposer();
-    else state.selectTab(item === 'explore' ? 'markets' : item);
+    else if (item === 'cash') state.openMoney();
+    else if (item === 'investments') state.openInvestments();
+    else if (item === 'explore') state.selectTab('markets');
+    else state.selectTab(item);
   };
-  if (variant === 'pill') return <PillNavigation activeItem={state.mode === 'idle' ? pillDestinations[state.activeTab] : 'assistant'}
+  const walletItem: PillDestination = state.walletTab === 'money' ? 'cash' : 'investments';
+  const active: PillDestination = isGlow ? (state.activeTab === 'assets' ? walletItem : pillDestinations[state.activeTab])
+    : state.mode === 'idle' ? pillDestinations[state.activeTab] : 'assistant';
+  if (variant === 'pill') return <PillNavigation activeItem={active} destinationSet={destinationSet}
     onNavigate={navigate} isActionsOpen={actionsOpen} onActionsOpenChange={setActionsOpen}
     onAction={() => undefined}
     isComposerOpen={state.mode !== 'idle'} assistantRef={state.assistantRef} />;

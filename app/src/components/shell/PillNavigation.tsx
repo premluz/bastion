@@ -1,27 +1,37 @@
 import { Fragment, type Ref } from 'react';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
-import { HomeIcon, MagnifyingGlassIcon, WalletIcon, SparklesIcon, PlusIcon,
+import { HomeIcon, MagnifyingGlassIcon, WalletIcon, SparklesIcon, PlusIcon, ArrowTrendingUpIcon,
   BanknotesIcon, ArrowUpRightIcon, ArrowDownLeftIcon, ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import { DockMenu, type DockMenuItem } from './DockMenu';
 import '../../theme/pill-navigation.css';
 import styles from './PillNavigation.module.css';
 
-const destinations = [
+const STANDARD_DESTINATIONS = [
   { id: 'home', label: 'Home', icon: HomeIcon }, { id: 'explore', label: 'Explore', icon: MagnifyingGlassIcon },
   { id: 'assets', label: 'Assets', icon: WalletIcon }, { id: 'assistant', label: 'Assistant', icon: SparklesIcon },
 ] as const;
+// The glow home (2026-10-11, direct feedback): no Assistant item (the swipe up and
+// the composer are its way in), and the wallet page splits into two destinations.
+const GLOW_DESTINATIONS = [
+  { id: 'home', label: 'Home', icon: HomeIcon }, { id: 'explore', label: 'Explore', icon: MagnifyingGlassIcon },
+  { id: 'cash', label: 'Cash', icon: WalletIcon }, { id: 'investments', label: 'Investments', icon: ArrowTrendingUpIcon },
+] as const;
+const DESTINATION_SETS = { standard: STANDARD_DESTINATIONS, glow: GLOW_DESTINATIONS } as const;
 export const QUICK_ACTIONS = [
   { id: 'add-cash', label: 'Add cash', icon: BanknotesIcon, isPrototype: true }, { id: 'send', label: 'Send', icon: ArrowUpRightIcon, isPrototype: true },
   { id: 'receive', label: 'Receive', icon: ArrowDownLeftIcon, isPrototype: true }, { id: 'trade', label: 'Trade', icon: ArrowsRightLeftIcon, isPrototype: true },
 ] as const satisfies readonly DockMenuItem[];
 export const PLUS_TRIGGER_ICON = <span className={styles.plus}><Icon icon={PlusIcon} size="lg" /></span>;
-export type PillDestination = (typeof destinations)[number]['id'];
+export type PillDestination = (typeof STANDARD_DESTINATIONS)[number]['id'] | (typeof GLOW_DESTINATIONS)[number]['id'];
+export type PillDestinationSet = keyof typeof DESTINATION_SETS;
 export type PillAction = (typeof QUICK_ACTIONS)[number]['id'];
 const isPillAction = (id: string): id is PillAction => QUICK_ACTIONS.some((action) => action.id === id);
 
 export interface PillNavigationProps {
   assistantRef?: Ref<HTMLButtonElement>;
+  /** Which destinations the pill shows; `glow` has Cash and Investments, and no Assistant. */
+  destinationSet?: PillDestinationSet;
   // Still meaningful even though the composer's own UI now lives in a
   // separate full-screen overlay (ComposerModeOverlay.tsx, 2026-09-16
   // follow-up) — drives the dock's own halo glow and the nav pill's
@@ -32,7 +42,7 @@ export interface PillNavigationProps {
   isActionsOpen: boolean; onActionsOpenChange: (open: boolean) => void; onAction: (action: PillAction) => void;
 }
 
-export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onActionsOpenChange, onAction, isComposerOpen = false, assistantRef }: PillNavigationProps) {
+export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onActionsOpenChange, onAction, isComposerOpen = false, assistantRef, destinationSet = 'standard' }: PillNavigationProps) {
   return <Fragment>
     {/* Modal scrim, not alpha-dimming the nav itself (2026-09-16, direct
         feedback: "the menu when opened via + in the nav sets alpha
@@ -57,7 +67,7 @@ export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onAction
       <span className={styles.track} aria-hidden="true"><span className={styles.indicator} data-active={activeItem}>
         <span key={activeItem} className={styles.highlight} />
       </span></span>
-      {destinations.map(({ id, label, icon }) => <IconButton key={id} label={label} variant="ghost" className={styles.destination}
+      {DESTINATION_SETS[destinationSet].map(({ id, label, icon }) => <IconButton key={id} label={label} variant="ghost" className={styles.destination}
         {...(id === 'assistant' && assistantRef ? { ref: assistantRef } : {})}
         icon={<Icon icon={icon} size="lg" />} aria-current={activeItem === id ? 'page' : undefined} onClick={() => onNavigate(id)} />)}
     </nav>

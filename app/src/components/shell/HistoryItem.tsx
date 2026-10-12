@@ -10,6 +10,7 @@ import type { HistoryCategory, HistoryEntry } from '../../contracts/props/histor
 import { CoinLogo } from './CoinLogo';
 import { formatHistoryAmount } from './accountHistory';
 import { PrototypeHint } from './PrototypeNotice';
+import { avatarProps } from '../../avatars';
 import styles from './HistoryItem.module.css';
 
 export interface HistoryItemProps { entry: HistoryEntry; onSelect?: (entry: HistoryEntry) => void }
@@ -24,6 +25,10 @@ const CATEGORY_ICONS: Record<HistoryCategory, typeof ArrowsRightLeftIcon> = {
   entertainment: FilmIcon, transfer: ArrowsRightLeftIcon, other: Squares2X2Icon,
 };
 
+// Astryx's avatar scale has no 44px step (--list-accessory-size): the next step up,
+// fitted into the accessory circle by HistoryItem.module.css.
+const ACCESSORY_SIZE = 48;
+
 // Shell row with validated data props; no registry action or engine dependency.
 export function HistoryItem({ entry, onSelect }: HistoryItemProps) {
   const amount = entry.displayAmount ?? formatHistoryAmount(entry);
@@ -32,7 +37,7 @@ export function HistoryItem({ entry, onSelect }: HistoryItemProps) {
       label={entry.title} description={entry.detail}
       {...(onSelect ? { onClick: () => onSelect(entry) } : {})}
       startContent={<span className={styles.asset}>
-        {entry.avatar?.kind === 'initials' ? <Avatar name={entry.avatar.name} size="medium" />
+        {entry.avatar?.kind === 'initials' ? <Avatar {...avatarProps(entry.avatar.name)} size={ACCESSORY_SIZE} />
           : entry.avatar?.kind === 'category' ? <Icon icon={CATEGORY_ICONS[entry.avatar.category]} size="lg" />
           : entry.assetId ? <CoinLogo entityId={entry.assetId} label={entry.symbol ?? ''} />
           : <Icon icon={entry.kind === 'trade' ? ArrowsRightLeftIcon : Squares2X2Icon} size="lg" />}

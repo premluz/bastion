@@ -208,9 +208,25 @@
      the gradient painting harmlessly below the cut. Masking the page
      itself fades content out as it reaches that edge instead. Same
      --shell-transcript-mask the conversation transcripts already use, so
-     every scrolling surface in the shell fades alike. */
-  mask: var(--shell-transcript-mask);
+     every scrolling surface in the shell fades alike.
+     Its top ramp grows with scroll (2026-10-11, direct feedback: no top shadow
+     while the page is at its top): --shell-mask-top runs 0 → --shell-mask-span
+     over the first header-height of scroll, in step with the header shade. */
+  --shell-mask-top: var(--shell-mask-span);
+  mask: linear-gradient(to bottom,
+    transparent, transparent var(--shell-mask-inset),
+    var(--surface-0) calc(var(--shell-mask-inset) + var(--shell-mask-top)),
+    var(--surface-0) calc(100% - var(--shell-mask-inset) - var(--shell-mask-span)),
+    transparent calc(100% - var(--shell-mask-inset)), transparent);
 }
+@supports (animation-timeline: scroll()) {
+  .page {
+    animation: shell-mask-top-in linear both;
+    animation-timeline: --shell-page-scroll;
+    animation-range: 0 var(--shell-header-height);
+  }
+}
+@keyframes shell-mask-top-in { from { --shell-mask-top: 0px; } to { --shell-mask-top: var(--shell-mask-span); } }
 
 /* Page landing: each tab's sections rise out of a soft blur one stagger
    step apart (the <main> is keyed per tab, so this replays on every tab

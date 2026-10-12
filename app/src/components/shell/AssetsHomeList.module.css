@@ -1,21 +1,12 @@
-/* One pane wrapping all asset rows (2026-10-05, direct feedback): same
-   card fill and hairline edge as the Crypto/Money tiles, rows flush with no
-   gap and no separators. Rows lose their own rounding so hover fills meet
-   the pane's clipped corners squarely. */
+/* The shared two-line list recipe (shell.css --list-row-*, 2026-10-12, direct
+   feedback): no pane behind the asset rows, rows flush with no gap, every row
+   rounded so its hover is its own shape. */
 .list {
   display: flex;
   flex-direction: column;
-  border: var(--shell-edge-width) solid;
-  border-color: var(--card-rim);
-  border-radius: var(--shell-card-radius);
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box;
-  backdrop-filter: blur(var(--surface-blur));
-  overflow: hidden;
 }
 .list section > div { gap: 0; }
-.list :global(.astryx-item):not(#\#):not(#\#):not(#\#) { border-radius: 0; padding: var(--space-16) var(--shell-pane-inset); }
-/* No separate pane padding at the top/bottom (2026-10-07, direct feedback):
-   the first and last rows meet the pane's edges and carry its corners, so
-   their hover fill follows the rounding. */
-.list section > div > :first-child :global(.astryx-item):not(#\#):not(#\#):not(#\#) { border-start-start-radius: var(--shell-card-radius); border-start-end-radius: var(--shell-card-radius); }
-.list section > div > :last-child :global(.astryx-item):not(#\#):not(#\#):not(#\#) { border-end-start-radius: var(--shell-card-radius); border-end-end-radius: var(--shell-card-radius); }
+.list :global(.astryx-item):not(#\#):not(#\#):not(#\#) {
+  border-radius: var(--list-row-radius);
+  padding: var(--list-row-padding-block) var(--list-row-padding-inline);
+}

@@ -7,8 +7,9 @@
   inset-inline-start: calc(50% - var(--glow-orb-size) / 2);
   bottom: calc(var(--glow-orb-size) * -.5 + var(--glow-lift));
   z-index: 4;
-  /* Light adds to light: the plasma brightens the ambient glow instead of covering it. */
-  mix-blend-mode: screen;
+  /* Light adds to light: the plasma brightens the ambient glow instead of covering
+     it (screen); a light theme paints it plainly, since screen on paper washes out. */
+  mix-blend-mode: var(--glow-blend);
   width: var(--glow-orb-size);
   height: var(--glow-orb-size);
   pointer-events: none;

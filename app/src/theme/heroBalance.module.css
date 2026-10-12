@@ -15,7 +15,7 @@
   font-weight: 700;
 }
 
-:global([data-theme='bastion']) .heroBalance {
+:global(:is([data-theme='bastion'], [data-theme='bastion-light'])) .heroBalance {
   font-weight: 900;
 }
 

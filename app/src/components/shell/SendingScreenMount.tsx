@@ -1,11 +1,8 @@
 import { dollars, type SendAction, type SendState } from '../../engine/sendMoneyState';
 import { recipientName } from '../../engine/sendMoneyQuestions';
 import { SendingScreen } from './SendingScreen';
+import { USER_NAME } from '../../avatars';
 
-// Drop images here (app/public/avatars/<id>.png); Avatar shows initials
-// until a file exists or if it fails to load.
-const avatarSrc = (id: string) => `/avatars/${id}.png`;
-const SENDER = { name: 'Preview user', src: avatarSrc('me') };
 const isShowing = (flow: SendState) => flow.stage === 'sending' || (flow.stage === 'sent' && !flow.acknowledged);
 export const isSendingScreenOpen = (flows: Record<number, SendState>) => Object.values(flows).some(isShowing);
 
@@ -20,6 +17,6 @@ export function SendingScreenMount({ flows, dispatch }: {
   const [key, flow] = entry;
   const id = Number(key);
   return <SendingScreen phase={flow.stage === 'sending' ? 'processing' : 'success'} amount={`$${dollars(flow.amountCents)}`}
-    sender={SENDER} recipient={{ name: recipientName(flow) }}
+    sender={{ name: USER_NAME }} recipient={{ name: recipientName(flow) }}
     onCancel={() => dispatch(id, { type: 'cancel' })} onDone={() => dispatch(id, { type: 'done' })} />;
 }

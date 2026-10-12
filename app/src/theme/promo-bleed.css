@@ -14,7 +14,13 @@
   /* The slide's height: its own, or `auto` to fill a taller carousel (hero bleed). */
   --promo-bleed-slide-height: var(--promo-bleed-height);
   /* Hero bleed (glow home): room under the tiles for the banner's copy and button. */
-  --promo-hero-text-zone: calc(var(--space-64) * 2);
+  --promo-hero-text-zone: calc(var(--space-64) * 2 + var(--space-24));
+  /* Where a slide's copy sits: bottom-anchored by default; the hero bleed anchors it
+     this far below the tiles on every slide, whatever the title's line count
+     (2026-10-12, direct feedback: slightly less gap, the same on all banners). */
+  --promo-bleed-copy-justify: flex-end;
+  --promo-bleed-copy-top: var(--shell-inset);
+  --promo-hero-copy-gap: var(--space-20);
   /* Photo brightness: 1 as is; the hero bleed dims it so the balance reads on top. */
   --promo-bleed-image-dim: 1;
   --promo-bleed-frost: none;

@@ -15,11 +15,12 @@
   gap: var(--space-12);
   flex-shrink: 0;
   padding: var(--shell-pane-inset);
-  border-radius: var(--shell-card-radius);
+  /* Raised glass with a rim (shell.css --list-card-*, 2026-10-12). */
+  border-radius: var(--list-card-radius);
   border: var(--shell-edge-width) solid;
   border-color: var(--card-rim);
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--card-fill), var(--card-fill)) padding-box;
-  backdrop-filter: blur(var(--surface-blur));
+  background: var(--list-card-fill-raised);
+  backdrop-filter: var(--list-card-backdrop);
 }
 
 .logo {

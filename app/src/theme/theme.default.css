@@ -189,6 +189,7 @@
      shell hook still tracks the pointer (one rAF-throttled listener, theme
      -agnostic by design), but nothing renders. This theme is matte. */
   --canvas-backdrop: none;
+  --glow-blend: screen;
   --surface-material: none;
   --spec-alpha: 0;
   --spec-radius: var(--spec-radius-lg);

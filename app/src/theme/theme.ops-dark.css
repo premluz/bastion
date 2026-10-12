@@ -135,6 +135,7 @@
      precise. Nothing floats, nothing glows except signal states").
      See theme.default.css for why `none` rather than `blur(0px)`. */
   --canvas-backdrop: none;
+  --glow-blend: screen;
   --surface-material: none;
   --spec-alpha: 0;
   --spec-radius: var(--spec-radius-lg);

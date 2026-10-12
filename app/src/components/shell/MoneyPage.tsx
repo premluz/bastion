@@ -1,6 +1,4 @@
 import { Heading } from '@astryxdesign/core/Heading';
-import { Icon } from '@astryxdesign/core/Icon';
-import { Text } from '@astryxdesign/core/Text';
 import { WalletTabSwitch } from './WalletTabSwitch';
 import { WalletActionRow } from './WalletActionRow';
 import { ContributingBalanceRow } from './ContributingBalanceRow';
@@ -11,6 +9,8 @@ import { ActivityGroups } from './ActivityGroups';
 import { InvestmentsTab } from './InvestmentsTab';
 import { MONEY_HISTORY } from './moneyHistoryData';
 import { MONEY_PLACEHOLDER } from './moneySummary';
+import { EarningBadge } from './EarningBadge';
+import { SectionHeading } from '../nodes/SectionHeading';
 import { WALLET_CARDS } from './cardData';
 import { notifyPrototypeUnavailable } from './PrototypeNotice';
 import heroBalanceStyles from '../../theme/heroBalance.module.css';
@@ -32,6 +32,8 @@ export interface MoneyPageProps {
   tab: WalletTab;
   onTabChange: (tab: WalletTab) => void;
   onCardOpen?: (id: string, rect: DOMRect) => void;
+  /** The Money / Investments switch; off where the two are separate nav destinations (glow home). */
+  showTabSwitch?: boolean;
 }
 
 // Portfolio/Wallet nav destination (2026-09-15, direct feedback: "this is
@@ -60,11 +62,11 @@ const WALLET_TAB_ITEMS = [
   { id: 'crypto', label: 'Investments' },
 ] as const;
 
-export function MoneyPage({ tab, onTabChange, onCardOpen }: MoneyPageProps) {
+export function MoneyPage({ tab, onTabChange, onCardOpen, showTabSwitch = true }: MoneyPageProps) {
 
   return (
     <div className={styles.root}>
-      <div className={styles.tabRow}>
+      {showTabSwitch && <div className={styles.tabRow}>
         {/* Same sliding-highlight interaction as the main pill nav
             (2026-09-16 follow-up, direct feedback: "on changing tabs
             (money/investments in portfolio) we need same interaction
@@ -74,25 +76,20 @@ export function MoneyPage({ tab, onTabChange, onCardOpen }: MoneyPageProps) {
             WalletTabSwitch is a small dedicated component replicating
             PillNavigation's own track/indicator/highlight mechanism. */}
         <WalletTabSwitch items={WALLET_TAB_ITEMS} value={tab} onChange={onTabChange} label="Wallet section" />
-      </div>
+      </div>}
       {tab === 'money' ? (
         <>
           <div className={styles.balanceBlock}>
             <Heading level={1} type="display-1" className={heroBalanceStyles.heroBalance}>
               ${MONEY_PLACEHOLDER.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </Heading>
-            <div className={styles.apyRow}>
-              <Text type="supporting" weight="semibold" className={styles.apy}>{MONEY_PLACEHOLDER.apy}% APY</Text>
-              <Text type="supporting" color="secondary">· mUSD</Text>
-              {/* Info icon and the Est. annual figure removed (2026-10-06, direct
-                  feedback: "just keep 4% APY · mUSD"). */}
-            </div>
+            <EarningBadge rate={MONEY_PLACEHOLDER.earningRate} />
           </div>
           <ContributingBalanceRow balances={CONTRIBUTING_BALANCES} />
           <WalletActionRow variant="money" shape="circle" />
           <div className={styles.section}>
             <CardDeck aria-label="Cards"
-              renderDetails={(activeIndex) => <WalletCardTile card={WALLET_CARDS[activeIndex]!}
+              renderDetails={(activeIndex) => <WalletCardTile
                 {...(onCardOpen ? { onManage: () => {
                   const front = document.querySelector<HTMLElement>('[data-front="true"][role="button"]');
                   if (front) onCardOpen(WALLET_CARDS[activeIndex]!.id, front.getBoundingClientRect());
@@ -105,10 +102,7 @@ export function MoneyPage({ tab, onTabChange, onCardOpen }: MoneyPageProps) {
             </CardDeck>
           </div>
           <div className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <Text type="label" weight="semibold">Activity</Text>
-              <Icon icon="chevronRight" size="sm" color="secondary" />
-            </div>
+            <SectionHeading title="Activity" href="#wallet/activity" />
             <ActivityGroups entries={MONEY_HISTORY} />
           </div>
         </>

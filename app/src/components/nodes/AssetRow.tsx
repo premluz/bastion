@@ -12,7 +12,7 @@ export function AssetRow(props: AssetRowProps) {
   const metadata = [props.marketCap && `${props.marketCap} cap`, props.volume && `${props.volume} vol`].filter(Boolean).join(' · ');
   const item = <Item density="balanced" href={props.href} data-asset-id={props.entityId} data-explore-link={props.href}
     isSelected={props.selected} className={styles.row}
-    startContent={<CoinLogo entityId={props.entityId} label={props.symbol} />}
+    startContent={<span className={styles.accessory}><CoinLogo entityId={props.entityId} label={props.symbol} /></span>}
     label={<span className={styles.identity}>
       <span className={styles.name}><Text weight="medium">{owned ? props.symbol : props.name}</Text>
         {props.badge && <span className={styles.badge}>{props.badge}</span>}</span>

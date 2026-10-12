@@ -1,6 +1,7 @@
 import { SendingScreenMount, isSendingScreenOpen } from './SendingScreenMount';
 import { TouchIndicators } from './TouchIndicators';
 import { Avatar } from '@astryxdesign/core/Avatar';
+import { avatarProps, USER_NAME } from '../../avatars';
 import { Button } from '@astryxdesign/core/Button';
 import { AccountExperience } from './AccountExperience';
 import { TextInput } from '@astryxdesign/core/TextInput';
@@ -99,7 +100,7 @@ export function MobileFrame(props: MobileFrameProps) {
         <AccountExperience initialView={props.initialAccountView ?? 'closed'}>{(openAccounts) => (
         <div className={styles.chrome} inert={chromeInert} aria-hidden={chromeInert}>
           <header className={styles.header} aria-label="Asset search">
-            <Button label="Open account menu" variant="ghost" icon={<Avatar name="Preview user" size="medium" />} isIconOnly onClick={openAccounts} />
+            <Button label="Open account menu" variant="ghost" icon={<Avatar {...avatarProps(USER_NAME)} size="medium" />} isIconOnly onClick={openAccounts} />
             {/* Agent home moves Explore into the dock's menu; the spacer keeps the avatar its own size. */}
             {hasAgentPage ? <span aria-hidden="true" />
               : <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />}
@@ -119,7 +120,7 @@ export function MobileFrame(props: MobileFrameProps) {
             </main>
           ) : state.activeTab === 'assets' ? (
             <main key="assets" className={styles.page} aria-label="Wallet" tabIndex={0}>
-              <MoneyPage tab={state.walletTab} onTabChange={state.setWalletTab} onCardOpen={state.openCard} />
+              <MoneyPage tab={state.walletTab} onTabChange={state.setWalletTab} onCardOpen={state.openCard} showTabSwitch={!isGlowHome} />
             </main>
           ) : state.activeTab === 'markets' ? (
             <main key="markets" className={styles.page} aria-label="Explore" tabIndex={0} onClick={explore.onClick} data-scene-page>

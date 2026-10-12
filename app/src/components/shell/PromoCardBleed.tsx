@@ -26,8 +26,9 @@ export function PromoCardBleed({ title, image, eyebrow, cta }: PromoCardBleedPro
     <div className={styles.root}>
       <img className={styles.image} src={image} alt="" />
       <div className={styles.body}>
-        <Text type="large" className={styles.title}>{title}</Text>
+        {/* Eyebrow above the title (2026-10-12, direct feedback), as on the framed promo card. */}
         {eyebrow && <Text type="supporting" color="secondary" data-eyebrow>{eyebrow}</Text>}
+        <Text type="large" className={styles.title}>{title}</Text>
         {cta && <Button label={cta} variant="primary" size="sm" className={styles.cta} onClick={notifyPrototypeUnavailable} />}
       </div>
     </div>

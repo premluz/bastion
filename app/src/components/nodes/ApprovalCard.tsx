@@ -4,6 +4,7 @@ import { RadioList, RadioListItem } from '@astryxdesign/core/RadioList';
 import { Text } from '@astryxdesign/core/Text';
 import { TextInput } from '@astryxdesign/core/TextInput';
 import { Avatar } from '@astryxdesign/core/Avatar';
+import { avatarProps } from '../../avatars';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
 import { useStreamingText } from '@astryxdesign/core/hooks';
@@ -50,7 +51,7 @@ export function ApprovalCard(props: ApprovalCardProps) {
       <RadioList label={props.prompt} isLabelHidden value={props.selected ?? ''} isDisabled={props.isDisabled}
         onChange={(value) => root.current?.setAttribute('data-approval-value', value)}>
         {props.options.map((option) => <RadioListItem key={option.value} value={option.value} label={option.label}
-          {...(option.avatar ? { startContent: <Avatar name={option.label} size="small" /> } : {})}
+          {...(option.avatar ? { startContent: <Avatar {...avatarProps(option.label)} size="small" /> } : {})}
           {...(option.description ? { description: option.description } : {})} isDisabled={option.isDisabled} />)}
       </RadioList>
       {multiple && props.allowOther && <div data-approval-other="true"><TextInput label="Something else" isLabelHidden

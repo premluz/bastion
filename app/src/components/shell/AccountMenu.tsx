@@ -1,4 +1,5 @@
 import { Avatar } from '@astryxdesign/core/Avatar';
+import { avatarProps } from '../../avatars';
 import { Button } from '@astryxdesign/core/Button';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
@@ -15,7 +16,7 @@ const links = [
 
 export function AccountMenu({ name, onNavigate }: { name: string; onNavigate: (screen: AccountScreen) => void }) {
   return <nav className={styles.menu} aria-label="Account menu">
-    <Avatar name="Bastion demo" size="medium" />
+    <Avatar {...avatarProps('Bastion demo')} size="medium" />
     <Text type="large">@bastion.demo</Text>
     <Text type="supporting">Your space in Bastion</Text>
     <Button label={name} tooltip={PROTOTYPE_NOTICE} variant="ghost" icon={<Icon icon="chevronDown" />} onClick={notifyPrototypeUnavailable} />

@@ -14,6 +14,7 @@ import {
   resolveInvestmentsSeries,
   resolveInvestmentsPeriodDelta,
   investmentsPeriodHasCoverage,
+  backfillForDisplay,
   densifyForDisplay,
   INVESTMENTS_PERIODS,
   type InvestmentsPeriod,
@@ -58,6 +59,9 @@ const CHART_DISPLAY_SEED = 'investments-chart';
 
 // Plot 108px (+20% over the prior 90) plus the 44px airy X band (2026-10-09).
 const AIRY_CHART_HEIGHT = 152;
+// The allocation bar is switched off (2026-10-12, direct feedback: "comment out
+// allocation") — a flag, not a commented-out block, so it comes back by flipping this.
+const SHOW_ALLOCATION = false;
 
 // Same category set as Discover's own "Explore Categories" row (2026-09-16,
 // direct feedback: "we need tabs on crypto portfolio same as on discover —
@@ -89,9 +93,13 @@ export function InvestmentsTab() {
   const summary = resolveAssetsHomeSummary();
   const series = resolveInvestmentsSeries();
   const hasCoverage = investmentsPeriodHasCoverage(period);
-  const periodDelta = resolveInvestmentsPeriodDelta(period, series);
+  // The change figure above the chart describes the line drawn below it (2026-10-12,
+  // direct feedback: "153.94 +2.91%" should match the chart's span), so both read the
+  // same backfilled series; the headline total stays the real balance.
+  const chartSeries = hasCoverage ? backfillForDisplay(series, CHART_DISPLAY_SEED) : [];
+  const displaySeries = densifyForDisplay(chartSeries, CHART_DISPLAY_SEED);
+  const periodDelta = resolveInvestmentsPeriodDelta(period, chartSeries);
   const isUp = (periodDelta?.changeAbs ?? 0) >= 0;
-  const displaySeries = hasCoverage ? densifyForDisplay(series, CHART_DISPLAY_SEED) : [];
 
   function onCategoryClick(event: MouseEvent<HTMLElement>) {
     if (!(event.target instanceof Element)) return;
@@ -155,7 +163,7 @@ export function InvestmentsTab() {
         <WalletActionRow variant="wallet" shape="circle" />
       </div>
 
-      {summary.rows.length > 0 && (
+      {SHOW_ALLOCATION && summary.rows.length > 0 && (
         <AllocationBar segments={summary.rows.map((row) => ({ id: row.entityId, label: row.symbol, value: row.value }))} />
       )}
 
@@ -163,7 +171,7 @@ export function InvestmentsTab() {
           "these should be under allocation") — previously opened the
           page above the balance; same local category-filter behavior,
           just relocated in the reading order. */}
-      <div onClick={onCategoryClick}>
+      <div className={styles.categories} onClick={onCategoryClick}>
         <LinkChips label="Investment categories" variant="tabs" active={category} links={[...CATEGORY_CHIPS]} />
       </div>
 

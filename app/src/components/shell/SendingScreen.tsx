@@ -1,4 +1,5 @@
 import { Avatar } from '@astryxdesign/core/Avatar';
+import { avatarProps } from '../../avatars';
 import { Button } from '@astryxdesign/core/Button';
 import { Dialog } from '@astryxdesign/core/Dialog';
 import { Heading } from '@astryxdesign/core/Heading';
@@ -23,7 +24,7 @@ const AVATAR_SIZE = 64;
 
 function PartyAvatar({ party, side }: { party: SendingParty; side: 'from' | 'to' }) {
   return <span className={styles.party} data-side={side}>
-    {party.src ? <Avatar name={party.name} src={party.src} size={AVATAR_SIZE} /> : <Avatar name={party.name} size={AVATAR_SIZE} />}
+    {party.src ? <Avatar name={party.name} src={party.src} size={AVATAR_SIZE} /> : <Avatar {...avatarProps(party.name)} size={AVATAR_SIZE} />}
   </span>;
 }
 

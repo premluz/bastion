@@ -1,0 +1,6 @@
+/* The scene asset-card carousel (2026-10-11): structural alias over primitives,
+   so every theme gets it. Wide enough for the identity row and price, narrow
+   enough that the next card peeks in at a phone's width. */
+:root {
+  --asset-card-carousel-width: calc(var(--space-64) * 4);
+}

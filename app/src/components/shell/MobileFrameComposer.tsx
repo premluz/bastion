@@ -1,6 +1,6 @@
 import { Icon } from '@astryxdesign/core/Icon';
 import { IconButton } from '@astryxdesign/core/IconButton';
-import { SignalIcon } from '@heroicons/react/24/outline';
+import { WaveformIcon } from './WaveformIcon';
 import { ChatBarComposer } from './ChatBarComposer';
 import type { useMobileFrame } from './useMobileFrame';
 
@@ -23,7 +23,7 @@ export function MobileFrameComposer({ state, onVoiceStart, voiceSupported }: {
     sendActions={<>
       <IconButton label={voiceSupported ? 'Start voice recognition' : 'Speech recognition unavailable in this browser'}
         icon={<Icon icon="microphone" />} variant="ghost" isDisabled={!voiceSupported} onClick={onVoiceStart} data-dock-item="mic" />
-      <IconButton label="Start conversation mode" tooltip="Start conversation mode" icon={<Icon icon={SignalIcon} />}
+      <IconButton label="Start conversation mode" tooltip="Start conversation mode" icon={<Icon icon={WaveformIcon} />}
         variant="ghost" onClick={onVoiceStart} ref={state.conversationRef} data-dock-item="voice" />
     </>} />;
 }

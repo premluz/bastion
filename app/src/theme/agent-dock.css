@@ -6,7 +6,7 @@
   --agent-dock-gap: var(--space-8);
   /* Room the in-place thread leaves for the dock beneath it. */
   --agent-dock-height: calc(var(--space-64) + var(--space-32));
-  --agent-suggestion-icon-size: calc(var(--space-32) + var(--space-12));
+  --agent-suggestion-icon-size: var(--list-accessory-size);
   /* Asleep: the orb sits dim and breathes slowly; awake it is full light. */
   --agent-orb-sleep-opacity: var(--opacity-55);
   --agent-orb-sleep-breath: var(--opacity-70);

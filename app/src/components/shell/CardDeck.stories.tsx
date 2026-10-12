@@ -11,7 +11,7 @@ type Story = StoryObj<typeof CardDeck>;
 export const Default: Story = {
   args: {
     'aria-label': 'Cards',
-    renderDetails: (activeIndex: number) => <WalletCardTile card={WALLET_CARDS[activeIndex]!} />,
+    renderDetails: () => <WalletCardTile />,
     children: WALLET_CARDS.map((card) => (
       <VirtualCardPlaceholder key={card.id} lastFourDigits={card.lastFourDigits} />
     )),
@@ -23,7 +23,7 @@ export const Default: Story = {
 export const TwoCards: Story = {
   args: {
     'aria-label': 'Cards',
-    renderDetails: (activeIndex: number) => <WalletCardTile card={WALLET_CARDS[activeIndex]!} />,
+    renderDetails: () => <WalletCardTile />,
     children: WALLET_CARDS.slice(0, 2).map((card) => (
       <VirtualCardPlaceholder key={card.id} lastFourDigits={card.lastFourDigits} />
     )),

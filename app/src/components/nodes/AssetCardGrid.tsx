@@ -1,21 +1,21 @@
 import { ClickableCard } from '@astryxdesign/core/ClickableCard';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import type { AssetCardGridProps } from '../../contracts/props/asset-card-grid';
-import { DashboardLayout } from './DashboardLayout';
 import { AssetCardVisual } from './AssetCardVisual';
-import { config } from '../../config';
+import '../../theme/asset-card-carousel.css';
+import styles from './AssetCardGrid.module.css';
 
 // Registry node (Phase 21, 2026-08-30) — the Scene-JSON-driven half of
 // "one card system serves both human browsing and assistant generation"
 // (CLAUDE.md's own Phase 21 law). Renders the SAME AssetCardVisual
 // EntityAssetGrid.tsx uses for the Discover page's own card grid, so an
 // inline-in-transcript result (e.g. "what are the hottest crypto this
-// week") reads as visually identical to browsing Discover directly —
-// including the RESPONSIVE column count (config.assetCardGrid, same
-// shared config both consumers read): this mounts in the transcript,
-// which can be a genuinely narrow side pane or a mobile-width column, so
-// a fixed column count would crowd the grid exactly where it has the
-// least room to spare.
+// week") shows the same card as browsing Discover directly. The layout
+// differs (2026-10-11, direct feedback): this
+// mounts in the transcript, a narrow column, where a grid squashed the cards
+// into two thin columns — so here the cards are a horizontal scroll-snap
+// carousel, each at a comfortable fixed width. Discover's own grid
+// (EntityAssetGrid.tsx) keeps config.assetCardGrid's responsive columns.
 //
 // Click reaches out via data-entity-id, never a callback prop (CLAUDE.md
 // rule 7 — "never callbacks, never engine/app imports" — EntityLink.tsx
@@ -44,7 +44,7 @@ export function AssetCardGrid({ data }: AssetCardGridProps) {
   }
 
   return (
-    <DashboardLayout columns={config.assetCardGrid} spans={data.entities.map(() => 1)}>
+    <div className={styles.track} role="group" aria-label="Assets">
       {data.entities.map((entity) => (
         // data-entity-id only, no role/onClick baked in here — same posture
         // as EntityLink.tsx (rule 7's reference implementation): this node
@@ -62,6 +62,6 @@ export function AssetCardGrid({ data }: AssetCardGridProps) {
           <AssetCardVisual id={entity.id} name={entity.name} type={entity.type} formattedValue={entity.value} deltaPercent={entity.deltaPercent} />
         </ClickableCard>
       ))}
-    </DashboardLayout>
+    </div>
   );
 }

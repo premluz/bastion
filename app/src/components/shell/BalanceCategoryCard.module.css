@@ -11,20 +11,16 @@
   flex-direction: column;
   gap: var(--space-4);
   min-width: 0;
-  border-radius: var(--shell-card-radius);
   /* Card's own default variant draws a themed border unconditionally
      (2026-09-16, direct feedback: "no border") — overridden here rather
      than switching Card to variant="transparent", which would also
-     strip the background this component just added. */
+     strip the background this component just added.
+     Raised glass with a rim (shell.css --list-card-*, 2026-10-12). */
+  border-radius: var(--list-card-radius);
   border: var(--shell-edge-width) solid;
   border-color: var(--card-rim);
-  /* Smoked glass (2026-10-10, direct feedback): a translucent dark fill over a
-     deep blur, with a bright top lip — see theme/balance-glass.css — so the
-     banner that rides up under these tiles shows through, blurred, instead of
-     the flat card fill. */
-  background: var(--glass-sheen) padding-box, linear-gradient(var(--balance-glass-fill), var(--balance-glass-fill)) padding-box;
-  box-shadow: var(--balance-glass-lip), var(--glass-shadow);
-  backdrop-filter: var(--balance-glass-backdrop);
+  background: var(--list-card-fill-raised);
+  backdrop-filter: var(--list-card-backdrop);
 }
 
 .labelRow {
@@ -50,17 +46,3 @@
 .deltaDown {
   color: var(--delta-down);
 }
-
-/* Earning pill (Money tile on Home): copper-tinted, brand accent — the
-   reference's "Earning 6.4%" chip. */
-.earning {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  gap: var(--space-8);
-  padding: var(--space-4) var(--space-12);
-  border-radius: var(--radius-full);
-  background: color-mix(in oklab, var(--accent-signal) 14%, transparent);
-  color: var(--accent-signal);
-}
-.earningText:not(#\#):not(#\#):not(#\#) { color: var(--accent-signal); }

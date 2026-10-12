@@ -11,6 +11,7 @@ import './theme/theme.glass.css';
 import './theme/theme.glass-light.css';
 import './theme/theme.safe-one.css';
 import './theme/theme.bastion.css';
+import './theme/theme.bastion-light.css';
 import './theme/shell.css';
 import { MobileFrame } from './components/shell/MobileFrame';
 

@@ -7,7 +7,7 @@ const meta: Meta<typeof SendingScreen> = {
   parameters: { layout: 'fullscreen' },
   args: {
     amount: '$50.00',
-    sender: { name: 'Preview user', src: '/avatars/me.png' },
+    sender: { name: 'Preview user' },
     recipient: { name: 'Daniel Jones' },
     onCancel: () => undefined,
     onDone: () => undefined,

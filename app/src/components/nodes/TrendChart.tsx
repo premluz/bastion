@@ -125,6 +125,8 @@ const TARGET_TICK_COUNT = 7;
 // Airy charts label fewer, roomier ticks: a month + day label is wider than a
 // bare unit, and at 7 ticks recharts hid the ones that touched (2026-10-09).
 const AIRY_TICK_COUNT = 5;
+// Month names are short, so a one-label-per-month axis can carry more of them.
+const ONE_PER_MONTH_MAX_TICKS = 8;
 
 // EXPLICIT ticks, not a tickFormatter alone (2026-08-22 fourth follow-up
 // — three formatter-only approaches were each tried and caught as real
@@ -161,6 +163,7 @@ function buildExplicitTicks(
   orderedPoints: { x: string; date: Date }[],
   granularity: AxisGranularity,
   targetCount: number = TARGET_TICK_COUNT,
+  isOnePerUnit = false,
 ): { ticks: string[]; shortLabels: Map<string, string> } {
   // The category axis places a tick at the FIRST row carrying its label, and
   // a densified daily series repeats each date label on many rows (2026-10-09).
@@ -171,6 +174,18 @@ function buildExplicitTicks(
   const firstRow = new Map<string, number>();
   orderedPoints.forEach((point, index) => { if (!firstRow.has(point.x)) firstRow.set(point.x, index); });
   const unique = orderedPoints.filter((point, index) => firstRow.get(point.x) === index);
+  // One tick per month, at the month's first point (2026-10-12, direct feedback:
+  // the portfolio axis should read months only, from a few months back to the
+  // current one, each once) — evenly spaced dates would repeat a month name.
+  if (isOnePerUnit && granularity === 'month') {
+    const firstOfMonth = unique.filter((point, index) => index === 0 || unitLabel(point.date, granularity) !== unitLabel(unique[index - 1]!.date, granularity));
+    if (firstOfMonth.length <= ONE_PER_MONTH_MAX_TICKS) {
+      return {
+        ticks: firstOfMonth.map((point) => point.x),
+        shortLabels: new Map(firstOfMonth.map((point) => [point.x, unitLabel(point.date, granularity)])),
+      };
+    }
+  }
   const picked: { x: string; date: Date }[] = [];
   if (unique.length <= targetCount) {
     picked.push(...unique);
@@ -321,7 +336,7 @@ export function TrendChart({
   const firstDate = orderedPoints[0]?.date;
   const lastDate = orderedPoints[orderedPoints.length - 1]?.date;
   const realSpanDays = firstDate && lastDate ? (lastDate.getTime() - firstDate.getTime()) / 86_400_000 : 0;
-  const { ticks: xTicks, shortLabels } = buildExplicitTicks(orderedPoints, granularityForPeriod(activePeriod, realSpanDays), airy ? AIRY_TICK_COUNT : TARGET_TICK_COUNT);
+  const { ticks: xTicks, shortLabels } = buildExplicitTicks(orderedPoints, granularityForPeriod(activePeriod, realSpanDays), airy ? AIRY_TICK_COUNT : TARGET_TICK_COUNT, Boolean(airy));
   const xTickFormatter = (value: string) => shortLabels.get(value) ?? value;
 
   const data: SeriesDataSet = {

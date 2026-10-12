@@ -55,4 +55,16 @@
    direct feedback). */
 .actions {
   margin-block-start: var(--space-24);
+  /* And more room before the category tabs (2026-10-12, direct feedback), on top of
+     the page's own gap. */
+  margin-block-end: var(--space-24);
+}
+
+/* The active category tab is the Money / Investments switch's active look
+   (2026-10-12, direct feedback): the same selected fill and primary ink, in place of
+   the light pill. Scoped to this row — Explore's identical row is unchanged. The chain
+   of :not(#\#) outranks the chip's own aria-current rule. */
+.categories :global([aria-current='page'] > *):not(#\#):not(#\#):not(#\#) {
+  background: var(--glass-sheen), var(--surface-selected);
+  color: var(--ink-primary);
 }

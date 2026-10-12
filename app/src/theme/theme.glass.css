@@ -159,6 +159,7 @@
      without the field itself reading as "a colored wash." TASTE DIAL —
      `none` removes it entirely without touching anything else. */
   --canvas-backdrop:
+  --glow-blend: screen;
     radial-gradient(60% 50% at 18% 0%, oklch(.24 .035 250) 0%, transparent 62%),
     radial-gradient(52% 46% at 88% 12%, oklch(.21 .04 285) 0%, transparent 58%),
     linear-gradient(180deg, oklch(.14 .012 250) 0%, oklch(.10 .01 250) 100%);

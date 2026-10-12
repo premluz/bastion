@@ -186,6 +186,28 @@ function seededRandom(seed: string): () => number {
   };
 }
 
+// DISPLAY-ONLY history (2026-10-12, direct feedback: the portfolio axis should
+// run in months, from a few months back to the current one): the real series
+// only spans a week, so this prepends `weeks` weekly points of seeded random-walk
+// history ending exactly on the first real point's price. Like densifyForDisplay
+// it is never a data source — the headline and delta still come from the real
+// series (resolveInvestmentsPeriodDelta never sees it).
+export function backfillForDisplay(series: PortfolioSeriesPoint[], seed: string, weeks = 26): PortfolioSeriesPoint[] {
+  const first = series[0];
+  if (!first || weeks < 1) return series;
+  const random = seededRandom(seed);
+  const firstTime = new Date(first.t).getTime();
+  const weekMs = 7 * 86_400_000;
+  const history: PortfolioSeriesPoint[] = [];
+  let price = first.price;
+  for (let week = 1; week <= weeks; week += 1) {
+    // Walking backwards: each earlier week drifts a little around the later one.
+    price = Math.max(price * (1 + (random() - 0.5) * 0.12), first.price * 0.2);
+    history.unshift({ t: new Date(firstTime - week * weekMs).toISOString(), price });
+  }
+  return [...history, ...series];
+}
+
 // DISPLAY-ONLY texture, never a data source (2026-09-16, direct feedback
 // against a reference chart: "need more mocked points to be more like
 // this chart not so smooth" — the reference is AssetTrendGlyph's own

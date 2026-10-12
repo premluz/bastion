@@ -1,4 +1,5 @@
 .root {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--shell-gap);
@@ -13,7 +14,10 @@
 .track {
   position: relative;
   height: var(--card-deck-viewport-height);
-  overflow: hidden;
+  /* Nothing is masked any more (2026-10-12, direct feedback: show the cards in
+     full): the viewport is as tall as the card plus the room the rear cards
+     rise into, so the cards are never cut off. */
+  overflow: visible;
   touch-action: pan-y;
   cursor: grab;
 }

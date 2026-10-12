@@ -192,6 +192,7 @@
      is flat, not a colored glow field like glass's own Linear-derived
      backdrop; --surface-0 alone carries the purple undertone. */
   --canvas-backdrop: none;
+  --glow-blend: screen;
 
   /* Motion binding — ops-dark's own matte-precision timing (this theme
      is dense/precise like ops-dark, not float-paced like glass). */
