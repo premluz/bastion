@@ -1,3 +1,10 @@
+/* Box-less root: it only carries the close gesture's progress (--glow-close, 0 → 1,
+   written by useSwipeUp) for both the composer and the glow to read. */
+.root {
+  display: contents;
+  --glow-close: 0;
+}
+
 /* The swipe layer around the pill dock: it holds the gesture's state for the glow.
    The pill itself takes no browser panning — a vertical drag on it is the swipe. */
 .swipe {
@@ -7,7 +14,7 @@
   /* How revealed the glow is: the finger's progress, or held while open. */
   --glow-reveal: min(1, var(--glow-progress) + var(--glow-open));
 }
-.swipe[data-composer-open='true'] { --glow-open: var(--glow-open-reveal); }
+.swipe[data-composer-open='true'] { --glow-open: calc(var(--glow-open-reveal) * (1 - var(--glow-close))); }
 .swipe [data-testid='pill-navigation'] { touch-action: none; }
 
 /* The pill morphs with the finger (2026-10-10, direct feedback: the morph starts
@@ -87,7 +94,14 @@
 .composer {
   position: relative;
   padding: var(--shell-label-gap) var(--shell-inset) max(var(--shell-inset), env(safe-area-inset-bottom));
+  /* Follows the finger as it slides down to close, easing back if released early;
+     the pointer, not the browser, owns the vertical drag. */
+  translate: 0 calc(var(--glow-close) * var(--glow-close-travel));
+  opacity: calc(1 - var(--glow-close) * var(--glow-close-fade));
+  touch-action: none;
+  transition: translate var(--glow-reveal-duration) var(--glow-reveal-ease), opacity var(--glow-reveal-duration) var(--glow-reveal-ease);
 }
+.root[data-dragging] .composer { transition: none; }
 /* Over the live page, not a blank screen: the composer's glass blurs what is
    under it, as the header search does, and a shade (.shade) sits behind it. */
 .composer :global(.astryx-chat-composer > div) { backdrop-filter: var(--shell-header-backdrop); }
@@ -105,5 +119,6 @@
 @keyframes glow-thread-in { from { opacity: 0; translate: 0 var(--space-16); } }
 @keyframes glow-shade-in { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
+  .composer { transition: none; }
   .thread, .shade { animation: none; }
 }

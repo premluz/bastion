@@ -137,6 +137,10 @@
   --list-row-padding-block: var(--space-12);
   --list-accessory-size: calc(var(--space-32) + var(--space-12));
   --list-accessory-ring: var(--shell-edge-width) solid var(--edge);
+  /* An icon accessory is the Lisk/Flame fallback circle (--surface-2) with the same
+     pale off-white icon the home suggestions use (2026-10-12, direct feedback). */
+  --list-accessory-fill: var(--surface-2);
+  --list-accessory-ink: var(--presence);
   /* Gap between side-by-side cards — tighter than --shell-gap's section
      rhythm (2026-10-05, direct feedback). */
   --shell-card-gap: var(--space-12);
@@ -188,7 +192,10 @@
      25% alongside this, so the whole stack scales down together rather
      than the gap between cards staying fixed while only the cards
      themselves shrink. */
-  --card-deck-card-height: calc(var(--space-64) * 3 * 0.75);
+  /* 0.75 → 0.84 of 3 × --space-64 (2026-10-12, direct feedback: slightly larger
+     wallet cards); CardDeck.tsx's rest offsets are eased by the same step so the
+     rear cards still end inside the screen. */
+  --card-deck-card-height: calc(var(--space-64) * 3 * 0.84);
   /* Pushed down until only the card's top half is visible (2026-09-16,
      direct feedback) — the card starts far enough below the viewport's
      own top that exactly half its height (card-height / 2) still fits

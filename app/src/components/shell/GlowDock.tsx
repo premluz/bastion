@@ -23,7 +23,7 @@ export interface GlowDockProps {
 // The glow home's dock (2026-10-10, direct feedback with mocks): the navigation
 // pill (four items) and a separate +, over a flat, low glow at the bottom edge.
 // Swiping up — or the pill's assistant item — morphs the pill into the composer
-// in place: the page stays as it is until the first question, then gives way to
+// in place (and sliding the composer back down closes it again): the page stays as it is until the first question, then gives way to
 // the thread (AgentHomePage recedes) while the composer stays at the bottom.
 export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, threadRef }: GlowDockProps) {
   const isOpen = state.mode === 'composer';
@@ -33,6 +33,11 @@ export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, 
   }, () => false);
   // Inside the morph's update (flushSync), so the morph's old frame keeps the swipe's state.
   useLayoutEffect(() => { if (isOpen) swipe.reset(); }, [isOpen, swipe.reset]);
+  // Sliding the composer down closes it: the reverse of sliding up (2026-10-12, direct
+  // feedback). Its progress (`--glow-close`) lives on the root wrapper so the composer
+  // and the glow both follow it; the close commits at the same distance the open does.
+  const closeSwipe = useSwipeUp<HTMLDivElement>(onClose, () => false, { direction: 'down', property: '--glow-close' });
+  useLayoutEffect(() => { if (!isOpen) closeSwipe.reset(); }, [isOpen, closeSwipe.reset]);
   // The pill's own assistant item opens through the same path as the swipe.
   const dockState = { ...state, toggleComposer: onOpen };
   useEffect(() => {
@@ -41,7 +46,7 @@ export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, 
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [isOpen, onClose]);
-  return <>
+  return <div ref={closeSwipe.ref} className={styles.root}>
     {/* Box-less (display: contents): pointer events from the pill still bubble here,
         and the glow's custom properties still inherit, but the pill dock's own scrim
         keeps sizing itself to the whole screen. */}
@@ -53,7 +58,7 @@ export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, 
     {isOpen && !isWorking && <button type="button" className={styles.dismiss} aria-label="Close assistant" onClick={onClose} />}
     {isOpen && <div className={styles.sheet}>
       {isWorking && <div ref={threadRef} className={styles.thread} role="log" aria-label="Assistant transcript" tabIndex={0}>{thread}</div>}
-      <div className={styles.composer}>{composer}</div>
+      <div className={styles.composer} {...closeSwipe.handlers}>{composer}</div>
     </div>}
-  </>;
+  </div>;
 }

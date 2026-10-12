@@ -38,6 +38,10 @@
   --glow-reveal-rise: .8;
   /* The shade behind the open composer: the bar, its padding and a ramp above. */
   --glow-composer-shade: calc(var(--space-64) * 3);
+  /* Sliding the composer down to close: it follows the finger up to the commit
+     distance (the swipe's 72px) and fades part way. */
+  --glow-close-travel: calc(var(--space-64) + var(--space-8));
+  --glow-close-fade: .5;
   --glow-reveal-duration: var(--duration-480);
   --glow-reveal-ease: var(--ease-spring-soft);
 }

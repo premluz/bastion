@@ -32,11 +32,13 @@ const ACCESSORY_SIZE = 48;
 // Shell row with validated data props; no registry action or engine dependency.
 export function HistoryItem({ entry, onSelect }: HistoryItemProps) {
   const amount = entry.displayAmount ?? formatHistoryAmount(entry);
+  // Icons (not photos, initials or coin logos) sit on the shared accessory fill.
+  const isIcon = entry.avatar?.kind === 'category' || (entry.avatar?.kind !== 'initials' && !entry.assetId);
   const item = (
     <Item className={styles.root} density="spacious" data-testid={`history-${entry.id}`}
       label={entry.title} description={entry.detail}
       {...(onSelect ? { onClick: () => onSelect(entry) } : {})}
-      startContent={<span className={styles.asset}>
+      startContent={<span className={styles.asset} data-icon={isIcon ? '' : undefined}>
         {entry.avatar?.kind === 'initials' ? <Avatar {...avatarProps(entry.avatar.name)} size={ACCESSORY_SIZE} />
           : entry.avatar?.kind === 'category' ? <Icon icon={CATEGORY_ICONS[entry.avatar.category]} size="lg" />
           : entry.assetId ? <CoinLogo entityId={entry.assetId} label={entry.symbol ?? ''} />

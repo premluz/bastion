@@ -26,7 +26,8 @@
   height: var(--agent-suggestion-icon-size);
   border-radius: var(--radius-full);
   border: var(--list-accessory-ring);
-  color: var(--presence);
+  background: var(--list-accessory-fill);
+  color: var(--list-accessory-ink);
 }
 
 /* Receding (2026-10-09, direct feedback): when the assistant takes a request,

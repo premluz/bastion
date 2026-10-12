@@ -16,8 +16,9 @@
   flex-shrink: 0;
   border-radius: var(--radius-full);
   overflow: hidden;
-  color: var(--accent-signal);
+  color: var(--list-accessory-ink);
 }
+.asset[data-icon] { background: var(--list-accessory-fill); }
 .asset::after {
   content: '';
   position: absolute;

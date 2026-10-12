@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isSwipeStarted, shouldCommitSwipe, swipeProgress, SWIPE_COMMIT_DISTANCE } from './swipeUp';
+import { isSwipeStarted, shouldCommitSwipe, swipeProgress, swipeTravel, SWIPE_COMMIT_DISTANCE } from './swipeUp';
 
 describe('swipeUp', () => {
   it('reveals in proportion to the rise and never past full', () => {
@@ -27,5 +27,18 @@ describe('swipeUp', () => {
     expect(shouldCommitSwipe(30, 0.8)).toBe(true);
     expect(shouldCommitSwipe(10, 2)).toBe(false);
     expect(shouldCommitSwipe(30, 0.2)).toBe(false);
+  });
+});
+
+describe('swipeTravel', () => {
+  it('is the rise for an up swipe and the drop for a down swipe', () => {
+    expect(swipeTravel('up', 300, 240)).toBe(60);
+    expect(swipeTravel('down', 300, 360)).toBe(60);
+  });
+
+  it('is negative against the gesture, so it never reveals or commits', () => {
+    expect(swipeTravel('up', 300, 360)).toBe(-60);
+    expect(swipeTravel('down', 300, 240)).toBe(-60);
+    expect(swipeProgress(swipeTravel('down', 300, 240))).toBe(0);
   });
 });

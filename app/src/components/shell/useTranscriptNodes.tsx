@@ -67,7 +67,7 @@ export function useTranscriptNodes(state: ReturnType<typeof useMobileFrame>, { s
         {send.flows[id] && <SendMoneyTranscript state={send.flows[id]} presentation={sendPresentation}
           interactionMode={voice ? 'voice' : 'chat'}
           dispatch={(action) => send.dispatch(id, action)} />}
-        {topUpFlow && <TopUpTranscript state={topUpFlow} presentation={sendPresentation} voice={voice}
+        {topUpFlow && <TopUpTranscript state={topUpFlow} presentation={sendPresentation}
           dispatch={(action) => topUp.dispatch(id, action)} />}
         {/* Buy flow renders inline, as one more result under its own
             message (2026-09-13, direct feedback: "inline — for all

@@ -30,13 +30,13 @@ function payment(state: TopUpState, presentation: PaymentCardProps['presentation
     from: source.label, balance: usd(source.balanceCents) } };
 }
 
-export function buildTopUpScene(state: TopUpState, presentation: PaymentCardProps['presentation'], voice: boolean) {
+export function buildTopUpScene(state: TopUpState, presentation: PaymentCardProps['presentation']) {
   const children: SceneNode[] = [findings(state)];
   if (state.stage !== 'checking') {
     children.push(authored('top-up-message'));
     const question = authored('top-up-source');
     children.push({ ...question, props: { ...question.props, selected: state.source ?? '', isDisabled: state.stage !== 'options',
-      navigationMode: voice ? 'hidden' : 'continue-only' } });
+      navigationMode: 'hidden' } });
     if (state.stage === 'options' && state.error) children.push({ id: 'top-up-error', type: 'text-block', props: { text: state.error } });
   }
   if (state.stage !== 'checking' && state.stage !== 'options') children.push(authored('top-up-acknowledgement'), payment(state, presentation));

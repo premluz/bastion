@@ -11,7 +11,20 @@
 .group { min-width: 0; }
 .rows { display: flex; flex-direction: column; gap: var(--space-8); }
 .heading { margin: 0 0 var(--space-12); font: inherit; color: var(--ink-primary); }
-.heading .headingLink { padding: 0; min-height: var(--space-32);  }
+/* The title link's hit area (2026-10-12, direct feedback): the text stays on the
+   content's left edge while the clickable/hover area reaches out around it (padding
+   out, margin back), the ghost button has no border or shadow of its own — only the
+   hover fill — and the chevron is centred on the capital letters whatever the font. */
+.heading .headingLink:not(#\#):not(#\#):not(#\#) {
+  min-height: var(--space-32);
+  padding-inline: var(--space-8);
+  margin-inline-start: calc(-1 * var(--space-8));
+  align-items: center;
+  border: 0;
+  box-shadow: none;
+}
+.heading .headingLink :is(span, svg):not(#\#):not(#\#):not(#\#) { align-self: center; }
+.heading .headingLink span:not(#\#):not(#\#):not(#\#) { text-box: trim-both cap alphabetic; }
 .identity, .values { display: flex; flex-direction: column; gap: var(--space-4); min-width: 0; }
 .identity { align-items: flex-start; }
 .values { align-items: flex-end; white-space: nowrap; }

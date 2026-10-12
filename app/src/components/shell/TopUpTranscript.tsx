@@ -5,9 +5,11 @@ import { SceneRenderer } from '../../renderer/SceneRenderer';
 import styles from './SendMoneyTranscript.module.css';
 
 // The mortgage top-up in the thread: its scene for the current stage, with
-// the same delegated data-attribute listeners the send flow uses (§2.7).
-export function TopUpTranscript({ state, presentation, voice, dispatch }: {
-  state: TopUpState; presentation: PaymentCardProps['presentation']; voice: boolean; dispatch: (action: TopUpAction) => void;
+// the same delegated data-attribute listeners the send flow uses (§2.7). Tapping a
+// source selects it and moves straight on to the review (2026-10-12, direct feedback),
+// as voice always has, so there is no Continue button.
+export function TopUpTranscript({ state, presentation, dispatch }: {
+  state: TopUpState; presentation: PaymentCardProps['presentation']; dispatch: (action: TopUpAction) => void;
 }) {
   return <section aria-label="Mortgage top-up" data-top-up-stage={state.stage} className={styles.root}
     onChange={(event) => {
@@ -15,7 +17,7 @@ export function TopUpTranscript({ state, presentation, voice, dispatch }: {
       const question = event.target.closest('[data-approval-card]');
       const choice = question?.getAttribute('data-approval-value');
       if (question?.getAttribute('data-approval-card') === 'top-up-source' && (choice === 'money' || choice === 'usdc'))
-        dispatch({ type: 'source', value: choice, advance: voice });
+        dispatch({ type: 'source', value: choice, advance: true });
       const field = event.target.closest('[data-payment-field]')?.getAttribute('data-payment-field');
       if (field === 'amount' || field === 'purpose') dispatch({ type: 'change', field, value: event.target.value });
     }} onClick={(event) => {
@@ -24,6 +26,6 @@ export function TopUpTranscript({ state, presentation, voice, dispatch }: {
       const type = event.target.closest('[data-payment-action]')?.getAttribute('data-payment-action');
       if (type === 'accept' || type === 'edit' || type === 'save' || type === 'cancel') dispatch({ type });
     }}>
-    <SceneRenderer scene={buildTopUpScene(state, presentation, voice)} />
+    <SceneRenderer scene={buildTopUpScene(state, presentation)} />
   </section>;
 }

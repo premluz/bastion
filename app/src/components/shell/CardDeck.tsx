@@ -189,7 +189,9 @@ export function CardDeck({ children, 'aria-label': ariaLabel, renderDetails, onC
             // direct feedback: "cards smaller 25% so they all fit") — the
             // stack's own gap must shrink with the cards themselves, not
             // stay fixed while only the card size changes.
-            const REST_SCALE_X = 6.5 * 0.75;
+            // Eased again for the 12% larger cards (2026-10-12): the rear cards' right
+            // edge must stay on screen.
+            const REST_SCALE_X = 6.5 * 0.75 * 0.8;
             const REST_SCALE_Y = 1.4 * 0.75;
             const base = [
               { s: 1, ox: 0, oy: 0, r: 0 },
