@@ -18,12 +18,15 @@ export function MobileFrameComposer({ state, onVoiceStart, voiceSupported }: {
   onVoiceStart: () => void;
   voiceSupported: boolean;
 }) {
+  // Two buttons (2026-10-13, direct feedback): dictation, and in the send slot the
+  // conversation-mode button while the field is empty — typing turns that slot into
+  // Send (the composer's own), clearing the field turns it back.
+  const isEmpty = state.value.trim() === '';
+  const conversation = <IconButton label="Start conversation mode" tooltip="Start conversation mode" icon={<Icon icon={WaveformIcon} />}
+    variant="ghost" onClick={onVoiceStart} ref={state.conversationRef} data-dock-item="voice" />;
   return <ChatBarComposer value={state.value} onChange={state.setValue} onSubmit={state.submit}
     placeholder="Ask anything" inputRef={state.inputRef}
-    sendActions={<>
-      <IconButton label={voiceSupported ? 'Start voice recognition' : 'Speech recognition unavailable in this browser'}
-        icon={<Icon icon="microphone" />} variant="ghost" isDisabled={!voiceSupported} onClick={onVoiceStart} data-dock-item="mic" />
-      <IconButton label="Start conversation mode" tooltip="Start conversation mode" icon={<Icon icon={WaveformIcon} />}
-        variant="ghost" onClick={onVoiceStart} ref={state.conversationRef} data-dock-item="voice" />
-    </>} />;
+    sendActions={<IconButton label={voiceSupported ? 'Start voice recognition' : 'Speech recognition unavailable in this browser'}
+      icon={<Icon icon="microphone" />} variant="ghost" isDisabled={!voiceSupported} onClick={onVoiceStart} data-dock-item="mic" />}
+    {...(isEmpty ? { sendButton: conversation } : {})} />;
 }

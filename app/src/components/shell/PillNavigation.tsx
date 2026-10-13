@@ -1,7 +1,7 @@
 import { Fragment, type Ref } from 'react';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
-import { HomeIcon, MagnifyingGlassIcon, WalletIcon, SparklesIcon, PlusIcon, ArrowTrendingUpIcon,
+import { HomeIcon, MagnifyingGlassIcon, ChartBarIcon, WalletIcon, SparklesIcon, PlusIcon, ArrowTrendingUpIcon,
   BanknotesIcon, ArrowUpRightIcon, ArrowDownLeftIcon, ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import { DockMenu, type DockMenuItem } from './DockMenu';
 import '../../theme/pill-navigation.css';
@@ -13,8 +13,10 @@ const STANDARD_DESTINATIONS = [
 ] as const;
 // The glow home (2026-10-11, direct feedback): no Assistant item (the swipe up and
 // the composer are its way in), and the wallet page splits into two destinations.
+// Explore shows a markets chart rather than a magnifier (2026-10-13): search moved
+// to the header's top right.
 const GLOW_DESTINATIONS = [
-  { id: 'home', label: 'Home', icon: HomeIcon }, { id: 'explore', label: 'Explore', icon: MagnifyingGlassIcon },
+  { id: 'home', label: 'Home', icon: HomeIcon }, { id: 'explore', label: 'Explore', icon: ChartBarIcon },
   { id: 'cash', label: 'Cash', icon: WalletIcon }, { id: 'investments', label: 'Investments', icon: ArrowTrendingUpIcon },
 ] as const;
 const DESTINATION_SETS = { standard: STANDARD_DESTINATIONS, glow: GLOW_DESTINATIONS } as const;

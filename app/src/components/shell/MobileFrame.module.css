@@ -54,6 +54,9 @@
   padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--shell-inset);
 }
 
+.headerEnd { display: flex; justify-content: flex-end; }
+/* A ghost button has no edge of its own — Astryx paints inset highlight/shade lines on it. */
+.headerEnd button:not(#\#):not(#\#):not(#\#) { box-shadow: none; border: 0; }
 .header > :last-child {
   flex: 1;
   min-width: 0;

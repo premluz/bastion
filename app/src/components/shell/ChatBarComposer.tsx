@@ -8,6 +8,8 @@ export interface ChatBarComposerProps {
   placeholder: string;
   isDisabled?: boolean;
   sendActions?: ReactNode;
+  /** Replaces the composer's own send button (e.g. a voice action while the field is empty). */
+  sendButton?: ReactNode;
   footerActions?: ReactNode;
   inputRef?: Ref<ChatComposerInputHandle>;
 }

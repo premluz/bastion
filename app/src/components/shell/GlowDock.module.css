@@ -102,6 +102,10 @@
   transition: translate var(--glow-reveal-duration) var(--glow-reveal-ease), opacity var(--glow-reveal-duration) var(--glow-reveal-ease);
 }
 .root[data-dragging] .composer { transition: none; }
+/* The input's wrapper is a scroll container, which stops the bar's own touch-action
+   reaching a drag that starts there (2026-10-12, direct feedback: closing only worked
+   from the bottom of the composer) — so every part of the bar takes it. */
+.composer :global(*):not(#\#):not(#\#):not(#\#) { touch-action: none; }
 /* Over the live page, not a blank screen: the composer's glass blurs what is
    under it, as the header search does, and a shade (.shade) sits behind it. */
 .composer :global(.astryx-chat-composer > div) { backdrop-filter: var(--shell-header-backdrop); }

@@ -3,6 +3,8 @@ import { TouchIndicators } from './TouchIndicators';
 import { Avatar } from '@astryxdesign/core/Avatar';
 import { avatarProps, USER_NAME } from '../../avatars';
 import { Button } from '@astryxdesign/core/Button';
+import { Icon } from '@astryxdesign/core/Icon';
+import { IconButton } from '@astryxdesign/core/IconButton';
 import { AccountExperience } from './AccountExperience';
 import { TextInput } from '@astryxdesign/core/TextInput';
 import { AssetsHomePage } from './AssetsHomePage';
@@ -29,7 +31,7 @@ import { useScenarioThread } from './useScenarioThread';
 import { useAgentAgenda } from './useAgentAgenda';
 import { useShellBack } from './useShellBack';
 import { useAssistantSounds } from './useAssistantSounds';
-import { PrototypeNoticeProvider } from './PrototypeNotice';
+import { PrototypeNoticeProvider, PROTOTYPE_NOTICE, notifyPrototypeUnavailable } from './PrototypeNotice';
 import styles from './MobileFrame.module.css';
 
 // Bastion's mobile app shell — the counterpart to Merlin's Frame.tsx, and
@@ -102,7 +104,10 @@ export function MobileFrame(props: MobileFrameProps) {
           <header className={styles.header} aria-label="Asset search">
             <Button label="Open account menu" variant="ghost" icon={<Avatar {...avatarProps(USER_NAME)} size="medium" />} isIconOnly onClick={openAccounts} />
             {/* Agent home moves Explore into the dock's menu; the spacer keeps the avatar its own size. */}
-            {hasAgentPage ? <span aria-hidden="true" />
+            {isGlowHome ? <span className={styles.headerEnd}>
+              <IconButton label="Search" icon={<Icon icon="search" />} variant="ghost" tooltip={PROTOTYPE_NOTICE} onClick={notifyPrototypeUnavailable} />
+            </span>
+              : hasAgentPage ? <span aria-hidden="true" />
               : <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />}
           </header>
           {/* Independent overlay elements, not .header/.dock pseudo-elements
