@@ -39,6 +39,14 @@
    double it. */
 .root[data-shared-orb='true']::after { display: none; }
 .orbSpace { width: var(--assistant-orb-expanded-size); height: var(--assistant-orb-expanded-size); }
+/* The monolith between the mic and close buttons: a little larger than the slot, nudged right and down; the bar sits flush with the screen's bottom, so there is only ~28 px of room under the cube — 1.2× would cut its base off (2026-10-25, direct feedback). */
+.monolithMark {
+  display: block;
+  width: 100%;
+  height: 100%;
+  scale: 1.1;
+  translate: var(--space-8) var(--space-4);
+}
 
 .layout {
   display: flex;

@@ -106,6 +106,12 @@
   pointer-events: none;
 }
 .chatBar button:not(#\#):not(#\#):not(#\#) { box-shadow: none; border: 0; }
+/* The same hit area as the composer's buttons (48 px, Astryx's own 16 px corner there), so close and history are as easy to reach. */
+.chatBar button:not(#\#):not(#\#):not(#\#) {
+  width: var(--space-48);
+  height: var(--space-48);
+  border-radius: var(--space-16);
+}
 .thread {
   flex: 1 1 auto;
   min-height: 0;

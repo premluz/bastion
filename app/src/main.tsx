@@ -20,16 +20,14 @@ import { startAppearance } from './engine/stores/appearanceStore';
 // (CLAUDE.md §2.1). Theme is set statically on <html> in index.html
 // (data-theme="bastion"); every other registered theme stays loaded so a
 // theme switch remains a pure attribute change.
-// The deployed app opens on the glow home (2026-10-11, direct feedback; the agent
-// home before that, 2026-10-09); the assets home stays available as MobileFrame's
-// default for Storybook.
+// The deployed app opens on the attention home with the Bastion monolith, matching
+// Shell/MobileFrame's AttentionHomeMonolith story; the assets home stays available
+// as MobileFrame's default for Storybook.
 startAppearance();
-// `?home=attention` opens the attention home instead (2026-10-23), e.g. for the portfolio embed.
-const homeVariant = new URLSearchParams(window.location.search).get('home') === 'attention' ? 'attention' : 'glow';
 const root = document.getElementById('root');
 if (!root) throw new Error('index.html is missing its #root mount point.');
 createRoot(root).render(
   <StrictMode>
-    <MobileFrame homeVariant={homeVariant} />
+    <MobileFrame homeVariant="attention" orbVariant="monolith" />
   </StrictMode>,
 );

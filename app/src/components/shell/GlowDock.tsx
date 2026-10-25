@@ -33,7 +33,7 @@ export interface GlowDockProps {
   trailing?: ReactNode;
   /** The agent's status line, floating above the trailing slot (the attention home's work queue). */
   status?: ReactNode;
-  /** The Bastion monolith stands in for the plasma orb: above the landing's welcome and in the chat bar. */
+  /** The Bastion monolith stands in for the plasma orb: above the landing's welcome and, once chatting, in the chat bar. */
   landingMonolith?: boolean;
 }
 
@@ -81,7 +81,7 @@ export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, 
     {isOpen && <div className={styles.sheet}>
       {/* The chat view's own top bar: close on the left, chat history on the right. */}
       <div className={styles.chatBar}>
-        {landingMonolith && <span className={styles.chatMark}><MonolithOrb /></span>}
+        {landingMonolith && isWorking && <span className={styles.chatMark}><MonolithOrb /></span>}
         <IconButton label="Close assistant" tooltip="Close assistant" icon={<Icon icon="close" />} variant="ghost" onClick={onClose} />
         <IconButton label="Chat history" icon={<Icon icon={ClockIcon} />} variant="ghost" onClick={notifyPrototypeUnavailable} />
       </div>

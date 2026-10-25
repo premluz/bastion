@@ -62,7 +62,7 @@ export function ConversationModeOverlay({ isOpen, onClose, speech, audioError, c
             variant="ghost" size="lg" isDisabled={!speech.supported || speech.isSuspended}
             aria-pressed={speech.isListening} onClick={speech.isListening ? speech.stop : speech.start} />
           <div className={styles.indicator}>
-            {sharedOrb || orbVariant === 'unbounded' ? <span className={styles.orbSpace}>{monolith && <MonolithOrb working={assistantSpeaking} />}</span>
+            {sharedOrb || orbVariant === 'unbounded' ? <span className={styles.orbSpace}>{monolith && <span className={styles.monolithMark}><MonolithOrb working={assistantSpeaking} /></span>}</span>
               : <AssistantOrb activity={activity} expanded speaking={assistantSpeaking} />}
             <button type="button" className={styles.orbRestore} aria-label="Resume voice recognition"
               disabled={!speech.supported || speech.isListening || speech.isSuspended} onClick={speech.start} />
