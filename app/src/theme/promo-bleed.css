@@ -21,13 +21,19 @@
   --promo-bleed-copy-justify: flex-end;
   --promo-bleed-copy-top: var(--shell-inset);
   --promo-hero-copy-gap: var(--space-20);
-  /* Photo brightness: 1 as is; the hero bleed dims it so the balance reads on top. */
-  --promo-bleed-image-dim: 1;
+  /* The photo as is; the hero bleed washes it per theme (--hero-image-wash) so the balance reads on top. */
+  --promo-bleed-image-filter: none;
+  /* The bottom dissolve into the page: the page's own fade unless a home eases it. */
+  --promo-bleed-fade-bottom: var(--shell-fade);
+  --promo-bleed-dots-bottom: var(--space-12);
   --promo-bleed-frost: none;
   --promo-bleed-frost-mask: none;
   /* Title: 24 → 20px, and a measure wide enough that "DeFi opportunities" holds
      one line (it broke after "DeFi" at 12ch). */
   --promo-bleed-title-size: var(--text-20);
   --promo-bleed-title-measure: 22ch;
+  /* The larger call to action (the attention home, 2026-10-23). */
+  --promo-bleed-cta-large-height: var(--space-48);
+  --promo-bleed-cta-large-width: calc(var(--space-64) * 2);
   --promo-bleed-dot: color-mix(in oklab, var(--ink-primary) 28%, transparent);
 }

@@ -171,7 +171,7 @@ export function InvestmentsTab() {
           "these should be under allocation") — previously opened the
           page above the balance; same local category-filter behavior,
           just relocated in the reading order. */}
-      <div className={styles.categories} onClick={onCategoryClick}>
+      <div onClick={onCategoryClick}>
         <LinkChips label="Investment categories" variant="tabs" active={category} links={[...CATEGORY_CHIPS]} />
       </div>
 

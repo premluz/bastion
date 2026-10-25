@@ -37,7 +37,7 @@
 .accessory > * { width: 100%; height: 100%; }
 /* Raised glass (shell.css --list-card-*, 2026-10-12, direct feedback: the Perps cards
    too get some transparency and background blur). */
-.prominent.prominent { overflow: hidden; width: var(--explore-card-width); background: var(--list-card-fill-raised); backdrop-filter: var(--list-card-backdrop); border-radius: var(--list-card-radius); box-shadow: none; border: 0; }
+.prominent.prominent { overflow: hidden; width: var(--explore-card-width); background: var(--list-card-fill-raised); backdrop-filter: var(--list-card-backdrop); border-radius: var(--list-card-radius); box-shadow: var(--card-light); border: 0; }
 .cardContent { --pane-inset: var(--space-16); display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-12); min-height: var(--explore-card-min-height); }
 .cardContent > :first-child { width: calc(var(--space-32) + var(--space-8)); height: calc(var(--space-32) + var(--space-8)); }
 .chart { composes: inline blockEnd from '../../theme/bleed.module.css'; align-self: stretch; margin-top: auto; }
@@ -77,10 +77,17 @@
   font-size: var(--text-16);
   border-radius: var(--radius-full);
   background: var(--surface-2);
-  color: var(--ink-secondary);
+  color: var(--tab-ink);
   text-decoration: none;
 }
-.chipWrap[aria-current='page'] .chip { background: var(--ink-primary); color: var(--surface-0); }
+.chipWrap[aria-current='page'] .chip { background: var(--tab-active-fill); color: var(--tab-active-ink); }
+/* Hover: the main nav's (shell.css --tab-hover-ink, --press-hover-scale). */
+.chip { transition: scale var(--press-release-duration) var(--press-release-ease), color var(--motion-enter-duration) var(--motion-enter-ease); }
+@media (hover: hover) {
+  .chipWrap:not([aria-current='page']) .chip:hover { color: var(--tab-hover-ink); scale: var(--press-hover-scale); }
+}
 
 .chipWrap { flex-shrink: 0; }
 .headingLink span { font-size: var(--text-20); }
+.heading[data-size='title'] { display: flex; align-items: center; gap: var(--space-8); font-size: var(--text-20); font-weight: 400; }
+.headingCount { flex-shrink: 0; margin-inline-start: var(--space-8); vertical-align: middle; }

@@ -74,7 +74,7 @@ export function AssetsHomeHeader({ totalValue, changeAbs, changePercent, onSelec
         <BalanceCategoryCard label="Money" value={MONEY_PLACEHOLDER.value} changeAbs={MONEY_PLACEHOLDER.changeAbs}
           changePercent={MONEY_PLACEHOLDER.changePercent} earningRate={MONEY_PLACEHOLDER.earningRate}
           {...(onSelectMoney ? { onClick: onSelectMoney } : {})} />
-        <BalanceCategoryCard label="Investments" value={totalValue} changeAbs={changeAbs} changePercent={changePercent}
+        <BalanceCategoryCard label="Investments" value={totalValue} changeAbs={changeAbs} changePercent={changePercent} glow
           {...(onSelectInvestments ? { onClick: onSelectInvestments } : {})} />
       </div>
     </div>

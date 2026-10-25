@@ -5,8 +5,9 @@ import styles from './PromoCarousel.module.css';
 export interface PromoCarouselProps {
   children: ReactNode[];
   'aria-label': string;
-  /** `bleed` runs the slides edge to edge of the screen, with the dots over the image. */
-  variant?: 'card' | 'bleed';
+  /** `bleed` runs the slides edge to edge of the screen, with the dots over the image.
+      `edge` slides cards across the whole screen width, each resting aligned with the page. */
+  variant?: 'card' | 'bleed' | 'edge';
 }
 
 // One-at-a-time carousel with dot navigation (2026-09-15, direct feedback:

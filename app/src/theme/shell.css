@@ -120,13 +120,33 @@
      A card opts into a hairline rim (--card-rim) separately: the hero tiles and
      the wallet balances do, the lists don't. Derived from each theme's own
      surfaces, so no theme needs its own entry. */
-  --list-card-fill-raised: color-mix(in oklab, var(--surface-2) 72%, transparent);
+  /* --list-card-fill-raised is per theme (theme files): light needs a whiter, opaque card. */
   --list-card-fill-clear: color-mix(in oklab, var(--glass-fill-clear) 45%, transparent);
   --list-card-backdrop: blur(var(--blur-40)) saturate(1.8);
-  --list-card-radius: var(--radius-12);
+  /* Rounder cards (2026-10-23, direct feedback with an inspiration mock). */
+  /* Rounder still (2026-10-23, direct feedback with a mock): soft, pebble-like cards. */
+  --list-card-radius: calc(var(--radius-24) + var(--radius-4));
+  /* Sheets arrive soft and deliberate — a long decelerating glide — and leave quicker
+     (2026-10-23, direct feedback; motion-language.md). Sheet.tsx's SHEET_EXIT_MS matches the exit. */
+  --sheet-enter-duration: var(--duration-480);
+  --sheet-enter-ease: var(--ease-float);
+  --sheet-exit-duration: var(--duration-250);
+  --sheet-exit-ease: var(--ease-standard);
+  /* A floating sheet: rounder than a card, it is the largest surface on screen. */
+  --sheet-floating-radius: calc(var(--radius-24) + var(--radius-8));
   /* Rows inside a list card are inset by this and rounded on every corner, so a
      hovered row is its own rounded shape inside the card (2026-10-11). */
   --list-card-inset: var(--space-4);
+  /* The active tab, one look everywhere (2026-10-21, direct feedback): the main nav pill,
+     the wallet switch, Explore's and Investments' category tabs — a solid ink pill with
+     the page colour on it (dark in light mode, warm white in dark). */
+  --tab-active-fill: var(--ink-primary);
+  --tab-active-ink: var(--surface-0);
+  /* A tab under the pointer (not the active one): the main nav's hover — ink lifts to
+     primary and the tab swells a touch (--press-hover-scale) — shared by every tab bar. */
+  --tab-hover-ink: var(--ink-primary);
+  /* A tab at rest, not selected: subtle (2026-10-23, direct feedback). */
+  --tab-ink: var(--ink-muted);
   --list-row-radius: calc(var(--list-card-radius) - var(--list-card-inset));
   /* Two-line rows with a circle on the left — agent suggestions, transactions,
      asset lists (Explore, portfolio, home) — share one recipe (2026-10-12, direct
@@ -286,6 +306,10 @@
     var(--orb-liquid-ice), var(--orb-liquid-blue) 35%, var(--surface-3) 85%);
   --assistant-orb-color-a: var(--orb-liquid-blue);
   --assistant-orb-color-b: var(--orb-liquid-ice);
+  /* The orb's third colour (2026-10-21, direct feedback: richer than copper alone, not as
+     colourful as the reference): the ribbon drifts between the two warm colours and this
+     one, and its outer glow leans toward it. Per theme: slate in dark, warm in light. */
+  --assistant-orb-color-c: var(--orb-color-third);
   --assistant-orb-aura:
     0 0 var(--space-16) oklch(from var(--orb-liquid-blue) l c h / var(--opacity-70)),
     0 0 var(--space-48) oklch(from var(--orb-liquid-blue) l c h / var(--opacity-40)),
@@ -337,6 +361,12 @@
      landing stagger fade ins, decisive, subtle"). Each tab arrives as a
      short rise out of a soft blur, its sections following one stagger
      step apart — decisive deceleration, short travel, nothing bouncy. */
+  /* A detail page's exit: very fast, the page shrinking back toward where it came from and
+     fading, its sections leaving bottom-up a half-stride apart (2026-10-23, motion-language.md). */
+  --detail-exit-duration: calc(var(--duration-120) + var(--duration-150));
+  --detail-exit-scale: .9;
+  --detail-section-exit-duration: var(--duration-150);
+  --detail-exit-stagger: calc(var(--motion-assembly-stagger) / 2);
   --shell-page-enter-duration: var(--duration-480);
   --shell-page-enter-ease: var(--ease-float);
   --shell-page-enter-rise: var(--space-12);

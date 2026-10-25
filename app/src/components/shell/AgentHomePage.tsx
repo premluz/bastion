@@ -1,19 +1,13 @@
-import { Icon } from '@astryxdesign/core/Icon';
-import { Item } from '@astryxdesign/core/Item';
+import type { ReactNode } from 'react';
 import { Text } from '@astryxdesign/core/Text';
-import { ArrowTrendingUpIcon, BuildingLibraryIcon, ChartPieIcon, UserIcon } from '@heroicons/react/24/outline';
 import { resolveAssetsHomeSummary } from '../../engine/assetsHome';
-import { AGENT_SUGGESTIONS } from '../../engine/agentAgenda';
 import { greetingFor, USER_FIRST_NAME } from './greeting';
 import { AssetsHomeHeader } from './AssetsHomeHeader';
 import { HomePromos } from './HomePromos';
+import { SuggestionList } from './SuggestionList';
 import '../../theme/balance-glass.css';
 import homeStyles from './AssetsHomePage.module.css';
 import styles from './AgentHomePage.module.css';
-
-// The list itself lives with the agenda (engine/agentAgenda.ts), so what the
-// home suggests and what the agent goes over in voice mode are one list.
-const ICONS = { mortgage: BuildingLibraryIcon, positions: ArrowTrendingUpIcon, 'payment-request': UserIcon, portfolio: ChartPieIcon } as const;
 
 export interface AgentHomePageProps {
   onSelectMoney?: () => void;
@@ -24,33 +18,30 @@ export interface AgentHomePageProps {
   isReceding?: boolean;
   /** The banner runs behind the whole hero (balance and tiles too), with no top texture. */
   heroBleed?: boolean;
+  /** Takes the suggestions' place: the attention home's queue (2026-10-23). */
+  attention?: ReactNode;
 }
 
 // The agent-first home (2026-10-09): same balance and promos as the assets
 // home, but the coin list gives way to what the assistant suggests looking
 // at next. A suggestion is a request: it wakes the assistant on it.
-export function AgentHomePage({ onSelectMoney, onSelectInvestments, onSuggestion, isReceding = false, heroBleed = false }: AgentHomePageProps) {
+export function AgentHomePage({ onSelectMoney, onSelectInvestments, onSuggestion, isReceding = false, heroBleed = false, attention }: AgentHomePageProps) {
   const summary = resolveAssetsHomeSummary();
   return (
-    <div className={`${homeStyles.root} ${styles.root}`} data-receding={isReceding ? '' : undefined} data-hero={heroBleed ? '' : undefined} inert={isReceding}>
+    <div className={`${homeStyles.root} ${styles.root}`} data-receding={isReceding ? '' : undefined} data-hero={heroBleed ? '' : undefined}
+      data-attention={attention ? '' : undefined} inert={isReceding}>
       <div className={homeStyles.body}>
         <div className={`${homeStyles.cardStack} ${styles.top}`}>
           <AssetsHomeHeader totalValue={summary.totalValue} changeAbs={summary.changeAbs} changePercent={summary.changePercent}
             {...(onSelectMoney ? { onSelectMoney } : {})} {...(onSelectInvestments ? { onSelectInvestments } : {})} />
-          <HomePromos variant="bleed" />
+          <HomePromos variant="bleed" ctaSize={attention ? 'lg' : 'sm'} />
         </div>
-        <section className={styles.suggestions} aria-labelledby="agent-suggestions-title">
+        {attention ?? <section className={styles.suggestions} aria-labelledby="agent-suggestions-title">
           <Text type="body" as="h2" id="agent-suggestions-title" className={styles.title}>
             {greetingFor(new Date().getHours())} {USER_FIRST_NAME}, would you like to review those?
           </Text>
-          <div className={styles.pane}>
-            {AGENT_SUGGESTIONS.map((suggestion) => (
-              <Item key={suggestion.id} className={styles.item} label={suggestion.text} labelLines={2}
-                onClick={() => onSuggestion(suggestion.text, 'prompt' in suggestion ? suggestion.prompt : suggestion.text)}
-                startContent={<span className={styles.icon}><Icon icon={ICONS[suggestion.id]} size="md" /></span>} />
-            ))}
-          </div>
-        </section>
+          <SuggestionList className={styles.pane} onSuggestion={onSuggestion} />
+        </section>}
       </div>
     </div>
   );

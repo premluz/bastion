@@ -29,11 +29,18 @@ export interface SheetProps {
   // scales/dims slightly rather than vanishing outright, so the stack
   // reads as literal depth.
   isReceded?: boolean;
-  children: ReactNode;
+  /** Floats inside the screen's inset with every corner rounded, as the navigation does
+      (2026-10-23, direct feedback), instead of running edge to edge from the bottom. */
+  isFloating?: boolean;
+  /** Content, or a render function given `close` — the same animated close the drag and the
+      scrim use, for an in-sheet Back or Close (2026-10-23: a plain onClose unmounted at once). */
+  children: ReactNode | ((close: () => void) => ReactNode);
   'aria-label': string;
 }
 
 const CLOSE_THRESHOLD_PX = 100;
+// The exit transition's length (shell.css --sheet-exit-duration): unmount once it has played.
+const SHEET_EXIT_MS = 250;
 const EXPAND_THRESHOLD_PX = 60;
 
 // General-purpose mobile sheet primitive (2026-09-16, direct feedback:
@@ -54,7 +61,7 @@ const EXPAND_THRESHOLD_PX = 60;
 // same reasoning CardDetailPage.tsx already documents for why IT isn't a
 // Dialog either. This is a plain overlay div, positioned/stacked by
 // whatever mounts it (see stackIndex/isReceded above).
-export function Sheet({ size = 'half', isExpandable = false, onClose, onExpand, stackIndex = 0, isReceded = false, children, 'aria-label': ariaLabel }: SheetProps) {
+export function Sheet({ size = 'half', isExpandable = false, onClose, onExpand, stackIndex = 0, isReceded = false, isFloating = false, children, 'aria-label': ariaLabel }: SheetProps) {
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -79,11 +86,14 @@ export function Sheet({ size = 'half', isExpandable = false, onClose, onExpand, 
     return () => cancelAnimationFrame(frame);
   }, []);
 
-  const { containerRef, focusFirst } = useFocusTrap<HTMLDivElement>({
+  const { containerRef } = useFocusTrap<HTMLDivElement>({
     isActive: !isReceded && !isClosing,
     onEscape: onClose,
   });
-  useEffect(() => { if (!isReceded && !isClosing) focusFirst(); }, [isReceded, isClosing, focusFirst]);
+  // Focus lands on the dialog itself, without scrolling (2026-10-23, direct feedback: opening
+  // jolted the screen). The trap's focusFirst() focuses a control while the sheet still sits
+  // below the screen edge, and WebKit scrolls to reveal it; Tab still cycles inside the trap.
+  useEffect(() => { if (!isReceded && !isClosing) containerRef.current?.focus({ preventScroll: true }); }, [isReceded, isClosing, containerRef]);
 
   function onHandlePointerDown(event: ReactPointerEvent<HTMLDivElement>) {
     pointerStart.current = { y: event.clientY, time: Date.now() };
@@ -127,7 +137,7 @@ export function Sheet({ size = 'half', isExpandable = false, onClose, onExpand, 
     // transition uses, and re-reading the custom property in JS here
     // would need an extra getComputedStyle round-trip for a value this
     // file already knows.
-    window.setTimeout(onClose, 200);
+    window.setTimeout(onClose, SHEET_EXIT_MS);
   }
 
   // One composed transform string, not competing CSS rules — translateY
@@ -143,15 +153,15 @@ export function Sheet({ size = 'half', isExpandable = false, onClose, onExpand, 
     <div className={styles.backdrop} data-closing={isClosing} data-receded={isReceded}
       style={{ zIndex: 20 + stackIndex } as React.CSSProperties}>
       {!isReceded && <button type="button" className={styles.scrim} aria-label="Close" onClick={close} tabIndex={-1} />}
-      <div ref={containerRef} role="dialog" aria-modal="true" aria-label={ariaLabel}
-        className={styles.sheet} data-size={size} data-dragging={isDragging} data-receded={isReceded} data-closing={isClosing}
+      <div ref={containerRef} role="dialog" aria-modal="true" aria-label={ariaLabel} tabIndex={-1}
+        className={styles.sheet} data-size={size} data-floating={isFloating} data-dragging={isDragging} data-receded={isReceded} data-closing={isClosing}
         style={{ transform: `translateY(${translateY}) scale(${scale})` } as React.CSSProperties}>
         <div className={styles.handleZone}
           onPointerDown={onHandlePointerDown} onPointerMove={onHandlePointerMove}
           onPointerUp={onHandlePointerUp} onPointerCancel={onHandlePointerUp}>
           <div className={styles.handle} />
         </div>
-        <div className={styles.body}>{children}</div>
+        <div className={styles.body}>{typeof children === 'function' ? children(close) : children}</div>
       </div>
     </div>
   );

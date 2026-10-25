@@ -21,6 +21,7 @@
   border-color: var(--card-rim);
   background: var(--list-card-fill-raised);
   backdrop-filter: var(--list-card-backdrop);
+  box-shadow: var(--card-light);
 }
 
 .logo {

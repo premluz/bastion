@@ -20,11 +20,11 @@
   padding: 0;
   cursor: pointer;
   background: var(--scrim, rgb(0 0 0 / 0.4));
-  animation: sheet-scrim-in var(--duration-200) var(--motion-enter-ease) both;
+  animation: sheet-scrim-in var(--sheet-enter-duration) var(--sheet-enter-ease) both;
 }
 
 .backdrop[data-closing='true'] .scrim {
-  animation: sheet-scrim-out var(--duration-200) var(--motion-exit-ease) both;
+  animation: sheet-scrim-out var(--sheet-exit-duration) var(--sheet-exit-ease) both;
 }
 
 @keyframes sheet-scrim-in { from { opacity: 0; } to { opacity: 1; } }
@@ -46,8 +46,8 @@
      element for as long as the fill mode held, which silently broke the
      recede scale below. This class only owns the TRANSITION (how a
      transform change animates), never the transform value itself. */
-  transition: transform var(--duration-320) var(--motion-enter-ease), height var(--duration-320) var(--motion-enter-ease),
-    opacity var(--duration-320) var(--motion-enter-ease);
+  transition: transform var(--sheet-enter-duration) var(--sheet-enter-ease), height var(--sheet-enter-duration) var(--sheet-enter-ease),
+    opacity var(--sheet-enter-duration) var(--sheet-enter-ease);
 }
 
 .sheet[data-dragging='true'] { transition: none; }
@@ -57,8 +57,8 @@
    Sheet.tsx's own close() timeout (200ms) matches this exactly, since
    the unmount callback needs the same number the CSS transition uses. */
 .sheet[data-closing='true'] {
-  transition-duration: var(--duration-200);
-  transition-timing-function: var(--motion-exit-ease);
+  transition-duration: var(--sheet-exit-duration);
+  transition-timing-function: var(--sheet-exit-ease);
 }
 
 /* Three fixed snap heights, not freeform (2026-09-16 ruling: "fixed size
@@ -67,6 +67,15 @@
 .sheet[data-size='compact'] { height: 40dvh; }
 .sheet[data-size='half'] { height: 65dvh; }
 .sheet[data-size='full'] { height: 100dvh; border-radius: 0; }
+/* Floating (the attention home's full view): inset like the navigation pill, every corner
+   rounded like the cards, lifted off the bottom edge. */
+.sheet[data-floating='true'] {
+  width: calc(100% - var(--shell-inset) * 2);
+  margin-block-end: max(var(--shell-inset), env(safe-area-inset-bottom));
+  border-radius: var(--sheet-floating-radius);
+  box-shadow: var(--card-light);
+}
+.sheet[data-floating='true'][data-size='full'] { height: calc(100dvh - var(--shell-header-height)); }
 
 /* Receded (2026-09-16, same visual language as MobileFrame's own
    assistant-mode recede) — a sheet now sitting BENEATH a newly pushed

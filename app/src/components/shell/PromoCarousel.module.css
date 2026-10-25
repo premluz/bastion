@@ -66,7 +66,7 @@
 .root[data-variant='bleed'] .dots {
   position: absolute;
   inset-inline: 0;
-  bottom: var(--space-12);
+  bottom: var(--promo-bleed-dots-bottom);
   z-index: 3;
   pointer-events: none;
 }
@@ -75,6 +75,18 @@
   background: var(--promo-bleed-dot);
 }
 .root[data-variant='bleed'] .dot[data-active='true'] { background: var(--accent-signal); }
+
+/* Edge to edge (2026-10-23, direct feedback: the attention cards slide across the full
+   width): the track breaks out to the screen edges; each card keeps the page's width and
+   rests at the page's inset, the next one waiting just past the screen edge. */
+.root[data-variant='edge'] { margin-inline: calc(-1 * var(--shell-inset)); }
+/* No dots (2026-10-23, direct feedback): the next card peeking in is the cue. */
+.root[data-variant='edge'] .dots { display: none; }
+.root[data-variant='edge'] .track {
+  gap: var(--shell-inset);
+  padding-inline: var(--shell-inset);
+  scroll-padding-inline: var(--shell-inset);
+}
 
 @media (prefers-reduced-motion: reduce) {
   .dot { transition: none; }

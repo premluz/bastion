@@ -20,8 +20,9 @@ export interface MobileFrameProps {
   /**
    * 'agent': assistant suggestions on Home and a persistent orb dock that wakes in place.
    * 'glow': the same Home with a glow dock — swipe up to open the composer.
+   * 'attention': the glow home with an attention queue and the assistant's work in place of the suggestions.
    */
-  homeVariant?: 'assets' | 'agent' | 'glow';
+  homeVariant?: 'assets' | 'agent' | 'glow' | 'attention';
   sendPresentation?: 'inline' | 'overlay';
   initialPurchaseQuery?: string;
   initialAccountView?: import('./accountTypes').AccountInitialView;

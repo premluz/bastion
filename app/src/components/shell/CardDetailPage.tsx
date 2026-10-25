@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type AnimationEvent, type MouseEvent } from 'react';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
@@ -67,6 +67,7 @@ export function CardDetailPage({ card, sourceRect, onClose }: CardDetailPageProp
   const [tab, setTab] = useState<DetailTab>('transactions');
   const [isClosing, setIsClosing] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const cardIndex = WALLET_CARDS.findIndex((candidate) => candidate.id === card.id);
 
   function onTabClick(event: MouseEvent<HTMLElement>) {
@@ -102,22 +103,24 @@ export function CardDetailPage({ card, sourceRect, onClose }: CardDetailPageProp
     // is only ever meaningful at the moment this page first appears.
   }, []);
 
+  // A very fast exit (2026-10-23, direct feedback; motion-language.md): the whole page shrinks
+  // back toward the card it opened from and fades, its sections leaving bottom-up — the
+  // entrance run backwards. The page may be scrolled far from the card, so it is the page
+  // that returns, not the card. Unmounts when the page's own exit animation ends.
   function close() {
-    const el = cardRef.current;
-    if (!el) { onClose(); return; }
-    const restRect = el.getBoundingClientRect();
-    const scaleX = sourceRect.width / restRect.width;
-    const scaleY = sourceRect.height / restRect.height;
-    const translateX = sourceRect.left + sourceRect.width / 2 - (restRect.left + restRect.width / 2);
-    const translateY = sourceRect.top + sourceRect.height / 2 - (restRect.top + restRect.height / 2);
+    const root = rootRef.current;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!root || reduced) { onClose(); return; }
+    const rootRect = root.getBoundingClientRect();
+    root.style.setProperty('--detail-exit-origin', `${sourceRect.left + sourceRect.width / 2 - rootRect.left}px ${sourceRect.top + sourceRect.height / 2 - rootRect.top}px`);
     setIsClosing(true);
-    el.style.transition = `transform var(--shell-mode-duration) var(--ease-float)`;
-    el.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`;
-    window.setTimeout(onClose, 480);
+  }
+  function onAnimationEnd(event: AnimationEvent<HTMLDivElement>) {
+    if (isClosing && event.target === event.currentTarget) onClose();
   }
 
   return (
-    <div className={styles.root} data-closing={isClosing} role="dialog" aria-label={`${card.name} details`}>
+    <div ref={rootRef} className={styles.root} data-closing={isClosing} role="dialog" aria-label={`${card.name} details`} onAnimationEnd={onAnimationEnd}>
       <header className={styles.header}>
         <IconButton label="Back" icon={<Icon icon="chevronLeft" />} variant="ghost" onClick={close} />
         <IconButton label="Add card" icon={<Icon icon={PlusIcon} />} variant="ghost" />

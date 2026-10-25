@@ -102,6 +102,16 @@
   --card-rim: transparent;
   --glass-edge-accent: none;
   --glass-shadow: none;
+  --card-light: none;
+  --hero-image-wash: brightness(.6);
+  --gain-glow: var(--delta-up);
+  --orb-color-third: oklch(.68 .07 245);
+  --orb-rim: color-mix(in oklab, var(--ink-primary) 55%, transparent);
+  --orb-light-ground: 0;
+  --action-fill: linear-gradient(var(--accent-signal), var(--accent-signal));
+  --action-fill-hover: linear-gradient(var(--accent-signal), var(--accent-signal));
+  --action-ink: var(--color-on-accent);
+  --approval-edge: color-mix(in srgb, var(--ink-muted) 25%, transparent);
   --halo-fill: radial-gradient(ellipse at bottom, var(--accent-signal), transparent 70%);
   --shell-ambient: none;
 
@@ -163,6 +173,8 @@
     radial-gradient(52% 46% at 88% 12%, oklch(.21 .04 285) 0%, transparent 58%),
     linear-gradient(180deg, oklch(.14 .012 250) 0%, oklch(.10 .01 250) 100%);
   --glow-blend: screen;
+  --approval-option-fill: var(--surface-2);
+  --list-card-fill-raised: color-mix(in oklab, var(--surface-2) 45%, transparent);
 
   /* Motion binding */
   --motion-enter-duration: var(--duration-320);

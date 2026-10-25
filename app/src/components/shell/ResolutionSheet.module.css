@@ -1,0 +1,22 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--resolution-gap);
+  /* No header bar (the handle closes it), so the content starts below the handle. */
+  padding: var(--space-8) var(--shell-inset) var(--shell-inset);
+}
+
+.context {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* Confirm stays at the sheet's foot, full width, however far the choices scroll. */
+.confirm:global(.astryx-button):not(#\#):not(#\#):not(#\#) {
+  position: sticky;
+  bottom: var(--shell-inset);
+  width: 100%;
+  min-height: var(--resolution-confirm-height);
+  border-radius: var(--radius-full);
+}

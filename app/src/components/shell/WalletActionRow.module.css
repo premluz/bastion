@@ -43,6 +43,7 @@
   height: var(--shell-control-size);
   border: var(--shell-edge-width) solid transparent;
   background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--glass-edge) border-box;
+  box-shadow: var(--glass-shadow);
   color: var(--accent-signal);
   transition: scale var(--press-release-duration) var(--press-release-ease);
 }

@@ -1,0 +1,61 @@
+/* The assistant's landing screen: welcome and suggestions over the orb (GlowLight's one
+   orb, which the swipe lifts to the middle — see GlowLight.module.css). Hidden at rest. */
+.landing {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: var(--shell-header-height) var(--shell-inset) var(--glow-landing-bottom);
+  pointer-events: none;
+  visibility: hidden;
+}
+.landing[data-open] { visibility: visible; }
+
+/* A spacer where the one orb (GlowLight's, risen to the middle) sits behind this screen. */
+.orbSlot { flex: 1 1 auto; min-height: 0; }
+
+.welcome {
+  margin: 0;
+  min-height: 1.3em;
+  text-align: start;
+  font-size: var(--text-20);
+  color: var(--ink-secondary);
+}
+.welcome strong { font-weight: inherit; color: var(--ink-primary); }
+
+/* The suggestions arrive one row at a time after the welcome has printed, by the same
+   motion the page's contents leave with (page-recede.css) run the other way (2026-10-14,
+   direct feedback): a staggered fade out of a soft blur with barely any travel, not a slide. */
+.list { margin-block-start: var(--space-24); }
+.welcome, .list > * {
+  opacity: 0;
+  filter: blur(var(--blur-8));
+  translate: 0 calc(var(--space-4) * -1);
+  transition: opacity var(--agent-recede-duration) var(--motion-exit-ease),
+    filter var(--agent-recede-duration) var(--motion-exit-ease),
+    translate var(--agent-recede-duration) var(--motion-exit-ease);
+}
+.landing[data-open]:not([data-away]) :is(.welcome, .list > *) {
+  opacity: 1;
+  filter: none;
+  translate: none;
+  transition-timing-function: var(--motion-enter-ease);
+}
+.landing[data-open]:not([data-away]) .welcome { transition-delay: var(--glow-landing-text-delay); }
+.landing[data-open]:not([data-away]) .list > :nth-child(1) { transition-delay: var(--glow-landing-list-delay); }
+.landing[data-open]:not([data-away]) .list > :nth-child(2) { transition-delay: calc(var(--glow-landing-list-delay) + var(--glow-landing-list-stagger)); }
+.landing[data-open]:not([data-away]) .list > :nth-child(3) { transition-delay: calc(var(--glow-landing-list-delay) + var(--glow-landing-list-stagger) * 2); }
+.landing[data-open]:not([data-away]) .list > :nth-child(4) { transition-delay: calc(var(--glow-landing-list-delay) + var(--glow-landing-list-stagger) * 3); }
+.landing[data-open]:not([data-away]) .list { pointer-events: auto; }
+
+.landing[data-away] .welcome, .landing[data-away] .list {
+  opacity: 0;
+  translate: 0 var(--space-16);
+  transition: opacity var(--duration-250) var(--motion-exit-ease), translate var(--duration-250) var(--motion-exit-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome, .list > * { transition-property: opacity; transition-delay: 0s; filter: none; translate: none; }
+}

@@ -15,6 +15,12 @@
   --glow-reveal: min(1, var(--glow-progress) + var(--glow-open));
 }
 .swipe[data-composer-open='true'] { --glow-open: calc(var(--glow-open-reveal) * (1 - var(--glow-close))); }
+/* How far the one orb has risen to the landing screen: with the finger, held while the
+   landing is up (and handed back by a slide down to close). */
+.swipe { --glow-landing-open: 0; --glow-landing: max(calc(var(--glow-progress) * var(--glow-landing-drag)), var(--glow-landing-open)); }
+.swipe[data-landing] { --glow-landing-open: calc(1 - var(--glow-close)); }
+/* The finger lifts the orb only when it is meant to rise at all (config.landing.orbRises). */
+.swipe:not([data-orb-rise]) { --glow-landing-drag: 0; }
 .swipe [data-testid='pill-navigation'] { touch-action: none; }
 
 /* The pill morphs with the finger (2026-10-10, direct feedback: the morph starts
@@ -78,6 +84,19 @@
   pointer-events: none;
 }
 .sheet > * { pointer-events: auto; }
+.chatBar {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--shell-inset);
+  animation: glow-shade-in var(--motion-enter-duration) var(--motion-enter-ease) both;
+}
+/* A ghost button has no edge of its own (Astryx paints inset highlight/shade lines). */
+.chatBar button:not(#\#):not(#\#):not(#\#) { box-shadow: none; border: 0; }
 .thread {
   flex: 1 1 auto;
   min-height: 0;
@@ -124,5 +143,16 @@
 @keyframes glow-shade-in { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   .composer { transition: none; }
-  .thread, .shade { animation: none; }
+  .thread, .shade, .chatBar { animation: none; }
+}
+
+/* The status line over the trailing orb; it fades with the pill's own morph as the finger rises. */
+.status {
+  position: absolute;
+  inset-inline-end: var(--pill-inset);
+  bottom: var(--glow-status-bottom);
+  z-index: 6;
+  width: max-content;
+  max-width: var(--glow-status-max-width);
+  opacity: calc(1 - var(--glow-progress) * var(--glow-morph-fade));
 }

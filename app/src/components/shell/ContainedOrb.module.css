@@ -1,0 +1,37 @@
+.root {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background: var(--contained-orb-fill);
+  backdrop-filter: var(--contained-orb-backdrop);
+  box-shadow: var(--glow-contained-rim);
+}
+
+/* Drawn larger than the circle and set low, softened, so the light rises from below. */
+.plasma {
+  position: absolute;
+  inset-inline: var(--contained-orb-inset);
+  top: var(--contained-orb-top);
+  height: calc(100% - var(--contained-orb-inset) * 2);
+  opacity: var(--contained-orb-opacity);
+  filter: blur(var(--contained-orb-blur));
+  mix-blend-mode: var(--glow-blend);
+  /* The unbounded orb is the glow's size by default; here it fills this box instead. */
+  --glow-orb-size: 100%;
+  /* The glow's copper palette, as GlowLight's plasma has it (else the shell's blue default). */
+  --assistant-orb-color-a: var(--agent-orb-color-a);
+  --assistant-orb-color-b: var(--agent-orb-color-b);
+}
+
+/* The rim again above the light, so the plasma never covers it. */
+.root::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--glow-contained-rim);
+  pointer-events: none;
+}

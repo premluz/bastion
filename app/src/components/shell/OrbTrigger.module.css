@@ -1,0 +1,30 @@
+.root {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* The + toggle's size, so the pill keeps its proportions. */
+.orb {
+  display: block;
+  width: var(--pill-toggle-size);
+  height: var(--pill-toggle-size);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: none;
+  cursor: pointer;
+  /* The whole orb inside the circle, sharp and moving (2026-10-23, direct feedback: zoomed
+     in it read as a static blur), and no rim. */
+  --contained-orb-blur: 0px;
+  --contained-orb-inset: -5%;
+  --contained-orb-top: -5%;
+  --contained-orb-opacity: 1;
+  --glow-contained-rim: none;
+  --contained-orb-fill: transparent;
+  --contained-orb-backdrop: none;
+  transition: scale var(--press-release-duration) var(--press-release-ease);
+}
+@media (hover: hover) {
+  .orb:hover { scale: var(--press-hover-scale); }
+}
+.orb:focus-visible { outline: var(--shell-edge-width) solid var(--accent-signal); outline-offset: var(--space-2); }

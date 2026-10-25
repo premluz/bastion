@@ -1,0 +1,29 @@
+/* Brand ground colours mirror src/brand/palette.ts (groundDark / groundLight). */
+:root {
+  --ground: #101113;
+  --panel-surface: color-mix(in oklab, var(--ground) 74%, transparent);
+  --panel-edge: color-mix(in oklab, white 9%, transparent);
+  --panel-blur: 18px;
+  /** One duration and curve for every Dark/Light change, DOM and scene alike. */
+  --appearance-fade: 900ms;
+  --appearance-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --panel-radius: 16px;
+  --panel-padding: 12px;
+  --panel-width: 300px;
+  --overlay-inset: 20px;
+  --overlay-gap: 12px;
+  --header-height: 54px;
+  --icon-size: 16px;
+  --wordmark-tracking: 0.32em;
+  --phase-tracking: 0.14em;
+  --readout-width: 44px;
+  --phase-width: 96px;
+  --scrubber-width: 360px;
+  --panel-max-height: calc(100dvh - 2 * var(--overlay-inset) - 80px);
+}
+
+[data-appearance='light'] {
+  --ground: #f7f6f3;
+  --panel-surface: color-mix(in oklab, var(--ground) 78%, transparent);
+  --panel-edge: color-mix(in oklab, black 8%, transparent);
+}

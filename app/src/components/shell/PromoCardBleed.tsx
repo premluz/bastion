@@ -9,6 +9,8 @@ export interface PromoCardBleedProps {
   image: string;
   eyebrow?: string;
   cta?: string;
+  /** `lg`: a much larger call to action (2026-10-23, direct feedback: the attention home). */
+  ctaSize?: 'sm' | 'lg';
 }
 
 // Full-bleed promo banner (2026-10-10, direct feedback with a reference): a
@@ -21,7 +23,7 @@ export interface PromoCardBleedProps {
 //
 // The call to action has no destination yet, so it says so rather than
 // looking clickable and doing nothing.
-export function PromoCardBleed({ title, image, eyebrow, cta }: PromoCardBleedProps) {
+export function PromoCardBleed({ title, image, eyebrow, cta, ctaSize = 'sm' }: PromoCardBleedProps) {
   return (
     <div className={styles.root}>
       <img className={styles.image} src={image} alt="" />
@@ -29,7 +31,8 @@ export function PromoCardBleed({ title, image, eyebrow, cta }: PromoCardBleedPro
         {/* Eyebrow above the title (2026-10-12, direct feedback), as on the framed promo card. */}
         {eyebrow && <Text type="supporting" color="secondary" data-eyebrow>{eyebrow}</Text>}
         <Text type="large" className={styles.title}>{title}</Text>
-        {cta && <Button label={cta} variant="primary" size="sm" className={styles.cta} onClick={notifyPrototypeUnavailable} />}
+        {cta && <Button label={cta} variant="primary" size={ctaSize}
+          className={ctaSize === 'lg' ? `${styles.cta} ${styles.ctaLarge}` : styles.cta} onClick={notifyPrototypeUnavailable} />}
       </div>
     </div>
   );

@@ -22,8 +22,8 @@
    ::before — the pill carries a view-transition-name (dock morph), which
    makes it a backdrop root, so a blur on a child layer could only ever see
    the pill's own empty interior, never the page (measured). */
-.pill .destination { width: 100%; min-width: 0; min-height: var(--pill-item-size); padding: 0; border-radius: var(--pill-radius); color: var(--ink-secondary); box-shadow: none; border-color: transparent; }
-.pill .destination[aria-current='page'] { color: var(--ink-primary); background: transparent; }
+.pill .destination { width: 100%; min-width: 0; min-height: var(--pill-item-size); padding: 0; border-radius: var(--pill-radius); color: var(--tab-ink); box-shadow: none; border-color: transparent; }
+.pill .destination[aria-current='page'] { color: var(--tab-active-ink); background: transparent; }
 /* While the quick-actions menu is open the pill keeps its glass pane and
    active highlight — it is dimmed only by its own scrim layer (.pill::after
    below), exactly like the page behind (2026-10-01, direct feedback: the
@@ -49,7 +49,7 @@
 .pill .destination, .root .toggle { transition: scale var(--press-release-duration) var(--press-release-ease), color var(--pill-duration) var(--pill-ease); }
 @media (hover: hover) {
   .pill .destination:hover, .root .toggle:hover { scale: var(--press-hover-scale); }
-  .pill .destination:hover { color: var(--ink-primary); }
+  .pill .destination:not([aria-current='page']):hover { color: var(--tab-hover-ink); }
 }
 .pill .destination:active, .root .toggle:active { scale: var(--press-active-scale); transition-duration: var(--press-in-duration); transition-timing-function: var(--press-in-ease); }
 .popover:global(.astryx-popover) { padding: var(--pill-menu-padding); }
@@ -161,6 +161,6 @@
 .indicator[data-active='assistant'] { transform: translateX(300%); }
 .indicator[data-active='cash'] { transform: translateX(200%); }
 .indicator[data-active='investments'] { transform: translateX(300%); }
-.highlight { display: block; width: 100%; height: 100%; border-radius: var(--pill-radius); background: var(--glass-sheen), var(--surface-selected); animation: pill-stretch var(--pill-slide-duration) var(--pill-slide-ease) both; }
+.highlight { display: block; width: 100%; height: 100%; border-radius: var(--pill-radius); background: var(--tab-active-fill); animation: pill-stretch var(--pill-slide-duration) var(--pill-slide-ease) both; }
 @keyframes pill-stretch { 0%, 100% { transform: scaleX(1); } 40% { transform: scaleX(var(--pill-stretch)); } }
 @media (prefers-reduced-motion: reduce) { .indicator, .root, .dock::before { transition: none; } .highlight { animation: none; } }

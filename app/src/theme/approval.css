@@ -1,6 +1,9 @@
 :root {
   --approval-inset: var(--space-12);
   --approval-gap: var(--space-12);
+  /* The question's own breathing room inside the card (2026-10-24, direct feedback): it sat too
+     close to the border; this is on top of the card's own inset. */
+  --approval-prompt-inset: var(--space-8);
   --approval-option-gap: var(--space-4);
   --approval-option-inset: var(--space-8);
   --approval-footer-gap: var(--space-24);
@@ -8,9 +11,12 @@
   --approval-control-size: var(--space-32);
   --approval-line-height: var(--space-24);
   --approval-edge-width: calc(var(--space-2) / 2);
-  --approval-edge: color-mix(in srgb, var(--ink-muted) 25%, transparent);
-  --approval-radius: calc(var(--radius-8) * 2);
-  --approval-option-radius: var(--radius-8);
+  /* The home cards' rounding (2026-10-23, direct feedback); rows inside stay concentric. */
+  --approval-radius: var(--list-card-radius);
+  --approval-option-radius: calc(var(--list-card-radius) - var(--approval-inset));
   --approval-round: var(--radius-full);
+  /* The assistant's cards' surface: a top-to-bottom fall-off, shared by the question card and
+     the transfer card (which adds its accent light on top, sending.css). */
+  --approval-pane: linear-gradient(180deg, var(--surface-1), var(--surface-0));
   --approval-preview-width: calc(var(--space-64) * 7);
 }

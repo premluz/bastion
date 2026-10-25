@@ -1,0 +1,39 @@
+/* The transfer card's sent state (sending.css): sage wash, the green mark with its glow. */
+.root {
+  display: flex;
+  align-items: center;
+  gap: var(--space-20);
+  padding-inline: var(--space-24);
+  border-radius: var(--list-card-radius);
+  background: var(--send-pane-wash-done), var(--list-card-fill-raised);
+  box-shadow: var(--card-light);
+  animation: caught-up-in var(--caught-up-enter-duration) var(--ease-float) both;
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--send-mark-size);
+  height: var(--send-mark-size);
+  border-radius: var(--radius-full);
+  background: var(--accent-ok);
+  box-shadow: var(--send-mark-glow);
+  color: var(--surface-0);
+  animation: caught-up-mark var(--send-mark-duration) var(--send-mark-ease) var(--send-mark-delay) both;
+}
+
+.title { font-weight: 400; }
+
+/* Sinking into depth: smaller, lower, gone. */
+.root[data-leaving] {
+  animation: caught-up-out var(--caught-up-exit-duration) var(--motion-exit-ease) forwards;
+}
+
+@keyframes caught-up-in { from { opacity: 0; } }
+@keyframes caught-up-mark { from { scale: var(--send-mark-from-scale); opacity: 0; } }
+@keyframes caught-up-out { to { opacity: 0; scale: var(--caught-up-exit-scale); translate: 0 var(--space-12); filter: blur(var(--blur-8)); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .root, .mark, .root[data-leaving] { animation-duration: 0s; animation-delay: 0s; }
+}

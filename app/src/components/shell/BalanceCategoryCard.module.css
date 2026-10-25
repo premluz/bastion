@@ -21,7 +21,16 @@
   border-color: var(--card-rim);
   background: var(--list-card-fill-raised);
   backdrop-filter: var(--list-card-backdrop);
+  box-shadow: var(--card-light);
 }
+
+.root.glowUp { --glow-color: var(--gain-glow); --glow-strength: var(--tint-strong); }
+.root.glowDown { --glow-color: var(--delta-down); --glow-strength: var(--tint-strong); }
+/* Much softer than the primitive's own bottom glow (2026-10-23, direct feedback with an
+   inspiration mock): a wide, deep haze rising into the card, not a band at its edge. */
+.root.glowUp::after, .root.glowDown::after { left: 10%; width: 80%; height: 60%; bottom: -20%; filter: blur(var(--blur-64)); }
+/* The glow paints on ::after; the card's rows sit above it. */
+.root.glowUp > *, .root.glowDown > * { position: relative; z-index: 1; }
 
 .labelRow {
   display: flex;

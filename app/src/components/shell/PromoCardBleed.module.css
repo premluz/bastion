@@ -14,7 +14,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(var(--promo-bleed-image-dim));
+  filter: var(--promo-bleed-image-filter);
 }
 
 /* The page's own shade, twice: --shell-fade is background → transparent, so
@@ -30,7 +30,7 @@
   z-index: 1;
 }
 .root::before { top: 0; height: var(--promo-bleed-fade-top); backdrop-filter: var(--promo-bleed-frost); mask: var(--promo-bleed-frost-mask); }
-.root::after { bottom: 0; transform: rotate(180deg); }
+.root::after { bottom: 0; transform: rotate(180deg); background: var(--promo-bleed-fade-bottom); }
 
 /* Same left-side scrim as the framed hero card, so copy stays legible on any photo. */
 .body {
@@ -59,4 +59,10 @@
 .cta:global(.astryx-button):not(#\#):not(#\#):not(#\#) {
   margin-block-start: var(--space-4);
   border-radius: var(--radius-full);
+}
+
+.ctaLarge:global(.astryx-button):not(#\#):not(#\#):not(#\#) {
+  min-height: var(--promo-bleed-cta-large-height);
+  min-width: var(--promo-bleed-cta-large-width);
+  font-size: var(--text-16);
 }

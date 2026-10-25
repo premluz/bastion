@@ -1,0 +1,41 @@
+/* Attention home (2026-10-23): structural aliases over primitives and semantic tokens
+   only, so every theme gets it without a parity entry. */
+:root {
+  /* The hero photo dissolves slowly (2026-10-24, direct feedback: not a sharp gradient, a soft
+     blend reaching further down): a long fade, eased like a smoothstep so it has no visible
+     start, over room the section below reaches back up into. Applied in AgentHomePage.module.css. */
+  --attention-hero-fade-extra: var(--space-64);
+  /* How far the section climbs over the photo's tail: the extra height plus 16px, so the gap from
+     the banner's button to "Needs you" equals the gap from the tiles to the banner's copy (40px). */
+  --attention-hero-pullup: calc(var(--attention-hero-fade-extra) + var(--space-16));
+  --attention-hero-fade-height: calc(var(--space-64) * 3);
+  --attention-hero-fade: linear-gradient(to bottom,
+    var(--surface-0) 0%,
+    color-mix(in oklab, var(--surface-0) 97%, transparent) 10%,
+    color-mix(in oklab, var(--surface-0) 90%, transparent) 20%,
+    color-mix(in oklab, var(--surface-0) 72%, transparent) 35%,
+    color-mix(in oklab, var(--surface-0) 50%, transparent) 50%,
+    color-mix(in oklab, var(--surface-0) 28%, transparent) 65%,
+    color-mix(in oklab, var(--surface-0) 10%, transparent) 80%,
+    color-mix(in oklab, var(--surface-0) 3%, transparent) 92%,
+    transparent 100%);
+  /* Every card in the queue keeps one height, so swiping never makes the page jump. */
+  --attention-card-height: calc(var(--space-64) + var(--space-32));
+  --attention-mark-size: var(--space-40);
+  /* Tight under each title (the heading keeps its own 12px below it). */
+  --attention-section-gap: var(--space-8);
+  /* The assistant's work bar: a pill at rest, its tasks listed when expanded. */
+  --work-queue-radius: var(--list-card-radius);
+  --work-queue-inset: var(--space-16);
+  --work-queue-row-gap: var(--space-12);
+  /* "You're caught up" (2026-10-23): fades in, holds (config.attention.caughtUpHoldMs), sinks
+     into depth, then the block closes and what follows rises into its place. */
+  --caught-up-enter-duration: var(--duration-320);
+  --caught-up-exit-duration: var(--duration-320);
+  --caught-up-exit-scale: .9;
+  --attention-close-duration: var(--duration-480);
+  --attention-close-delay: var(--duration-200);
+  /* The full view's Confirm sits at the sheet's foot. */
+  --resolution-gap: var(--space-24);
+  --resolution-confirm-height: var(--space-48);
+}

@@ -1,0 +1,26 @@
+/* A page's contents leave when the assistant's landing screen opens over it (2026-10-14,
+   direct feedback: the stagger the home already does, for every page): bottom-up, one
+   stagger apart, and back top-down when it closes. Sections are the page root's children
+   (their order is --page-section-index, set by MobileFrame.module.css); a scene page
+   (Explore) is staggered by its own renderer, so it leaves as one. The home does the same
+   in AgentHomePage.module.css. Structural aliases over --agent-recede-* only. */
+main[data-glow-page]:not([data-scene-page]) > * > *,
+main[data-glow-page][data-scene-page] > * {
+  transition: opacity var(--agent-recede-duration) var(--motion-enter-ease) calc(var(--page-section-index, 0) * var(--agent-recede-stagger)),
+    translate var(--agent-recede-duration) var(--motion-enter-ease) calc(var(--page-section-index, 0) * var(--agent-recede-stagger)),
+    filter var(--agent-recede-duration) var(--motion-enter-ease) calc(var(--page-section-index, 0) * var(--agent-recede-stagger));
+}
+main[data-glow-page][data-receded]:not([data-scene-page]) > * > *,
+main[data-glow-page][data-receded][data-scene-page] > * {
+  opacity: 0;
+  translate: 0 calc(var(--space-12) * -1);
+  filter: blur(var(--blur-8));
+  transition-timing-function: var(--motion-exit-ease);
+  transition-delay: calc((5 - var(--page-section-index, 0)) * var(--agent-recede-stagger));
+}
+@media (prefers-reduced-motion: reduce) {
+  main[data-glow-page]:not([data-scene-page]) > * > *,
+  main[data-glow-page][data-scene-page] > * { transition-property: opacity; transition-delay: 0s; }
+  main[data-glow-page][data-receded]:not([data-scene-page]) > * > *,
+  main[data-glow-page][data-receded][data-scene-page] > * { translate: none; filter: none; }
+}

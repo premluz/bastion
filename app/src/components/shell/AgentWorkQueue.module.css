@@ -1,0 +1,61 @@
+/* The same raised glass as the cards above it. */
+.root {
+  padding: var(--work-queue-inset);
+  border-radius: var(--work-queue-radius);
+  background: var(--list-card-fill-raised);
+  backdrop-filter: var(--list-card-backdrop);
+  box-shadow: var(--card-light);
+}
+
+/* The status line: a small glass pill, the menu's material, quieter than the menu. */
+.root[data-variant='status'] {
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-full);
+  background: var(--glass-fill-clear);
+  backdrop-filter: var(--shell-header-backdrop);
+  box-shadow: var(--glass-shadow);
+  --work-queue-row-gap: var(--space-8);
+}
+.root[data-variant='status']:has([aria-expanded='true']) { border-radius: var(--list-card-radius); }
+/* Astryx's Collapsible trigger brings its own roomy padding; the status line stays slim. */
+.root[data-variant='status'] :global(.astryx-collapsible) > button:not(#\#):not(#\#):not(#\#) { padding-block: var(--space-4); gap: var(--space-8); }
+
+.summary, .row {
+  display: flex;
+  align-items: center;
+  gap: var(--work-queue-row-gap);
+  min-width: 0;
+}
+
+.summaryText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  text-align: start;
+}
+
+.actionText:not(#\#):not(#\#):not(#\#) {
+  color: var(--accent-signal);
+}
+
+/* The accent, not Astryx's default spinner colour. */
+.spinner {
+  display: grid;
+  place-items: center;
+  color: var(--accent-signal);
+}
+
+.alert {
+  display: grid;
+  place-items: center;
+  color: var(--accent-alert);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--work-queue-row-gap);
+  margin: 0;
+  padding: var(--work-queue-row-gap) 0 0;
+  list-style: none;
+}

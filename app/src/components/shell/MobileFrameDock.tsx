@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { PillNavigation, type PillDestination, type PillDestinationSet } from './PillNavigation';
 import { TabBar, type TabDestination } from './TabBar';
 import type { useMobileFrame } from './useMobileFrame';
@@ -18,9 +18,11 @@ export interface MobileFrameDockProps {
   variant: 'pill' | 'classic';
   /** The pill's destinations; `glow` splits the wallet into Cash and Investments and drops Assistant. */
   destinationSet?: PillDestinationSet;
+  /** The pill's + slot, taken by something else (the attention home's orb). */
+  trailing?: ReactNode;
 }
 
-export function MobileFrameDock({ state, variant, destinationSet = 'standard' }: MobileFrameDockProps) {
+export function MobileFrameDock({ state, variant, destinationSet = 'standard', trailing }: MobileFrameDockProps) {
   const [actionsOpen, setActionsOpen] = useState(false);
   const isGlow = destinationSet === 'glow';
   const navigate = (item: PillDestination) => {
@@ -36,7 +38,7 @@ export function MobileFrameDock({ state, variant, destinationSet = 'standard' }:
   if (variant === 'pill') return <PillNavigation activeItem={active} destinationSet={destinationSet}
     onNavigate={navigate} isActionsOpen={actionsOpen} onActionsOpenChange={setActionsOpen}
     onAction={() => undefined}
-    isComposerOpen={state.mode !== 'idle'} assistantRef={state.assistantRef} />;
+    isComposerOpen={state.mode !== 'idle'} assistantRef={state.assistantRef} {...(trailing ? { trailing } : {})} />;
   return <footer className={styles.dock}>
     <TabBar activeTab={state.activeTab} onTabChange={state.selectTab} isComposerOpen={state.mode !== 'idle'}
       isConversation={state.mode === 'conversation'} onAssistantPress={state.toggleComposer}

@@ -1,4 +1,4 @@
-import { Fragment, type Ref } from 'react';
+import { Fragment, type ReactNode, type Ref } from 'react';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
 import { HomeIcon, MagnifyingGlassIcon, ChartBarIcon, WalletIcon, SparklesIcon, PlusIcon, ArrowTrendingUpIcon,
@@ -40,11 +40,13 @@ export interface PillNavigationProps {
   // fade-out, both real visual cues that composer mode is active
   // elsewhere on screen.
   isComposerOpen?: boolean;
+  /** Takes the + menu's place (2026-10-23: the attention home's orb). */
+  trailing?: ReactNode;
   activeItem: PillDestination; onNavigate: (destination: PillDestination) => void;
   isActionsOpen: boolean; onActionsOpenChange: (open: boolean) => void; onAction: (action: PillAction) => void;
 }
 
-export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onActionsOpenChange, onAction, isComposerOpen = false, assistantRef, destinationSet = 'standard' }: PillNavigationProps) {
+export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onActionsOpenChange, onAction, isComposerOpen = false, assistantRef, destinationSet = 'standard', trailing }: PillNavigationProps) {
   return <Fragment>
     {/* Modal scrim, not alpha-dimming the nav itself (2026-09-16, direct
         feedback: "the menu when opened via + in the nav sets alpha
@@ -73,8 +75,8 @@ export function PillNavigation({ activeItem, onNavigate, isActionsOpen, onAction
         {...(id === 'assistant' && assistantRef ? { ref: assistantRef } : {})}
         icon={<Icon icon={icon} size="lg" />} aria-current={activeItem === id ? 'page' : undefined} onClick={() => onNavigate(id)} />)}
     </nav>
-    <DockMenu label="Quick actions" items={QUICK_ACTIONS} isOpen={isActionsOpen} onOpenChange={onActionsOpenChange}
-      onSelect={(id) => { if (isPillAction(id)) onAction(id); }} triggerIcon={PLUS_TRIGGER_ICON} alignment="end" />
+    {trailing ?? <DockMenu label="Quick actions" items={QUICK_ACTIONS} isOpen={isActionsOpen} onOpenChange={onActionsOpenChange}
+      onSelect={(id) => { if (isPillAction(id)) onAction(id); }} triggerIcon={PLUS_TRIGGER_ICON} alignment="end" />}
     </div>
     </div>
   </Fragment>;

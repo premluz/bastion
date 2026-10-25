@@ -8,40 +8,43 @@
    Its light scheme is theme.bastion-light.css; the component rules below the
    token block match both. */
 [data-theme='bastion'] {
+  /* 2026-10-21 palette (direct feedback, supplied as hex, converted exactly to OKLCH):
+     Graphite 101113 page, Surface 26272A raised, Warm white F2EEE8 ink, Signal orange
+     FF8A29 the accent, Glow FFC08A the orb's light. Steps between are interpolated. */
   color-scheme: dark;
 
-  /* 2026-10-06 reference values (supplied as hex 0B0B0A page, 0F0F0F raised
-     surface, 111110 @ 72% panes), converted exactly to OKLCH. Panes are
+  /* Graphite page → Surface (surface-2) with interpolated steps either side. Panes are
      translucent so the page's ambient light reads through their blur. */
-  --surface-0: oklch(.149 .002 107);
-  --surface-1: oklch(.168 0 0);
-  --surface-2: oklch(.195 .003 100);
-  --surface-3: oklch(.23 .004 100);
-  --surface-selected: oklch(.3 .005 90);
+  --surface-0: oklch(.177 .004 264.5);
+  --surface-1: oklch(.215 .005 268);
+  --surface-2: oklch(.273 .006 271.2);
+  --surface-3: oklch(.31 .007 271);
+  --surface-selected: oklch(.35 .007 271);
   /* Smoked glass cards (2026-10-10, direct feedback with a reference card): a
      thinner fill over a deep blur, so what is behind warms the pane. Then "much
      darker, more transparency and blur": near-black tint, under half opaque. */
-  --card-fill: oklch(.08 .002 107 / .45);
+  --card-fill: oklch(.13 .004 264.5 / .45);
   /* Lines: half-pixel hairlines, very subtle (2026-10-06). */
   --hairline-width: .5px;
-  --ink-primary: oklch(.88 .01 70);
-  --ink-secondary: oklch(.70 .012 70);
-  --ink-muted: oklch(.51 .012 70);
+  /* Softer than the palette's warm white (2026-10-23, direct feedback: primary text too strong). */
+  --ink-primary: oklch(.88 .009 78.3);
+  --ink-secondary: oklch(.74 .01 78);
+  --ink-muted: oklch(.55 .01 78);
 
   /* Semantic split (2026-10-06, direct feedback): copper = action /
      selection / brand; sage = positive; red-ochre = risk; champagne-white =
-     intelligence / agent presence. Copper is the supplied hex D78A4A; the orb
-     is the supplied champagne core E8DED0 and active glow D8C5AC (exact). */
-  --accent-signal: oklch(.701 .123 58.5);
-  --orb-liquid-blue: oklch(.833 .04 74.7);
-  --orb-liquid-ice: oklch(.905 .022 76.5);
-  --presence: oklch(.833 .04 74.7);
+     intelligence / agent presence. Since 2026-10-21 the accent is Signal orange FF8A29
+     and the orb's light Glow FFC08A (see the palette note at the top). */
+  --accent-signal: oklch(.749 .173 54.1);
+  --orb-liquid-blue: oklch(.8 .135 58);
+  --orb-liquid-ice: oklch(.853 .1 61.5);
+  --presence: oklch(.86 .045 70);
   /* Voice states speak through luminance, not hue: idle dim ivory, listening
      brighter, reasoning a touch lower with a faint copper seam. */
   --orb-luminance-idle: .72;
   --orb-luminance-listening: 1.08;
   --orb-luminance-thinking: .94;
-  --orb-seam: oklch(.701 .123 58.5 / .55);
+  --orb-seam: oklch(.749 .173 54.1 / .55);
   /* A taller, broader glow rising from the orb (2026-10-06, direct
      feedback: "larger gradient from bottom where the orb is"). */
   --halo-height: calc(var(--space-64) * 6);
@@ -62,37 +65,53 @@
   --viz-4: oklch(.66 .09 285);
   --viz-5: oklch(.66 .08 25);
   --viz-6: oklch(.68 .08 115);
-  --edge: oklch(.8 .01 80 / .09);
-  --edge-highlight: oklch(.85 .012 80 / .18);
-  --surface-1-solid: oklch(.168 0 0);
-  --pane-surface: oklch(.168 0 0 / .92);
+  --edge: oklch(.951 .009 78.3 / .09);
+  --edge-highlight: oklch(.951 .009 78.3 / .18);
+  --surface-1-solid: oklch(.215 .005 268);
+  --pane-surface: oklch(.215 .005 268 / .92);
   --glow: 0 0 12px oklch(from var(--presence) l c h / .14);
-  --scrim: oklch(.09 .002 107 / .62);
+  --scrim: oklch(.1 .004 264.5 / .62);
 
   /* Flat panels: a uniform hairline, no top-lit sheen or cast shadow. */
-  --glass-fill: oklch(.168 0 0 / .84);
-  --glass-fill-clear: oklch(.168 0 0 / .6);
+  --glass-fill: oklch(.215 .005 268 / .55);
+  /* See-through (2026-10-21, direct feedback): under a third opaque so the page's warm
+     glow reads through the blur in the nav, popover and cards. */
+  --glass-fill-clear: oklch(.215 .005 268 / .3);
   --glass-sheen: none;
   /* A lighter rim than the hairline dividers, a touch brighter at the top. */
-  --glass-edge: linear-gradient(oklch(.85 .012 80 / .26), oklch(.85 .012 80 / .16));
+  --glass-edge: linear-gradient(transparent, transparent);
   /* Cards' rim as real border colours (top, sides, bottom), 2026-10-11: under a
      translucent fill a background-painted rim (--glass-edge) shows through the
      whole pane and greys it. */
-  --card-rim: oklch(.85 .012 80 / .26) oklch(.85 .012 80 / .2) oklch(.85 .012 80 / .16);
-  --glass-edge-accent: linear-gradient(to bottom, oklch(.78 .07 52 / .32), oklch(.72 .095 52 / .16) 48%, oklch(.72 .095 52 / .06));
-  --glass-shadow: none;
+  --card-rim: transparent;
+  --glass-edge-accent: linear-gradient(to bottom, oklch(.82 .12 56 / .32), oklch(.749 .173 54.1 / .16) 48%, oklch(.749 .173 54.1 / .06));
+  /* Inner light instead of borders (2026-10-23, direct feedback with a reference): controls get a
+     bright 1px top line, darker 1px sides, a faint bottom reflection and a soft inner glow; cards
+     a top highlight and a broad soft glow under their top edge. No visible stroke. */
+  --glass-shadow: inset -1px 0 1px oklch(0 0 0 / .2), inset 1px 0 1px oklch(0 0 0 / .2), inset 0 -1px 1px oklch(.951 .009 78.3 / .2), inset 0 1px 1px oklch(.951 .009 78.3 / .2), inset 0 -4px 4px oklch(.951 .009 78.3 / .04), inset 0 4px 4px oklch(.951 .009 78.3 / .04);
+  --card-light: inset 0 -1px 1px oklch(.951 .009 78.3 / .1), inset 0 1px 1px oklch(.951 .009 78.3 / .2), inset 0 -4px 4px oklch(.951 .009 78.3 / .08), inset 0 28px 40px oklch(.951 .009 78.3 / .08);
+  --hero-image-wash: brightness(.6);
+  /* A gain's glow, as vivid as the accent's (2026-10-23, direct feedback): --delta-up is a text colour, too dim to light. */
+  --gain-glow: oklch(.8 .2 150);
+  --orb-color-third: oklch(.68 .07 245);
+  --orb-rim: oklch(.951 .009 78.3 / .55);
+  --orb-light-ground: 0;
+  --action-fill: linear-gradient(var(--accent-signal), var(--accent-signal));
+  --action-fill-hover: linear-gradient(var(--accent-signal), var(--accent-signal));
+  --action-ink: var(--color-on-accent);
+  --approval-edge: transparent;
   /* Seamless glow rising from the bottom edge (2026-10-06, direct feedback:
      no visible egg/radial; then "slightly more curve, lower, more blur"):
      a broad low light just wider than the screen — a gentle curve, no hard
      edge. Then "subtler, more blend into the background": lower peak and a
      long multi-stop falloff that only reaches transparent at the very edge. */
   --halo-fill:
-    radial-gradient(130% 85% at 50% 100%, oklch(.905 .022 76.5 / .2), oklch(.905 .022 76.5 / .1) 35%, oklch(.905 .022 76.5 / .04) 65%, transparent 100%),
-    linear-gradient(to top, oklch(.833 .04 74.7 / .1), oklch(.833 .04 74.7 / .03) 40%, transparent 65%);
+    radial-gradient(130% 85% at 50% 100%, oklch(.853 .1 61.5 / .2), oklch(.853 .1 61.5 / .1) 35%, oklch(.853 .1 61.5 / .04) 65%, transparent 100%),
+    linear-gradient(to top, oklch(.8 .135 58 / .1), oklch(.8 .135 58 / .03) 40%, transparent 65%);
   --shell-ambient:
-    radial-gradient(72% 84% at 100% 0%, oklch(.45 .06 52 / .09), transparent 72%),
-    radial-gradient(55% 68% at 0% 0%, oklch(.52 .02 60 / .05), transparent 72%);
-  --shading-light: oklch(.85 .025 60 / .04);
+    radial-gradient(72% 84% at 100% 0%, oklch(.55 .12 54 / .09), transparent 72%),
+    radial-gradient(55% 68% at 0% 0%, oklch(.5 .02 268 / .05), transparent 72%);
+  --shading-light: oklch(.951 .009 78.3 / .04);
   --shading-dark: oklch(0 0 0 / .18);
   --shadow-low: 0px 1px 1px oklch(0 0 0 / .16), 0px 1px 4px oklch(0 0 0 / .16);
   --surface-blur: var(--blur-64);
@@ -100,9 +119,11 @@
   --spec-alpha: 0;
   --spec-radius: var(--spec-radius-lg);
   --surface-opacity: 1;
-  --canvas-backdrop: linear-gradient(155deg, oklch(.195 .003 100 / .16), transparent 38%);
+  --canvas-backdrop: linear-gradient(155deg, oklch(.273 .006 271.2 / .16), transparent 38%);
   /* The glow's plasma adds light to the ambient glow behind it. */
   --glow-blend: screen;
+  --approval-option-fill: var(--surface-2);
+  --list-card-fill-raised: color-mix(in oklab, var(--surface-2) 45%, transparent);
 
   --motion-enter-duration: var(--duration-200);
   --motion-enter-ease: var(--ease-standard);
@@ -150,6 +171,7 @@
 /* The shared list card (shell.css --list-card-*: clear glass, no rim, 2026-10-12). */
 :is([data-theme='bastion'], [data-theme='bastion-light']) .astryx-card.panelFlat {
   border: 0;
+  box-shadow: var(--card-light);
   background: var(--list-card-fill-clear);
   backdrop-filter: var(--list-card-backdrop);
 }
@@ -201,17 +223,38 @@
   color: var(--surface-1-solid);
 }
 
+/* Primary actions paint with the theme's action fill and ink (2026-10-23; per theme). */
+:is([data-theme='bastion'], [data-theme='bastion-light']) .astryx-button.primary:not(#\#):not(#\#):not(#\#) {
+  background: var(--action-fill);
+  color: var(--action-ink);
+  font-weight: 400;
+}
+:is([data-theme='bastion'], [data-theme='bastion-light']) .astryx-button.primary:not(:disabled):hover:not(#\#):not(#\#):not(#\#) {
+  background: var(--action-fill-hover);
+}
+
+/* A disabled primary action is plainly inactive (2026-10-24, direct feedback): not the action
+   fill at half opacity, which let the page show through it, but a solid, quiet pill (a touch
+   of ink over the page colour) with muted ink; the backdrop blur keeps anything behind it soft. */
+:is([data-theme='bastion'], [data-theme='bastion-light']) .astryx-button.primary:disabled:not(#\#):not(#\#):not(#\#) {
+  opacity: 1;
+  background: color-mix(in oklab, var(--ink-primary) 9%, var(--surface-0));
+  color: var(--ink-muted);
+  backdrop-filter: var(--list-card-backdrop);
+  box-shadow: none;
+}
+
 /* Eyebrows (2026-10-06, direct feedback: titles like ASSETS and pane titles
-   like CRYPTO/CASH): Geist Mono, uppercase, wide tracking, small, secondary
-   ink. Elements opt in with the `data-eyebrow` role marker; other themes
+   like CRYPTO/CASH): uppercase, tracked, small, quiet ink. Since 2026-10-23 (direct feedback
+   with a mock) the body sans at a lighter tracking and muted ink, not the wide mono. Elements opt in with the `data-eyebrow` role marker; other themes
    leave them as they were. Descendants included so a heading's link label
    follows; specificity matches Astryx's inflated text rules. */
 :is([data-theme='bastion'], [data-theme='bastion-light']) [data-eyebrow]:not(#\#):not(#\#):not(#\#),
 :is([data-theme='bastion'], [data-theme='bastion-light']) [data-eyebrow] :is(span, a, button):not(#\#):not(#\#):not(#\#) {
-  font-family: var(--font-geist-mono);
+  font-family: var(--font-geist);
   font-size: var(--text-10);
   font-weight: 400;
-  letter-spacing: .28em;
+  letter-spacing: .16em;
   text-transform: uppercase;
-  color: var(--ink-secondary);
+  color: var(--ink-muted);
 }

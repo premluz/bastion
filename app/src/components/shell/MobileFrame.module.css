@@ -325,6 +325,15 @@
     transform var(--motion-enter-duration) var(--motion-enter-ease);
 }
 
+/* The glow home's composer (in place) has its own top bar — close and chat history —
+   so the home header (avatar, search) steps aside while it is open (2026-10-13,
+   direct feedback). */
+.phone[data-home='glow']:not([data-mode='idle']) .header {
+  opacity: 0;
+  pointer-events: none;
+  transition-duration: var(--motion-exit-duration);
+}
+
 /* Header hides in composer too, not just conversation (2026-09-13, direct
    feedback: "in this mode with composer, we should also hide the header as
    we do in the voice mode") — both assistant modes clear the chrome so the

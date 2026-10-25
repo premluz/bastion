@@ -1,0 +1,39 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  padding-block-start: var(--space-8);
+}
+
+/* The transient block: its rows close from its full height to nothing (1fr → 0fr), so
+   whatever follows rises smoothly into its place. Its spacing lives inside, so it closes too. */
+.block {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows var(--attention-close-duration) var(--ease-float) var(--attention-close-delay);
+}
+.block[data-closing] { grid-template-rows: 0fr; }
+.blockInner {
+  display: grid;
+  min-height: 0;
+}
+.block[data-closing] .blockInner { overflow: hidden; }
+/* The queue and the caught-up card share one cell; the card takes the queue's measure. */
+.blockInner > * { grid-area: 1 / 1; min-width: 0; margin-block-end: var(--attention-section-gap); }
+
+.queue {
+  display: flex;
+  flex-direction: column;
+  gap: var(--attention-section-gap);
+}
+.queue[data-hidden] { visibility: hidden; }
+/* With no cards left, the queue still holds a card's height for the caught-up card to fill. */
+.cardSpace { height: var(--attention-card-height); }
+
+.caughtUp { display: grid; }
+
+.pulse {
+  display: flex;
+  flex-direction: column;
+  gap: var(--attention-section-gap);
+  padding-block-start: var(--space-16);
+}

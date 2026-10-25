@@ -17,17 +17,21 @@ uniform float u_time;
 uniform vec2 u_resolution;
 uniform vec3 u_colorA;
 uniform vec3 u_colorB;
+uniform vec3 u_colorC;
 uniform float u_unbounded;
+// 1 on a light theme: the orb is painted plainly over paper, not screened over a dark page.
+uniform float u_lightGround;
 
-const float VIEW_SCALE = 0.58;
-const float MORPH_SPEED = 1.3;
-const float DEFORM_STRENGTH = 0.045;
-
-mat2 rotate(float angle) {
-  float cosine = cos(angle);
-  float sine = sin(angle);
-  return mat2(cosine, -sine, sine, cosine);
-}
+// A soft luminous ribbon (2026-10-21, direct feedback: closer to a blurred ring of
+// light, richer than copper alone): a ring whose radius is bent by slow noise and
+// whose body swells and thins around it, glowing on a wide gaussian with a tighter
+// hot edge on part of its inner side. Colour drifts around it between the three
+// palette colours (copper, champagne, slate). Procedural and 2D — a handful of
+// noise reads per pixel, far cheaper than the raymarched blob it replaces.
+const float RING_RADIUS = 0.44;
+const float RING_BEND = 0.05;
+const float RING_WIDTH = 0.04;
+const float DRIFT_SPEED = 0.32;
 
 float hash13(vec3 point) {
   point = fract(point * 0.1031);
@@ -54,136 +58,79 @@ float valueNoise(vec3 point) {
   );
 }
 
-float fractalNoise(vec3 point) {
-  float value = 0.0;
-  float amplitude = 0.5;
-  for (int index = 0; index < 2; index++) {
-    value += amplitude * valueNoise(point);
-    point *= 2.03;
-    amplitude *= 0.5;
-  }
-  return value;
-}
-
-float liquidField(vec3 point) {
-  float time = u_time;
-  point *= 2.2;
-  point.xy *= rotate(time * 0.15);
-  point.yz *= rotate(time * 0.10);
-  vec3 warp = vec3(
-    fractalNoise(point + time * 0.2),
-    fractalNoise(point + vec3(4.3, 1.2, -time * 0.15)),
-    fractalNoise(point.zxy + vec3(7.7, 2.3, time * 0.10))
-  );
-  return fractalNoise(point + 1.8 * warp);
-}
-
-float blobField(vec3 point) {
-  float time = u_time * MORPH_SPEED;
-  float lobes = 0.0;
-  lobes += sin(point.x * 5.2 + time);
-  lobes += sin(point.y * 5.8 - time * 0.8 + 1.3);
-  lobes += sin(point.z * 6.4 + time * 1.2 + 2.7);
-  lobes += sin((point.x + point.z) * 4.4 - time * 0.9 + 4.1);
-  lobes += sin((point.y - point.x) * 4.8 + time * 0.7 + 0.6);
-  return lobes * DEFORM_STRENGTH;
-}
-
-float mapBlob(vec3 point) {
-  float time = u_time * 0.18;
-  point.xy *= rotate(time * 0.7);
-  point.yz *= rotate(time * 0.5);
-  return length(point) - 0.72 - blobField(point);
-}
-
-vec3 normalAt(vec3 point) {
-  vec2 epsilon = vec2(0.0015, 0.0);
-  return normalize(vec3(
-    mapBlob(point + epsilon.xyy) - mapBlob(point - epsilon.xyy),
-    mapBlob(point + epsilon.yxy) - mapBlob(point - epsilon.yxy),
-    mapBlob(point + epsilon.yyx) - mapBlob(point - epsilon.yyx)
-  ));
-}
-
 void main() {
-  vec2 point = (v_uv * 2.0 - 1.0) * VIEW_SCALE;
+  vec2 point = v_uv * 2.0 - 1.0;
   point.x *= u_resolution.x / u_resolution.y;
+  // The fade-out is measured on the canvas; the ribbon itself is drawn zoomed in, the
+  // big feathered glow more than the small orb, so it fills what it is given.
+  float canvasRadius = length(point);
+  point *= mix(0.88, 0.58, u_unbounded);
+  float radius = length(point);
+  vec2 direction = point / max(radius, 0.0001);
+  float angle = atan(direction.y, direction.x);
+  float time = u_time * DRIFT_SPEED;
 
-  vec3 rayOrigin = vec3(0.0, 0.0, 3.0);
-  vec3 rayDirection = normalize(vec3(point, -1.8));
-  float distanceAlongRay = 0.0;
-  float closestDistance = 1e3;
-  vec3 hitPoint = rayOrigin;
-  bool hit = false;
+  // Noise on the circle of directions (seamless at the atan wrap), drifting in time.
+  float bend = valueNoise(vec3(direction * 1.5, time)) - 0.5;
+  float fineBend = valueNoise(vec3(direction * 3.2 + 7.0, time * 1.4)) - 0.5;
+  float swell = valueNoise(vec3(direction * 1.2 + 3.0, time * 0.8));
+  float heat = smoothstep(0.32, 0.7, valueNoise(vec3(direction * 2.1 + 11.0, time * 1.1)));
 
-  for (int index = 0; index < 48; index++) {
-    hitPoint = rayOrigin + rayDirection * distanceAlongRay;
-    float distanceToSurface = mapBlob(hitPoint);
-    closestDistance = min(closestDistance, distanceToSurface);
-    if (distanceToSurface < 0.001) {
-      hit = true;
-      break;
-    }
-    distanceAlongRay += distanceToSurface * 0.40;
-    if (distanceAlongRay > 6.0) break;
-  }
+  // A near-round shell, its outline wobbling slowly (a little ellipse, a little noise).
+  float ringRadius = RING_RADIUS + RING_BEND * (bend * 1.6 + fineBend * 0.5) + 0.03 * sin(2.0 * angle + time * 1.3) + 0.014 * sin(3.0 * angle - time * 0.9);
+  float width = RING_WIDTH * (0.55 + 1.3 * swell);
+  float offset = (radius - ringRadius) / width;
 
-  vec3 emissive = vec3(0.0);
-  if (hit) {
-    vec3 normal = normalAt(hitPoint);
-    vec3 view = -rayDirection;
-    float fresnel = pow(1.0 - max(dot(normal, view), 0.0), 3.0);
-    vec3 liquidPoint = hitPoint + rayDirection * 0.04;
-    float transmission = 1.0;
-    vec3 liquid = vec3(0.0);
+  float body = exp(-offset * offset * 2.2);
+  // The crisp hot rim (2026-10-21, direct feedback: closer to a fiery shell): a thin bright
+  // line on the outline, brightest where the noise heats it.
+  float rimLine = exp(-offset * offset * 22.0) * (0.6 + 0.4 * heat);
+  // The halo's width follows the noise, so it must not reach the middle (a crease there).
+  float halo = 0.34 * exp(-offset * offset * 0.16) * smoothstep(0.12, 0.42, radius);
+  // The hot edge hugs the ring's inner side and only lights where the noise allows.
+  float inner = (radius - (ringRadius - width * 0.6)) / (width * 0.38);
+  float core = exp(-inner * inner) * heat;
 
-    for (int index = 0; index < 5; index++) {
-      float raw = liquidField(liquidPoint);
-      float density = smoothstep(0.20, 0.58, raw);
-      float filament = pow(1.0 - abs(2.0 * raw - 1.0), 3.0);
-      vec3 color = mix(u_colorB, u_colorA,
-        0.5 + 0.5 * sin(raw * 6.0 + u_time * 0.3 + liquidPoint.y * 2.5));
-      vec3 emission = color * density * 0.55
-        + color * filament * 1.4
-        + vec3(1.0) * pow(filament, 3.0) * 0.85;
-      emission += u_colorA * smoothstep(0.5, 0.0, length(liquidPoint)) * 0.3;
-      liquid += transmission * emission * 0.28;
-      transmission *= 0.84;
-      liquidPoint += rayDirection * 0.11;
-      if (length(liquidPoint) > 1.0) break;
-    }
+  // Colour drifts around the ring: each palette colour (copper, slate, champagne) owns a
+  // stretch of it — three cosines a third of a turn apart, squared so one dominates
+  // locally instead of averaging toward white — and the result is pushed a little richer.
+  float phase = angle - time * 1.2 - bend * 3.0;
+  float weightA = pow(0.5 + 0.5 * cos(phase), 2.0);
+  float weightC = pow(0.5 + 0.5 * cos(phase - 2.0944), 2.0) * 0.5;
+  float weightB = pow(0.5 + 0.5 * cos(phase + 2.0944), 2.0);
+  vec3 tint = (u_colorA * weightA + u_colorC * weightC + u_colorB * weightB) / (weightA + weightB + weightC);
+  tint = mix(vec3(dot(tint, vec3(0.299, 0.587, 0.114))), tint, 1.75);
 
-    if (u_unbounded > 0.5) {
-      // Light, not a lit ball: only the liquid's own marbling — no diffuse
-      // shading, rim or white highlights.
-      emissive += mix(u_colorA, u_colorB, 0.5) * 0.75 + liquid * 1.6;
-    } else {
-      vec3 light = normalize(vec3(0.6, 0.85, 0.6));
-      float diffuse = max(dot(normal, light), 0.0);
-      emissive += mix(u_colorA, u_colorB, 0.7 + diffuse * 0.3)
-        * (0.45 + diffuse * 0.45) * (1.0 - fresnel * 0.35);
-      emissive += liquid * (1.0 - fresnel * 0.6) * 1.25;
-      emissive += mix(u_colorB, u_colorA, 0.5 + 0.5 * (normal.x * 0.7 + normal.y * 0.45)) * fresnel * 1.3;
-      vec3 halfVector = normalize(light + view);
-      emissive += vec3(1.0) * pow(max(dot(normal, halfVector), 0.0), 140.0) * 2.0;
-      vec3 fillLight = normalize(vec3(-0.7, 0.25, 0.55));
-      vec3 fillHalf = normalize(fillLight + view);
-      emissive += u_colorB * pow(max(dot(normal, fillHalf), 0.0), 64.0) * 1.2;
-    }
-  } else {
-    float glow = exp(-closestDistance * 5.5);
-    float angle = atan(rayDirection.y, rayDirection.x);
-    vec3 glowColor = mix(u_colorA, u_colorB, 0.5 + 0.5 * sin(angle * 3.0 + u_time * 0.5));
-    emissive += glowColor * glow * 1.6 + u_colorB * pow(glow, 3.0) * 0.8;
-  }
+  // The body (2026-10-21, direct feedback: a whole object, not a hollow ring): inside the
+  // ribbon the same wobbly outline is filled with a soft, deeper-toned glow — the ribbon's
+  // own drifting colour leaning slate toward the middle — so the bright edge reads as the
+  // rim of a solid, luminous shape. A little centre falloff keeps it from going flat.
+  float inside = 1.0 - smoothstep(ringRadius - width * 0.9, ringRadius + width * 0.3, radius);
+  // Wisps drifting through the middle (Cartesian noise: no angle, so no seam), so it
+  // reads as a glowing volume rather than a flat fill.
+  float wisps = 0.55 + 0.85 * valueNoise(vec3(point * 3.1, time * 1.3));
+  // (Fixed radius below: scaling by the bent one would crease the middle along the noise.)
+  // Brightest just inside the rim, easing toward the middle but never dark (2026-10-21,
+  // direct feedback: it read as a ring — it needs more inner fill).
+  float depth = 0.55 + 0.45 * smoothstep(0.0, RING_RADIUS * 1.05, radius);
+  // The ribbon's drifting colour toward the rim; a fixed copper–slate blend toward the
+  // middle, where the angle (and so the drifting colour) is undefined — no pinwheel seam.
+  float rim = smoothstep(RING_RADIUS * 0.45, RING_RADIUS * 1.05, radius);
+  vec3 bodyTint = mix(mix(u_colorA, u_colorC, 0.18), mix(tint, u_colorC, 0.25), rim * rim);
+  bodyTint = mix(vec3(dot(bodyTint, vec3(0.299, 0.587, 0.114))), bodyTint, 1.9);
 
-  float alpha = clamp(max(emissive.r, max(emissive.g, emissive.b)), 0.0, 1.0);
-  // Unbounded (2026-10-10): no hard sphere edge — the whole picture, glow included,
-  // dissolves radially, so the morphing liquid reads as a soft circle of light.
-  float radius = length(v_uv * 2.0 - 1.0);
-  alpha *= mix(1.0, 1.0 - smoothstep(0.12, 0.96, radius), u_unbounded);
-  vec3 color = emissive / (1.0 + emissive);
-  // Unbounded keeps its hue where it is brightest: the curve above bleaches copper toward grey.
-  if (u_unbounded > 0.5) color = emissive / max(1.0, max(emissive.r, max(emissive.g, emissive.b)));
-  fragColor = vec4(color, alpha);
+  // The wide outer glow leans slate, so a warm ribbon sits in a cool atmosphere.
+  // Hot, not white: the rim is the warm palette colour pushed bright, so it stays saturated.
+  vec3 hot = mix(u_colorA, u_colorB, 0.5) * 1.5;
+  vec3 emissive = tint * body * 0.9 + mix(tint, u_colorC, 0.22) * halo * 1.3
+    + hot * (core * 0.5 + rimLine * 1.1) + bodyTint * inside * depth * wisps * 1.0;
+
+  float peak = max(emissive.r, max(emissive.g, emissive.b));
+  // Hue-preserving tone map, and everything dissolves radially so no edge ever shows. On a
+  // light ground the colour keeps its full brightness and only the coverage fades: dimming
+  // it too reads as a dark rim on paper (2026-10-23, direct feedback: orange, no dark shadow).
+  vec3 color = emissive / mix(max(1.0, peak), max(peak, 0.0001), u_lightGround);
+  float alpha = clamp(peak, 0.0, 1.0) * (1.0 - smoothstep(mix(0.7, 0.8, u_unbounded), 1.0, canvasRadius));
+  // Premultiplied, to match the context (liquidOrbRenderer.ts).
+  fragColor = vec4(color * alpha, alpha);
 }`;

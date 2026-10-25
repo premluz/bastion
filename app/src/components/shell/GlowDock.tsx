@@ -1,5 +1,11 @@
 import { useEffect, useLayoutEffect, type ReactNode, type Ref } from 'react';
-import { GlowLight } from './GlowLight';
+import { Icon } from '@astryxdesign/core/Icon';
+import { IconButton } from '@astryxdesign/core/IconButton';
+import { ClockIcon } from '@heroicons/react/24/outline';
+import { notifyPrototypeUnavailable } from './PrototypeNotice';
+import { GlowLight, type GlowOrbStyle } from './GlowLight';
+import { config } from '../../config';
+import { AssistantLanding } from './AssistantLanding';
 import { MobileFrameDock } from './MobileFrameDock';
 import type { useMobileFrame } from './useMobileFrame';
 import { useSwipeUp } from './useSwipeUp';
@@ -18,6 +24,14 @@ export interface GlowDockProps {
   thread: ReactNode;
   isWorking: boolean;
   threadRef?: Ref<HTMLDivElement>;
+  /** A suggestion on the landing screen: shown as `text`, run as `prompt`. */
+  onSuggestion: (text: string, prompt: string) => void;
+  /** The light's look: the free plasma, or the plasma held in a glass circle. */
+  orb?: GlowOrbStyle;
+  /** The navigation's + slot, taken by something else (the attention home's orb and status). */
+  trailing?: ReactNode;
+  /** The agent's status line, floating above the trailing slot (the attention home's work queue). */
+  status?: ReactNode;
 }
 
 // The glow home's dock (2026-10-10, direct feedback with mocks): the navigation
@@ -25,7 +39,7 @@ export interface GlowDockProps {
 // Swiping up — or the pill's assistant item — morphs the pill into the composer
 // in place (and sliding the composer back down closes it again): the page stays as it is until the first question, then gives way to
 // the thread (AgentHomePage recedes) while the composer stays at the bottom.
-export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, threadRef }: GlowDockProps) {
+export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, threadRef, onSuggestion, orb = 'plasma', trailing, status }: GlowDockProps) {
   const isOpen = state.mode === 'composer';
   const swipe = useSwipeUp<HTMLDivElement>(() => {
     if (state.mode === 'idle') onOpen();
@@ -50,13 +64,23 @@ export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, 
     {/* Box-less (display: contents): pointer events from the pill still bubble here,
         and the glow's custom properties still inherit, but the pill dock's own scrim
         keeps sizing itself to the whole screen. */}
-    <div ref={swipe.ref} className={styles.swipe} data-composer-open={isOpen} {...(isOpen ? {} : swipe.handlers)}>
+    <div ref={swipe.ref} className={styles.swipe} data-composer-open={isOpen} data-orb-rise={config.landing.orbRises ? '' : undefined}
+      data-landing={config.landing.orbRises && isOpen && !isWorking ? '' : undefined} {...(isOpen ? {} : swipe.handlers)}>
       {isOpen && <div className={styles.shade} aria-hidden="true" />}
-      <GlowLight isOpen={isOpen} />
-      <MobileFrameDock state={dockState} variant="pill" destinationSet="glow" />
+      <GlowLight isOpen={isOpen} orb={orb} />
+      <AssistantLanding isOpen={isOpen} isAway={isWorking} onSuggestion={onSuggestion} />
+      {/* Beside the dock, not inside it (2026-10-23): hanging out of the dock's box, its glass
+          could not blur the page behind it. */}
+      {status && !isOpen && <div className={styles.status}>{status}</div>}
+      <MobileFrameDock state={dockState} variant="pill" destinationSet="glow" {...(trailing ? { trailing } : {})} />
     </div>
     {isOpen && !isWorking && <button type="button" className={styles.dismiss} aria-label="Close assistant" onClick={onClose} />}
     {isOpen && <div className={styles.sheet}>
+      {/* The chat view's own top bar: close on the left, chat history on the right. */}
+      <div className={styles.chatBar}>
+        <IconButton label="Close assistant" tooltip="Close assistant" icon={<Icon icon="close" />} variant="ghost" onClick={onClose} />
+        <IconButton label="Chat history" icon={<Icon icon={ClockIcon} />} variant="ghost" onClick={notifyPrototypeUnavailable} />
+      </div>
       {isWorking && <div ref={threadRef} className={styles.thread} role="log" aria-label="Assistant transcript" tabIndex={0}>{thread}</div>}
       <div className={styles.composer} {...closeSwipe.handlers}>{composer}</div>
     </div>}

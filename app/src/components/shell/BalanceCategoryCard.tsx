@@ -4,6 +4,7 @@ import { Text } from '@astryxdesign/core/Text';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import { TrendDelta } from '../nodes/TrendDelta';
 import { EarningBadge } from './EarningBadge';
+import glowStyles from '../../theme/glow.module.css';
 import styles from './BalanceCategoryCard.module.css';
 
 interface BalanceCategoryCardProps {
@@ -14,6 +15,8 @@ interface BalanceCategoryCardProps {
   // When set, an "Earning N%" pill replaces the change row (2026-10-06,
   // direct feedback, Money tile on Home).
   earningRate?: number;
+  // A subtle bottom glow in the change's own colour (2026-10-23, direct feedback: Investments tile on Home).
+  glow?: boolean;
   onClick?: () => void;
 }
 
@@ -28,10 +31,10 @@ interface BalanceCategoryCardProps {
 // className/padding/onClick actually apply as a real interactive
 // surface (confirmed earlier this session Card spreads ...props,
 // unlike RadioList).
-export function BalanceCategoryCard({ label, value, changeAbs, changePercent, earningRate, onClick }: BalanceCategoryCardProps) {
+export function BalanceCategoryCard({ label, value, changeAbs, changePercent, earningRate, glow = false, onClick }: BalanceCategoryCardProps) {
   const isUp = changeAbs >= 0;
   return (
-    <Card className={`${styles.root}`} padding={6} {...(onClick ? { onClick } : {})}>
+    <Card className={glow ? `${styles.root} ${glowStyles.root} ${glowStyles.bottom} ${glowStyles.clipped} ${isUp ? styles.glowUp : styles.glowDown}` : `${styles.root}`} padding={6} {...(onClick ? { onClick } : {})}>
       <div className={styles.labelRow}>
         {/* supporting, not label (2026-09-13 follow-up, direct feedback:
             "crypto and money labels in balances smaller") — one step down
@@ -41,13 +44,13 @@ export function BalanceCategoryCard({ label, value, changeAbs, changePercent, ea
         </Text>
         <Icon icon={ChevronRightIcon} size="sm" color="secondary" />
       </div>
-      {/* large + semibold (2026-09-13, second follow-up: "balance cards
+      {/* large, regular weight since 2026-10-23 (was semibold; direct feedback: lighter) (2026-09-13, second follow-up: "balance cards
           balances slight larger, 1 scale up") — one step up from body on
           Astryx's own type ramp (body < large < display-3), landing
           between the earlier display-3 (too close to the page's own Total
           balance hero) and body (read too small once compared directly
           against the hero card next to it). */}
-      <Text type="large" weight="semibold" hasTabularNumbers className={styles.value}>
+      <Text type="large" weight="normal" hasTabularNumbers className={styles.value}>
         ${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
       </Text>
       {earningRate !== undefined ? <EarningBadge rate={earningRate} /> : <div className={styles.changeRow}>

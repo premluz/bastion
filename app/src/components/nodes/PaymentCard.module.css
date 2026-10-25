@@ -1,5 +1,5 @@
 .root { display: flex; flex-direction: column; gap: var(--space-16); min-width: 0; color: var(--ink-primary); }
-.card:global(.astryx-card) { overflow: hidden; border: var(--approval-edge-width) solid var(--approval-edge); outline: none; box-shadow: none; border-radius: var(--approval-radius); background: var(--send-pane-wash); }
+.card:global(.astryx-card) { overflow: hidden; border: var(--approval-edge-width) solid var(--approval-edge); outline: none; box-shadow: var(--card-light); border-radius: var(--approval-radius); background: var(--send-pane-wash); }
 .root[data-payment-card='sent'] .card:global(.astryx-card) { background: var(--send-pane-wash-done); }
 .header { padding: var(--space-16); }
 /* No clipping here: the success mark's glow must fall off into the card,

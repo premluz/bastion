@@ -2,6 +2,7 @@ import { Text } from '@astryxdesign/core/Text';
 import { Item } from '@astryxdesign/core/Item';
 import { Switch } from '@astryxdesign/core/Switch';
 import { useShowTouchesStore } from '../../engine/stores/showTouchesStore';
+import { useAppearanceStore } from '../../engine/stores/appearanceStore';
 import type { HistoryEntry } from '../../contracts/props/history-item';
 import type { AccountScreen, PreviewAccount } from './accountTypes';
 import { formatHistoryAmount } from './accountHistory';
@@ -20,11 +21,14 @@ export function AccountInfoPage({ screen, account, entry, update }: {
   update: (patch: Partial<PreviewAccount>) => void;
 }) {
   const showTouches = useShowTouchesStore();
+  const appearance = useAppearanceStore();
   return <div className={styles.body}>
     {screen === 'addresses' && <><Text color="secondary">Demo addresses for {account.name}</Text>
       <Item className={styles.row} label="Ethereum" description="0x7c0e…afd3" />
       <Item className={styles.row} label="Solana" description="7YkP…c9mQ" /></>}
     {screen === 'settings' && <>
+      <Switch label="Dark mode" description="Turn off for the light theme."
+        value={appearance.appearance === 'dark'} onChange={(dark) => appearance.setAppearance(dark ? 'dark' : 'light')} />
       <Switch label="Account notifications" value={account.notifications}
         onChange={(notifications) => update({ notifications })} />
       <Switch label="Show touches" description="Draw a dot under each finger, for demos and recordings."

@@ -13,30 +13,37 @@
    banner photos stays dark ink: checked on the glow hero and the framed promo,
    the light glass and the photos' pale concrete keep it legible. */
 [data-theme='bastion-light'] {
+  /* 2026-10-23: the page is near-white (direct feedback), cards pure white with their rims.
+     2026-10-21 palette, lit the other way (direct feedback: light mode too): Warm white
+     F2EEE8 is the page and Graphite 101113 the ink; Signal orange FF8A29 stays the accent
+     but deepened to L .6 (≈3.6:1 on the page — buttons and larger text; the pure orange is 2:1);
+     the orb's light is Glow FFC08A, deepened so it shows on paper. */
   color-scheme: light;
 
-  --surface-0: oklch(.972 .005 80);
-  --surface-1: oklch(.99 .003 80);
-  --surface-2: oklch(.952 .006 78);
-  --surface-3: oklch(.925 .007 76);
-  --surface-selected: oklch(.885 .009 74);
-  --card-fill: oklch(.995 .002 80 / .62);
+  --surface-0: oklch(.982 .004 80);
+  --surface-1: oklch(.992 .003 80);
+  /* On paper, raised (chips, coin circles, rows) is whiter than the page, not darker. */
+  --surface-2: oklch(.996 .002 80);
+  --surface-3: oklch(.95 .006 78);
+  --surface-selected: oklch(.91 .008 76);
+  --card-fill: oklch(.985 .004 78 / .62);
   --hairline-width: .5px;
-  --ink-primary: oklch(.24 .012 65);
-  --ink-secondary: oklch(.44 .014 65);
-  --ink-muted: oklch(.6 .012 68);
+  /* Softer than graphite (2026-10-23, direct feedback: primary text too strong). */
+  --ink-primary: oklch(.3 .006 268);
+  --ink-secondary: oklch(.4 .006 268);
+  --ink-muted: oklch(.56 .006 268);
 
   /* Copper deepened for contrast on paper; presence is bronze so headings in
      the agent's voice still read; the orb's liquid keeps a warm champagne body
      with enough chroma to show against a light page. */
-  --accent-signal: oklch(.6 .135 52);
-  --orb-liquid-blue: oklch(.72 .075 62);
-  --orb-liquid-ice: oklch(.84 .05 70);
-  --presence: oklch(.5 .07 62);
+  --accent-signal: oklch(.6 .17 54);
+  --orb-liquid-blue: oklch(.7 .15 55);
+  --orb-liquid-ice: oklch(.8 .11 61.5);
+  --presence: oklch(.42 .06 58);
   --orb-luminance-idle: .72;
   --orb-luminance-listening: 1.08;
   --orb-luminance-thinking: .94;
-  --orb-seam: oklch(.6 .135 52 / .55);
+  --orb-seam: oklch(.6 .17 54 / .55);
   --halo-height: calc(var(--space-64) * 6);
   --accent-alert: oklch(.55 .16 30);
   --accent-warn: oklch(.62 .13 68);
@@ -55,29 +62,52 @@
   --viz-4: oklch(.54 .11 285);
   --viz-5: oklch(.56 .11 25);
   --viz-6: oklch(.56 .1 115);
-  --edge: oklch(.3 .012 70 / .12);
-  --edge-highlight: oklch(.3 .012 70 / .2);
-  --surface-1-solid: oklch(.99 .003 80);
-  --pane-surface: oklch(.99 .003 80 / .92);
+  --edge: oklch(.177 .004 264.5 / .07);
+  --edge-highlight: oklch(.177 .004 264.5 / .2);
+  --surface-1-solid: oklch(.992 .003 80);
+  --pane-surface: oklch(.992 .003 80 / .92);
   --glow: 0 0 12px oklch(from var(--presence) l c h / .14);
-  --scrim: oklch(.25 .012 65 / .32);
+  --scrim: oklch(.177 .004 264.5 / .16);
 
-  --glass-fill: oklch(.995 .002 80 / .8);
-  --glass-fill-clear: oklch(.995 .002 80 / .66);
+  --glass-fill: oklch(1 0 0 / .82);
+  /* Same light as the raised cards (Perps, balance tiles): the nav pill, + and header glass (2026-10-21). */
+  --glass-fill-clear: oklch(1 0 0 / .78);
   --glass-sheen: none;
-  --glass-edge: linear-gradient(oklch(.3 .012 70 / .16), oklch(.3 .012 70 / .1));
-  --card-rim: oklch(.3 .012 70 / .16) oklch(.3 .012 70 / .12) oklch(.3 .012 70 / .1);
-  --glass-edge-accent: linear-gradient(to bottom, oklch(.6 .135 52 / .45), oklch(.6 .135 52 / .22) 48%, oklch(.6 .135 52 / .08));
-  --glass-shadow: none;
+  --glass-edge: linear-gradient(transparent, transparent);
+  /* Subtle rims on paper (2026-10-23, direct feedback): about half the earlier alpha. */
+  --card-rim: transparent;
+  --glass-edge-accent: linear-gradient(to bottom, oklch(.6 .17 54 / .45), oklch(.6 .17 54 / .22) 48%, oklch(.6 .17 54 / .08));
+  /* Inner light instead of borders (2026-10-23, direct feedback with a reference): controls get a
+     bright 1px top line, darker 1px sides, a faint bottom reflection and a soft inner glow; cards
+     a top highlight and a broad soft glow under their top edge. No visible stroke. */
+  --glass-shadow: inset -1px 0 1px oklch(.177 .004 264.5 / .07), inset 1px 0 1px oklch(.177 .004 264.5 / .07), inset 0 -1px 1px oklch(.177 .004 264.5 / .06), inset 0 1px 1px oklch(1 0 0 / .9), inset 0 -4px 4px oklch(.177 .004 264.5 / .02), inset 0 4px 4px oklch(1 0 0 / .5);
+  --card-light: inset 0 0 0 .5px oklch(.177 .004 264.5 / .05), inset 0 -1px 1px oklch(.177 .004 264.5 / .05), inset 0 1px 1px oklch(1 0 0 / 1), inset 0 -4px 4px oklch(.177 .004 264.5 / .02), inset 0 28px 40px oklch(1 0 0 / .55);
+  /* The hero photo under the balance: dimmed in dark themes; light leaves it as is (the photo is already pale, 2026-10-23, direct feedback). */
+  --hero-image-wash: none;
+  /* A gain's glow, as vivid as the accent's (2026-10-23, direct feedback): --delta-up is a text colour, too dim to light. */
+  --gain-glow: oklch(.78 .2 150);
+  /* The orb's third colour: warm in light (2026-10-23, direct feedback: the slate read as a dark
+     shadow on paper — light gets a soft orange glow instead). */
+  --orb-color-third: oklch(.88 .08 68);
+  /* The contained orb's glass rim. */
+  --orb-rim: oklch(1 0 0 / .95);
+  /* The orb is painted over a light ground (1) or screened over a dark one (0). */
+  --orb-light-ground: 1;
+  /* Primary actions (2026-10-23, direct feedback with a mock): a soft apricot fill with dark ink,
+     not the saturated signal with white — calm, the accent as warmth rather than alarm. */
+  --action-fill: linear-gradient(oklch(.88 .065 58), oklch(.84 .085 52));
+  --action-fill-hover: linear-gradient(oklch(.85 .075 56), oklch(.81 .095 50));
+  --action-ink: var(--ink-primary);
+  --approval-edge: transparent;
   --halo-fill:
-    radial-gradient(130% 85% at 50% 100%, oklch(.72 .075 62 / .2), oklch(.72 .075 62 / .1) 35%, oklch(.72 .075 62 / .04) 65%, transparent 100%),
-    linear-gradient(to top, oklch(.72 .075 62 / .1), oklch(.72 .075 62 / .03) 40%, transparent 65%);
+    radial-gradient(130% 85% at 50% 100%, oklch(.8 .11 61.5 / .2), oklch(.8 .11 61.5 / .1) 35%, oklch(.8 .11 61.5 / .04) 65%, transparent 100%),
+    linear-gradient(to top, oklch(.7 .15 55 / .1), oklch(.7 .15 55 / .03) 40%, transparent 65%);
   --shell-ambient:
-    radial-gradient(72% 84% at 100% 0%, oklch(.8 .07 55 / .14), transparent 72%),
-    radial-gradient(55% 68% at 0% 0%, oklch(.85 .03 70 / .1), transparent 72%);
+    radial-gradient(72% 84% at 100% 0%, oklch(.82 .1 58 / .14), transparent 72%),
+    radial-gradient(55% 68% at 0% 0%, oklch(.88 .01 268 / .1), transparent 72%);
   --shading-light: oklch(1 0 0 / .4);
-  --shading-dark: oklch(.2 .01 65 / .06);
-  --shadow-low: 0px 1px 1px oklch(.2 .01 65 / .06), 0px 1px 4px oklch(.2 .01 65 / .06);
+  --shading-dark: oklch(.177 .004 264.5 / .06);
+  --shadow-low: 0px 1px 1px oklch(.177 .004 264.5 / .06), 0px 1px 4px oklch(.177 .004 264.5 / .06);
   --surface-blur: var(--blur-64);
   --surface-material: none;
   --spec-alpha: 0;
@@ -86,6 +116,11 @@
   --canvas-backdrop: linear-gradient(155deg, oklch(1 0 0 / .5), transparent 38%);
   /* Light on paper must not screen: it would wash out to nothing. */
   --glow-blend: normal;
+  /* The question card's option rows (ApprovalCard); lighter than the pane on paper. */
+  --approval-option-fill: oklch(1 0 0 / .8);
+  /* Raised cards (Perps, balance tiles, transactions) on paper: whiter than the page and
+     mostly opaque, or they vanish into it (2026-10-21, direct feedback). */
+  --list-card-fill-raised: oklch(1 0 0 / .85);
 
   --motion-enter-duration: var(--duration-200);
   --motion-enter-ease: var(--ease-standard);
@@ -119,5 +154,5 @@
   --color-warning: var(--accent-warn);
   --color-success: var(--accent-ok);
   --color-border: var(--edge);
-  --color-shadow: oklch(.2 .01 65 / .18);
+  --color-shadow: oklch(.177 .004 264.5 / .18);
 }

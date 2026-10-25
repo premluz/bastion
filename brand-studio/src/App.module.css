@@ -1,0 +1,6 @@
+.shell {
+  position: fixed;
+  inset: 0;
+  background: var(--ground);
+  transition: background-color var(--appearance-fade) var(--appearance-ease);
+}

@@ -128,6 +128,16 @@
   --card-rim: transparent;
   --glass-edge-accent: none;
   --glass-shadow: none;
+  --card-light: none;
+  --hero-image-wash: brightness(.6);
+  --gain-glow: var(--delta-up);
+  --orb-color-third: oklch(.68 .07 245);
+  --orb-rim: color-mix(in oklab, var(--ink-primary) 55%, transparent);
+  --orb-light-ground: 0;
+  --action-fill: linear-gradient(var(--accent-signal), var(--accent-signal));
+  --action-fill-hover: linear-gradient(var(--accent-signal), var(--accent-signal));
+  --action-ink: var(--color-on-accent);
+  --approval-edge: color-mix(in srgb, var(--ink-muted) 25%, transparent);
   --halo-fill: radial-gradient(ellipse at bottom, var(--accent-signal), transparent 70%);
   --shell-ambient: none;
 
@@ -136,6 +146,8 @@
      See theme.default.css for why `none` rather than `blur(0px)`. */
   --canvas-backdrop: none;
   --glow-blend: screen;
+  --approval-option-fill: var(--surface-2);
+  --list-card-fill-raised: color-mix(in oklab, var(--surface-2) 45%, transparent);
   --surface-material: none;
   --spec-alpha: 0;
   --spec-radius: var(--spec-radius-lg);

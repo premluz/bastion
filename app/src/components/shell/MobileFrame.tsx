@@ -12,6 +12,11 @@ import { AgentHomePage } from './AgentHomePage';
 import { AgentDock } from './AgentDock';
 import { GlowDock } from './GlowDock';
 import { useGlowHome } from './useGlowHome';
+import { useAttentionQueue } from './useAttentionQueue';
+import { AttentionSection } from './AttentionSection';
+import { ResolutionSheet } from './ResolutionSheet';
+import { OrbTrigger } from './OrbTrigger';
+import { AgentWorkQueue } from './AgentWorkQueue';
 import { useAgentHome } from './useAgentHome';
 import { MoneyPage } from './MoneyPage';
 import { CardDetailPage } from './CardDetailPage';
@@ -29,6 +34,8 @@ import { useSpeechRecognition } from './useSpeechRecognition';
 import { useVoiceNarration } from './useVoiceNarration';
 import { useScenarioThread } from './useScenarioThread';
 import { useAgentAgenda } from './useAgentAgenda';
+import { config } from '../../config';
+import '../../theme/page-recede.css';
 import { useShellBack } from './useShellBack';
 import { useAssistantSounds } from './useAssistantSounds';
 import { PrototypeNoticeProvider, PROTOTYPE_NOTICE, notifyPrototypeUnavailable } from './PrototypeNotice';
@@ -53,10 +60,13 @@ export function MobileFrame(props: MobileFrameProps) {
   const agent = useAgentHome(state, speech, voicePlayback);
   const isAgentHome = props.homeVariant === 'agent';
   // The glow home shares the agent home's page; only its dock and how it opens the assistant differ.
-  const isGlowHome = props.homeVariant === 'glow';
+  // The attention home is the glow home with the attention queue in place of the suggestions.
+  const isAttentionHome = props.homeVariant === 'attention';
+  const isGlowHome = props.homeVariant === 'glow' || isAttentionHome;
+  const attention = useAttentionQueue();
   const hasAgentPage = isAgentHome || isGlowHome;
   const glow = useGlowHome(state);
-  useAgentAgenda(state, thread.isFinished, isAgentHome && agent.isAwake, agent.threadStart);
+  useAgentAgenda(state, thread.isFinished, config.agent.autoHandover && isAgentHome && agent.isAwake, agent.threadStart);
   useShellBack(state, agent.sleep, isAgentHome);
   const startConversationVoice = () => {
     state.openConversation();
@@ -86,6 +96,9 @@ export function MobileFrame(props: MobileFrameProps) {
   const isHome = state.activeTab === 'home';
   // Agent home (2026-10-09): voice mode runs in place inside the shell, so
   // neither assistant overlay opens and the page stays live under the dock.
+  // Sliding the assistant up from any other page makes that page's contents leave
+  // bottom-up, as the home's do (theme/page-recede.css, 2026-10-14, direct feedback).
+  const pageRecede = isGlowHome ? { 'data-glow-page': '', ...(glow.isOpen ? { 'data-receded': '', inert: true } : {}) } : {};
   const chromeInert = !hasAgentPage && state.mode !== 'idle';
   const selectedCardData = state.selectedCard && WALLET_CARDS.find((candidate) => candidate.id === state.selectedCard!.id);
   // Pinned to the latest content (2026-09-14, direct feedback: a settled
@@ -98,7 +111,7 @@ export function MobileFrame(props: MobileFrameProps) {
   return (
     <PrototypeNoticeProvider>
     <div className={styles.stage}>
-      <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode} data-home={props.homeVariant ?? 'assets'}>
+      <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode} data-home={isAttentionHome ? 'glow' : props.homeVariant ?? 'assets'}>
         <AccountExperience initialView={props.initialAccountView ?? 'closed'}>{(openAccounts) => (
         <div className={styles.chrome} inert={chromeInert} aria-hidden={chromeInert}>
           <header className={styles.header} aria-label="Asset search">
@@ -120,29 +133,34 @@ export function MobileFrame(props: MobileFrameProps) {
           {isHome ? (
             <main key="home" className={styles.page} aria-label="Home" tabIndex={0}>
               {hasAgentPage ? <AgentHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments}
-                onSuggestion={isGlowHome ? glow.ask : agent.ask} isReceding={isAgentHome ? agent.isWorking : glow.isWorking} heroBleed={isGlowHome} />
+                onSuggestion={isGlowHome ? glow.ask : agent.ask} isReceding={isAgentHome ? agent.isWorking : glow.isOpen} heroBleed={isGlowHome}
+                {...(isAttentionHome ? { attention: <AttentionSection queue={attention} onSuggestion={glow.ask} /> } : {})} />
                 : <AssetsHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments} />}
             </main>
           ) : state.activeTab === 'assets' ? (
-            <main key="assets" className={styles.page} aria-label="Wallet" tabIndex={0}>
+            <main key="assets" className={styles.page} aria-label="Wallet" tabIndex={0} {...pageRecede}>
               <MoneyPage tab={state.walletTab} onTabChange={state.setWalletTab} onCardOpen={state.openCard} showTabSwitch={!isGlowHome} />
             </main>
           ) : state.activeTab === 'markets' ? (
-            <main key="markets" className={styles.page} aria-label="Explore" tabIndex={0} onClick={explore.onClick} data-scene-page>
+            <main key="markets" className={styles.page} aria-label="Explore" tabIndex={0} onClick={explore.onClick} data-scene-page {...pageRecede}>
               <SceneRenderer scene={explore.scene} />
             </main>
           ) : (
             <main className={styles.content} aria-label="Preview transcript" tabIndex={0}>{transcript}</main>
           )}
           <div className={styles.bottomFade} aria-hidden="true" />
-          {isGlowHome ? <GlowDock state={state} onOpen={glow.open} onClose={glow.close} isWorking={glow.isWorking} threadRef={composerScrollRef}
+          {isGlowHome ? <GlowDock state={state} onOpen={glow.open} onClose={glow.close} isWorking={glow.isWorking} threadRef={composerScrollRef} onSuggestion={glow.ask} orb={isAttentionHome ? 'none' : 'plasma'}
+            {...(isAttentionHome ? { trailing: <OrbTrigger onOpen={glow.open} />, status: <AgentWorkQueue tasks={attention.tasks} variant="status" /> } : {})}
             thread={transcript.slice(glow.threadStart)} composer={<MobileFrameComposer state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />} />
             : isAgentHome ? <AgentDock isAwake={agent.isAwake} activeTab={state.activeTab} onWake={agent.wake} onSleep={agent.sleep}
               onNavigate={state.selectTab} thread={transcript.slice(agent.threadStart)} isWorking={agent.isWorking} caption={agent.caption}
               activity={agent.activity} speaking={voicePlayback.isSpeaking} threadRef={conversationScrollRef} orbRef={state.assistantRef} />
               : <MobileFrameDock state={state} variant={props.navigationVariant ?? 'pill'} />}
           {selectedCardData && <CardDetailPage card={selectedCardData} sourceRect={state.selectedCard!.sourceRect} onClose={state.closeCard} />}
-          </div> )}</AccountExperience></div>
+          </div> )}</AccountExperience>
+        {/* Over the whole phone, glow dock included: the chrome stops short of the bottom edge. */}
+        {attention.openItem && <ResolutionSheet key={attention.openItem.id} item={attention.openItem} onClose={attention.close} onConfirm={attention.confirm} />}
+      </div>
       <ComposerModeOverlay isOpen={state.mode === 'composer' && !isGlowHome} onClose={state.closeComposer} scrollRef={composerScrollRef} isReceded={sendingOpen}
         composer={isGlowHome ? null : <MobileFrameComposer state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />}>
         {isGlowHome ? null : transcript}

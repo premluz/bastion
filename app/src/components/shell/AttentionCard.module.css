@@ -1,0 +1,37 @@
+/* The balance tiles' raised glass card (shell.css --list-card-*, theme --card-light), so the
+   queue reads as the same family of surfaces as the hero above it. */
+.root {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-20);
+  min-width: 0;
+  min-height: var(--attention-card-height);
+  border-radius: var(--list-card-radius);
+  border: var(--shell-edge-width) solid;
+  border-color: var(--card-rim);
+  background: var(--list-card-fill-raised);
+  backdrop-filter: var(--list-card-backdrop);
+  box-shadow: var(--card-light);
+  cursor: pointer;
+}
+
+/* The kind's colour on its mark: due is the alert, a request the signal, a review the gain. */
+.root { --attention-tone: var(--accent-signal); }
+.root[data-attention-kind='due'] { --attention-tone: var(--accent-alert); }
+.root[data-attention-kind='review'] { --attention-tone: var(--delta-up); }
+
+.mark {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--attention-mark-size);
+  height: var(--attention-mark-size);
+  border-radius: var(--radius-full);
+  color: var(--attention-tone);
+  background: color-mix(in oklab, var(--attention-tone) 14%, transparent);
+}
+
+.title {
+  text-wrap: balance;
+}

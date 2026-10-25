@@ -42,6 +42,47 @@
      distance (the swipe's 72px) and fades part way. */
   --glow-close-travel: calc(var(--space-64) + var(--space-8));
   --glow-close-fade: .5;
+  /* The assistant's landing screen (2026-10-14, direct feedback): sliding up (or the +
+     pill) enters a screen of its own — the page's contents leave bottom-up, the orb
+     rises to the middle, the welcome prints, then the suggestions arrive — and a first
+     question sends the orb back down behind the composer. Delays chain off the recede
+     (--agent-recede-*): the orb once most of the page has gone, the welcome once the orb
+     is up, the list once the welcome has printed. */
+  /* Where the one orb's centre sits on the landing screen (from the top of the screen),
+     and its scale there (1 = its square canvas, --glow-orb-size) once it has rounded out. */
+  --glow-landing-orb-y: 32cqh;
+  --glow-landing-orb-scale: 1;
+  --glow-landing-bottom: calc(var(--space-64) * 2 + var(--space-16));
+  /* Much earlier, on the recede's own cadence (2026-10-23, direct feedback): the welcome two
+     beats in, the suggestions one beat after it and one beat apart — arriving while the page
+     is still leaving, the same stagger run the other way. */
+  --glow-landing-text-delay: calc(var(--agent-recede-stagger) * 2);
+  --glow-landing-list-delay: calc(var(--glow-landing-text-delay) + var(--agent-recede-stagger));
+  --glow-landing-list-stagger: var(--agent-recede-stagger);
+  /* The orb waits for the page to clear (the recede and its stagger, 2026-10-14, direct
+     feedback: it moved up too early and too fast) and then rises slowly; during the finger's
+     drag it only lifts a little (--glow-landing-drag). */
+  --glow-landing-orb-delay: calc(var(--agent-recede-duration) + var(--agent-recede-stagger) * 4);
+  --glow-landing-orb-duration: calc(var(--duration-480) * 5);
+  --glow-landing-drag: .3;
+  /* The contained orb (2026-10-23, direct feedback with a reference): the plasma inside a glass
+     circle that rises from the bottom edge, a chevron hinting the swipe up. */
+  /* It rests mostly behind the navigation pill, its top arc and chevron just above it. */
+  --glow-contained-size: calc(var(--space-64) * 2 - var(--space-8));
+  --glow-contained-dip: calc(var(--space-12) * -1);
+  --contained-orb-blur: var(--blur-16);
+  /* How far the light reaches past the circle's sides (negative: beyond them), where it
+     sits (from the circle's top) and how strong it is. */
+  --contained-orb-fill: var(--glass-fill-clear);
+  --contained-orb-backdrop: var(--list-card-backdrop);
+  --contained-orb-inset: -20%;
+  --contained-orb-top: 35%;
+  --contained-orb-opacity: var(--opacity-70);
+  --glow-contained-rim: inset 0 0 0 var(--space-2) var(--orb-rim), 0 0 var(--space-24) color-mix(in oklab, var(--accent-signal) 30%, transparent);
+  /* The agent's status line, floating just above the navigation's trailing orb: right-aligned
+     to it, a gap above it, wide enough for a task's label but never the screen. */
+  --glow-status-bottom: calc(max(var(--pill-inset), env(safe-area-inset-bottom)) + var(--pill-toggle-size) + var(--space-8));
+  --glow-status-max-width: calc(var(--space-64) * 4);
   --glow-reveal-duration: var(--duration-480);
   --glow-reveal-ease: var(--ease-spring-soft);
 }

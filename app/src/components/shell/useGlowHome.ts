@@ -13,8 +13,10 @@ export function useGlowHome(state: ReturnType<typeof useMobileFrame>) {
     setThreadStart(state.messages.length);
     state.toggleComposer();
   };
-  // A suggestion is the user's first question: it opens the composer on it.
+  // A suggestion is the user's first question: from the home it opens the composer on
+  // it; from the landing screen (composer already open) it is simply asked.
   const ask = (text: string, prompt: string) => {
+    if (state.mode === 'composer') { state.submit(text, undefined, prompt); return; }
     if (state.mode !== 'idle') return;
     setThreadStart(state.messages.length);
     state.submit(text, undefined, prompt);

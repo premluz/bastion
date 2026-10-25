@@ -11,7 +11,7 @@ const config: CapacitorConfig = {
     // The page draws under the status bar and home indicator and pads itself
     // with env(safe-area-inset-*), exactly as the installed web app does.
     contentInset: 'never',
-    backgroundColor: '#0B0B0A',
+    backgroundColor: '#101113',
   },
 };
 

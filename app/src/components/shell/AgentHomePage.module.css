@@ -6,35 +6,14 @@
 /* The assistant's own voice: champagne presence, not the action accent. */
 .title:not(#\#):not(#\#):not(#\#) { margin: 0; color: var(--presence); }
 
-/* The shared two-line list (shell.css --list-row-*, 2026-10-12): no pane behind
-   it; every row is rounded, so a hovered row is its own rounded shape. */
-.pane {
-  display: flex;
-  flex-direction: column;
-}
-.pane .item:not(#\#):not(#\#):not(#\#) {
-  border-radius: var(--list-row-radius);
-  padding: var(--list-row-padding-block) var(--list-row-padding-inline);
-  gap: var(--space-16);
-}
-
-.icon {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: var(--agent-suggestion-icon-size);
-  height: var(--agent-suggestion-icon-size);
-  border-radius: var(--radius-full);
-  border: var(--list-accessory-ring);
-  background: var(--list-accessory-fill);
-  color: var(--list-accessory-ink);
-}
+/* The suggestions' rows are SuggestionList's; `.pane` is the hook the recede below animates. */
+.pane { display: flex; flex-direction: column; }
 
 /* Receding (2026-10-09, direct feedback): when the assistant takes a request,
    the contents leave from the bottom up, one stagger apart; waking with
    nothing said leaves the page as it is. Coming back runs top-down. Index 0
    is the lowest element on the page. */
-.root .pane > *, .title, .top > :nth-child(2), .top > :first-child > * {
+.root .pane > *, .title, .top > :nth-child(2), .top > :first-child > *, .root [data-recede-step] {
   transition: opacity var(--agent-recede-duration) var(--motion-enter-ease) calc((7 - var(--recede-index, 0)) * var(--agent-recede-stagger)),
     translate var(--agent-recede-duration) var(--motion-enter-ease) calc((7 - var(--recede-index, 0)) * var(--agent-recede-stagger)),
     filter var(--agent-recede-duration) var(--motion-enter-ease) calc((7 - var(--recede-index, 0)) * var(--agent-recede-stagger));
@@ -47,7 +26,12 @@
 .top > :nth-child(2) { --recede-index: 5; }
 .top > :first-child > :nth-child(2) { --recede-index: 6; }
 .top > :first-child > :first-child { --recede-index: 7; }
-.root[data-receding] .pane, .root[data-receding] .pane > *, .root[data-receding] .title, .root[data-receding] .top > :nth-child(2), .root[data-receding] .top > :first-child > * {
+/* The attention home's blocks (AttentionSection), in place of the suggestions (2026-10-23, direct feedback). */
+.root [data-recede-step='1'] { --recede-index: 1; }
+.root [data-recede-step='2'] { --recede-index: 2; }
+.root [data-recede-step='3'] { --recede-index: 3; }
+.root [data-recede-step='4'] { --recede-index: 4; }
+.root[data-receding] .pane, .root[data-receding] .pane > *, .root[data-receding] .title, .root[data-receding] .top > :nth-child(2), .root[data-receding] .top > :first-child > *, .root[data-receding] [data-recede-step] {
   opacity: 0;
   translate: 0 calc(var(--space-12) * -1);
   filter: blur(var(--blur-8));
@@ -58,8 +42,8 @@
 .root[data-receding] .pane { --recede-index: 3; translate: none; filter: none; }
 .pane { transition: opacity var(--agent-recede-duration) var(--motion-enter-ease) calc(4 * var(--agent-recede-stagger)); }
 @media (prefers-reduced-motion: reduce) {
-  .root .pane, .root .pane > *, .title, .top > :nth-child(2), .top > :first-child > * { transition-property: opacity; transition-delay: 0s; }
-  .root[data-receding] .pane > *, .root[data-receding] .title, .root[data-receding] .top > :nth-child(2), .root[data-receding] .top > :first-child > * { translate: none; filter: none; }
+  .root .pane, .root .pane > *, .title, .top > :nth-child(2), .top > :first-child > *, .root [data-recede-step] { transition-property: opacity; transition-delay: 0s; }
+  .root[data-receding] .pane > *, .root[data-receding] .title, .root[data-receding] .top > :nth-child(2), .root[data-receding] .top > :first-child > *, .root[data-receding] [data-recede-step] { translate: none; filter: none; }
 }
 
 /* The banner rides up under the balance tiles (2026-10-10, direct feedback:
@@ -91,15 +75,31 @@
 .root[data-hero] .top > * { grid-area: 1 / 1; min-width: 0; }
 .root[data-hero] .top > :first-child { align-self: start; padding-block-end: var(--promo-hero-text-zone); }
 .root[data-hero] .top > :first-child::before { display: none; }
+/* The block's reserved copy zone must not catch the banner's taps (its CTA lies under it): only its own rows do. */
+.root[data-hero] .top > :first-child { pointer-events: none; }
+.root[data-hero] .top > :first-child > * { pointer-events: auto; }
 .root[data-hero] .top > :nth-child(2) {
   margin-block-start: calc(-1 * (var(--shell-header-height) + var(--space-8)));
   --promo-bleed-slide-height: auto;
   --promo-bleed-fade-top: 0px;
   --promo-bleed-frost: none;
   --promo-bleed-frost-mask: none;
-  --promo-bleed-image-dim: .6;
+  --promo-bleed-image-filter: var(--hero-image-wash);
   /* The copy starts a fixed gap below the tiles: the slide is the cell's full
      height, and the tiles end the text zone above its bottom. */
   --promo-bleed-copy-justify: flex-start;
   --promo-bleed-copy-top: calc(100cqh - var(--promo-hero-text-zone) + var(--promo-hero-copy-gap));
 }
+
+/* The attention home (2026-10-23, direct feedback): more air between the tiles and the
+   banner's copy, so the copy zone grows by the same amount the copy moves down. */
+.root[data-hero][data-attention] {
+  --promo-hero-copy-gap: var(--space-40);
+  --promo-hero-text-zone: calc(var(--space-64) * 2 + var(--space-24) + var(--space-20) + var(--attention-hero-fade-extra));
+  --promo-bleed-fade-height: var(--attention-hero-fade-height);
+  --promo-bleed-fade-bottom: var(--attention-hero-fade);
+  /* The dots stay just under the button, not at the slide's (now lower) bottom edge. */
+  --promo-bleed-dots-bottom: calc(var(--attention-hero-fade-extra) + var(--space-12));
+}
+/* The photo now reaches further down; the section below climbs back over its faded tail. */
+.root[data-attention] section[aria-label="Attention"] { margin-block-start: calc(-1 * var(--attention-hero-pullup)); position: relative; }

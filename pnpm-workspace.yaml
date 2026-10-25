@@ -1,6 +1,7 @@
 packages:
   - app
   - mcp-server
+  - brand-studio
 allowBuilds:
   '@swc/core': true
   esbuild: true

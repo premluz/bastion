@@ -1,0 +1,105 @@
+.panel {
+  pointer-events: auto;
+  background: var(--panel-surface);
+  border: 1px solid var(--panel-edge);
+  border-radius: var(--panel-radius);
+  padding: var(--panel-padding);
+  backdrop-filter: blur(var(--panel-blur));
+  transition:
+    background-color var(--appearance-fade) var(--appearance-ease),
+    border-color var(--appearance-fade) var(--appearance-ease);
+  -webkit-backdrop-filter: blur(var(--panel-blur));
+}
+
+.header {
+  position: absolute;
+  top: var(--overlay-inset);
+  left: var(--overlay-inset);
+  right: var(--overlay-inset);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--overlay-gap);
+  pointer-events: none;
+}
+
+.headerGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--overlay-gap);
+}
+
+.wordmark {
+  letter-spacing: var(--wordmark-tracking);
+  padding-inline: var(--overlay-gap);
+}
+
+.tuning {
+  position: absolute;
+  top: calc(var(--overlay-inset) + var(--header-height) + var(--overlay-gap));
+  right: var(--overlay-inset);
+  width: var(--panel-width);
+  max-height: var(--panel-max-height);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--overlay-gap);
+  padding-top: var(--overlay-gap);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--overlay-gap);
+  padding-block: var(--overlay-gap);
+}
+
+.dock {
+  position: absolute;
+  left: var(--overlay-inset);
+  right: var(--overlay-inset);
+  bottom: var(--overlay-inset);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--overlay-gap);
+  pointer-events: none;
+}
+
+.scrollRow {
+  max-width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: var(--overlay-gap);
+}
+
+.scrubber {
+  width: var(--scrubber-width);
+  max-width: 40vw;
+}
+
+.readout {
+  width: var(--readout-width);
+  text-align: right;
+}
+
+.phase {
+  width: var(--phase-width);
+  letter-spacing: var(--phase-tracking);
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .tuning {
+    display: none;
+  }
+}

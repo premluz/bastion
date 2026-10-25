@@ -30,11 +30,11 @@ const PROMOS: readonly Promo[] = [
 // Shared by both homes (2026-10-09). `card` is the framed one-at-a-time card
 // the assets home uses; `bleed` (2026-10-10) is the full-bleed banner the
 // agent home uses.
-export function HomePromos({ variant = 'card' }: { variant?: 'card' | 'bleed' }) {
+export function HomePromos({ variant = 'card', ctaSize = 'sm' }: { variant?: 'card' | 'bleed'; ctaSize?: 'sm' | 'lg' }) {
   return (
     <PromoCarousel aria-label="Promotions" variant={variant}>
       {PROMOS.map((promo) => variant === 'bleed' ? (
-        <PromoCardBleed key={promo.id} title={promo.bleed.title ?? promo.title} image={promo.bleed.image} cta={promo.bleed.cta}
+        <PromoCardBleed key={promo.id} title={promo.bleed.title ?? promo.title} image={promo.bleed.image} cta={promo.bleed.cta} ctaSize={ctaSize}
           {...(promo.bleed.eyebrow ?? promo.eyebrow ? { eyebrow: promo.bleed.eyebrow ?? promo.eyebrow } : {})} />
       ) : (
         <PromoCardFull key={promo.id} title={promo.title} {...(promo.icon ? { icon: promo.icon } : {})}

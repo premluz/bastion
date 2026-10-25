@@ -38,6 +38,9 @@ function readCssColor(value: string, context: CanvasRenderingContext2D): Rgb {
 // pixels is plenty, and it makes the shader several times cheaper (it is rendered
 // 576px wide behind the composer).
 const UNBOUNDED_PIXEL_RATIO = 0.6;
+// Below this width (CSS px) the saving is negligible and the low ratio shows as pixels: a
+// small orb (the attention home's, in the navigation, 2026-10-23) renders at full ratio.
+const UNBOUNDED_FULL_RATIO_BELOW_PX = 128;
 
 export interface LiquidOrbOptions {
   /** Feather the picture into a soft circle instead of a sphere with a hard edge. */
@@ -48,7 +51,10 @@ export function createLiquidOrbRenderer(canvas: HTMLCanvasElement, options: Liqu
   const context = canvas.getContext('webgl2', {
     alpha: true,
     antialias: false,
-    premultipliedAlpha: false,
+    // Premultiplied (the shader outputs colour × alpha): WebKit — Safari and the iOS
+    // wrapper — composites a non-premultiplied canvas wrongly, showing colour where
+    // alpha is 0 (a pale square around the orb) and washing the hues out (2026-10-14).
+    premultipliedAlpha: true,
     preserveDrawingBuffer: true,
   });
   if (!context) return null;
@@ -88,12 +94,15 @@ export function createLiquidOrbRenderer(canvas: HTMLCanvasElement, options: Liqu
     resolution: gl.getUniformLocation(program, 'u_resolution'),
     colorA: gl.getUniformLocation(program, 'u_colorA'),
     colorB: gl.getUniformLocation(program, 'u_colorB'),
+    colorC: gl.getUniformLocation(program, 'u_colorC'),
     unbounded: gl.getUniformLocation(program, 'u_unbounded'),
+    lightGround: gl.getUniformLocation(program, 'u_lightGround'),
   };
 
   function resize() {
     const bounds = canvas.getBoundingClientRect();
-    const pixelRatio = options.unbounded ? UNBOUNDED_PIXEL_RATIO : Math.min(window.devicePixelRatio || 1, 1.5);
+    const pixelRatio = options.unbounded && bounds.width >= UNBOUNDED_FULL_RATIO_BELOW_PX
+      ? UNBOUNDED_PIXEL_RATIO : Math.min(window.devicePixelRatio || 1, 1.5);
     const width = Math.max(1, Math.floor(bounds.width * pixelRatio));
     const height = Math.max(1, Math.floor(bounds.height * pixelRatio));
     if (canvas.width === width && canvas.height === height) return;
@@ -106,10 +115,15 @@ export function createLiquidOrbRenderer(canvas: HTMLCanvasElement, options: Liqu
     const styles = getComputedStyle(canvas);
     const colorA = readCssColor(styles.getPropertyValue('--assistant-orb-color-a'), parser);
     const colorB = readCssColor(styles.getPropertyValue('--assistant-orb-color-b'), parser);
+    const colorC = readCssColor(styles.getPropertyValue('--assistant-orb-color-c'), parser);
     gl.useProgram(program);
     gl.uniform3fv(uniforms.colorA, colorA);
     gl.uniform3fv(uniforms.colorB, colorB);
+    gl.uniform3fv(uniforms.colorC, colorC);
     gl.uniform1f(uniforms.unbounded, options.unbounded ? 1 : 0);
+    const lightGround = Number.parseFloat(styles.getPropertyValue('--orb-light-ground'));
+    if (Number.isNaN(lightGround)) throw new Error('Liquid orb: --orb-light-ground must be a number (0 or 1) in every theme.');
+    gl.uniform1f(uniforms.lightGround, lightGround);
   }
 
   function render(time: number) {

@@ -1,0 +1,32 @@
+/* The shared two-line list (shell.css --list-row-*, 2026-10-12): no pane behind
+   it; every row is rounded, so a hovered row is its own rounded shape. Used by the
+   agent home and the assistant's landing screen. */
+.list {
+  display: flex;
+  flex-direction: column;
+}
+/* Wrapped in the cards' raised surface (the attention home's Pulse); rows keep their inset. */
+.list[data-variant='card'] {
+  padding: var(--list-card-inset);
+  border-radius: var(--list-card-radius);
+  background: var(--list-card-fill-raised);
+  backdrop-filter: var(--list-card-backdrop);
+  box-shadow: var(--card-light);
+}
+.item:not(#\#):not(#\#):not(#\#) {
+  border-radius: var(--list-row-radius);
+  padding: var(--list-row-padding-block) var(--list-row-padding-inline);
+  gap: var(--space-16);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--agent-suggestion-icon-size);
+  height: var(--agent-suggestion-icon-size);
+  border-radius: var(--radius-full);
+  border: var(--list-accessory-ring);
+  background: var(--list-accessory-fill);
+  color: var(--list-accessory-ink);
+}

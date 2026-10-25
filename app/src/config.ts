@@ -77,4 +77,24 @@ export const config = {
     max: 4,
     repeat: "fit",
   },
+  landing: {
+    // Whether the one orb rises to the middle of the assistant's landing screen (2026-10-14).
+    // Off (2026-10-21, direct feedback: switch the orb's movement off for now): it stays at the
+    // bottom as the resting glow while the page leaves and the welcome and suggestions arrive.
+    orbRises: false,
+  },
+  agent: {
+    // After a scenario finishes (send, top-up…) the agent used to go straight on to
+    // the next recommended action by itself (2026-10-09). Off (2026-10-14, direct
+    // feedback): a finished scenario ends there; the home's suggestions are the way
+    // to the next one. Flip to true to bring the handover back.
+    autoHandover: false,
+  },
+  attention: {
+    // How long the assistant works on a delegated item before it is done and leaves its
+    // queue (the attention home, 2026-10-23).
+    taskCompletesAfterMs: 4000,
+    // How long "You're caught up" stays before it sinks away and the section closes.
+    caughtUpHoldMs: 1000,
+  },
 } as const;

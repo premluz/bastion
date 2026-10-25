@@ -1,0 +1,10 @@
+.stage {
+  position: absolute;
+  inset: 0;
+  touch-action: none;
+  cursor: grab;
+}
+
+.stage:active {
+  cursor: grabbing;
+}

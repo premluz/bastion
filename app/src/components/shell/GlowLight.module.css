@@ -15,10 +15,16 @@
   pointer-events: none;
   --assistant-orb-color-a: var(--agent-orb-color-a);
   --assistant-orb-color-b: var(--agent-orb-color-b);
-  scale: calc(var(--glow-widen) * (1 + var(--glow-reveal) * var(--glow-reveal-grow)))
-    calc(var(--glow-flatten) * (1 + var(--glow-reveal) * var(--glow-reveal-rise)));
+  /* The landing screen (2026-10-14, direct feedback: one orb, never two): the same
+     orb that rests off screen rises to the middle and rounds out as --glow-landing
+     goes 0 → 1 (the swipe's progress, held while the landing is up), and sinks back.
+     The distance is the container's height (.light), less its resting dip. */
+  translate: 0 calc(var(--glow-landing, 0) * (var(--glow-lift) + (var(--glow-landing-orb-y) - 100cqh)));
+  scale: calc(var(--glow-widen) * (1 + var(--glow-reveal) * var(--glow-reveal-grow)) * (1 - var(--glow-landing, 0)) + var(--glow-landing-orb-scale) * var(--glow-landing, 0))
+    calc(var(--glow-flatten) * (1 + var(--glow-reveal) * var(--glow-reveal-rise)) * (1 - var(--glow-landing, 0)) + var(--glow-landing-orb-scale) * var(--glow-landing, 0));
   opacity: calc(var(--glow-rest-opacity) + var(--glow-reveal) * (var(--glow-full-opacity) - var(--glow-rest-opacity)));
-  transition: scale var(--glow-reveal-duration) var(--glow-reveal-ease), opacity var(--glow-reveal-duration) var(--glow-reveal-ease);
+  transition: translate var(--glow-landing-orb-duration) var(--glow-reveal-ease), scale var(--glow-landing-orb-duration) var(--glow-reveal-ease),
+    opacity var(--glow-reveal-duration) var(--glow-reveal-ease);
 }
 /* The light (ambient + plasma) rises with the finger and keeps part of the rise
    while open; when a swipe commits it snaps — overshoot, settle, land — on the
@@ -28,6 +34,8 @@
   inset: 0;
   z-index: 4;
   pointer-events: none;
+  /* Its height is what the orb's rise is measured against (cqh in .glow). */
+  container-type: size;
   transform-origin: 50% 100%;
   translate: 0 calc(var(--glow-reveal) * var(--glow-pull) * -1);
   transition: translate var(--glow-reveal-duration) var(--glow-reveal-ease);
@@ -38,6 +46,10 @@
   45% { scale: var(--glow-snap-under); }
   100% { scale: 1; }
 }
+
+/* Once the landing is up the orb waits for the page to clear before it rises (it sinks at
+   once when a question is asked, which takes the landing away). */
+:global([data-landing]) .glow { transition-delay: var(--glow-landing-orb-delay), var(--glow-landing-orb-delay), 0s; }
 
 /* The ambient light under the plasma; it strengthens with the same reveal. */
 .ambient {
@@ -53,8 +65,30 @@
   scale: 1 calc(1 + var(--glow-reveal) * var(--glow-reveal-rise));
   transition: scale var(--glow-reveal-duration) var(--glow-reveal-ease), opacity var(--glow-reveal-duration) var(--glow-reveal-ease);
 }
+/* The contained orb (ContainedOrb): low on the bottom edge, fading in with the same reveal
+   as the free light. */
+.contained {
+  position: absolute;
+  inset-inline-start: calc(50% - var(--glow-contained-size) / 2);
+  bottom: var(--glow-contained-dip);
+  z-index: 4;
+  width: var(--glow-contained-size);
+  height: var(--glow-contained-size);
+  opacity: calc(var(--glow-rest-opacity) + var(--glow-reveal) * (var(--glow-full-opacity) - var(--glow-rest-opacity)));
+  transition: opacity var(--glow-reveal-duration) var(--glow-reveal-ease);
+}
+.chevron {
+  position: absolute;
+  inset-inline: 0;
+  top: var(--space-12);
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  color: var(--ink-secondary);
+}
+
 /* While a finger drives the reveal (useSwipeUp's attribute on an ancestor), no easing. */
-[data-dragging] :is(.glow, .ambient, .light) { transition: none; }
+[data-dragging] :is(.glow, .ambient, .light, .contained) { transition: none; }
 @media (prefers-reduced-motion: reduce) {
-  .glow, .ambient, .light { transition: none; animation: none; }
+  .glow, .ambient, .light, .contained { transition: none; animation: none; }
 }
