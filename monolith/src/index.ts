@@ -1,0 +1,24 @@
+export { BastionMonolith } from './BastionMonolith';
+export type { BastionMonolithHandle, BastionMonolithProps, Composition, Sequence } from './props';
+export type { Quality } from './quality';
+export type {
+  Appearance,
+  CameraSettings,
+  GlowMode,
+  IntelligenceSettings,
+  MaterialParams,
+  MonolithSettings,
+  MonolithSettingsInput,
+} from './settings';
+export { DEFAULT_SETTINGS } from './settings';
+export type { MonolithState } from './states';
+export { DEFAULT_STATES } from './states';
+export { phaseNameFor } from './phaseNames';
+
+// For host UIs that expose the same choices.
+export type { VariantId } from './monolith/geometry/types';
+export { isVariantId, VARIANTS } from './monolith/variants';
+export { CUBE_COUNT } from './fractal/geometry/cubeLayout';
+export type { IntelligenceMode, MotionStyle } from './monolith/intelligence/styles';
+export { STYLE_LABELS, STYLES } from './monolith/intelligence/styles';
+export { clamp01 } from './monolith/assembly/timeline';

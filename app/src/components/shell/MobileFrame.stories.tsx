@@ -28,6 +28,8 @@ export const AgentHome: Story = { args: { homeVariant: 'agent' } };
 // (or tap it) and the dock morphs into the composer, the glow filling the screen.
 export const GlowHome: Story = { args: { homeVariant: 'glow' } };
 export const AttentionHome: Story = { args: { homeVariant: 'attention' } };
+// The same home with the Bastion monolith in the bottom-right slot instead of the plasma orb.
+export const AttentionHomeMonolith: Story = { args: { homeVariant: 'attention', orbVariant: 'monolith' } };
 export const ClassicNavigation: Story = { args: { navigationVariant: 'classic' } };
 export const BuyEth: Story = { args: { initialPurchaseQuery: 'I want to buy ETH for $800.' } };
 export const AccountMenu: Story = { args: { initialAccountView: 'menu' } };

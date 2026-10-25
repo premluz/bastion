@@ -125,7 +125,7 @@ Bastion/
 └── .storybook/                    ← theme-switch toolbar, scene playground story
 ```
 
-Do not add top-level directories. Do not relocate files between layers.
+Do not add top-level directories. Do not relocate files between layers. Approved exceptions, outside this tree: `brand-studio/` (Prem, 2026-10-24: the internal brand tool, standalone) and `monolith/` (Prem, 2026-10-25: the monolith as a reusable package, consumed by both).
 
 ## 5. Stack (closed list)
 
@@ -141,6 +141,7 @@ Same closed list Merlin used, inherited unchanged — no mobile-wallet-specific 
 - `@modelcontextprotocol/sdk` (mcp-server package only)
 - `@types/node` (mcp-server package only, types-only)
 - `@capacitor/core`, `@capacitor/ios` (exact pins) and `@capacitor/cli` (dev) — the iOS TestFlight wrapper in `app/ios/`, a thin native shell around the same Vite build. Approved by Prem 2026-10-09; the native project lives inside `app/`, not as a new top-level directory.
+- `@bastion/monolith` (the workspace package in `monolith/`) and, through it, `three`, `@react-three/fiber`, `@react-three/drei`, `@react-three/postprocessing`, `postprocessing` (exact pins) — the Bastion monolith as the assistant orb in the navigation's + slot. Approved by Prem 2026-10-25 ("Add it to bastion App"). Loaded lazily (`MonolithOrb` → `MonolithOrbCanvas`), so the main bundle does not carry it.
 - vitest (contracts + bindings + resolver tests)
 - @playwright/test + @storybook/test-runner (visual regression only)
 

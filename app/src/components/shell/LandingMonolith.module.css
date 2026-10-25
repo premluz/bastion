@@ -1,0 +1,30 @@
+.root {
+  position: relative;
+  flex: none;
+  width: var(--landing-monolith-size);
+  height: var(--landing-monolith-size);
+  pointer-events: none;
+  --landing-monolith-size: calc(var(--space-64) * 2.5);
+  --landing-monolith-from-scale: 0.8;
+  --monolith-bleed: 90%;
+  /* Out: quick and small, nothing to wait for. */
+  opacity: 0;
+  scale: var(--landing-monolith-from-scale);
+  transition: opacity var(--duration-250) var(--motion-exit-ease), scale var(--duration-250) var(--motion-exit-ease);
+}
+
+/* In: the fade settles early, the scale takes its time to land — while the pieces assemble inside. */
+.root[data-open]:not([data-away]) {
+  opacity: 1;
+  scale: 1;
+  transition: opacity var(--duration-550) var(--motion-enter-ease), scale var(--duration-1600) var(--ease-float);
+}
+
+.bleed {
+  position: absolute;
+  inset: calc(var(--monolith-bleed) * -1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root { scale: none; transition-property: opacity; }
+}

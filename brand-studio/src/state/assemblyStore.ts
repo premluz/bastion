@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { clamp01 } from '../monolith/assembly/timeline';
+import { clamp01 } from '@bastion/monolith';
 
 interface AssemblyState {
   /** 0 = dormant, 1 = assembled. The only source of truth for every piece and light state. */

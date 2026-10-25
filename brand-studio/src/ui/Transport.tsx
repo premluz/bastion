@@ -1,17 +1,16 @@
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Slider } from '@astryxdesign/core/Slider';
 import { Text } from '@astryxdesign/core/Text';
-import { phaseName } from '../monolith/assembly/timeline';
 import { useAssembly } from '../state/assemblyStore';
 import { PauseIcon, PlayIcon, ReplayIcon, ReverseIcon } from './icons';
 import styles from './overlay.module.css';
 
 interface TransportProps {
-  /** Names the current phase of the sequence being played; the monolith assembly's by default. */
-  readonly phaseName?: (progress: number) => string;
+  /** Names the current phase of the sequence being played. */
+  readonly phaseName: (progress: number) => string;
 }
 
-export function Transport({ phaseName: nameOf = phaseName }: TransportProps) {
+export function Transport({ phaseName: nameOf }: TransportProps) {
   const progress = useAssembly((s) => s.progress);
   const playing = useAssembly((s) => s.playing);
   const direction = useAssembly((s) => s.direction);

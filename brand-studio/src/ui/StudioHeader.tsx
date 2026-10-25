@@ -2,7 +2,6 @@ import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/Segme
 import { Tab, TabList } from '@astryxdesign/core/TabList';
 import { Text } from '@astryxdesign/core/Text';
 import { isStagePage, navigate } from '../routing';
-import { useAppearanceFade } from '../state/appearanceFade';
 import type { StagePage } from '../scene/Stage';
 import { useStudio } from '../state/studioStore';
 import { ExportControls } from './ExportControls';
@@ -10,7 +9,7 @@ import styles from './overlay.module.css';
 
 export function StudioHeader({ page }: { readonly page: StagePage }) {
   const appearance = useStudio((s) => s.appearance);
-  const requestAppearance = useAppearanceFade((s) => s.request);
+  const setAppearance = useStudio((s) => s.setAppearance);
 
   return (
     <header className={styles.header}>
@@ -41,7 +40,7 @@ export function StudioHeader({ page }: { readonly page: StagePage }) {
             label="Appearance"
             size="sm"
             value={appearance}
-            onChange={(value) => requestAppearance(value === 'light' ? 'light' : 'dark')}
+            onChange={(value) => setAppearance(value === 'light' ? 'light' : 'dark')}
           >
             <SegmentedControlItem value="dark" label="Dark" />
             <SegmentedControlItem value="light" label="Light" />

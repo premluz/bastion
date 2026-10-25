@@ -1,12 +1,10 @@
 import { Collapsible } from '@astryxdesign/core/Collapsible';
 import { Text } from '@astryxdesign/core/Text';
 import { useEffect } from 'react';
-import { cubePhaseName } from '../fractal/assembly/fractalTimeline';
-import { CUBE_COUNT } from '../fractal/geometry/cubeLayout';
+import { CUBE_COUNT, phaseNameFor } from '@bastion/monolith';
 import { useAssembly } from '../state/assemblyStore';
 import { useCube } from '../state/cubeStore';
 import { ParamSlider } from '../ui/ParamSlider';
-import { withRelease } from '../monolith/assembly/shapeToShape';
 import { Transport } from '../ui/Transport';
 import { TuningPanel } from '../ui/TuningPanel';
 import styles from '../ui/overlay.module.css';
@@ -60,7 +58,7 @@ export function CubePage() {
         <CubeControls />
       </TuningPanel>
       <div className={styles.dock}>
-        <Transport phaseName={withRelease(cubePhaseName)} />
+        <Transport phaseName={phaseNameFor('cube', 'shape-to-shape')} />
       </div>
     </>
   );

@@ -1,7 +1,7 @@
 import { Collapsible } from '@astryxdesign/core/Collapsible';
 import { Text } from '@astryxdesign/core/Text';
 import { useEffect } from 'react';
-import { fractalPhaseName } from '../fractal/assembly/fractalTimeline';
+import { phaseNameFor } from '@bastion/monolith';
 import { useAssembly } from '../state/assemblyStore';
 import { useFractal } from '../state/fractalStore';
 import { ParamSlider } from '../ui/ParamSlider';
@@ -61,7 +61,7 @@ export function FractalPage() {
         <FractalControls />
       </TuningPanel>
       <div className={styles.dock}>
-        <Transport phaseName={fractalPhaseName} />
+        <Transport phaseName={phaseNameFor('fractal', 'assemble')} />
       </div>
     </>
   );

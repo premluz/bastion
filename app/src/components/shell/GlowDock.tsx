@@ -7,6 +7,7 @@ import { GlowLight, type GlowOrbStyle } from './GlowLight';
 import { config } from '../../config';
 import { AssistantLanding } from './AssistantLanding';
 import { MobileFrameDock } from './MobileFrameDock';
+import { MonolithOrb } from './MonolithOrb';
 import type { useMobileFrame } from './useMobileFrame';
 import { useSwipeUp } from './useSwipeUp';
 import '../../theme/agent-dock.css';
@@ -32,6 +33,8 @@ export interface GlowDockProps {
   trailing?: ReactNode;
   /** The agent's status line, floating above the trailing slot (the attention home's work queue). */
   status?: ReactNode;
+  /** The Bastion monolith stands in for the plasma orb: above the landing's welcome and in the chat bar. */
+  landingMonolith?: boolean;
 }
 
 // The glow home's dock (2026-10-10, direct feedback with mocks): the navigation
@@ -39,7 +42,7 @@ export interface GlowDockProps {
 // Swiping up — or the pill's assistant item — morphs the pill into the composer
 // in place (and sliding the composer back down closes it again): the page stays as it is until the first question, then gives way to
 // the thread (AgentHomePage recedes) while the composer stays at the bottom.
-export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, threadRef, onSuggestion, orb = 'plasma', trailing, status }: GlowDockProps) {
+export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, threadRef, onSuggestion, orb = 'plasma', trailing, status, landingMonolith = false }: GlowDockProps) {
   const isOpen = state.mode === 'composer';
   const swipe = useSwipeUp<HTMLDivElement>(() => {
     if (state.mode === 'idle') onOpen();
@@ -68,7 +71,7 @@ export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, 
       data-landing={config.landing.orbRises && isOpen && !isWorking ? '' : undefined} {...(isOpen ? {} : swipe.handlers)}>
       {isOpen && <div className={styles.shade} aria-hidden="true" />}
       <GlowLight isOpen={isOpen} orb={orb} />
-      <AssistantLanding isOpen={isOpen} isAway={isWorking} onSuggestion={onSuggestion} />
+      <AssistantLanding isOpen={isOpen} isAway={isWorking} onSuggestion={onSuggestion} monolith={landingMonolith} />
       {/* Beside the dock, not inside it (2026-10-23): hanging out of the dock's box, its glass
           could not blur the page behind it. */}
       {status && !isOpen && <div className={styles.status}>{status}</div>}
@@ -78,6 +81,7 @@ export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, 
     {isOpen && <div className={styles.sheet}>
       {/* The chat view's own top bar: close on the left, chat history on the right. */}
       <div className={styles.chatBar}>
+        {landingMonolith && <span className={styles.chatMark}><MonolithOrb /></span>}
         <IconButton label="Close assistant" tooltip="Close assistant" icon={<Icon icon="close" />} variant="ghost" onClick={onClose} />
         <IconButton label="Chat history" icon={<Icon icon={ClockIcon} />} variant="ghost" onClick={notifyPrototypeUnavailable} />
       </div>

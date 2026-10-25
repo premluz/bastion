@@ -96,6 +96,15 @@
   animation: glow-shade-in var(--motion-enter-duration) var(--motion-enter-ease) both;
 }
 /* A ghost button has no edge of its own (Astryx paints inset highlight/shade lines). */
+.chatMark {
+  position: absolute;
+  inset-inline-start: calc(50% - var(--chat-mark-size) / 2);
+  top: max(var(--shell-inset), env(safe-area-inset-top));
+  width: var(--chat-mark-size);
+  height: var(--chat-mark-size);
+  --chat-mark-size: var(--space-48);
+  pointer-events: none;
+}
 .chatBar button:not(#\#):not(#\#):not(#\#) { box-shadow: none; border: 0; }
 .thread {
   flex: 1 1 auto;

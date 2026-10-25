@@ -1,5 +1,5 @@
 import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
-import { isVariantId, VARIANTS } from '../monolith/variants';
+import { isVariantId, VARIANTS } from '@bastion/monolith';
 import { useStudio } from '../state/studioStore';
 import styles from './overlay.module.css';
 

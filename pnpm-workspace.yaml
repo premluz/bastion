@@ -2,6 +2,7 @@ packages:
   - app
   - mcp-server
   - brand-studio
+  - monolith
 allowBuilds:
   '@swc/core': true
   esbuild: true

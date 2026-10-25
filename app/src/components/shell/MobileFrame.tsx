@@ -150,7 +150,8 @@ export function MobileFrame(props: MobileFrameProps) {
           )}
           <div className={styles.bottomFade} aria-hidden="true" />
           {isGlowHome ? <GlowDock state={state} onOpen={glow.open} onClose={glow.close} isWorking={glow.isWorking} threadRef={composerScrollRef} onSuggestion={glow.ask} orb={isAttentionHome ? 'none' : 'plasma'}
-            {...(isAttentionHome ? { trailing: <OrbTrigger onOpen={glow.open} />, status: <AgentWorkQueue tasks={attention.tasks} variant="status" /> } : {})}
+            landingMonolith={isAttentionHome && props.orbVariant === 'monolith'}
+            {...(isAttentionHome ? { trailing: <OrbTrigger onOpen={glow.open} variant={props.orbVariant ?? 'plasma'} working={attention.tasks.length > 0 || glow.isWorking} />, status: <AgentWorkQueue tasks={attention.tasks} variant="status" /> } : {})}
             thread={transcript.slice(glow.threadStart)} composer={<MobileFrameComposer state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />} />
             : isAgentHome ? <AgentDock isAwake={agent.isAwake} activeTab={state.activeTab} onWake={agent.wake} onSleep={agent.sleep}
               onNavigate={state.selectTab} thread={transcript.slice(agent.threadStart)} isWorking={agent.isWorking} caption={agent.caption}
@@ -167,7 +168,8 @@ export function MobileFrame(props: MobileFrameProps) {
       </ComposerModeOverlay>
       <ConversationModeOverlay isOpen={state.mode === 'conversation' && !isAgentHome} onClose={state.closeConversation} sharedOrb={props.navigationVariant === 'classic'}
         scrollRef={conversationScrollRef} isReceded={sendingOpen} speech={speech} audioError={voicePlayback.error}
-        assistantSpeaking={voicePlayback.isSpeaking} orbVariant={isGlowHome ? 'unbounded' : 'bounded'}>
+        assistantSpeaking={voicePlayback.isSpeaking} orbVariant={isGlowHome ? 'unbounded' : 'bounded'}
+        monolith={isAttentionHome && props.orbVariant === 'monolith'}>
         {transcript}
       </ConversationModeOverlay>
       {sendPresentation === 'overlay' && <SendingScreenMount flows={send.flows} dispatch={send.dispatch} />}

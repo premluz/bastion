@@ -8,7 +8,6 @@ import { MonolithPage } from './pages/MonolithPage';
 import { usePage } from './routing';
 import { Stage } from './scene/Stage';
 import { useStudio } from './state/studioStore';
-import { AppearanceFade } from './ui/AppearanceFade';
 import { StudioHeader } from './ui/StudioHeader';
 
 export function App() {
@@ -19,7 +18,6 @@ export function App() {
     <Theme theme={neutralTheme} mode={appearance}>
       <div className={styles.shell} data-appearance={appearance}>
         <Stage page={page} />
-        <AppearanceFade />
         <StudioHeader page={page} />
         {page === 'monolith' && <MonolithPage />}
         {page === 'assembly' && <AssemblyPage />}

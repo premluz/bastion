@@ -23,6 +23,8 @@ export interface MobileFrameProps {
    * 'attention': the glow home with an attention queue and the assistant's work in place of the suggestions.
    */
   homeVariant?: 'assets' | 'agent' | 'glow' | 'attention';
+  /** The attention home's assistant orb: the plasma, or the Bastion monolith (@bastion/monolith). */
+  orbVariant?: 'plasma' | 'monolith';
   sendPresentation?: 'inline' | 'overlay';
   initialPurchaseQuery?: string;
   initialAccountView?: import('./accountTypes').AccountInitialView;
