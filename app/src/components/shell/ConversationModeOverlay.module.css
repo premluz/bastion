@@ -25,6 +25,10 @@
 /* The orb is the composer bar's other shape: same `dock-bar` name while
    open, so starting conversation mode shrinks the bar into this sphere. */
 .root[open]:not([data-shared-orb='true']) .indicator > :first-child { view-transition-name: dock-bar; }
+/* The monolith is not the bar's other shape: it has its own name, and arrives as the bar sinks away
+   (theme/dock-morph.css, to-monolith / from-monolith). */
+.root[open][data-monolith]:not([data-shared-orb='true']) .indicator > :first-child { view-transition-name: none; }
+
 
 .root::backdrop {
   background: var(--scrim);
@@ -46,6 +50,14 @@
   height: 100%;
   scale: 1.1;
   translate: var(--space-8) var(--space-4);
+  /* It emerges once the composer has sunk away: a fade that settles early, a scale that takes its time. */
+  transition: opacity var(--duration-550) var(--motion-enter-ease), scale var(--duration-1600) var(--ease-float);
+}
+:global(html[data-monolith-arriving]) .monolithMark { opacity: 0; scale: calc(1.1 * .8); transition: none; }
+:global(html[data-monolith-leaving]) .monolithMark {
+  opacity: 0;
+  scale: calc(1.1 * .85);
+  transition: opacity var(--monolith-leave-duration) var(--motion-exit-ease), scale var(--monolith-leave-duration) var(--motion-exit-ease);
 }
 
 .layout {

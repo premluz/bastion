@@ -73,6 +73,8 @@
      into the sphere on a decisive deceleration, no bounce; the orb itself
      surfaces late in that travel. */
   --orb-morph-duration: var(--duration-480);
+  /* The voice-mode monolith fades out live before the composer returns (dockMorph.ts reads this). */
+  --monolith-leave-duration: var(--duration-250);
   --orb-morph-ease: var(--ease-float);
   /* Surfaces from a quarter of the travel and finishes with it, so it
      overlaps the bar's fade — a later start left an empty frame between. */

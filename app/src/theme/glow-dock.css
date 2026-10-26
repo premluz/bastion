@@ -56,7 +56,10 @@
   /* Much earlier, on the recede's own cadence (2026-10-23, direct feedback): the welcome two
      beats in, the suggestions one beat after it and one beat apart — arriving while the page
      is still leaving, the same stagger run the other way. */
-  --glow-landing-text-delay: calc(var(--agent-recede-stagger) * 2);
+  /* A beat before anything arrives (2026-10-26, direct feedback: the page recedes first, then the orb and
+     the suggestions): the monolith, the welcome and the list all wait this long, keeping their gaps. */
+  --glow-landing-arrival-delay: var(--agent-recede-duration);
+  --glow-landing-text-delay: calc(var(--glow-landing-arrival-delay) + var(--agent-recede-stagger) * 2);
   --glow-landing-list-delay: calc(var(--glow-landing-text-delay) + var(--agent-recede-stagger));
   --glow-landing-list-stagger: var(--agent-recede-stagger);
   /* The orb waits for the page to clear (the recede and its stagger, 2026-10-14, direct

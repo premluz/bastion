@@ -68,6 +68,8 @@ export function MobileFrame(props: MobileFrameProps) {
   const glow = useGlowHome(state);
   useAgentAgenda(state, thread.isFinished, config.agent.autoHandover && isAgentHome && agent.isAwake, agent.threadStart);
   useShellBack(state, agent.sleep, isAgentHome);
+  // The monolith takes the orb's place in voice mode (its morph is chosen in useMobileFrame).
+  const isMonolithVoice = isAttentionHome && props.orbVariant === 'monolith';
   const startConversationVoice = () => {
     state.openConversation();
     speech.start();
@@ -169,7 +171,7 @@ export function MobileFrame(props: MobileFrameProps) {
       <ConversationModeOverlay isOpen={state.mode === 'conversation' && !isAgentHome} onClose={state.closeConversation} sharedOrb={props.navigationVariant === 'classic'}
         scrollRef={conversationScrollRef} isReceded={sendingOpen} speech={speech} audioError={voicePlayback.error}
         assistantSpeaking={voicePlayback.isSpeaking} orbVariant={isGlowHome ? 'unbounded' : 'bounded'}
-        monolith={isAttentionHome && props.orbVariant === 'monolith'}>
+        monolith={isMonolithVoice}>
         {transcript}
       </ConversationModeOverlay>
       {sendPresentation === 'overlay' && <SendingScreenMount flows={send.flows} dispatch={send.dispatch} />}

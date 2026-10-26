@@ -43,7 +43,9 @@ const voiceUnavailableReply = (heard: string) => `I heard “${heard}”, but I 
 // store or session/artifact store; those remain out of scope until Phase 4/6
 // (CLAUDE.md). Final voice utterances use the same submission path as typed input.
 export type { TranscriptMessage } from './transcriptMessage';
-export function useMobileFrame({ initialMode = 'idle', initialMessages = [], initialPurchaseQuery = '' }: MobileFrameProps) {
+export function useMobileFrame({ initialMode = 'idle', initialMessages = [], initialPurchaseQuery = '', homeVariant, orbVariant }: MobileFrameProps) {
+  // What the composer becomes in voice mode decides the morph: the plasma orb, or the monolith (which is no circle).
+  const voiceShape = homeVariant === 'attention' && orbVariant === 'monolith' ? 'monolith' : 'orb';
   const [mode, setMode] = useState<ShellPreviewMode>(initialMode);
   const [activeTab, setActiveTab] = useState<TabDestination>('home');
   // MoneyPage is its own page, not a sheet overlay (2026-09-14, direct
@@ -157,8 +159,8 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
     setMessages((current) => [...current, { id, text: text.trim(), source: 'voice', declinedOffer }]);
   };
   const selectTab = (tab: TabDestination) => { setActiveTab(tab); setMode('idle'); };
-  const openConversation = () => morphDock(() => { submit(value); setMode('conversation'); }, ['to-orb']);
-  const closeConversation = () => morphDock(() => setMode('composer'), ['from-orb']);
+  const openConversation = () => morphDock(() => { submit(value); setMode('conversation'); }, [`to-${voiceShape}`]);
+  const closeConversation = () => morphDock(() => setMode('composer'), [`from-${voiceShape}`]);
   const toggleComposer = () => morphDock(() => setMode((current) => current === 'idle' ? 'composer' : 'idle'));
   const closeComposer = () => { morphDock(() => setMode('idle')); assistantRef.current?.focus(); };
   // Home's "Money" card jumps straight to the assets tab, preset to Money

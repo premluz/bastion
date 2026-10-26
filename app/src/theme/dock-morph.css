@@ -83,6 +83,13 @@
 ::view-transition-new(dock-nav-4) { animation-delay: calc(var(--dock-nav-in-delay) + var(--dock-item-stagger) * 3); }
 ::view-transition-new(dock-nav-5) { animation-delay: calc(var(--dock-nav-in-delay) + var(--dock-item-stagger) * 4); }
 
+/* On the glow home the page behind the dock transforms live (it sinks into depth as the assistant opens;
+   page-recede.css, AgentHomePage.module.css). The browser's default root cross-fade would lay a frozen,
+   full-size snapshot of the old page over that, drawing every line of it twice. The live page already
+   starts from the same pixels as the snapshot, so the snapshot is dropped and the live one shown as is. */
+:root:has([data-home='glow'])::view-transition-old(root) { display: none; }
+:root:has([data-home='glow'])::view-transition-new(root) { animation: none; }
+
 /* The sphere overshoots while the bar's geometry keeps its smooth path. */
 :root {
   --orb-enter-scale: .72;
@@ -116,6 +123,23 @@
 :root:active-view-transition-type(to-orb)::view-transition-new(dock-bar) {
   animation: dock-orb-reveal var(--orb-reveal-duration) var(--orb-morph-ease) var(--orb-reveal-delay) both,
     dock-orb-pop var(--orb-morph-duration) linear var(--dock-bar-delay) both;
+}
+
+/* Composer ⇄ monolith (2026-10-25, direct feedback: the composer tried to wrap into a circle, and the
+   monolith is not one). Only the bar is in the transition: the whole group sinks (the group carries the
+   bar's copied backdrop blur, so fading just the image left a glass box that vanished at the end). The
+   monolith is a live WebGL canvas, which a transition snapshot can capture as a black shape, so it never
+   enters one: it stays hidden until the transition ends and emerges in the page (dockMorph.ts,
+   ConversationModeOverlay.module.css), and on closing it fades out live before the bar returns. */
+:root:active-view-transition-type(to-monolith)::view-transition-group(dock-bar) {
+  animation: dock-bar-sink var(--orb-morph-duration) var(--motion-exit-ease) var(--dock-bar-delay) both;
+}
+:root:active-view-transition-type(from-monolith)::view-transition-group(dock-bar) {
+  animation: dock-bar-rise var(--orb-morph-duration) var(--motion-enter-ease) both;
+}
+:root:active-view-transition-type(to-monolith, from-monolith)::view-transition-old(dock-bar),
+:root:active-view-transition-type(to-monolith, from-monolith)::view-transition-new(dock-bar) {
+  animation: none;
 }
 
 /* The three orb layers share one bounce so their edges stay aligned. */
@@ -158,5 +182,7 @@
   50% { scale: var(--orb-overshoot-scale); animation-timing-function: var(--ease-spring-soft); }
   to { scale: 1; }
 }
+@keyframes dock-bar-sink { to { opacity: 0; scale: var(--dock-item-scale); translate: 0 var(--space-16); filter: blur(var(--dock-morph-blur)); } }
+@keyframes dock-bar-rise { from { opacity: 0; scale: var(--dock-item-scale); translate: 0 var(--space-16); filter: blur(var(--dock-morph-blur)); } }
 @keyframes dock-texture-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes dock-texture-out { to { opacity: 0; } }

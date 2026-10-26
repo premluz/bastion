@@ -70,6 +70,8 @@
   --surface-1-solid: oklch(.215 .005 268);
   --pane-surface: oklch(.215 .005 268 / .92);
   --glow: 0 0 12px oklch(from var(--presence) l c h / .14);
+  /* The composer's own edge glow: a hairline (2026-10-25, direct feedback: the shared 12 px --glow was far too strong on it). */
+  --composer-glow: 0 0 1px oklch(from var(--presence) l c h / .14);
   --scrim: oklch(.1 .004 264.5 / .62);
 
   /* Flat panels: a uniform hairline, no top-lit sheen or cast shadow. */
@@ -93,6 +95,9 @@
   --hero-image-wash: brightness(.6);
   /* A gain's glow, as vivid as the accent's (2026-10-23, direct feedback): --delta-up is a text colour, too dim to light. */
   --gain-glow: oklch(.8 .2 150);
+  /* Information (2026-10-26, direct feedback: a request is info, so bluish): the mark's colour, and the vivid hue its card's glow takes. */
+  --accent-info: oklch(.74 .09 245);
+  --info-glow: oklch(.72 .16 250);
   --orb-color-third: oklch(.68 .07 245);
   --orb-rim: oklch(.951 .009 78.3 / .55);
   --orb-light-ground: 0;
@@ -196,7 +201,7 @@
   background: var(--glass-sheen) padding-box,
     linear-gradient(var(--glass-fill), var(--glass-fill)) padding-box,
     var(--glass-edge) border-box;
-  box-shadow: var(--glass-shadow), var(--glow);
+  box-shadow: var(--glass-shadow), var(--composer-glow);
   backdrop-filter: var(--surface-material);
 }
 :is([data-theme='bastion'], [data-theme='bastion-light']) .astryx-text-input:not(#\#):not(#\#):not(#\#) {

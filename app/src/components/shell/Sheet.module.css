@@ -67,6 +67,8 @@
 .sheet[data-size='compact'] { height: 40dvh; }
 .sheet[data-size='half'] { height: 65dvh; }
 .sheet[data-size='full'] { height: 100dvh; border-radius: 0; }
+/* Fits its content (2026-10-26, direct feedback), never taller than the screen; the body scrolls past that. */
+.sheet[data-size='auto'] { height: auto; max-height: 100dvh; }
 /* Floating (the attention home's full view): inset like the navigation pill, every corner
    rounded like the cards, lifted off the bottom edge. */
 .sheet[data-floating='true'] {
@@ -76,6 +78,7 @@
   box-shadow: var(--card-light);
 }
 .sheet[data-floating='true'][data-size='full'] { height: calc(100dvh - var(--shell-header-height)); }
+.sheet[data-floating='true'][data-size='auto'] { max-height: calc(100dvh - var(--shell-header-height) - var(--shell-inset)); }
 
 /* Receded (2026-09-16, same visual language as MobileFrame's own
    assistant-mode recede) — a sheet now sitting BENEATH a newly pushed

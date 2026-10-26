@@ -10,6 +10,15 @@ main[data-glow-page][data-scene-page] > * {
     translate var(--agent-recede-duration) var(--motion-enter-ease) calc(var(--page-section-index, 0) * var(--agent-recede-stagger)),
     filter var(--agent-recede-duration) var(--motion-enter-ease) calc(var(--page-section-index, 0) * var(--agent-recede-stagger));
 }
+/* The whole page sinks into depth with its contents (see AgentHomePage.module.css): scale back, at once. */
+main[data-glow-page] {
+  transform-origin: 50% 50%;
+  transition: scale var(--shell-mode-duration) var(--shell-mode-ease);
+}
+main[data-glow-page][data-receded] {
+  scale: var(--shell-recede-scale);
+  transition-timing-function: var(--motion-exit-ease);
+}
 main[data-glow-page][data-receded]:not([data-scene-page]) > * > *,
 main[data-glow-page][data-receded][data-scene-page] > * {
   opacity: 0;
@@ -19,6 +28,8 @@ main[data-glow-page][data-receded][data-scene-page] > * {
   transition-delay: calc((5 - var(--page-section-index, 0)) * var(--agent-recede-stagger));
 }
 @media (prefers-reduced-motion: reduce) {
+  main[data-glow-page] { transition: none; }
+  main[data-glow-page][data-receded] { scale: none; }
   main[data-glow-page]:not([data-scene-page]) > * > *,
   main[data-glow-page][data-scene-page] > * { transition-property: opacity; transition-delay: 0s; }
   main[data-glow-page][data-receded]:not([data-scene-page]) > * > *,

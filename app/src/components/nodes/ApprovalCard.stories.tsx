@@ -67,3 +67,5 @@ export const MultipleWithoutExtras: Story = { args: { questionCount: 3, allowSki
 export const ContinueOnly: Story = { args: { questionCount: 2, questionIndex: 1, navigationMode: 'continue-only', allowSkip: false } };
 export const Numbered: Story = { args: { questionCount: 2, navigationMode: 'numbered', allowSkip: false } };
 export const HiddenNavigation: Story = { args: { questionCount: 2, navigationMode: 'hidden', allowSkip: false } };
+// Only the choices, for a host that already has a header and a surface (the attention sheet).
+export const Bare: Story = { args: { chrome: 'bare', selected: 'USDT' } };

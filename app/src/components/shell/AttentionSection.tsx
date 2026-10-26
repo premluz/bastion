@@ -1,10 +1,11 @@
-import type { TransitionEvent } from 'react';
+import { useEffect, type TransitionEvent } from 'react';
 import { SectionHeading } from '../nodes/SectionHeading';
 import { AttentionCard } from './AttentionCard';
 import { CaughtUpCard } from './CaughtUpCard';
 import { PromoCarousel } from './PromoCarousel';
 import { SuggestionList } from './SuggestionList';
 import { PULSE_ITEMS } from '../../engine/attentionQueue';
+import { preloadApprovalCard } from '../../registry/registry';
 import type { AttentionQueue } from './useAttentionQueue';
 import '../../theme/attention.css';
 import styles from './AttentionSection.module.css';
@@ -16,6 +17,11 @@ import styles from './AttentionSection.module.css';
 // a row hands itself to the assistant. The assistant's own work is its status line above
 // the orb (GlowDock), not part of the page.
 export function AttentionSection({ queue, onSuggestion }: { queue: AttentionQueue; onSuggestion: (text: string, prompt: string) => void }) {
+  // Every card opens a sheet of choices (the question card); loaded now, it is in the sheet's first frame,
+  // so the sheet opens at its final height instead of growing when the code arrives (2026-10-26, direct feedback).
+  useEffect(() => {
+    preloadApprovalCard().catch((error: unknown) => console.error('Preloading the question card failed.', error));
+  }, []);
   return (
     <section className={styles.root} aria-label="Attention">
       {/* Each block is a step of the home's recede into the assistant (data-recede-step,

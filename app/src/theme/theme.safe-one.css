@@ -113,6 +113,8 @@
   --pane-surface: oklch(.17 .02 285 / .68);
 
   --glow: 0 0 12px oklch(from var(--accent-signal) l c h / .35);
+
+  --composer-glow: var(--glow);
   --scrim: oklch(.11 .02 285 / .35);
 
   /* Glass edge system (2026-09-30, direct feedback: "refine UI borders
@@ -139,6 +141,9 @@
   --card-light: none;
   --hero-image-wash: brightness(.6);
   --gain-glow: var(--delta-up);
+  /* Information (2026-10-26, direct feedback: a request is info, so bluish): the mark's colour, and the vivid hue its card's glow takes. */
+  --accent-info: oklch(.76 .14 245);
+  --info-glow: var(--accent-info);
   --orb-color-third: oklch(.68 .07 245);
   --orb-rim: color-mix(in oklab, var(--ink-primary) 55%, transparent);
   --orb-light-ground: 0;

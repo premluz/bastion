@@ -4,7 +4,7 @@ import { AssetRowPropsSchema } from '../contracts/props/asset-row';
 import { ProminentAssetCardPropsSchema } from '../contracts/props/prominent-asset-card';
 import { ContentGroupPropsSchema } from '../contracts/props/content-group';
 import { LinkChipsPropsSchema } from '../contracts/props/link-chips';
-import { lazy } from 'react';
+import { createElement, lazy } from 'react';
 import type { ComponentType } from 'react';
 import type { ZodType } from 'zod';
 import { SceneGridPropsSchema } from '../contracts/props/scene-grid';
@@ -43,6 +43,30 @@ interface RegistryEntry {
   propSchema: ZodType<unknown>;
 }
 
+/**
+ * A lazily loaded node that can be loaded ahead of time. Once `preload` has resolved it renders at
+ * once, with no suspended first frame: a host that sizes itself to its content (the attention
+ * sheet) would otherwise open at the size of an empty box and grow when the code arrived.
+ */
+function preloadable<P extends object>(load: () => Promise<ComponentType<P>>) {
+  let loaded: ComponentType<P> | null = null;
+  const remember = (component: ComponentType<P>) => {
+    loaded = component;
+    return component;
+  };
+  const Lazy = lazy(() => load().then((component) => ({ default: remember(component) })));
+  function Node(props: P) {
+    return loaded === null ? createElement(Lazy, props) : createElement(loaded, props);
+  }
+  return { component: Node, preload: () => load().then(remember).then(() => undefined), isLoaded: () => loaded !== null };
+}
+
+const approvalCard = preloadable(() => import('../components/nodes/ApprovalCard').then((m) => m.ApprovalCard));
+/** Loads the question card ahead of its first use. */
+export const preloadApprovalCard = approvalCard.preload;
+/** True once the question card's code is in, so it renders in a host's first frame. */
+export const isApprovalCardLoaded = approvalCard.isLoaded;
+
 export const registry: Record<string, RegistryEntry> = {
   'thinking-findings': {
     component: lazy(() => import('../components/nodes/ThinkingFindings').then((m) => ({ default: m.ThinkingFindings }))),
@@ -70,7 +94,7 @@ export const registry: Record<string, RegistryEntry> = {
   },
 
   'approval-card': {
-    component: lazy(() => import('../components/nodes/ApprovalCard').then((m) => ({ default: m.ApprovalCard }))),
+    component: approvalCard.component,
     propSchema: ApprovalCardPropsSchema,
   },
   'purchase-card': {

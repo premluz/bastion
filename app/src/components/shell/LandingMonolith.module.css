@@ -17,7 +17,7 @@
 .root[data-open]:not([data-away]) {
   opacity: 1;
   scale: 1;
-  transition: opacity var(--duration-550) var(--motion-enter-ease), scale var(--duration-1600) var(--ease-float);
+  transition: opacity var(--duration-550) var(--motion-enter-ease) var(--glow-landing-arrival-delay), scale var(--duration-1600) var(--ease-float) var(--glow-landing-arrival-delay);
 }
 
 .bleed {
@@ -27,4 +27,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .root { scale: none; transition-property: opacity; }
+  .root[data-open]:not([data-away]) { transition-delay: 0s; }
 }

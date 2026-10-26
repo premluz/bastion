@@ -12,5 +12,7 @@ export const ApprovalCardPropsSchema = z.object({
   isDisabled: z.boolean().default(false), allowSkip: z.boolean().default(true),
   navigationMode: z.enum(['default', 'continue-only', 'numbered', 'hidden']).default('default'),
   isDismissible: z.boolean().default(false), allowOther: z.boolean().default(false), otherValue: z.string().default(''),
+  /** card: the question in its own surface (chat). bare: only the choices, for a host that already has a header and a surface (a sheet). */
+  chrome: z.enum(['card', 'bare']).default('card'),
 }).refine((value) => value.questionIndex < value.questionCount, { message: 'Question index must be within the question count' });
 export type ApprovalCardProps = z.infer<typeof ApprovalCardPropsSchema>;

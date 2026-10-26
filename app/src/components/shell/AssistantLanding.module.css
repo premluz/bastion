@@ -25,14 +25,14 @@
 }
 .welcome strong { font-weight: inherit; color: var(--ink-primary); }
 
-/* The suggestions arrive one row at a time after the welcome has printed, by the same
-   motion the page's contents leave with (page-recede.css) run the other way (2026-10-14,
-   direct feedback): a staggered fade out of a soft blur with barely any travel, not a slide. */
+/* The suggestions arrive one row at a time after the welcome has printed: a staggered fade out of a soft
+   blur, rising into place as a page does on arriving (2026-10-26, direct feedback: the page behind sinks
+   into depth and this one comes in; `--shell-page-enter-rise`, as MobileFrame's page enter). */
 .list { margin-block-start: var(--space-24); }
 .welcome, .list > * {
   opacity: 0;
   filter: blur(var(--blur-8));
-  translate: 0 calc(var(--space-4) * -1);
+  translate: 0 var(--shell-page-enter-rise);
   transition: opacity var(--agent-recede-duration) var(--motion-exit-ease),
     filter var(--agent-recede-duration) var(--motion-exit-ease),
     translate var(--agent-recede-duration) var(--motion-exit-ease);

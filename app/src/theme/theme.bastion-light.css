@@ -67,6 +67,8 @@
   --surface-1-solid: oklch(.992 .003 80);
   --pane-surface: oklch(.992 .003 80 / .92);
   --glow: 0 0 12px oklch(from var(--presence) l c h / .14);
+  /* The composer's own edge glow: a hairline (2026-10-25, direct feedback: the shared 12 px --glow was far too strong on it). */
+  --composer-glow: 0 0 1px oklch(from var(--presence) l c h / .14);
   --scrim: oklch(.177 .004 264.5 / .16);
 
   --glass-fill: oklch(1 0 0 / .82);
@@ -86,6 +88,9 @@
   --hero-image-wash: none;
   /* A gain's glow, as vivid as the accent's (2026-10-23, direct feedback): --delta-up is a text colour, too dim to light. */
   --gain-glow: oklch(.78 .2 150);
+  /* Information (2026-10-26, direct feedback: a request is info, so bluish): the mark's colour, and the vivid hue its card's glow takes. */
+  --accent-info: oklch(.52 .13 250);
+  --info-glow: oklch(.72 .15 250);
   /* The orb's third colour: warm in light (2026-10-23, direct feedback: the slate read as a dark
      shadow on paper — light gets a soft orange glow instead). */
   --orb-color-third: oklch(.88 .08 68);

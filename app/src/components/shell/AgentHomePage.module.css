@@ -38,10 +38,17 @@
   transition-timing-function: var(--motion-exit-ease);
   transition-delay: calc(var(--recede-index, 0) * var(--agent-recede-stagger));
 }
+/* The page itself sinks into depth as its contents leave (2026-10-26, direct feedback: the page goes
+   into the depth and the assistant's landing comes in): it scales back toward its centre on the shell's
+   recede scale, starting at once while the contents stagger out, and returns with them. */
+.root { transform-origin: 50% 50%; transition: scale var(--shell-mode-duration) var(--shell-mode-ease); }
+.root[data-receding] { scale: var(--shell-recede-scale); transition-timing-function: var(--motion-exit-ease); }
 /* The pane's glass leaves with its last row. */
 .root[data-receding] .pane { --recede-index: 3; translate: none; filter: none; }
 .pane { transition: opacity var(--agent-recede-duration) var(--motion-enter-ease) calc(4 * var(--agent-recede-stagger)); }
 @media (prefers-reduced-motion: reduce) {
+  .root { transition: none; }
+  .root[data-receding] { scale: none; }
   .root .pane, .root .pane > *, .title, .top > :nth-child(2), .top > :first-child > *, .root [data-recede-step] { transition-property: opacity; transition-delay: 0s; }
   .root[data-receding] .pane > *, .root[data-receding] .title, .root[data-receding] .top > :nth-child(2), .root[data-receding] .top > :first-child > *, .root[data-receding] [data-recede-step] { translate: none; filter: none; }
 }

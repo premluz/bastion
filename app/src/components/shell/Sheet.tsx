@@ -2,7 +2,8 @@ import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, ty
 import { useFocusTrap } from '@astryxdesign/core/hooks';
 import styles from './Sheet.module.css';
 
-export type SheetSize = 'compact' | 'half' | 'full';
+/** compact, half and full are fixed snap heights; auto fits the content, up to the screen. */
+export type SheetSize = 'compact' | 'half' | 'full' | 'auto';
 
 export interface SheetProps {
   size?: SheetSize;

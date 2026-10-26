@@ -16,10 +16,17 @@
   cursor: pointer;
 }
 
-/* The kind's colour on its mark: due is the alert, a request the signal, a review the gain. */
-.root { --attention-tone: var(--accent-signal); }
-.root[data-attention-kind='due'] { --attention-tone: var(--accent-alert); }
-.root[data-attention-kind='review'] { --attention-tone: var(--delta-up); }
+/* The kind's colour on its mark, and the same hue as a soft glow rising into the card, as the Investments
+   tile has in green (2026-10-26, direct feedback): due is the alert with an orange glow, a request is
+   information, bluish, a review the gain. */
+.root { --attention-tone: var(--accent-info); --glow-color: var(--info-glow); --glow-strength: var(--tint-strong); }
+.root[data-attention-kind='due'] { --attention-tone: var(--accent-alert); --glow-color: var(--accent-signal); }
+.root[data-attention-kind='review'] { --attention-tone: var(--delta-up); --glow-color: var(--gain-glow); }
+
+/* Softer than the primitive's own bottom glow, as on the balance tiles: a wide, deep haze, not a band
+   at the edge. It paints on ::after; the card's rows sit above it. */
+.root::after { left: 10%; width: 80%; height: 60%; bottom: -20%; filter: blur(var(--blur-64)); }
+.root > * { position: relative; z-index: 1; }
 
 .mark {
   display: grid;

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, type MouseEvent, type ReactNode } from 'react';
 import { Card } from '@astryxdesign/core/Card';
 import { RadioList, RadioListItem } from '@astryxdesign/core/RadioList';
 import { Text } from '@astryxdesign/core/Text';
@@ -13,11 +13,27 @@ import { ApprovalNavigation } from './ApprovalNavigation';
 import '../../theme/approval.css';
 import styles from './ApprovalCard.module.css';
 
+// Forwards a click anywhere on a row to its real radio (see the long note in ApprovalCard).
+const pickRowOnClick = (event: MouseEvent<HTMLElement>) => {
+  const target = event.target as HTMLElement;
+  if (target.closest('input, label')) return;
+  target.closest('.astryx-radio-list-item')?.querySelector<HTMLInputElement>('input[type="radio"]')?.click();
+};
+
+// `bare` is a plain box: the rows keep their own fill, but there is no card around them (2026-10-26,
+// direct feedback: a card inside a sheet is nesting). Its class still carries the row rules.
+function Surface({ isBare, onClick, children }: { isBare: boolean; onClick: (event: MouseEvent<HTMLElement>) => void; children: ReactNode }) {
+  return isBare
+    ? <div className={styles.card} onClick={onClick}>{children}</div>
+    : <Card padding={0} className={`${styles.card}`} onClick={onClick}>{children}</Card>;
+}
+
 export function ApprovalCard(props: ApprovalCardProps) {
   const root = useRef<HTMLDivElement>(null);
   const reduced = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const title = useStreamingText(props.prompt, !reduced);
   const multiple = props.questionCount > 1;
+  const isBare = props.chrome === 'bare';
   return <div ref={root} data-approval-card={props.questionId}>
     {/* Delegated click on the whole row (2026-09-13, direct feedback: "hit
         area is a smaller layer inside pane... entire pane should be the
@@ -40,14 +56,10 @@ export function ApprovalCard(props: ApprovalCardProps) {
         row's real <input>, firing the same native change event the
         existing RadioList onChange below already handles — no new
         selection logic, just a bigger way to reach it. */}
-    <Card padding={0} className={`${styles.card}`} onClick={(event) => {
-      const target = event.target as HTMLElement;
-      if (target.closest('input, label')) return;
-      target.closest('.astryx-radio-list-item')?.querySelector<HTMLInputElement>('input[type="radio"]')?.click();
-    }}>
-      <header className={styles.header}><Text className={styles.prompt}>{title}</Text>
+    <Surface isBare={isBare} onClick={pickRowOnClick}>
+      {!isBare && <header className={styles.header}><Text className={styles.prompt}>{title}</Text>
         {props.isDismissible && <IconButton label="Dismiss question" icon={<Icon icon="close" />} variant="ghost" data-approval-action="dismiss" />}
-      </header>
+      </header>}
       <RadioList label={props.prompt} isLabelHidden value={props.selected ?? ''} isDisabled={props.isDisabled}
         onChange={(value) => root.current?.setAttribute('data-approval-value', value)}>
         {props.options.map((option) => <RadioListItem key={option.value} value={option.value} label={option.label}
@@ -58,6 +70,6 @@ export function ApprovalCard(props: ApprovalCardProps) {
         placeholder="Something else…" value={props.otherValue} isDisabled={props.isDisabled}
         onChange={(value) => root.current?.setAttribute('data-approval-other-value', value)} /></div>}
       {multiple && props.navigationMode !== 'hidden' && <ApprovalNavigation {...props} />}
-    </Card>
+    </Surface>
   </div>;
 }

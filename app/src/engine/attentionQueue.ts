@@ -44,10 +44,11 @@ export const PULSE_ITEMS = [
 ] as const;
 
 // The full view's choices are the app's own selectable question (approval-card), so they
-// arrive through the renderer like every other node; the sheet owns the Confirm action.
+// arrive through the renderer like every other node; the sheet owns the Confirm action. Its prompt
+// is the sheet's description (2026-10-26, direct feedback: no nesting), so the card draws only the choices.
 export function buildResolutionScene(item: AttentionItem, selected: string): HydratedScene {
   return { id: `attention-${item.id}`, title: item.title, intents: [], thinking: [], data: {},
     layout: { id: `attention-${item.id}-question`, type: 'approval-card', props: {
       questionId: `attention-${item.id}`, prompt: item.question, options: item.options, selected,
-      navigationMode: 'hidden', allowSkip: false } } };
+      navigationMode: 'hidden', allowSkip: false, chrome: 'bare' } } };
 }

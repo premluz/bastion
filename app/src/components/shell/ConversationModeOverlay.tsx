@@ -38,7 +38,7 @@ export function ConversationModeOverlay({ isOpen, onClose, speech, audioError, c
   return (
     <Dialog isOpen={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}
       variant="fullscreen" purpose="form" padding={0} className={styles.root}
-      aria-label="Assistant conversation" aria-describedby="conversation-activity" data-shared-orb={String(sharedOrb)} data-orb-variant={orbVariant}
+      aria-label="Assistant conversation" aria-describedby="conversation-activity" data-shared-orb={String(sharedOrb)} data-orb-variant={orbVariant} data-monolith={monolith ? '' : undefined}
       data-user-speaking={userSpeaking ? '' : undefined}>
       <div className={styles.layout} data-receded={isReceded ? '' : undefined}>
         {orbVariant === 'unbounded' && <div className={styles.glowLight} data-speaking={assistantSpeaking ? '' : undefined}><GlowLight isOpen orb={monolith ? 'none' : 'plasma'} /></div>}
