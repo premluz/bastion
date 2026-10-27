@@ -1,0 +1,182 @@
+/* Magic border (2026-10-27, direct request, after i-genie's magic button): a reusable
+   "the assistant is working on this" treatment for any button or pane — the theme's own
+   accents running around the edge as a soft inner rim glow, with a faint line on the edge
+   itself. Rendered by components/shell/MagicBorder.tsx (wrapper + two decorative layers); set
+   --magic-border-radius to the wrapped element's radius. Inner only (2026-10-27, direct
+   feedback: "inner shadow kind of rim aura", much softer) — nothing reaches past the edge. */
+
+@property --magic-border-angle {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0deg;
+}
+
+/* Registered so the rim can grow in from the edge (a plain custom property cannot transition). */
+@property --magic-border-rim {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+.root {
+  position: relative;
+  isolation: isolate;
+  --magic-border-shape: var(--magic-border-radius, var(--radius-12));
+  --magic-border-width: var(--hairline-width);
+  --magic-border-rim-active: var(--space-16);
+  --magic-border-blur: var(--blur-z1);
+  --magic-border-glow-strength: var(--opacity-55);
+  --magic-border-line-strength: var(--opacity-40);
+  --magic-border-colors: var(--accent-signal), var(--info-glow), var(--gain-glow), var(--accent-signal);
+  --magic-border-gradient: conic-gradient(from var(--magic-border-angle), var(--magic-border-colors));
+  --magic-border-cycle: calc(var(--duration-1600) * 2);
+  /* Soft arrival (2026-10-27, direct feedback: "appears too abruptly"): the glow fades in slowly
+     while the rim swells inward on a gentle spring; leaving is a plain, quicker fade. */
+  --magic-border-enter: var(--duration-1600);
+  --magic-border-enter-fade: calc(var(--duration-1600) / 2);
+  --magic-border-exit: var(--duration-480);
+  --magic-border-rim: 0px;
+  animation: spin var(--magic-border-cycle) linear infinite paused;
+  transition: --magic-border-rim var(--magic-border-exit) var(--ease-decel);
+}
+
+.root[data-magic-border='active'] {
+  --magic-border-rim: var(--magic-border-rim-active);
+  animation-play-state: running;
+  transition: --magic-border-rim var(--magic-border-enter) var(--ease-spring-soft);
+}
+
+/* The rim glow: a ring as wide as the rim, its inner edge rounded with the element's corners
+   (the padding box follows the border radius), blurred, then clipped to the element's shape —
+   so what remains is a soft band inside the edge that follows the curve. */
+.clip {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--magic-border-shape);
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--magic-border-exit) var(--ease-decel);
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  filter: blur(var(--magic-border-blur));
+}
+
+/* Masks are stencils (only their alpha counts), hence the plain keyword colour. */
+.glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: var(--magic-border-rim) solid transparent;
+  border-radius: var(--magic-border-shape);
+  background: var(--magic-border-gradient) border-box;
+  mask: linear-gradient(black 0 0) padding-box exclude, linear-gradient(black 0 0);
+}
+
+/* The line: the same gradient cut to a hairline on the edge. */
+.root::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: var(--magic-border-width);
+  border-radius: var(--magic-border-shape);
+  background: var(--magic-border-gradient);
+  mask: linear-gradient(black 0 0) content-box exclude, linear-gradient(black 0 0);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--magic-border-exit) var(--ease-decel);
+}
+
+.root[data-magic-border='active'] .clip {
+  opacity: var(--magic-border-glow-strength);
+  transition: opacity var(--magic-border-enter-fade) var(--ease-decel);
+}
+
+.root[data-magic-border='active']::after {
+  opacity: var(--magic-border-line-strength);
+  transition: opacity var(--magic-border-enter) var(--ease-decel);
+}
+
+/* Bottom variant (2026-10-27, direct feedback with a reference): the light sits at the foot —
+   a soft inner glow along the bottom, a thin spectrum line on the bottom edge that rises into
+   the corners and fades, faint at rest; a brighter highlight runs along it, pauses, runs again
+   (indeterminate progress). The rim variant above is the default. */
+.root[data-magic-border-variant='bottom'] {
+  --magic-border-width: calc(var(--hairline-width) * 2);
+  /* The highlight is thicker and more saturated than the line it runs along, so it reads as
+     the line lighting up (2026-10-27: "lights up … with a stronger color"). */
+  --magic-border-sweep-width: var(--space-2);
+  --magic-border-line-strength: var(--opacity-55);
+  /* The glow eases back and sits just off the edge, so the line (drawn over it, in the same
+     colours) still reads against it. */
+  --magic-border-glow-strength: var(--opacity-40);
+  --magic-border-rim-active: var(--space-24);
+  --magic-border-blur: var(--blur-16);
+  --magic-border-spectrum: linear-gradient(to right,
+    var(--info-glow), var(--accent-alert), var(--accent-signal), var(--gain-glow), var(--info-glow));
+  --magic-border-sweep-cycle: calc(var(--duration-1600) * 1.5);
+  /* The line climbs the corners only as far as their curve, fading out on the way up. */
+  --magic-border-foot: linear-gradient(to top, black, transparent var(--magic-border-shape));
+  animation: none;
+}
+
+.root[data-magic-border-variant='bottom'] .glow::before {
+  inset: auto 12% calc(-1 * var(--magic-border-rim) / 2);
+  height: calc(var(--magic-border-rim) * 2);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--magic-border-spectrum);
+  mask: none;
+}
+
+.root[data-magic-border-variant='bottom']::after,
+.root[data-magic-border-variant='bottom']::before {
+  z-index: 2;
+  background: var(--magic-border-spectrum);
+}
+
+.root[data-magic-border-variant='bottom']::after {
+  mask: var(--magic-border-foot) intersect, linear-gradient(black 0 0) content-box exclude, linear-gradient(black 0 0);
+}
+
+/* The highlight: the same line at full strength, shown only under a band that travels across. */
+.root[data-magic-border-variant='bottom']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: var(--magic-border-sweep-width);
+  border-radius: var(--magic-border-shape);
+  filter: saturate(var(--saturate-180));
+  mask: linear-gradient(to right, transparent, black, transparent) -70% 0 / 40% 100% no-repeat intersect,
+    var(--magic-border-foot) intersect, linear-gradient(black 0 0) content-box exclude, linear-gradient(black 0 0);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--magic-border-exit) var(--ease-decel);
+  animation: sweep var(--magic-border-sweep-cycle) var(--ease-standard) infinite paused;
+}
+
+.root[data-magic-border-variant='bottom'][data-magic-border='active']::before {
+  opacity: 1;
+  animation-play-state: running;
+  transition: opacity var(--magic-border-enter) var(--ease-decel);
+}
+
+@keyframes spin {
+  to { --magic-border-angle: 360deg; }
+}
+
+/* Across in the first two thirds, then a rest off the edge before the next run. */
+@keyframes sweep {
+  0% { mask-position: -70% 0, 0 0, 0 0, 0 0; }
+  65%, 100% { mask-position: 170% 0, 0 0, 0 0, 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root { animation: none; transition: none; }
+  .root::before { animation: none; visibility: hidden; }
+}

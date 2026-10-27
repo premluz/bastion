@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { FractalMonolith } from '../fractal/FractalMonolith';
-import { BEVEL } from '../fractal/geometry/bevel';
+import { BEVEL, cornerRadius } from '../fractal/geometry/bevel';
 import { buildFractal } from '../fractal/geometry/buildFractal';
 import type { LiveSettings } from '../live';
 import type { QualitySpec } from '../quality';
@@ -19,11 +19,12 @@ interface FractalStageProps {
 
 /** The fractal monolith: levels of cubes within cubes, the first level leaving as an agent. */
 export function FractalStage({ levels, granularity, seed, searchAttempts, settings, quality, preset, progress }: FractalStageProps) {
-  const { cutWidth } = settings.target.material;
+  const { cutWidth, softCorners } = settings.target.material;
+  const round = cornerRadius(softCorners);
   const search = useMemo(() => ({ trials: searchAttempts, seed }), [searchAttempts, seed]);
   const model = useMemo(
-    () => buildFractal({ seed, levels, granularity, cutWidth, bevel: BEVEL }),
-    [seed, levels, granularity, cutWidth],
+    () => buildFractal({ seed, levels, granularity, cutWidth, bevel: BEVEL, round }),
+    [seed, levels, granularity, cutWidth, round],
   );
 
   return <FractalMonolith model={model} search={search} settings={settings} quality={quality} preset={preset} progress={progress} />;

@@ -80,6 +80,7 @@ export function IntelligenceSection() {
         <ParamSlider label="Core intensity" value={m.core} min={0} max={1} step={0.01} format={percent} onChange={(core) => setMaterial({ core })} />
         <ParamSlider label="Cut illumination" value={m.cutLight} min={0} max={1} step={0.01} format={percent} onChange={(cutLight) => setMaterial({ cutLight })} />
         <ParamSlider label="Exterior spill" value={m.spill} min={0} max={1} step={0.01} format={percent} onChange={(spill) => setMaterial({ spill })} />
+        <ParamSlider label="Body illumination" value={m.bodyLight} min={0} max={1} step={0.01} format={percent} onChange={(bodyLight) => setMaterial({ bodyLight })} />
         <ParamSlider label="Diffusion radius" value={m.diffusion} min={0} max={1} step={0.01} format={percent} onChange={(diffusion) => setMaterial({ diffusion })} />
         <ParamSlider label="Absorption" value={m.absorption} min={0} max={1} step={0.01} format={percent} onChange={(absorption) => setMaterial({ absorption })} />
         <ParamSlider label="Glow falloff" value={m.falloff} min={0.8} max={3} step={0.05} onChange={(falloff) => setMaterial({ falloff })} />

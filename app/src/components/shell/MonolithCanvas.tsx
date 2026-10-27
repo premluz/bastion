@@ -1,6 +1,6 @@
 import { BastionMonolith } from '@bastion/monolith';
 import type { AssemblyClock } from './useAssemblyClock';
-import { MONOLITH_ORB_STATES, type MonolithOrbMood } from './monolithOrbStates';
+import { MONOLITH_ORB_STATES, monolithOrbState, type MonolithOrbMood } from './monolithOrbStates';
 
 const COMPOSITION = { kind: 'monolith', variant: 'step-angle' } as const;
 // The canvas is a few dozen pixels across, so the full device ratio and the top quality tier cost almost
@@ -26,7 +26,7 @@ export default function MonolithCanvas({ mood, appearance, framing, paused = fal
       composition={COMPOSITION}
       appearance={appearance}
       states={MONOLITH_ORB_STATES}
-      state={mood}
+      state={monolithOrbState(mood, appearance)}
       quality="high"
       maxPixelRatio={MAX_PIXEL_RATIO}
       interactive={false}

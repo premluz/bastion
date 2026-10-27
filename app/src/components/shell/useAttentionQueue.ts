@@ -7,24 +7,29 @@ export type CaughtUpPhase = 'none' | 'showing' | 'leaving' | 'gone';
 
 export interface AttentionQueue {
   items: AttentionItem[];
+  /** Items handed to the assistant and still being worked on: they stay in the queue until done. */
+  processing: string[];
   /** The item whose full view is open, if any. */
   openItem: AttentionItem | null;
   tasks: AgentTask[];
   caughtUp: CaughtUpPhase;
   open: (id: string) => void;
   close: () => void;
-  /** Hands the open item to the assistant with the chosen resolution; the next card comes forward. */
+  /** Hands the open item to the assistant with the chosen resolution; its card stays, processing, until done. */
   confirm: (choice: string) => void;
   /** The caught-up card's exit has played: the section closes for good. */
   finishCaughtUp: () => void;
 }
 
-// The attention home's state (2026-10-23): resolving an item removes it from the queue and
-// adds it to the assistant's work, which completes after a while and leaves (so the status
-// line exists only while something is running). Resolving the last item shows "You're caught
-// up" for a moment before the section closes. Browsing the cards changes nothing here.
+// The attention home's state (2026-10-23): resolving an item adds it to the assistant's work,
+// which completes after a while and leaves (so the status line exists only while something is
+// running). Its card stays in view meanwhile, processing, and leaves the queue only when the
+// work is done (2026-10-27, direct feedback) — only then does the next card come forward. The
+// last item done shows "You're caught up" for a moment before the section closes. Browsing the
+// cards changes nothing here.
 export function useAttentionQueue(): AttentionQueue {
   const [items, setItems] = useState(ATTENTION_ITEMS);
+  const [processing, setProcessing] = useState<string[]>([]);
   const [openId, setOpenId] = useState<string | null>(null);
   const [tasks, setTasks] = useState<AgentTask[]>([]);
   const [caughtUp, setCaughtUp] = useState<CaughtUpPhase>('none');
@@ -34,17 +39,25 @@ export function useAttentionQueue(): AttentionQueue {
   const openItem = items.find((item) => item.id === openId) ?? null;
   const confirm = useCallback((choice: string) => {
     if (!openItem || !choice) return;
-    const taskId = `${openItem.id}-${choice}`;
-    const remaining = items.filter((item) => item.id !== openItem.id);
-    setItems(remaining);
+    const itemId = openItem.id;
+    const taskId = `${itemId}-${choice}`;
+    setProcessing((current) => [...current, itemId]);
     setTasks((current) => [{ id: taskId, label: openItem.task, status: 'working' }, ...current]);
     setOpenId(null);
-    later(() => setTasks((current) => current.filter((task) => task.id !== taskId)), config.attention.taskCompletesAfterMs);
-    if (remaining.length === 0) {
-      setCaughtUp('showing');
-      later(() => setCaughtUp('leaving'), config.attention.caughtUpHoldMs);
-    }
-  }, [openItem, items]);
-  return { items, openItem, tasks, caughtUp, open: setOpenId, close: useCallback(() => setOpenId(null), []), confirm,
+    later(() => {
+      setTasks((current) => current.filter((task) => task.id !== taskId));
+      setProcessing((current) => current.filter((id) => id !== itemId));
+      setItems((current) => current.filter((item) => item.id !== itemId));
+    }, config.attention.taskCompletesAfterMs);
+  }, [openItem]);
+  const isEmpty = items.length === 0;
+  useEffect(() => {
+    if (!isEmpty) return;
+    setCaughtUp('showing');
+    const timer = window.setTimeout(() => setCaughtUp('leaving'), config.attention.caughtUpHoldMs);
+    return () => window.clearTimeout(timer);
+  }, [isEmpty]);
+  const open = useCallback((id: string) => { if (!processing.includes(id)) setOpenId(id); }, [processing]);
+  return { items, processing, openItem, tasks, caughtUp, open, close: useCallback(() => setOpenId(null), []), confirm,
     finishCaughtUp: useCallback(() => setCaughtUp('gone'), []) };
 }

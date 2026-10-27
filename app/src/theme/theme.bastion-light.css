@@ -69,7 +69,8 @@
   --glow: 0 0 12px oklch(from var(--presence) l c h / .14);
   /* The composer's own edge glow: a hairline (2026-10-25, direct feedback: the shared 12 px --glow was far too strong on it). */
   --composer-glow: 0 0 1px oklch(from var(--presence) l c h / .14);
-  --scrim: oklch(.177 .004 264.5 / .16);
+  --scrim: oklch(.99 .004 264.5 / .45);
+  --scrim-blur: var(--blur-z2);
 
   --glass-fill: oklch(1 0 0 / .82);
   /* Same light as the raised cards (Perps, balance tiles): the nav pill, + and header glass (2026-10-21). */
@@ -135,9 +136,9 @@
   --motion-table-stagger: 30ms;
   --motion-chart-reveal-duration: var(--duration-480);
   --motion-shimmer-duration: var(--duration-1600);
-  --face-ui: var(--font-geist);
-  --font-family-body: var(--font-geist);
-  --font-family-heading: var(--font-geist);
+  --face-ui: var(--font-poppins);
+  --font-family-body: var(--font-poppins);
+  --font-family-heading: var(--font-poppins);
   --face-data: var(--font-data);
   --face-voice: var(--font-voice);
 

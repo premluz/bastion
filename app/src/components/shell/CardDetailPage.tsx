@@ -6,6 +6,7 @@ import { Heading } from '@astryxdesign/core/Heading';
 import { EmptyState } from '@astryxdesign/core/EmptyState';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { VirtualCardPlaceholder } from './VirtualCardPlaceholder';
+import { EarningBadge } from './EarningBadge';
 import { WalletActionRow } from './WalletActionRow';
 import { ActivityGroups } from './ActivityGroups';
 import { LinkChips } from '../nodes/LinkChips';
@@ -151,7 +152,9 @@ export function CardDetailPage({ card, sourceRect, onClose }: CardDetailPageProp
           <Heading level={1} type="display-1" className={heroBalanceStyles.heroBalance}>
             ${MONEY_PLACEHOLDER.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </Heading>
-          <div className={styles.apyRow}>
+          {/* Aura shows only this (aura.css): the APY, token, info icon and estimated annual earnings give way to "Earning N%". */}
+          <div className={styles.earningOnly} data-earning-only><EarningBadge rate={MONEY_PLACEHOLDER.earningRate} /></div>
+          <div className={styles.apyRow} data-apy-row>
             <Text type="supporting" weight="semibold" className={styles.apy}>{MONEY_PLACEHOLDER.apy}% APY</Text>
             <Text type="supporting" color="secondary">· mUSD</Text>
             <Icon icon="info" size="sm" color="secondary" />

@@ -166,6 +166,7 @@
      than a single OKLCH pinned to one hue the way the dark-only themes
      below use, since this theme's own scheme actually toggles. */
   --scrim: light-dark(oklch(0 0 0 / .35), oklch(0 0 0 / .5));
+  --scrim-blur: var(--blur-z0);
 
   /* Glass edge system + orb halo + shell ambient — see theme.safe-one.css
      for the rationale. This theme keeps its existing look: opaque fill,

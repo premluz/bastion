@@ -48,6 +48,8 @@ export function writeFrameUniforms(u: CeramicUniforms, frame: FrameLight, m: Mat
   u.uPlasmaShape.value.set(field.plasmaScale, field.contrast, field.veil * preset.skinGlow * radiance);
   u.uExterior.value = field.exterior * radiance;
   u.uEdgeLight.value = preset.surface.edgeLight;
+  u.uBodyLight.value = m.bodyLight;
+  u.uPaleWarmth.value = m.paleWarmth;
   field.motes.forEach((mote, i) => u.uMotes.value[i]?.set(...mote.position, mote.strength));
   u.uReveal.value = light.reveal;
   u.uImpulse.value.set(field.impulseRadius, field.impulseStrength, 0);

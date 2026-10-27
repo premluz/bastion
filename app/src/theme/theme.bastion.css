@@ -73,6 +73,7 @@
   /* The composer's own edge glow: a hairline (2026-10-25, direct feedback: the shared 12 px --glow was far too strong on it). */
   --composer-glow: 0 0 1px oklch(from var(--presence) l c h / .14);
   --scrim: oklch(.1 .004 264.5 / .62);
+  --scrim-blur: var(--blur-z0);
 
   /* Flat panels: a uniform hairline, no top-lit sheen or cast shadow. */
   --glass-fill: oklch(.215 .005 268 / .55);
@@ -141,9 +142,9 @@
   /* Geist sans / Geist Mono eyebrows (2026-10-06, direct feedback) — this
      theme's own register, so --face-ui and Astryx's family variables are
      overridden here only (logged in astryx-bridge.md). */
-  --face-ui: var(--font-geist);
-  --font-family-body: var(--font-geist);
-  --font-family-heading: var(--font-geist);
+  --face-ui: var(--font-poppins);
+  --font-family-body: var(--font-poppins);
+  --font-family-heading: var(--font-poppins);
   --face-data: var(--font-data);
   --face-voice: var(--font-voice);
 
@@ -256,7 +257,7 @@
    follows; specificity matches Astryx's inflated text rules. */
 :is([data-theme='bastion'], [data-theme='bastion-light']) [data-eyebrow]:not(#\#):not(#\#):not(#\#),
 :is([data-theme='bastion'], [data-theme='bastion-light']) [data-eyebrow] :is(span, a, button):not(#\#):not(#\#):not(#\#) {
-  font-family: var(--font-geist);
+  font-family: var(--font-poppins);
   font-size: var(--text-10);
   font-weight: 400;
   letter-spacing: .16em;

@@ -28,7 +28,7 @@ export function AttentionSection({ queue, onSuggestion }: { queue: AttentionQueu
           AgentHomePage.module.css), counted from the bottom up. */}
       {queue.caughtUp !== 'gone' && <AttentionBlock queue={queue} />}
       <div className={styles.pulse}>
-        <div data-recede-step="2"><SectionHeading title="Pulse" href="#pulse" /></div>
+        <div data-recede-step="2" data-section-heading><SectionHeading title="Pulse" href="#pulse" /></div>
         <div data-recede-step="1"><SuggestionList items={PULSE_ITEMS} onSuggestion={onSuggestion} variant="card" /></div>
       </div>
     </section>
@@ -51,10 +51,11 @@ function AttentionBlock({ queue }: { queue: AttentionQueue }) {
         <div className={styles.queue} data-hidden={isCaughtUp ? '' : undefined} aria-hidden={isCaughtUp}>
           {/* A title with the queue's count (2026-10-23, direct feedback with a mock); the hidden
               copy keeps its badge so the caught-up card takes exactly the same height. */}
-          <div data-recede-step="4"><SectionHeading title="Needs you" {...(count > 0 || isCaughtUp ? { count } : {})} /></div>
+          <div data-recede-step="4" data-section-heading><SectionHeading title="Needs you" {...(count > 0 || isCaughtUp ? { count } : {})} /></div>
           <div data-recede-step="3">{count === 0 ? <div className={styles.cardSpace} />
             : <PromoCarousel aria-label="Items needing attention" variant="edge">
-              {queue.items.map((item, index) => <AttentionCard key={item.id} item={item} position={index + 1} count={count} onOpen={queue.open} />)}
+              {queue.items.map((item, index) => <AttentionCard key={item.id} item={item} position={index + 1} count={count}
+                isProcessing={queue.processing.includes(item.id)} onOpen={queue.open} />)}
             </PromoCarousel>}</div>
         </div>
         {isCaughtUp && <div className={styles.caughtUp} data-recede-step="3"><CaughtUpCard isLeaving={queue.caughtUp === 'leaving'} /></div>}

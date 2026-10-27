@@ -37,6 +37,10 @@
 .scrollRow {
   display: flex;
   overflow-x: auto;
+  /* Room for the cards' outer shadow, which the scroll track would cut in a straight line; the negative margin
+     gives it back, so the layout does not move. 0 unless a theme's cards cast one (shell.css, aura.css). */
+  padding-block: var(--carousel-shadow-room);
+  margin-block: calc(-1 * var(--carousel-shadow-room));
   scrollbar-width: none;
 }
 

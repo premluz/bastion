@@ -1,3 +1,7 @@
+/* The magic border's wrapper (theme/magicBorder.module.css) is the carousel slide: the card fills it,
+   and the border follows the card's corners. */
+.frame { display: grid; --magic-border-radius: var(--list-card-radius); }
+
 /* The balance tiles' raised glass card (shell.css --list-card-*, theme --card-light), so the
    queue reads as the same family of surfaces as the hero above it. */
 .root {
@@ -24,9 +28,11 @@
 .root[data-attention-kind='review'] { --attention-tone: var(--delta-up); --glow-color: var(--gain-glow); }
 
 /* Softer than the primitive's own bottom glow, as on the balance tiles: a wide, deep haze, not a band
-   at the edge. It paints on ::after; the card's rows sit above it. */
+   at the edge. It paints on ::after; the icon and title sit above it. Only those two: the card's own
+   full-size button (ClickableCard's click and focus target) must keep its positioning, or it drops into
+   the layout and pushes the icon aside. */
 .root::after { left: 10%; width: 80%; height: 60%; bottom: -20%; filter: blur(var(--blur-64)); }
-.root > * { position: relative; z-index: 1; }
+.mark, .title { position: relative; z-index: 1; }
 
 .mark {
   display: grid;

@@ -116,6 +116,7 @@
 
   --composer-glow: var(--glow);
   --scrim: oklch(.11 .02 285 / .35);
+  --scrim-blur: var(--blur-z0);
 
   /* Glass edge system (2026-09-30, direct feedback: "refine UI borders
      towards glass morphism with top lightened gradient that fades at

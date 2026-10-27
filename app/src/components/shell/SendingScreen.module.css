@@ -12,7 +12,7 @@
   box-shadow: none;
 }
 
-.root::backdrop { background: var(--scrim); }
+.root::backdrop { background: var(--scrim); backdrop-filter: blur(var(--scrim-blur)); }
 
 .layout {
   display: flex;

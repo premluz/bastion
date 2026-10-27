@@ -29,7 +29,7 @@ export function ContributingBalanceRow({ balances }: ContributingBalanceRowProps
           </span>
           <span className={styles.body}>
             <Text type="supporting" color="secondary">{balance.code}</Text>
-            <Text type="body" weight="semibold" hasTabularNumbers>
+            <Text type="body" weight="medium" hasTabularNumbers>
               ${balance.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </Text>
           </span>

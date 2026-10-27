@@ -4,7 +4,16 @@ import type { PieceModel, Polygon } from './types';
 const SKIN_GROUP = 0;
 const WALL_GROUP = 1;
 
-function appendFan(polygon: Polygon, positions: number[], normals: number[]): number {
+/** The outward normal of a cube rounded at `round`, at a point on its skin (the face normal when flat there). */
+function roundedNormal(p: readonly [number, number, number], round: number, flat: readonly [number, number, number]): readonly [number, number, number] {
+  const inner = 1 - round;
+  const d = p.map((v) => v - Math.max(-inner, Math.min(inner, v)));
+  const length = Math.hypot(d[0] ?? 0, d[1] ?? 0, d[2] ?? 0);
+  return length < 1e-6 ? flat : [(d[0] ?? 0) / length, (d[1] ?? 0) / length, (d[2] ?? 0) / length];
+}
+
+function appendFan(polygon: Polygon, positions: number[], normals: number[], round = 0): number {
+  const normalAt = (p: readonly [number, number, number]) => (round > 0 ? roundedNormal(p, round, polygon.normal) : polygon.normal);
   const [first, ...rest] = polygon.points;
   if (first === undefined) return 0;
   let vertices = 0;
@@ -13,17 +22,18 @@ function appendFan(polygon: Polygon, positions: number[], normals: number[]): nu
     const c = rest[i + 1];
     if (b === undefined || c === undefined) continue;
     positions.push(...first, ...b, ...c);
-    normals.push(...polygon.normal, ...polygon.normal, ...polygon.normal);
+    normals.push(...normalAt(first), ...normalAt(b), ...normalAt(c));
     vertices += 3;
   }
   return vertices;
 }
 
 /** Flat-shaded triangles: group 0 is the exterior skin, group 1 the slot walls. */
-export function pieceGeometry(piece: PieceModel): BufferGeometry {
+/** Triangles for a piece; with `round` (soft corners) the skin is shaded smooth over its rounded edges. */
+export function pieceGeometry(piece: PieceModel, round = 0): BufferGeometry {
   const positions: number[] = [];
   const normals: number[] = [];
-  const skinCount = piece.outer.reduce((n, polygon) => n + appendFan(polygon, positions, normals), 0);
+  const skinCount = piece.outer.reduce((n, polygon) => n + appendFan(polygon, positions, normals, round), 0);
   const wallCount = piece.walls.reduce((n, polygon) => n + appendFan(polygon, positions, normals), 0);
 
   const geometry = new BufferGeometry();

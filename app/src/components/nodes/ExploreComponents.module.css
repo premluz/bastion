@@ -26,6 +26,9 @@
 .heading .headingLink :is(span, svg):not(#\#):not(#\#):not(#\#) { align-self: center; }
 .heading .headingLink span:not(#\#):not(#\#):not(#\#) { text-box: trim-both cap alphabetic; }
 .identity, .values { display: flex; flex-direction: column; gap: var(--space-4); min-width: 0; }
+/* The sub-descriptions ("5.2M cap · $3.7M vol", holdings, card captions) sit a step quieter than Astryx's
+   secondary text (2026-10-27, direct feedback): its colour variable, set here, resolves to the muted ink. */
+.identity, .values { --color-text-secondary: var(--ink-muted); }
 .identity { align-items: flex-start; }
 .values { align-items: flex-end; white-space: nowrap; }
 .name { display: flex; align-items: center; gap: var(--space-4); min-width: 0; max-width: 100%; }
@@ -74,7 +77,8 @@
   flex-shrink: 0;
   height: var(--space-40);
   padding-inline: var(--space-16);
-  font-size: var(--text-16);
+  /* Body size, like the Folio tabs and the attention cards' titles (2026-10-27, direct feedback; 16px before). */
+  font-size: var(--text-14);
   border-radius: var(--radius-full);
   background: var(--surface-2);
   color: var(--tab-ink);
@@ -91,3 +95,9 @@
 .headingLink span { font-size: var(--text-20); }
 .heading[data-size='title'] { display: flex; align-items: center; gap: var(--space-8); font-size: var(--text-20); font-weight: 400; }
 .headingCount { flex-shrink: 0; margin-inline-start: var(--space-8); vertical-align: middle; }
+
+/* ContentGroup's card row: room for the cards' outer shadow (2026-10-27, direct feedback: shadows cut off).
+   Astryx's carousel clips at its own box and scrolls in an inner track, so the track gets the room inside and
+   the carousel takes it back outside; the layout does not move. 0 unless a theme's cards cast one (shell.css, aura.css). */
+.cards:not(#\#):not(#\#):not(#\#) { margin-block: calc(-1 * var(--carousel-shadow-room)); }
+.cards > :first-child:not(#\#):not(#\#):not(#\#) { padding-block: var(--carousel-shadow-room); }

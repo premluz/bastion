@@ -5,7 +5,7 @@ import styles from './PromoCarousel.module.css';
 export interface PromoCarouselProps {
   children: ReactNode[];
   'aria-label': string;
-  /** `bleed` runs the slides edge to edge of the screen, with the dots over the image.
+  /** `bleed` runs the slides edge to edge of the screen (no dots).
       `edge` slides cards across the whole screen width, each resting aligned with the page. */
   variant?: 'card' | 'bleed' | 'edge';
 }

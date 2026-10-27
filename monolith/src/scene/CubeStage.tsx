@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { FractalMonolith } from '../fractal/FractalMonolith';
-import { BEVEL } from '../fractal/geometry/bevel';
+import { BEVEL, cornerRadius } from '../fractal/geometry/bevel';
 import { buildCube } from '../fractal/geometry/buildFractal';
 import type { LiveSettings } from '../live';
 import type { QualitySpec } from '../quality';
@@ -18,9 +18,10 @@ interface CubeStageProps {
 
 /** One cube, broken into the chosen number of elements, assembling with the same search motion. */
 export function CubeStage({ elements, seed, searchAttempts, settings, quality, preset, progress }: CubeStageProps) {
-  const { cutWidth } = settings.target.material;
+  const { cutWidth, softCorners } = settings.target.material;
+  const round = cornerRadius(softCorners);
   const search = useMemo(() => ({ trials: searchAttempts, seed }), [searchAttempts, seed]);
-  const model = useMemo(() => buildCube({ seed, count: elements, cutWidth, bevel: BEVEL }), [seed, elements, cutWidth]);
+  const model = useMemo(() => buildCube({ seed, count: elements, cutWidth, bevel: BEVEL, round }), [seed, elements, cutWidth, round]);
 
   return <FractalMonolith model={model} search={search} settings={settings} quality={quality} preset={preset} progress={progress} />;
 }

@@ -118,6 +118,7 @@
      an "open" popover). Same dark hue/alpha theme.glass.css's own scrim
      already uses — this theme's own --surface-0 sits at the same hue. */
   --scrim: oklch(.13 .015 250 / .35); /* raise alpha here, nothing else, if a contrast audit fails */
+  --scrim-blur: var(--blur-z0);
 
   /* Glass edge system + orb halo + shell ambient — see theme.safe-one.css
      for the rationale. This theme keeps its existing look: opaque fill,

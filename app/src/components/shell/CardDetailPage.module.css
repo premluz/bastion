@@ -110,3 +110,5 @@
   color: var(--delta-up);
 }
 
+/* The plain "Earning N%" line; only themes that ask for it show it (aura.css). */
+.earningOnly { display: none; }

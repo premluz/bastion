@@ -7,6 +7,9 @@
    registered theme can share them; a theme that genuinely needs different
    chrome overrides the individual token in its own file. */
 :root {
+  /* Vertical room a scrolling card row leaves for its cards' outer shadow (PromoCarousel, edge); themes whose
+     cards cast one size it (aura.css). */
+  --carousel-shadow-room: 0px;
   --shell-inset: var(--space-16);
   /* 20px, revised up from an earlier same-day 16px pass (2026-09-16,
      direct feedback: "increase shell gap" then "increase shell gap to
@@ -143,6 +146,8 @@
      the wallet switch, Explore's and Investments' category tabs — a solid ink pill with
      the page colour on it (dark in light mode, warm white in dark). */
   --tab-active-fill: var(--ink-primary);
+  /* The selected item's own edge and depth; a plain fill unless a theme makes it glass (aura.css). */
+  --tab-active-edge: none;
   --tab-active-ink: var(--surface-0);
   /* A tab under the pointer (not the active one): the main nav's hover — ink lifts to
      primary and the tab swells a touch (--press-hover-scale) — shared by every tab bar. */

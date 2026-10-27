@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, type ReactNode, type Ref } from 'react';
 import { Icon } from '@astryxdesign/core/Icon';
 import { IconButton } from '@astryxdesign/core/IconButton';
-import { ClockIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { notifyPrototypeUnavailable } from './PrototypeNotice';
 import { GlowLight, type GlowOrbStyle } from './GlowLight';
 import { config } from '../../config';
@@ -19,8 +19,10 @@ export interface GlowDockProps {
   /** Opens the composer in place (records where its thread starts). */
   onOpen: () => void;
   onClose: () => void;
-  /** The composer bar shown in place of the pill while open. */
+  /** The composer bar shown in place of the pill while open: a single line. */
   composer: ReactNode;
+  /** Its voice buttons, in the row below it, on the right (back and chat history take the left). */
+  composerActions: ReactNode;
   /** The conversation since the composer opened; shown once there is one. */
   thread: ReactNode;
   isWorking: boolean;
@@ -42,7 +44,7 @@ export interface GlowDockProps {
 // Swiping up — or the pill's assistant item — morphs the pill into the composer
 // in place (and sliding the composer back down closes it again): the page stays as it is until the first question, then gives way to
 // the thread (AgentHomePage recedes) while the composer stays at the bottom.
-export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, threadRef, onSuggestion, orb = 'plasma', trailing, status, landingMonolith = false }: GlowDockProps) {
+export function GlowDock({ state, onOpen, onClose, composer, composerActions, thread, isWorking, threadRef, onSuggestion, orb = 'plasma', trailing, status, landingMonolith = false }: GlowDockProps) {
   const isOpen = state.mode === 'composer';
   const swipe = useSwipeUp<HTMLDivElement>(() => {
     if (state.mode === 'idle') onOpen();
@@ -79,14 +81,20 @@ export function GlowDock({ state, onOpen, onClose, composer, thread, isWorking, 
     </div>
     {isOpen && !isWorking && <button type="button" className={styles.dismiss} aria-label="Close assistant" onClick={onClose} />}
     {isOpen && <div className={styles.sheet}>
-      {/* The chat view's own top bar: close on the left, chat history on the right. */}
-      <div className={styles.chatBar}>
-        {landingMonolith && isWorking && <span className={styles.chatMark}><MonolithOrb /></span>}
-        <IconButton label="Close assistant" tooltip="Close assistant" icon={<Icon icon="close" />} variant="ghost" onClick={onClose} />
-        <IconButton label="Chat history" icon={<Icon icon={ClockIcon} />} variant="ghost" onClick={notifyPrototypeUnavailable} />
-      </div>
+      {/* Once chatting, the monolith holds the top of the chat view. */}
+      {landingMonolith && isWorking && <div className={styles.chatBar}><span className={styles.chatMark}><MonolithOrb /></span></div>}
       {isWorking && <div ref={threadRef} className={styles.thread} role="log" aria-label="Assistant transcript" tabIndex={0}>{thread}</div>}
-      <div className={styles.composer} {...closeSwipe.handlers}>{composer}</div>
+      <div className={styles.composer} {...closeSwipe.handlers}>
+        {composer}
+        {/* Below the bar (2026-10-27, direct feedback): back and chat history on the left, the voice buttons on the right. */}
+        <div className={styles.actions}>
+          <div className={styles.nav}>
+            <IconButton label="Back" tooltip="Back" icon={<Icon icon={ArrowLeftIcon} />} variant="ghost" onClick={onClose} />
+            <IconButton label="Chat history" icon={<Icon icon={ClockIcon} />} variant="ghost" onClick={notifyPrototypeUnavailable} />
+          </div>
+          <div className={styles.voice}>{composerActions}</div>
+        </div>
+      </div>
     </div>}
   </div>;
 }

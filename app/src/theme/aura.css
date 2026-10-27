@@ -1,0 +1,76 @@
+/* Bastion Aura's geometry (2026-10-27, direct request with a reference): the shared card shapes from
+   shell.css and attention.css, re-cut for the two Aura themes only, so every other theme is untouched.
+   Structural, like shell.css; colour and material stay in the theme files.
+
+   One rule: corners are concentric. Outer radius = inner radius + padding. The inner shape is the round
+   icon every card leads with (--list-accessory-size, a circle), so a card's radius is that circle's radius
+   plus the padding around it, and a row inside a card is the card's radius less the card's inset. Change
+   the padding and every radius follows.
+   `:root:is(...)` outranks the `:root` blocks of shell.css and attention.css whatever order they load in. */
+:root:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) {
+  /* A little more room than Bastion's (24 on tiles, 12–16 around the Pulse icons). */
+  --aura-card-padding: var(--space-20);
+  --list-card-radius: calc(var(--list-accessory-size) / 2 + var(--aura-card-padding));
+
+  /* Pulse: the card's own inset plus a row's padding is the card padding, on both axes. */
+  --list-card-inset: var(--space-8);
+  --list-row-padding-inline: calc(var(--aura-card-padding) - var(--list-card-inset));
+  --list-row-padding-block: calc(var(--aura-card-padding) - var(--list-card-inset));
+
+  /* The attention card's icon is the same circle, and the card is exactly icon + padding tall. */
+  --attention-mark-size: var(--list-accessory-size);
+  --attention-card-height: calc(var(--list-accessory-size) + var(--aura-card-padding) * 2);
+
+  /* Edges are light, not lines: the icon circles lose their keyline and become a soft translucent disc. */
+  --list-accessory-ring: none;
+  --list-accessory-fill: color-mix(in oklab, var(--surface-2) 60%, transparent);
+
+  /* The cards float on a shadow reaching ~36 px below (offset + blur − spread in the themes' --card-light);
+     the attention carousel leaves that much room, so it is never cut. */
+  --carousel-shadow-room: var(--space-40);
+}
+
+/* No "Needs you" / "Pulse" headings on the home (2026-10-27, direct feedback): the cards speak for themselves. */
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-section-heading] { display: none; }
+
+/* Money and Investments: 5:4 tiles (2026-10-27, direct feedback: not square, and not the earlier short strip either), the
+   label at the top and the value centred in the space below it (auto margins centre the value and its last line as one group). */
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-balance-tiles] > * { aspect-ratio: 5 / 4; }
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-balance-tiles] > * > :nth-child(2) { margin-block-start: auto; }
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-balance-tiles] > * > :last-child { margin-block-end: auto; }
+
+/* No search in the header (2026-10-27, direct feedback). */
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) button[aria-label='Search'] { display: none; }
+
+/* No wallet buttons around the cards (2026-10-27, direct feedback): "Manage cards" beside the deck, and the Add money /
+   Send / Withdraw row (Money page and card detail). Hidden, not removed, so other themes keep them. */
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) :is([data-manage-cards], [data-money-actions]) { display: none; }
+
+/* On a card's page the balance carries only "Earning N%" (2026-10-27, direct feedback): no APY line, token, info icon or
+   estimated annual earnings. */
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-apy-row] { display: none; }
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-earning-only] { display: block; }
+
+/* The attention card's padding is Astryx's (24), set by prop; Aura's padding replaces it. */
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-attention-kind]:not(#\#):not(#\#):not(#\#) {
+  padding: var(--aura-card-padding);
+}
+
+/* The navigation's selected item as liquid glass (2026-10-27, direct feedback with a reference): a translucent bubble,
+   lit at its top edge and from within, with a soft drop; it keeps the existing stretch as it slides between items. */
+:root[data-theme='bastion-aura-light'] {
+  --tab-active-fill: linear-gradient(oklch(1 0 0 / .7), oklch(.97 .006 70 / .45));
+  --tab-active-ink: var(--ink-primary);
+  --tab-active-edge: inset 0 1px 1px oklch(1 0 0 / 1), inset 0 -1px 2px oklch(.4 .03 60 / .1), inset 0 0 0 1px oklch(1 0 0 / .6),
+    inset 0 -8px 16px oklch(1 0 0 / .5), 0 6px 16px -6px oklch(.45 .05 60 / .22);
+}
+:root[data-theme='bastion-aura'] {
+  --tab-active-fill: linear-gradient(oklch(.951 .009 78.3 / .2), oklch(.951 .009 78.3 / .07));
+  --tab-active-ink: var(--ink-primary);
+  --tab-active-edge: inset 0 1px 1px oklch(.951 .009 78.3 / .4), inset 0 -1px 2px oklch(0 0 0 / .25), inset 0 0 0 1px oklch(.951 .009 78.3 / .04),
+    inset 0 -8px 16px oklch(.951 .009 78.3 / .06), 0 6px 18px -6px oklch(0 0 0 / .5);
+}
+
+/* Eyebrow headings keep their descenders (2026-10-27, direct feedback: "Trending", "Perps" were cut off): the cap-to-baseline
+   trim in ExploreComponents.module.css is sized for 10 px capitals and clips the g/p tails of Aura's 14 px normal-case text. */
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-eyebrow] span:not(#\#):not(#\#):not(#\#):not(#\#) { text-box: normal; }

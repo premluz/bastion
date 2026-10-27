@@ -105,9 +105,9 @@
   --chat-mark-size: var(--space-48);
   pointer-events: none;
 }
-.chatBar button:not(#\#):not(#\#):not(#\#) { box-shadow: none; border: 0; }
-/* The same hit area as the composer's buttons (48 px, Astryx's own 16 px corner there), so close and history are as easy to reach. */
-.chatBar button:not(#\#):not(#\#):not(#\#) {
+.nav button:not(#\#):not(#\#):not(#\#) { box-shadow: none; border: 0; }
+/* The same hit area as the composer's buttons (48 px, Astryx's own 16 px corner there), so back and history are as easy to reach. */
+.nav button:not(#\#):not(#\#):not(#\#) {
   width: var(--space-48);
   height: var(--space-48);
   border-radius: var(--space-16);
@@ -144,6 +144,13 @@
    under it, as the header search does, and a shade (.shade) sits behind it. */
 .composer :global(.astryx-chat-composer > div) { backdrop-filter: var(--shell-header-backdrop); }
 .composer button { min-height: var(--shell-control-size); min-width: var(--shell-control-size); }
+
+/* A single line (2026-10-27, direct feedback): the bar's own button row — its footer, the last child of the glass
+   body — is empty here (the buttons sit below the bar, in .actions), so it takes no height. */
+.composer :global(.astryx-chat-composer > div > div:last-child) { display: none; }
+/* Under the bar: back and history at the left, the voice buttons at the right, where they were. */
+.actions { display: flex; justify-content: space-between; align-items: center; margin-top: var(--shell-label-gap); }
+.nav, .voice { display: flex; align-items: center; gap: var(--space-4); }
 
 /* The composer's names for the dock morph (theme/dock-morph.css): the pill's
    glass stretches into the composer's, its controls arrive one by one. It only

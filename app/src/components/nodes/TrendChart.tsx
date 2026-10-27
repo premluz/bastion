@@ -355,6 +355,9 @@ export function TrendChart({
   };
 
   const trendColor = directionalColor(slicedPrimary);
+  // A gain glows in the same green as the Investments card on the home (2026-10-27, direct feedback); --delta-up is a text
+  // colour, too dim to light. The line keeps trendColor.
+  const glowColor = trendColor === 'var(--delta-up)' ? 'var(--gain-glow)' : trendColor;
   // Auto-scaled Y domain for every zoomed period, not just 1H/24H
   // (broadened 2026-08-22, direct feedback: "south bow 7d 1m 1y look
   // similar flat" — the SAME root cause as 1H/24H's original flatness:
@@ -383,7 +386,7 @@ export function TrendChart({
     // Card's badges/panes are untouched, still --tint-strong).
     <div
       className={`${styles.root} ${bleedStyles.inline} ${bleedStyles.blockEnd}${quiet ? '' : ` ${glowStyles.root} ${glowStyles.bottom} ${airy ? glowStyles.unclipped : glowStyles.clipped}`}`}
-      {...(quiet ? {} : { style: { '--glow-color': trendColor, '--glow-strength': 'var(--tint-subtle)' } as React.CSSProperties })}
+      {...(quiet ? {} : { style: { '--glow-color': glowColor, '--glow-strength': 'var(--tint-subtle)' } as React.CSSProperties })}
     >
       <div className={glowStyles.content}>
         {/* Header re-inset by exactly what the root above bled out

@@ -11,6 +11,8 @@ export interface CubeParams {
   readonly count: number;
   readonly cutWidth: number;
   readonly bevel: number;
+  /** Soft corners' radius; 0 or absent keeps the micro-bevel. */
+  readonly round?: number;
 }
 
 export const CUBE_COUNT = { min: 2, max: 48 } as const;

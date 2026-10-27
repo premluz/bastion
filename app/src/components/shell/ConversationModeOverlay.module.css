@@ -32,7 +32,7 @@
 
 .root::backdrop {
   background: var(--scrim);
-  backdrop-filter: none;
+  backdrop-filter: blur(var(--scrim-blur));
 }
 
 .root[data-shared-orb='true']:global(.astryx-dialog) { background: transparent; animation: none; }

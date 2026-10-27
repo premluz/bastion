@@ -66,3 +66,40 @@ export function chamferPlanes(size: number): BoundPlane[] {
   }
   return planes;
 }
+
+/** Facets per quarter-turn of a soft corner: enough for a smooth silhouette; shading is smoothed per vertex. */
+const ROUND_STEPS = 6;
+
+/**
+ * Planes tangent to a cube with edges and corners rounded at `radius`: along each edge, planes swept round the
+ * edge's cylinder; at each corner, planes tangent to its sphere. dot(n, p) <= (1 − r)·Σ|n| + r.
+ */
+export function roundPlanes(radius: number): BoundPlane[] {
+  const planes: BoundPlane[] = [];
+  const tangent = (n: Vec3): BoundPlane => ({ n, d: (1 - radius) * (Math.abs(n[0]) + Math.abs(n[1]) + Math.abs(n[2])) + radius, kind: 'outer' });
+  const quarter = Array.from({ length: ROUND_STEPS - 1 }, (_, k) => ((k + 1) / ROUND_STEPS) * (Math.PI / 2));
+  for (const [i, j] of [[0, 1], [1, 2], [0, 2]] as const) {
+    for (const si of [-1, 1]) {
+      for (const sj of [-1, 1]) {
+        for (const t of quarter) {
+          const n = [0, 0, 0];
+          n[i] = si * Math.cos(t);
+          n[j] = sj * Math.sin(t);
+          planes.push(tangent([n[0] ?? 0, n[1] ?? 0, n[2] ?? 0]));
+        }
+      }
+    }
+  }
+  for (const sx of [-1, 1]) {
+    for (const sy of [-1, 1]) {
+      for (const sz of [-1, 1]) {
+        for (const a of quarter) {
+          for (const b of quarter) {
+            planes.push(tangent([sx * Math.cos(a) * Math.sin(b), sy * Math.sin(a) * Math.sin(b), sz * Math.cos(b)]));
+          }
+        }
+      }
+    }
+  }
+  return planes;
+}

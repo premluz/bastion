@@ -1,4 +1,4 @@
-import { chamferPlanes, resolveBound } from './bounds';
+import { chamferPlanes, resolveBound, roundPlanes } from './bounds';
 import { buildCell, unitBox, type BoundPlane, type Face } from './convexCell';
 import { findJunctions } from '../intelligence/junctions';
 import { exposedFaces } from './pieceSurface';
@@ -8,6 +8,8 @@ import { add, centroid, dot, polygonArea, polygonAreaVector, scale, type Vec3 } 
 export interface BuildOptions {
   readonly cutWidth: number;
   readonly bevel: number;
+  /** Soft corners: the radius of the rounded edges and corners (0 keeps the micro-bevel). */
+  readonly round?: number;
 }
 
 const EXPOSED_SEAM_TOLERANCE = 1e-6;
@@ -43,12 +45,12 @@ function openingSegments(walls: readonly Polygon[], skin: readonly BoundPlane[])
 }
 
 /** The monolith's exterior: the unit cube's faces plus its micro-bevels. */
-export function skinPlanes(bevel: number): BoundPlane[] {
-  return [...unitBox().map((f) => f.plane), ...chamferPlanes(bevel)];
+export function skinPlanes(bevel: number, round = 0): BoundPlane[] {
+  return [...unitBox().map((f) => f.plane), ...(round > 0 ? roundPlanes(round) : chamferPlanes(bevel))];
 }
 
 function buildPiece(variant: VariantSpec, spec: PieceSpec, options: BuildOptions): PieceModel {
-  const skin = skinPlanes(options.bevel);
+  const skin = skinPlanes(options.bevel, options.round ?? 0);
   const cells = spec.cells.map((bounds, index) => {
     const cell = buildCell([...skin, ...bounds.map((b) => resolveBound(b, options.cutWidth))]);
     if (cell.length === 0) throw new Error(`${variant.id}/${spec.id}: cell ${index} is empty`);

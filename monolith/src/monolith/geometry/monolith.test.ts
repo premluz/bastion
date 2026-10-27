@@ -97,3 +97,20 @@ describe.each(VARIANTS.map((v) => [v.name, v] as const))('%s', (_name, variant) 
     }
   });
 });
+
+describe('soft corners', () => {
+  it.each(VARIANTS.map((v) => [v.name, v] as const))('%s builds with rounded corners, every seam covered', (_name, variant) => {
+    const model = buildMonolith(variant, { cutWidth: 0.034, bevel: BEVEL, round: 0.16 });
+    for (const piece of model.pieces) {
+      expect(piece.outer.length).toBeGreaterThan(0);
+      expect(piece.openings.length).toBeLessThanOrEqual(MAX_OPENINGS);
+      // Nothing reaches past the rounded corner. Facet corners (where two tangent planes meet) sit just outside the
+      // true curve, by at most 1/cos² of half a facet's angle (6 facets per quarter turn).
+      const facet = 0.16 / Math.cos(Math.PI / 24) ** 2;
+      for (const p of piece.outer.flatMap((poly) => [...poly.points])) {
+        const d = p.map((v) => Math.max(0, Math.abs(v) - (1 - 0.16)));
+        expect(Math.hypot(...d)).toBeLessThanOrEqual(facet + 1e-6);
+      }
+    }
+  });
+});

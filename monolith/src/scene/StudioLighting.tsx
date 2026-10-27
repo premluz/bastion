@@ -15,6 +15,7 @@ export function StudioLighting({ appearance, preset }: StudioLightingProps) {
       <directionalLight position={[-3, 7, 4]} intensity={preset.key} />
       <directionalLight position={[6, 2, -2]} intensity={preset.fill} />
       <Environment key={appearance} resolution={256} frames={1} environmentIntensity={preset.environment}>
+        {preset.room !== null && <color attach="background" args={[preset.room]} />}
         <Lightformer form="rect" intensity={2.2} position={[0, 7, 0]} rotation-x={Math.PI / 2} scale={[12, 12, 1]} />
         <Lightformer form="rect" intensity={1.1} position={[-7, 1.5, 4]} rotation-y={Math.PI / 2.6} scale={[8, 5, 1]} />
         <Lightformer form="rect" intensity={0.7} position={[7, 0.5, -2]} rotation-y={-Math.PI / 2} scale={[6, 4, 1]} />

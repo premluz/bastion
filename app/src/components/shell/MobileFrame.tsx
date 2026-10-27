@@ -23,7 +23,7 @@ import { CardDetailPage } from './CardDetailPage';
 import { WALLET_CARDS } from './cardData';
 import { ConversationModeOverlay } from './ConversationModeOverlay';
 import { ComposerModeOverlay } from './ComposerModeOverlay';
-import { MobileFrameComposer } from './MobileFrameComposer';
+import { MobileFrameComposer, MobileFrameComposerActions } from './MobileFrameComposer';
 import { MobileFrameDock } from './MobileFrameDock';
 import { useExploreNavigation } from './useExploreNavigation';
 import { useMobileFrame, type MobileFrameProps } from './useMobileFrame';
@@ -154,7 +154,8 @@ export function MobileFrame(props: MobileFrameProps) {
           {isGlowHome ? <GlowDock state={state} onOpen={glow.open} onClose={glow.close} isWorking={glow.isWorking} threadRef={composerScrollRef} onSuggestion={glow.ask} orb={isAttentionHome ? 'none' : 'plasma'}
             landingMonolith={isAttentionHome && props.orbVariant === 'monolith'}
             {...(isAttentionHome ? { trailing: <OrbTrigger onOpen={glow.open} variant={props.orbVariant ?? 'plasma'} working={attention.tasks.length > 0 || glow.isWorking} />, status: <AgentWorkQueue tasks={attention.tasks} variant="status" /> } : {})}
-            thread={transcript.slice(glow.threadStart)} composer={<MobileFrameComposer state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />} />
+            thread={transcript.slice(glow.threadStart)} composer={<MobileFrameComposer isActionsOutside state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />}
+            composerActions={<MobileFrameComposerActions state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />} />
             : isAgentHome ? <AgentDock isAwake={agent.isAwake} activeTab={state.activeTab} onWake={agent.wake} onSleep={agent.sleep}
               onNavigate={state.selectTab} thread={transcript.slice(agent.threadStart)} isWorking={agent.isWorking} caption={agent.caption}
               activity={agent.activity} speaking={voicePlayback.isSpeaking} threadRef={conversationScrollRef} orbRef={state.assistantRef} />

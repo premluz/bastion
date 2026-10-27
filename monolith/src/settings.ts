@@ -30,6 +30,12 @@ export interface MaterialParams {
   readonly incandescence: number;
   /** Outer glow around the monolith, in either glow mode. */
   readonly halo: number;
+  /** Rounds the cube's edges and corners (a geometry change: pieces rebuild). */
+  readonly softCorners: boolean;
+  /** Light filling the whole body from within, on top of the cuts' own (0 = only near the cuts). */
+  readonly bodyLight: number;
+  /** On a pale ground: 0 lets the inner light scatter to peach-white, 1 keeps it a saturated apricot. */
+  readonly paleWarmth: number;
 }
 
 export const DEFAULT_MATERIAL: MaterialParams = {
@@ -48,6 +54,9 @@ export const DEFAULT_MATERIAL: MaterialParams = {
   glowMode: 'contained',
   incandescence: 0.7,
   halo: 0.2,
+  softCorners: false,
+  bodyLight: 0,
+  paleWarmth: 0,
 };
 
 export interface IntelligenceSettings extends IntelligenceParams {

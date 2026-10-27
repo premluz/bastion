@@ -11,6 +11,7 @@ import {
   VERTEX_BODY,
   VERTEX_HEADER,
 } from './ceramicShader';
+import { FRAGMENT_CLEARCOAT_FACING, FRAGMENT_FACING } from './facingShader';
 
 export interface CeramicUniforms {
   readonly [name: string]: IUniform;
@@ -47,6 +48,8 @@ export interface CeramicUniforms {
   readonly uPlasmaShape: IUniform<Vector3>;
   readonly uExterior: IUniform<number>;
   readonly uEdgeLight: IUniform<number>;
+  readonly uBodyLight: IUniform<number>;
+  readonly uPaleWarmth: IUniform<number>;
 }
 
 export function createCeramicUniforms(openings: readonly Segment[]): CeramicUniforms {
@@ -92,6 +95,8 @@ export function createCeramicUniforms(openings: readonly Segment[]): CeramicUnif
     uPlasmaShape: { value: new Vector3(0.5, 0.5, 0) },
     uExterior: { value: 1 },
     uEdgeLight: { value: 0 },
+    uBodyLight: { value: 0 },
+    uPaleWarmth: { value: 0 },
   };
 }
 
@@ -107,6 +112,9 @@ export const ceramicSource = (material: Material) => SOURCES.get(material);
 
 /** Emission written straight out — the light each face sends into the room, visible or not. */
 const FRAGMENT_GLOW_OUT = /* glsl */ `
+// Pale warmth: on a light ground the body reads as amber glass where its inner light reaches, filtering the cream behind
+// and the light it reflects; where the light is low the body keeps its own pale colour.
+gl_FragColor.rgb *= mix(vec3(1.0), vec3(1.0, 0.6, 0.36), uPaleWarmth * uLightGround * bsWarmHere);
 #ifdef BS_GLOW_PASS
 gl_FragColor = vec4(totalEmissiveRadiance, 1.0);
 #endif
@@ -148,6 +156,8 @@ export function createCeramicMaterial(
     shader.fragmentShader = inject(shader.fragmentShader, '#include <clipping_planes_fragment>', FRAGMENT_DISSOLVE);
     shader.fragmentShader = inject(shader.fragmentShader, '#include <color_fragment>', FRAGMENT_COLOR);
     shader.fragmentShader = inject(shader.fragmentShader, '#include <roughnessmap_fragment>', FRAGMENT_ROUGHNESS);
+    shader.fragmentShader = inject(shader.fragmentShader, '#include <normal_fragment_maps>', FRAGMENT_FACING);
+    shader.fragmentShader = inject(shader.fragmentShader, '#include <clearcoat_normal_fragment_maps>', FRAGMENT_CLEARCOAT_FACING);
     shader.fragmentShader = inject(shader.fragmentShader, '#include <emissivemap_fragment>', FRAGMENT_EMISSION);
     shader.fragmentShader = inject(shader.fragmentShader, '#include <opaque_fragment>', FRAGMENT_GLOW_OUT);
   };

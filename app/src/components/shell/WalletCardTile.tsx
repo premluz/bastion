@@ -10,7 +10,7 @@ export interface WalletCardTileProps { onManage?: () => void }
 // CardDeck renders this beside the cards, so it stays still while they move.
 export function WalletCardTile({ onManage }: WalletCardTileProps) {
   return onManage
-    ? <Button label="Manage cards" variant="secondary" size="sm" className={styles.manageButton} onClick={onManage} />
+    ? <Button label="Manage cards" variant="secondary" size="sm" className={styles.manageButton} onClick={onManage} data-manage-cards />
     : <Button label="Manage cards" tooltip={PROTOTYPE_NOTICE} variant="secondary" size="sm"
-      className={styles.manageButton} onClick={notifyPrototypeUnavailable} />;
+      className={styles.manageButton} onClick={notifyPrototypeUnavailable} data-manage-cards />;
 }

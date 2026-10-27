@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import styles from './AssetLogo.module.css';
 
-const VIZ_TOKENS = ['--viz-1', '--viz-2', '--viz-3', '--viz-4', '--viz-5', '--viz-6'] as const;
+const SWATCH_COUNT = 6;
 
 function hashToIndex(id: string, length: number): number {
   let hash = 0;
@@ -60,65 +61,21 @@ const LOGO_FILES = [
 // no "text on a colored fill" token exists anywhere in this stack, and
 // inventing one would mean guessing per-hue contrast rather than
 // proposing a real token.
-// size (Phase 21): additive, defaults to the original 32/24 pair so
-// every existing call site (grid/table/strip rows) is unaffected —
-// 'large' is Entity Detail's own identity header, sized up per the
-// architect's own ruling (reuse AssetLogo.tsx, not new per-asset
-// artwork) rather than a new component.
-const SIZES = {
-  default: { box: 'var(--space-32)', mark: 'var(--space-24)' },
-  large: { box: 'var(--space-48)', mark: 'var(--space-32)' },
-} as const;
-
-export function AssetLogo({ id, size = 'default' }: { id: string; size?: keyof typeof SIZES }) {
+// size (Phase 21): 'large' is Entity Detail's identity header. Both sizes are a
+// circle (2026-10-27, direct feedback: logos sit inside a circle, the size of the
+// list accessory), the generic mark cropped to fill it; the swatch fallback shares
+// the same circle so a 404 never changes the layout.
+export function AssetLogo({ id, size = 'default' }: { id: string; size?: 'default' | 'large' }) {
   const [failed, setFailed] = useState(false);
-  const { box, mark } = SIZES[size];
 
   if (failed) {
-    const token = VIZ_TOKENS[hashToIndex(id, VIZ_TOKENS.length)];
-    return (
-      <div
-        style={{
-          width: box,
-          height: box,
-          borderRadius: 'var(--radius-8)',
-          background: `var(${token})`,
-          flexShrink: 0,
-        }}
-      />
-    );
+    return <div className={styles.root} data-size={size} data-swatch={hashToIndex(id, SWATCH_COUNT) + 1} />;
   }
 
   const file = LOGO_FILES[hashToIndex(id, LOGO_FILES.length)];
-
-  // Outer box stays the same 32x32 slot the swatch fallback uses (layout
-  // consistency across grid/table/strip rows); the mark itself renders at
-  // 24x24, centered inside it — these are generic external SVGs of
-  // varying internal padding/aspect ratio, so sizing down with breathing
-  // room (objectFit: contain, never cropped) reads cleaner than stretching
-  // edge-to-edge.
   return (
-    <div
-      style={{
-        width: box,
-        height: box,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-      }}
-    >
-      <img
-        src={`/logos/${file}`}
-        alt=""
-        style={{
-          width: mark,
-          height: mark,
-          borderRadius: 'var(--radius-8)',
-          objectFit: 'contain',
-        }}
-        onError={() => setFailed(true)}
-      />
+    <div className={styles.root} data-size={size}>
+      <img className={styles.mark} src={`/logos/${file}`} alt="" onError={() => setFailed(true)} />
     </div>
   );
 }

@@ -80,7 +80,7 @@ export interface WalletActionRowProps {
 export function WalletActionRow({ variant = 'wallet', shape = 'roundedSquare', size = 'default' }: WalletActionRowProps) {
   const actions = variant === 'money' ? MONEY_ACTIONS : variant === 'card' ? CARD_ACTIONS : WALLET_ACTIONS;
   return (
-    <div className={styles.row} data-variant={variant} data-size={size}>
+    <div className={styles.row} data-variant={variant} data-size={size} {...(variant === 'money' ? { 'data-money-actions': '' } : {})}>
       {actions.map(({ id, label, icon }) => (
         // A native <label> around the button makes the whole tile — circle
         // and caption — one rectangular hit area (2026-09-30, direct

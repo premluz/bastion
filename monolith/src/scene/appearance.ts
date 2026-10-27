@@ -15,6 +15,9 @@ export interface AppearancePreset {
   readonly ground: string;
   readonly base: string;
   readonly surface: SurfaceFinish;
+  /** The studio room's own colour in reflections; null leaves it black. A pale room keeps rounded edges, which face
+      away from the lights, from mirroring a black void (2026-10-27, direct feedback: dark bands on soft corners). */
+  readonly room: string | null;
   /** Tinted area lights in the environment, for gradients across the faces. */
   readonly accents: readonly AccentLight[];
   readonly edgeColor: string;
@@ -41,6 +44,7 @@ export const APPEARANCES: Record<Appearance, AppearancePreset> = {
     ground: PALETTE.groundDark,
     base: PALETTE.graphite,
     surface: GRAPHITE_CERAMIC,
+    room: null,
     accents: [],
     edgeColor: PALETTE.edgeNeutralDark,
     skinGlow: 1,
@@ -59,6 +63,7 @@ export const APPEARANCES: Record<Appearance, AppearancePreset> = {
     ground: PALETTE.groundLight,
     base: PALETTE.glassBody,
     surface: FROSTED_GLASS,
+    room: PALETTE.groundLight,
     accents: [
       { color: PALETTE.studioCool, intensity: 1.4, position: [-8, 2, 3], rotationY: Math.PI / 2.4, scale: [7, 9] },
       { color: PALETTE.studioWarm, intensity: 1.2, position: [8, 1, 3], rotationY: -Math.PI / 2.4, scale: [7, 9] },

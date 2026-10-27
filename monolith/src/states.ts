@@ -49,7 +49,7 @@ export function resolveState(
 
 /** Numeric settings that glide between values. Everything else (geometry, discrete choices) applies at once. */
 const EASED_MATERIAL: readonly (keyof MaterialParams)[] = [
-  'roughness', 'reflectance', 'edge', 'grainAmount', 'core', 'cutLight', 'spill', 'diffusion', 'absorption', 'falloff', 'incandescence', 'halo',
+  'roughness', 'reflectance', 'edge', 'grainAmount', 'core', 'cutLight', 'spill', 'diffusion', 'absorption', 'falloff', 'incandescence', 'halo', 'bodyLight', 'paleWarmth',
 ];
 const EASED_INTELLIGENCE: readonly (keyof IntelligenceSettings)[] = ['activity', 'flowSpeed', 'impulse'];
 

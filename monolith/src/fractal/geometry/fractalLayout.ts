@@ -16,6 +16,8 @@ export interface FractalParams {
   readonly granularity: number;
   readonly cutWidth: number;
   readonly bevel: number;
+  /** Soft corners' radius; 0 or absent keeps the micro-bevel. */
+  readonly round?: number;
 }
 
 export interface LevelFrame {

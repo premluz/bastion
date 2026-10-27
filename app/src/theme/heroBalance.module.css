@@ -15,7 +15,7 @@
   font-weight: 700;
 }
 
-:global(:is([data-theme='bastion'], [data-theme='bastion-light'])) .heroBalance {
+:global(:is([data-theme='bastion'], [data-theme='bastion-light'], [data-theme='bastion-aura'], [data-theme='bastion-aura-light'])) .heroBalance {
   /* Lighter (2026-10-23, direct feedback with an inspiration mock): regular, not black. */
   font-weight: 400;
 }

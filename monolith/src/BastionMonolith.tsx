@@ -14,6 +14,7 @@ import { CameraRig, DEFAULT_CAMERA } from './scene/CameraRig';
 import { CubeStage } from './scene/CubeStage';
 import { ExportBridge, type ExportRequest } from './scene/export/ExportBridge';
 import { FractalStage } from './scene/FractalStage';
+import { GlowAlpha } from './scene/GlowAlpha';
 import { luminance, toneMappedGround } from './scene/groundColor';
 import { OuterGlowBloom } from './scene/OuterGlowBloom';
 import { MAX_FRAME_STEP, SettingsEaser } from './scene/SettingsEaser';
@@ -148,6 +149,7 @@ export function BastionMonolith({
             radius={0.62 + HALO.radius * halo}
           />
           <ToneMapping mode={ToneMappingMode.NEUTRAL} />
+          {transparent ? <GlowAlpha /> : <></>}
         </EffectComposer>
       </Canvas>
       {fade !== null && <AppearanceFade key={fade.key} bitmap={fade.bitmap} onDone={done} />}

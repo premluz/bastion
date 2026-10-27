@@ -138,6 +138,7 @@
   padding: 0;
   cursor: pointer;
   background: var(--scrim, rgb(0 0 0 / 0.4));
+  backdrop-filter: blur(var(--scrim-blur));
   animation: pill-scrim-in var(--duration-200) var(--motion-enter-ease) both;
 }
 @keyframes pill-scrim-in { from { opacity: 0; } to { opacity: 1; } }
@@ -161,6 +162,6 @@
 .indicator[data-active='assistant'] { transform: translateX(300%); }
 .indicator[data-active='cash'] { transform: translateX(200%); }
 .indicator[data-active='investments'] { transform: translateX(300%); }
-.highlight { display: block; width: 100%; height: 100%; border-radius: var(--pill-radius); background: var(--tab-active-fill); animation: pill-stretch var(--pill-slide-duration) var(--pill-slide-ease) both; }
+.highlight { display: block; width: 100%; height: 100%; border-radius: var(--pill-radius); background: var(--tab-active-fill); box-shadow: var(--tab-active-edge); animation: pill-stretch var(--pill-slide-duration) var(--pill-slide-ease) both; }
 @keyframes pill-stretch { 0%, 100% { transform: scaleX(1); } 40% { transform: scaleX(var(--pill-stretch)); } }
 @media (prefers-reduced-motion: reduce) { .indicator, .root, .dock::before { transition: none; } .highlight { animation: none; } }

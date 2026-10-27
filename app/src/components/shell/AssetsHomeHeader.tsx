@@ -67,7 +67,7 @@ export function AssetsHomeHeader({ totalValue, changeAbs, changePercent, onSelec
           ${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </Heading>
       </div>
-      <div className={styles.categoryRow}>
+      <div className={styles.categoryRow} data-balance-tiles>
         {/* Money first, then Investments (2026-10-06, direct feedback: swap
             them; "Crypto" renamed to Investments and opens Portfolio's
             Investments tab). */}

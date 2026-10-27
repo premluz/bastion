@@ -19,6 +19,8 @@ const FILES = [
   'app/src/theme/theme.safe-one.css',
   'app/src/theme/theme.bastion.css',
   'app/src/theme/theme.bastion-light.css',
+  'app/src/theme/theme.bastion-aura.css',
+  'app/src/theme/theme.bastion-aura-light.css',
 ];
 
 function customPropertyNames(path) {

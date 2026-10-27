@@ -48,8 +48,13 @@ uniform vec4 uFlow;
 uniform vec3 uPlasmaShape;
 uniform float uExterior;
 uniform float uEdgeLight;
+uniform float uBodyLight;
+uniform float uPaleWarmth;
+// How much inner light reaches this fragment (0–1), for the amber-glass filter applied after lighting.
+float bsWarmHere = 0.0;
 
 const vec3 BS_GLASS_LIGHT = vec3(1.0, 0.72, 0.52);
+const vec3 BS_PALE_WARM = vec3(1.0, 0.48, 0.2);
 
 float bsHash(vec3 p) {
   p = fract(p * 0.3183099 + vec3(0.71, 0.113, 0.419));
@@ -161,17 +166,24 @@ ${INCANDESCENT_WALL}
   float bsTravel = clamp(bsDist / bsRadius, 0.0, 1.0);
   vec3 bsTint = mix(uAmber, uAmber * vec3(0.95, 0.42, 0.18), bsTravel * uAbsorption);
   // Through pale glass the inner light scatters to a peach-white rather than reading as orange paint.
-  bsTint = mix(bsTint, BS_GLASS_LIGHT, 0.5 * uLightGround);
+  vec3 bsPale = mix(BS_GLASS_LIGHT, BS_PALE_WARM, uPaleWarmth);
+  bsTint = mix(bsTint, bsPale, 0.5 * uLightGround);
   float bsKeep = mix(1.0, 0.35, uAbsorption);
   float bsSwing = mix(1.0 - 0.85 * uPlasmaShape.y, 1.0 + 1.1 * uPlasmaShape.y, bsPlasmaHere);
   float bsSpill = uSpill * uExterior * (0.45 * bsLip + 0.55 * bsBeneath) * bsSwing * bsPath * bsKeep * mix(1.0, 0.6, uOpen);
   totalEmissiveRadiance += bsTint * bsSpill * bsEnergyHere;
+  // Body light: the inner light fills the whole body, strongest near the cuts and never gone far from them, so the
+  // cube reads as lit from within rather than solid with glowing seams. Warm, whitening on a pale ground.
+  float bsBody = uBodyLight * uCore * uGlow * (0.45 + 0.55 * bsProximityField(vMonoPos, 0.9, 1.4)) * mix(0.8, 1.2, bsPlasmaHere) * mix(1.0, 0.5, uOpen);
+  totalEmissiveRadiance += mix(uAmber * vec3(1.0, 0.62, 0.38), bsPale, 0.2 * uLightGround) * bsBody * mix(0.55, 0.85, uLightGround);
   // The veil: organic light flowing across whole faces, strongest near the cuts but never only there.
   float bsVeil = uPlasmaShape.z * smoothstep(0.42, 0.88, bsPlasmaHere) * mix(0.35, 1.0, bsProximity) * uCore * uGlow * mix(1.0, 0.6, uOpen);
-  totalEmissiveRadiance += mix(mix(uAmber, uAmber * vec3(0.95, 0.42, 0.18), 0.5 * uAbsorption), BS_GLASS_LIGHT, 0.5 * uLightGround) * bsVeil;
+  totalEmissiveRadiance += mix(mix(uAmber, uAmber * vec3(0.95, 0.42, 0.18), 0.5 * uAbsorption), bsPale, 0.5 * uLightGround) * bsVeil;
   // Light passing through tinted ceramic colours what the surface reflects, not only what it adds;
   // on a pale ground this keeps the amber visible instead of brightening an already light surface.
-  float bsStainAmount = clamp((bsSpill * bsEnergyHere + bsVeil) * uStain, 0.0, 0.85) * uLightGround;
+  // On paper, light added to a white body only whitens it; body light also warms what the body reflects.
+  float bsStainAmount = clamp((bsSpill * bsEnergyHere + bsVeil + 0.9 * bsBody) * uStain * (1.0 + uPaleWarmth), 0.0, mix(0.85, 1.0, uPaleWarmth)) * uLightGround;
+  bsWarmHere = clamp((bsSpill * bsEnergyHere + bsVeil + 0.9 * bsBody) * uStain, 0.0, 1.0);
   diffuseColor.rgb *= mix(vec3(1.0), vec3(1.0, 0.5, 0.16), bsStainAmount);
   totalEmissiveRadiance += uEdgeColor * uEdge * pow(1.0 - bsNdv, 4.0);
   // Glass gathers light along its edges, where it is thinnest: on a face one axis sits at the shell,

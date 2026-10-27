@@ -6,6 +6,10 @@
   gap: var(--space-12);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  /* Room for the cards' outer shadow, which the scroll track would cut in a straight line; the negative margin
+     gives it back, so the layout does not move. 0 unless a theme's cards cast one (shell.css, aura.css). */
+  padding-block: var(--carousel-shadow-room);
+  margin-block: calc(-1 * var(--carousel-shadow-room));
   /* The ends of the row stop here instead of passing the swipe to the transcript. */
   overscroll-behavior-x: contain;
   scrollbar-width: none;

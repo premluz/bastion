@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import { Quaternion, Vector3, type Group } from 'three';
-import { BEVEL } from '../fractal/geometry/bevel';
+import { BEVEL, cornerRadius } from '../fractal/geometry/bevel';
 import { applySurface } from './material/applySurface';
 import { PALETTE } from '../brand/palette';
 import type { AppearancePreset } from '../scene/appearance';
@@ -35,10 +35,11 @@ const pivot = new Vector3();
 const rotatedPivot = new Vector3();
 
 export function Monolith({ variant, settings, quality, preset, progress, dissolve }: MonolithProps) {
-  const { cutWidth } = settings.target.material;
+  const { cutWidth, softCorners } = settings.target.material;
+  const round = cornerRadius(softCorners);
   const model = useMemo(
-    () => buildMonolith(variantById(variant), { cutWidth, bevel: BEVEL }),
-    [variant, cutWidth],
+    () => buildMonolith(variantById(variant), { cutWidth, bevel: BEVEL, round }),
+    [variant, cutWidth, round],
   );
   const motions = useMemo(() => pieceMotions(model), [model]);
   const parts = useMemo(
@@ -47,12 +48,12 @@ export function Monolith({ variant, settings, quality, preset, progress, dissolv
         const uniforms = createCeramicUniforms(piece.openings);
         return {
           id: piece.id,
-          geometry: pieceGeometry(piece),
+          geometry: pieceGeometry(piece, round),
           uniforms,
           materials: [createCeramicMaterial('skin', uniforms), createCeramicMaterial('wall', uniforms)],
         };
       }),
-    [model],
+    [model, round],
   );
   useEffect(
     () => () => {

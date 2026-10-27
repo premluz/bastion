@@ -42,6 +42,8 @@
      the same sanctioned web-font injection point as Merriweather. */
   --font-geist: "Geist", system-ui, sans-serif;
   --font-geist-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
+  /* Poppins (2026-10-27, direct request): the Bastion themes' sans, loaded in the same two places as Geist. */
+  --font-poppins: "Poppins", system-ui, sans-serif;
 
   /* Type ramp — dense-data bias, 13 is body */
   /* 10 added 2026-10-06 for bastion's eyebrow labels (direct feedback:

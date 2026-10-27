@@ -57,24 +57,14 @@
 }
 
 /* Full-bleed (2026-10-10): the carousel breaks out of the page's side padding
-   to the screen edges, and the dots sit over the photo's lower edge. */
+   to the screen edges. No dots (2026-10-27, direct feedback): the banners are
+   swiped, with nothing marking the page. */
 .root[data-variant='bleed'] {
   position: relative;
   margin-inline: calc(-1 * var(--shell-inset));
 }
 .root[data-variant='bleed'] .track { flex: 1 1 auto; min-height: 0; }
-.root[data-variant='bleed'] .dots {
-  position: absolute;
-  inset-inline: 0;
-  bottom: var(--promo-bleed-dots-bottom);
-  z-index: 3;
-  pointer-events: none;
-}
-.root[data-variant='bleed'] .dot {
-  pointer-events: auto;
-  background: var(--promo-bleed-dot);
-}
-.root[data-variant='bleed'] .dot[data-active='true'] { background: var(--accent-signal); }
+.root[data-variant='bleed'] .dots { display: none; }
 
 /* Edge to edge (2026-10-23, direct feedback: the attention cards slide across the full
    width): the track breaks out to the screen edges; each card keeps the page's width and
@@ -86,6 +76,10 @@
   gap: var(--shell-inset);
   padding-inline: var(--shell-inset);
   scroll-padding-inline: var(--shell-inset);
+  /* Room for the cards' outer shadow, which the scroll track would otherwise cut in a straight line; the
+     negative margin gives the same room back, so the layout does not move. 0 unless a theme's cards cast one. */
+  padding-block: var(--carousel-shadow-room);
+  margin-block: calc(-1 * var(--carousel-shadow-room));
 }
 
 @media (prefers-reduced-motion: reduce) {

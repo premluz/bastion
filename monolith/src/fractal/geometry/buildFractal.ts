@@ -60,7 +60,7 @@ function buildPieces(layout: FractalLayout, skin: ReturnType<typeof skinPlanes>)
 }
 
 export function buildFractal(params: FractalParams): FractalModel {
-  const skin = skinPlanes(params.bevel);
+  const skin = skinPlanes(params.bevel, params.round ?? 0);
   const layout = fractalLayout(params, skin);
   const pieces = buildPieces(layout, skin);
   const agentCore = frameAt(layout.frames, 1).center;
@@ -68,7 +68,7 @@ export function buildFractal(params: FractalParams): FractalModel {
 }
 
 export function buildCube(params: CubeParams): FractalModel {
-  const skin = skinPlanes(params.bevel);
+  const skin = skinPlanes(params.bevel, params.round ?? 0);
   const layout = cubeLayout(params, skin);
   const pieces = buildPieces(layout, skin);
   return { pieces, frames: layout.frames, junctions: pieceJunctions(pieces), agentCore: null };

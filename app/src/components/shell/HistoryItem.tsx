@@ -29,6 +29,7 @@ const CATEGORY_ICONS: Record<HistoryCategory, typeof ArrowsRightLeftIcon> = {
 // fitted into the accessory circle by HistoryItem.module.css.
 const ACCESSORY_SIZE = 48;
 
+// The title and the amount in the asset rows' weight, medium (AssetRow's name and price; 2026-10-27, direct feedback).
 // Shell row with validated data props; no registry action or engine dependency.
 export function HistoryItem({ entry, onSelect }: HistoryItemProps) {
   const amount = entry.displayAmount ?? formatHistoryAmount(entry);
@@ -36,7 +37,7 @@ export function HistoryItem({ entry, onSelect }: HistoryItemProps) {
   const isIcon = entry.avatar?.kind === 'category' || (entry.avatar?.kind !== 'initials' && !entry.assetId);
   const item = (
     <Item className={styles.root} density="spacious" data-testid={`history-${entry.id}`}
-      label={entry.title} description={entry.detail}
+      label={<Text weight="medium">{entry.title}</Text>} description={entry.detail}
       {...(onSelect ? { onClick: () => onSelect(entry) } : {})}
       startContent={<span className={styles.asset} data-icon={isIcon ? '' : undefined}>
         {entry.avatar?.kind === 'initials' ? <Avatar {...avatarProps(entry.avatar.name)} size={ACCESSORY_SIZE} />
@@ -45,7 +46,7 @@ export function HistoryItem({ entry, onSelect }: HistoryItemProps) {
           : <Icon icon={entry.kind === 'trade' ? ArrowsRightLeftIcon : Squares2X2Icon} size="lg" />}
       </span>}
       endContent={<span className={styles.value}>
-        {amount && <Text type="body" hasTabularNumbers className={entry.direction === 'in' ? styles.incoming : styles.amount}>{amount}</Text>}
+        {amount && <Text type="body" weight="medium" hasTabularNumbers className={entry.direction === 'in' ? styles.incoming : styles.amount}>{amount}</Text>}
         {entry.status !== 'confirmed' && <Badge variant={entry.status === 'failed' ? 'error' : 'neutral'}
           label={entry.status === 'failed' ? 'Failed' : 'Pending'} />}
       </span>} />

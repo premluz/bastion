@@ -4,6 +4,7 @@ import type { Group } from 'three';
 import { applySurface } from '../monolith/material/applySurface';
 import { PALETTE } from '../brand/palette';
 import { pieceGeometry } from '../monolith/geometry/toBufferGeometry';
+import { cornerRadius } from './geometry/bevel';
 import { IntelligenceDriver } from '../monolith/intelligence/driver';
 import { incandescenceTarget } from '../monolith/intelligence/glowTarget';
 import { writeFrameUniforms } from '../monolith/material/frameUniforms';
@@ -32,6 +33,7 @@ export interface FractalMonolithProps {
 
 export function FractalMonolith({ model, search, settings, quality, preset, progress }: FractalMonolithProps) {
   const motion = useMemo(() => fractalMotions(model, search), [model, search]);
+  const round = cornerRadius(settings.target.material.softCorners);
   const parts = useMemo(
     () =>
       model.pieces.map((piece) => {
@@ -39,12 +41,12 @@ export function FractalMonolith({ model, search, settings, quality, preset, prog
         return {
           id: piece.model.id,
           level: piece.level,
-          geometry: pieceGeometry(piece.model),
+          geometry: pieceGeometry(piece.model, round),
           uniforms,
           materials: [createCeramicMaterial('skin', uniforms), createCeramicMaterial('wall', uniforms)],
         };
       }),
-    [model],
+    [model, round],
   );
   useEffect(
     () => () => {
