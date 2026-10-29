@@ -28,9 +28,8 @@
   --promo-bleed-dots-bottom: var(--space-12);
   --promo-bleed-frost: none;
   --promo-bleed-frost-mask: none;
-  /* Title: 24 → 20px, and a measure wide enough that "DeFi opportunities" holds
-     one line (it broke after "DeFi" at 12ch). */
-  --promo-bleed-title-size: var(--text-20);
+  /* Reduced one step after direct feedback to make the DeFi title quieter. */
+  --promo-bleed-title-size: var(--text-16);
   --promo-bleed-title-measure: 22ch;
   /* The larger call to action (the attention home, 2026-10-23). */
   --promo-bleed-cta-large-height: var(--space-48);

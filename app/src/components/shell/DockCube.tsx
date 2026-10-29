@@ -2,8 +2,9 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { MonolithOrb } from './MonolithOrb';
 import { placeDockCube } from './dockCubeTravel';
 import styles from './DockCube.module.css';
+import type { AssemblyClock } from './useAssemblyClock';
 
-export function DockCube({ mode, working }: { mode: string; working: boolean }) {
+export function DockCube({ mode, working, assembly }: { mode: string; working: boolean; assembly: AssemblyClock }) {
   const cube = useRef<HTMLSpanElement>(null);
   const previous = useRef<string | null>(null);
   const [navWorking, setNavWorking] = useState(false);
@@ -29,6 +30,6 @@ export function DockCube({ mode, working }: { mode: string; working: boolean }) 
     return () => observer.disconnect();
   }, [mode]);
   return <div className={styles.layer} data-hidden={mode === 'conversation'} aria-hidden="true">
-    <span ref={cube} className={styles.cube} data-live-dock-cube=""><MonolithOrb working={mode === 'idle' ? navWorking : working} /></span>
+    <span ref={cube} className={styles.cube} data-live-dock-cube=""><MonolithOrb working={mode === 'idle' ? navWorking : working} assembly={assembly} /></span>
   </div>;
 }

@@ -5,7 +5,7 @@ import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
 import { UserCircleIcon, ChatBubbleLeftIcon, HeartIcon, ClockIcon, Cog6ToothIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import type { AccountScreen } from './accountTypes';
-import { PROTOTYPE_NOTICE, notifyPrototypeUnavailable } from './PrototypeNotice';
+import { notifyPrototypeUnavailable } from './PrototypeNotice';
 import styles from './AccountExperience.module.css';
 
 const links = [
@@ -18,10 +18,8 @@ export function AccountMenu({ name, onNavigate }: { name: string; onNavigate: (s
   return <nav className={styles.menu} aria-label="Account menu">
     <Avatar {...avatarProps('Bastion demo')} size="medium" />
     <Text type="large">@bastion.demo</Text>
-    <Text type="supporting">Your space in Bastion</Text>
-    <Button label={name} tooltip={PROTOTYPE_NOTICE} variant="ghost" icon={<Icon icon="chevronDown" />} onClick={notifyPrototypeUnavailable} />
-    {links.map(([screen, label, icon]) => <Button key={screen} label={label}
-      {...(screen === 'settings' ? {} : { tooltip: PROTOTYPE_NOTICE })} variant="ghost"
+    <Button label={name} variant="ghost" icon={<Icon icon="chevronDown" />} onClick={notifyPrototypeUnavailable} />
+    {links.map(([screen, label, icon]) => <Button key={screen} label={label} variant="ghost"
       className={screen === 'settings' ? styles.bottomLink : undefined}
       icon={<Icon icon={icon} />} onClick={screen === 'settings' ? () => onNavigate(screen) : notifyPrototypeUnavailable} />)}
   </nav>;

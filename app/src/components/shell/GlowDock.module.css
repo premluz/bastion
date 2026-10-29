@@ -111,7 +111,7 @@
 }
 .composer {
   position: relative;
-  padding: var(--shell-label-gap) var(--shell-inset) max(var(--shell-inset), env(safe-area-inset-bottom));
+  padding: var(--shell-label-gap) var(--shell-inset) max(var(--shell-inset), var(--shell-safe-area-bottom));
   /* Follows the finger as it slides down to close, easing back if released early;
      the pointer, not the browser, owns the vertical drag. */
   translate: 0 calc(var(--glow-close) * var(--glow-close-travel));
@@ -156,7 +156,7 @@
   min-height: var(--dock-controls-height);
   margin-top: var(--dock-cube-gap);
 }
-.nav, .voice { display: flex; align-items: center; gap: var(--space-4); }
+.nav, .voice { display: flex; align-items: center; gap: var(--space-4); translate: 0 var(--dock-cube-drop); }
 .nav, .cube, .voice { grid-row: 1; }
 .nav { grid-column: 1; justify-self: start; view-transition-name: dock-input-5; }
 .voice { grid-column: 3; justify-self: end; }

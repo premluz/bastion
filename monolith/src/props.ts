@@ -6,7 +6,7 @@ import type { MonolithState } from './states';
 
 /** What the object is made of. */
 export type Composition =
-  | { readonly kind: 'monolith'; readonly variant: VariantId }
+  | { readonly kind: 'monolith'; readonly variant: VariantId; readonly assembly?: 'self' | 'cube' }
   | { readonly kind: 'cube'; readonly elements: number; readonly seed: number; readonly searchAttempts: number }
   | {
       readonly kind: 'fractal';

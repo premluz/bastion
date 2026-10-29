@@ -1,5 +1,5 @@
 import { Button } from '@astryxdesign/core/Button';
-import { PROTOTYPE_NOTICE, notifyPrototypeUnavailable } from './PrototypeNotice';
+import { notifyPrototypeUnavailable } from './PrototypeNotice';
 import styles from './WalletCardTile.module.css';
 
 export interface WalletCardTileProps { onManage?: () => void }
@@ -11,6 +11,6 @@ export interface WalletCardTileProps { onManage?: () => void }
 export function WalletCardTile({ onManage }: WalletCardTileProps) {
   return onManage
     ? <Button label="Manage cards" variant="secondary" size="sm" className={styles.manageButton} onClick={onManage} data-manage-cards />
-    : <Button label="Manage cards" tooltip={PROTOTYPE_NOTICE} variant="secondary" size="sm"
+    : <Button label="Manage cards" variant="secondary" size="sm"
       className={styles.manageButton} onClick={notifyPrototypeUnavailable} data-manage-cards />;
 }

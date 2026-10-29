@@ -11,7 +11,7 @@
 .scroll { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: flex-end; overflow-y: auto; padding: var(--shell-inset); mask: var(--shell-transcript-mask); }
 .transcript { display: flex; flex-direction: column; align-items: stretch; gap: var(--shell-gap); padding-block: var(--shell-inset) var(--shell-fade-height); overflow-wrap: anywhere; }
 .choice[data-leaving='true'] { animation: funding-exit var(--purchase-choice-exit-duration) var(--motion-exit-ease) both; pointer-events: none; }
-.footer { display: flex; justify-content: space-between; align-items: center; padding: var(--shell-inset); padding-bottom: max(var(--shell-inset), env(safe-area-inset-bottom)); }
+.footer { display: flex; justify-content: space-between; align-items: center; padding: var(--shell-inset); padding-bottom: max(var(--shell-inset), var(--shell-safe-area-bottom)); }
 .footer button { min-height: var(--shell-control-size); }
 .spacer { width: var(--shell-control-size); }
 @keyframes funding-exit { to { opacity: 0; transform: translateY(var(--shell-gap)); } }

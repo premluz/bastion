@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, type ReactNode } from 'react';
-import { LayerProvider, Tooltip, useToast } from '@astryxdesign/core';
+import { LayerProvider, useToast } from '@astryxdesign/core';
 import styles from './PrototypeNotice.module.css';
 
 export const PROTOTYPE_NOTICE = 'This section is not available in the prototype yet.';
@@ -31,7 +31,5 @@ export function PrototypeNoticeProvider({ children }: { children: ReactNode }) {
 
 export function PrototypeHint({ children }: { children: ReactNode }) {
   const notify = useContext(NoticeContext) ?? notifyPrototypeUnavailable;
-  return <Tooltip content={PROTOTYPE_NOTICE} placement="above" hasHoverIndication={false}>
-    <span className={styles.target} onClick={notify}>{children}</span>
-  </Tooltip>;
+  return <span className={styles.target} onClick={notify}>{children}</span>;
 }

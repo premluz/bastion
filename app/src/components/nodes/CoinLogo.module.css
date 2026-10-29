@@ -1,12 +1,4 @@
 .mark { composes: mark from '../shell/CoinLogo.module.css'; }
-.fallback {
-  composes: fallback from '../shell/CoinLogo.module.css';
-  display: grid;
-  place-items: center;
-  color: var(--ink-secondary);
-  font-size: var(--text-12);
-}
-
 /* The plate a bare mark sits on: the shared list accessory's fill, as the icon circles have, with the mark
    at a little over half its width. Sized like .mark by default; the rows that hold a logo stretch it to theirs. */
 .plate {

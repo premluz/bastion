@@ -19,7 +19,7 @@
   flex-direction: column;
   align-items: center;
   height: 100%;
-  padding: max(var(--space-64), env(safe-area-inset-top)) var(--shell-inset) max(var(--shell-inset), env(safe-area-inset-bottom));
+  padding: max(var(--space-64), var(--shell-safe-area-top)) var(--shell-inset) max(var(--shell-inset), var(--shell-safe-area-bottom));
   color: var(--ink-primary);
 }
 

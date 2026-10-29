@@ -1,9 +1,7 @@
-/* Magic border (2026-10-27, direct request, after i-genie's magic button): a reusable
-   "the assistant is working on this" treatment for any button or pane — the theme's own
-   accents running around the edge as a soft inner rim glow, with a faint line on the edge
-   itself. Rendered by components/shell/MagicBorder.tsx (wrapper + two decorative layers); set
-   --magic-border-radius to the wrapped element's radius. Inner only (2026-10-27, direct
-   feedback: "inner shadow kind of rim aura", much softer) — nothing reaches past the edge. */
+/* Magic border (2026-10-27, direct request): a reusable travelling beam for any button or
+   pane. The highlighted segment follows the perimeter; its blurred twin stays clipped inside
+   the element. Rendered by components/shell/MagicBorder.tsx; set --magic-border-radius to the
+   wrapped element's radius. */
 
 @property --magic-border-angle {
   syntax: '<angle>';
@@ -27,8 +25,9 @@
   --magic-border-blur: var(--blur-z1);
   --magic-border-glow-strength: var(--opacity-55);
   --magic-border-line-strength: var(--opacity-40);
-  --magic-border-gradient: conic-gradient(from var(--magic-border-angle), var(--magic-border-colors));
-  --magic-border-cycle: calc(var(--duration-1600) * 2);
+  --magic-border-gradient: conic-gradient(from var(--magic-border-angle), transparent 0turn 0.78turn,
+      var(--magic-border-colors) 0.94turn, transparent 1turn);
+  --magic-border-cycle: var(--duration-4800);
   /* Soft arrival (2026-10-27, direct feedback: "appears too abruptly"): the glow fades in slowly
      while the rim swells inward on a gentle spring; leaving is a plain, quicker fade. */
   --magic-border-enter: var(--duration-1600);
@@ -45,9 +44,8 @@
   transition: --magic-border-rim var(--magic-border-enter) var(--ease-spring-soft);
 }
 
-/* The rim glow: a ring as wide as the rim, its inner edge rounded with the element's corners
-   (the padding box follows the border radius), blurred, then clipped to the element's shape —
-   so what remains is a soft band inside the edge that follows the curve. */
+/* The beam's halo: blurred then clipped to the element's shape, so the light stays inside the
+   perimeter instead of blooming over the wrapped content. */
 .clip {
   position: absolute;
   inset: 0;
@@ -76,7 +74,7 @@
   mask: linear-gradient(black 0 0) padding-box exclude, linear-gradient(black 0 0);
 }
 
-/* The line: the same gradient cut to a hairline on the edge. */
+/* The bright beam core: the same travelling gradient cut to a hairline on the edge. */
 .root::after {
   content: '';
   position: absolute;

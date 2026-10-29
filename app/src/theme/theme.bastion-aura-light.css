@@ -33,8 +33,8 @@
   --card-fill: oklch(.985 .004 78 / .62);
   --hairline-width: .5px;
   /* Softer than graphite (2026-10-23, direct feedback: primary text too strong). */
-  --ink-primary: oklch(.3 .006 268);
-  --ink-secondary: oklch(.4 .006 268);
+  --ink-primary: oklch(.34 .005 265);
+  --ink-secondary: oklch(.46 .005 265);
   --ink-muted: oklch(.56 .006 268);
 
   /* Copper deepened for contrast on paper; presence is bronze so headings in
@@ -149,9 +149,9 @@
   --motion-table-stagger: 30ms;
   --motion-chart-reveal-duration: var(--duration-480);
   --motion-shimmer-duration: var(--duration-1600);
-  --face-ui: var(--font-poppins);
-  --font-family-body: var(--font-poppins);
-  --font-family-heading: var(--font-poppins);
+  --face-ui: var(--font-inter);
+  --font-family-body: var(--font-inter);
+  --font-family-heading: var(--font-inter);
   --face-data: var(--font-data);
   --face-voice: var(--font-voice);
 

@@ -1,0 +1,17 @@
+.row { touch-action: none; }
+.slot {
+  width: var(--dock-cube-size);
+  height: var(--dock-cube-size);
+  margin: 0;
+}
+.dock[data-composer-open='true'] .row {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-exit-duration) var(--motion-exit-ease);
+}
+.dock:not([data-composer-open='true']) .row {
+  transition: opacity var(--motion-enter-duration) var(--motion-enter-ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dock .row { transition: none; }
+}

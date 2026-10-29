@@ -3,7 +3,7 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: end;
   min-height: var(--shell-nav-height);
-  padding: var(--shell-label-gap) var(--shell-label-gap) max(var(--shell-gap), env(safe-area-inset-bottom));
+  padding: var(--shell-label-gap) var(--shell-label-gap) max(var(--shell-gap), var(--shell-safe-area-bottom));
   background: transparent;
 }
 

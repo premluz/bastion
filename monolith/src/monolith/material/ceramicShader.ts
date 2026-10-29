@@ -1,5 +1,8 @@
 import { INCANDESCENCE_FUNCTIONS, INCANDESCENT_SKIN, INCANDESCENT_WALL } from './incandescenceShader';
 
+export const PALE_PLASMA = { reach: 0.16, whiteMix: 0.25, stainGain: 4,
+  patchReach: 0.4, patchStart: 0.38, patchPeak: 0.62, patchStain: 2, postTint: 1.5 } as const;
+
 /** GLSL injected into MeshPhysicalMaterial. All identifiers are prefixed `bs` to avoid three.js collisions. */
 
 export const VERTEX_HEADER = /* glsl */ `
@@ -52,6 +55,7 @@ uniform float uBodyLight;
 uniform float uPaleWarmth;
 // How much inner light reaches this fragment (0–1), for the amber-glass filter applied after lighting.
 float bsWarmHere = 0.0;
+float bsPatchHere = 0.0;
 
 float bsHash(vec3 p) {
   p = fract(p * 0.3183099 + vec3(0.71, 0.113, 0.419));
@@ -154,7 +158,7 @@ ${INCANDESCENT_WALL}
   float bsLip = exp(-pow(bsDist / 0.01, 2.0));
   // A tight core plus a long, soft tail: scattered light, not a hard frame along each edge.
   float bsBeneath = 0.55 * bsProximityField(vMonoPos, bsRadius, uFalloff) + 0.45 * bsProximityField(vMonoPos, bsRadius * 2.8, 1.2);
-  float bsProximity = bsProximityField(vMonoPos, mix(0.35, 0.035, uOpen), 2.0);
+  float bsProximity = bsProximityField(vMonoPos, mix(mix(0.35, ${PALE_PLASMA.reach}, uLightGround), 0.035, uOpen), 2.0);
   // The same world-space plasma that heats an incandescent body also breathes through the spill.
   float bsPlasmaHere = bsPlasma(vWorldPos);
   // A grazing view looks through a longer optical path, which scatters slightly more light back.
@@ -169,11 +173,16 @@ ${INCANDESCENT_WALL}
   totalEmissiveRadiance += bsSource * bsBody;
   // Keep the residual plasma near the openings; incandescent mode owns whole-body illumination.
   float bsVeil = uPlasmaShape.z * smoothstep(0.42, 0.88, bsPlasmaHere) * bsProximity * uCutLight * uCore * uGlow * mix(1.0, 0.6, uOpen);
-  totalEmissiveRadiance += mix(mix(uAmber, uAmber * vec3(0.95, 0.42, 0.18), 0.5 * uAbsorption), vec3(1.0), 0.85 * uLightGround) * bsVeil;
+  totalEmissiveRadiance += mix(mix(uAmber, uAmber * vec3(0.95, 0.42, 0.18), 0.5 * uAbsorption), vec3(1.0), ${PALE_PLASMA.whiteMix} * uLightGround) * bsVeil;
+  // Broad patches follow the shared moving plasma, while distance from a cut keeps the far shell white.
+  float bsPatch = smoothstep(${PALE_PLASMA.patchStart}, ${PALE_PLASMA.patchPeak}, bsPlasmaHere)
+    * exp(-pow(bsDist / ${PALE_PLASMA.patchReach}, 2.0)) * uPlasmaShape.z * uCutLight * uCore * uGlow;
+  bsPatchHere = bsPatch;
   // Light passing through tinted ceramic colours what the surface reflects, not only what it adds;
   // on a pale ground this keeps the amber visible instead of brightening an already light surface.
   // On paper, light added to a white body only whitens it; body light also warms what the body reflects.
-  float bsStainAmount = clamp((bsSpill * bsEnergyHere + bsVeil + 0.9 * bsBody) * uStain * (1.0 + uPaleWarmth), 0.0, mix(0.85, 1.0, uPaleWarmth)) * uLightGround;
+  float bsStainAmount = clamp((bsSpill * bsEnergyHere + ${PALE_PLASMA.stainGain.toFixed(1)} * bsVeil + 0.9 * bsBody) * uStain * (1.0 + uPaleWarmth)
+    + ${PALE_PLASMA.patchStain.toFixed(1)} * bsPatch, 0.0, mix(0.85, 1.0, uPaleWarmth)) * uLightGround;
   bsWarmHere = clamp((bsSpill * bsEnergyHere + bsVeil + 0.9 * bsBody) * uStain, 0.0, 1.0);
   diffuseColor.rgb *= mix(vec3(1.0), vec3(1.0, 0.5, 0.16), bsStainAmount);
   totalEmissiveRadiance += uEdgeColor * uEdge * pow(1.0 - bsNdv, 4.0);

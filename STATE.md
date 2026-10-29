@@ -1405,3 +1405,158 @@ Direct feedback: light mode needs a more near-white main background. bastion-lig
 - Added an optional fixed `pixelRatio` to the reusable renderer. The small app orb requests 4 render pixels per CSS pixel, giving the browser a higher-resolution image to downscale. Larger landing canvases retain their existing device-ratio cap; the single-sample HDR path remains in place. No geometry, corner radius, seam width, material, or glow values changed.
 - Files: monolith/src/props.ts and BastionMonolith.tsx; app/src/components/shell/MonolithCanvas.tsx; tests/visual/dockCubeFlicker.spec.ts; STATE.md.
 - Gate: app production build and 160 monolith tests pass; all three focused dock visual checks pass, including the 720-frame idle/open/working artifact probe. The frame check also verifies the renderer exceeds the display resolution on the 1× test display. Safari/iOS remains unverified; supersampling adds GPU cost only to the small orb. Learning: a higher DPR ceiling does not itself provide supersampling on low-density displays.
+
+## 2026-10-29 — Explicit coverage resolve for the small cube
+- Follow-up: forced 4× resolution helped but left stair-stepped silhouettes and rotating cuts. Added a final 4×4 coverage resolve after the existing tone mapping and alpha repair, averaging across one physical display pixel rather than relying solely on the browser's downscale. Sampling adapts to display density; colour conversion unpremultiplies and re-premultiplies before averaging, preserving valid transparent edges. Applied only to non-interactive transparent canvases with an explicit render pixel ratio (the app orb).
+- Geometry, corner radius, material settings, travelling seam light, bloom settings and the single-sample HDR workaround are unchanged. The WebGL motion skill guided the explicit render-pass approach; design constraints kept this a coverage correction, not a material redesign. No dependencies or tokens added.
+- Files: monolith/src/BastionMonolith.tsx; scene/EdgeCoverage.tsx, EdgeCoverage.test.ts and edgeCoverageProbe.ts; tests/visual/dockCubeCoverage.spec.ts; STATE.md. Controlled GPU patterns verify fractional silhouette and narrow-seam coverage against binary unfiltered controls, while rejecting flat or uniformly blurred results; five unit cases cover display-density mappings and resizing.
+- Gate: monolith typecheck, 165 monolith tests, app production build and diff check pass. Controlled GPU coverage, 720-frame light idle/open/working flicker regression and dark/light rendered entry-return checks pass. One light motion check was interrupted by a destroyed navigation context during the combined run; its isolated rerun passed with builds and edits stopped. An initial duplicate shader colour-conversion declaration caused a blank canvas, was corrected, and all subsequent rendering checks passed. No small-cube golden snapshots existed or were regenerated; perceived sharpness and Safari/iOS remain user/device verification items. Token lint remains red on untouched rgb fallbacks in PillNavigation.module.css:141 and Sheet.module.css:22. Added filtering has a GPU cost confined to the small canvas.
+- Learning: supersampling needs a coverage-aware final resolve; framebuffer dimensions alone do not prove that all subpixel samples contribute to the displayed edge.
+
+## 2026-10-29 — Replay Cube assembly for chat activity
+- User requested Studio's Cube assembly whenever a chat message is sent or a chat button is selected. The live chat dock now uses the Studio's twelve-piece cube (seed 7, two orientation trials) and its existing shape-to-shape release/search/reassembly sequence. New messages, including suggestions and voice-submitted messages reaching the shared message list, request a replay; enabled buttons in the visible transcript request one too. Dock navigation and typing do not. Separate landing and voice orb geometry is unchanged.
+- Added a frame-driven replay clock: starts assembled, plays a 4.8-second cycle, queues further activity rather than snapping a moving assembly, and skips animation for reduced motion. The canvas remains mounted; the existing transparent rendering, coverage resolve, subdued glow and material settings are retained. Added primitive --duration-4800 and alias --dock-cube-assembly-duration. The WebGL motion skill guided reuse of the Studio sequence instead of a separate CSS simulation; no dependencies added.
+- Files: app/src/components/shell/GlowDock.tsx, DockCube.tsx, MonolithOrb.tsx, MonolithCanvas.tsx, useChatCubeAssembly.ts and its unit test; app/src/theme/glow-dock.css and tokens.base.css; tests/visual/chatCubeAssembly.spec.ts and chatCubeAssemblyProbe.ts; STATE.md. Existing unrelated coverage-filter work was preserved.
+- Verification: app production build and all 164 app tests pass, including six replay-clock tests. Five browser checks pass: message plus Continue-button replays in both light/dark themes, reduced-motion behavior, and both existing dark/light entry-return rendering cases. The in-page probe measures actual opaque-pixel expansion and subsequent contraction using the renderer's capped frame time and confirms canvas identity. No cube golden baselines existed or were regenerated.
+- Open gate: the existing 720-frame flicker test timed out in the combined run. Isolated retries with a longer deadline failed before mounting the cube (canvas not found), so they provide no pixel evidence; the timeout change was reverted. Read-only checks found the Storybook listener on 6006 and no leftover automated Chromium processes, but did not establish the cause. Token lint still fails on untouched rgb fallbacks in PillNavigation.module.css:141 and Sheet.module.css:22. Long flicker sampling and Safari/iOS performance remain unverified; twelve-piece geometry is heavier than the previous monolith.
+- Learning: reusable assembly needs an activity counter/frame clock, not a boolean working flag; capture pixel baselines inside requestAnimationFrame because the WebGL drawing buffer may already be discarded outside the render frame.
+
+## 2026-10-29 — Add a persistent tooltip preference
+- Focused app-shell settings follow-up; no planned architecture phase advanced. Settings now includes a persistent Tooltips switch, enabled by default. The saved preference is applied to the document before the app renders, and disables both Astryx helper tips and Recharts chart-tip overlays app-wide.
+- Files: app/src/engine/stores/tooltipsStore.ts and its test; app/src/components/shell/AccountInfoPage.tsx; app/src/main.tsx; app/src/theme/shell.css; STATE.md. Reused the existing Astryx Switch and verified Tooltip's shared `.astryx-tooltip` surface in the installed component docs/source. No dependencies or tokens added.
+- Gate: focused preference test passes; app suite passes 165/165; production build and `git diff --check` pass. Build still reports existing dynamic-import/chunk-size advisories. Browser visual inspection and Safari/iOS remain unverified.
+- Learning: initialize persisted shell preferences before render, then use one root attribute to keep portaled tooltip surfaces theme-independent.
+
+## 2026-10-29 — Default tooltips to off
+- Follow-up: fresh installs now start with tooltips disabled; an explicitly saved user choice remains in effect. The focused test asserts the default and verifies the setting still updates the root immediately.
+- Files: app/src/engine/stores/tooltipsStore.ts, app/src/engine/stores/tooltipsStore.test.ts, STATE.md.
+- Gate: app suite passes 165/165, production build passes, and `git diff --check` passes. Existing Vite chunk/dynamic-import advisories remain.
+- Learning: a default change should not override a user's persisted preference.
+
+## 2026-10-29 — Add a safe-area padding setting
+- Settings now has a persistent Safe area padding switch, on by default. The viewport already uses `viewport-fit=cover`; shell content now consumes shared top/bottom variables sourced from iOS `env(safe-area-inset-*)`, with the switch zeroing those variables when disabled. Device-reported insets remain dynamic rather than hard-coded to 59/34 pt.
+- Files: app/src/engine/stores/safeAreaPaddingStore.ts and its test; app/src/components/shell/AccountInfoPage.tsx; app/src/main.tsx; app/src/theme/shell.css and glow-dock.css; app/src/components/shell/{MobileFrame,CardDetailPage,TabBar,BuyEthConversation,SendingScreen,ConversationModeOverlay,GlowDock,PillNavigation,Sheet,ComposerModeOverlay}.module.css; STATE.md. Existing changes in glow-dock.css and shell/app files were preserved.
+- Gate: app suite passes 166/166, production build and `git diff --check` pass. Existing Vite chunk/dynamic-import advisories remain. On-device iOS inset behavior is not visually verified.
+- Learning: route device environment insets through shell-level variables when a runtime preference must control them consistently.
+
+## 2026-10-29 — Keep prototype notices out of tooltips
+- Removed the generic “This section is not available in the prototype yet” message from hover/focus tooltip surfaces. Useful action tooltips remain; unavailable actions still provide the existing click-triggered toast.
+- Files: app/src/components/shell/PrototypeNotice.tsx, DockMenu.tsx, MobileFrame.tsx, AccountMenu.tsx, WalletActionRow.tsx, WalletCardTile.tsx; app/src/components/nodes/AssetRow.tsx, ProminentAssetCard.tsx, LinkChips.tsx, SectionHeading.tsx; STATE.md.
+- Gate: app suite passes 166/166, production build passes, and `git diff --check` passes. Existing Vite dynamic-import/chunk-size advisories remain.
+- Learning: prototype availability feedback belongs to an activated action, not incidental hover.
+
+## 2026-10-29 — Remove profile tagline and make safe-area padding visible in preview
+- Removed “Your space in Bastion” from the profile menu. Safe-area variables now use the requested 59px/34px preview floors when browser `env()` values are zero, while larger device-reported insets remain authoritative; agent-home dock and thread clearance include the bottom inset.
+- Files: app/src/components/shell/AccountMenu.tsx, AgentDock.module.css; app/src/theme/shell.css, agent-dock.css; STATE.md.
+- Gate: app suite passes 166/166, production build passes, and `git diff --check` passes. Browser visual/computed-style verification is unavailable here: the local Vite server cannot bind in the sandbox (`listen EPERM`).
+- Learning: browser previews need explicit safe-area floors because supported `env()` variables can validly resolve to zero.
+
+## 2026-10-29 — Tighten global typography and hero titles
+- Mapped interpretive copy to the active sans face and added denser global letter spacing, with reduced tracking on uppercase Bastion eyebrows. Shared main balances now use 24px; promo titles use 20px in card banners and 16px in full-bleed banners.
+- Files: app/src/theme/tokens.base.css, shell.css, theme.bastion.css, theme.bastion-aura.css, heroBalance.module.css, promo-bleed.css; app/src/components/shell/PromoCardFull.module.css; STATE.md.
+- Gate: app suite passes 166/166, production build and `git diff --check` pass; existing Vite dynamic-import/chunk-size advisories remain. Browser visual inspection remains unavailable because the sandbox blocks local server binding (`listen EPERM`).
+- Learning: retain a semantic voice hook while mapping it to the selected sans family for expressive copy.
+
+## 2026-10-29 — Tighten tracking further and lower the dock cube
+- Global tracking moves to −0.02em, eyebrow tracking to 0.04em, and the shared dock/chat cube offset increases by a 4px half-step to 12px.
+- Files: app/src/theme/tokens.base.css, glow-dock.css; STATE.md.
+- Gate: app suite passes 166/166, production build and `git diff --check` pass; existing Vite dynamic-import/chunk-size advisories remain. Visual inspection remains unavailable because the sandbox blocks local server binding (`listen EPERM`).
+- Learning: use the smallest layout increment that answers directional visual feedback without changing alignment between dock and chat.
+
+## 2026-10-29 — Tighten sans interface tracking slightly further
+- Direct follow-up: shared interface tracking moves from −0.02em to −0.03em; the separately tuned eyebrow tracking remains unchanged.
+- Files: app/src/theme/tokens.base.css; STATE.md.
+- Gate: app tests pass 166/166, production build and `git diff --check` pass. Existing dynamic-import/chunk-size advisories remain; browser visual verification remains unavailable in this sandbox.
+- Learning: keep iterative density changes to a single small token adjustment so their scope stays predictable.
+
+## 2026-10-29 — Use rotating Cube assembly with the original monolith pieces
+- Focused chat-cube follow-up; no architecture phase advanced. Added an optional monolith assembly variant, `self` (existing default) or `cube`. The chat cube now selects `cube`: its four original Step & Angle pieces use the Studio's independent quarter-turn search and reassembly motion. The piece count, signature cuts and intelligence junctions come directly from the chosen monolith geometry, rather than a separate twelve-piece procedural cube.
+- Reused the existing single-cube motion and rendering through a geometry adapter. Existing chat triggers, replay clock, reduced-motion behavior and canvas lifecycle remain in place. The motion skill guided reuse of the established rigid piece transforms.
+- Files: app/src/components/shell/MonolithCanvas.tsx; monolith/src/props.ts, BastionMonolith.tsx, scene/MonolithCubeStage.tsx, fractal/geometry/monolithCube.ts and fractal/monolithCube.test.ts; STATE.md.
+- Gate: 175 monolith tests, 166 app tests, monolith typecheck, app production build and diff check pass. Ten focused cases cover every monolith variant, preserving actual geometry/light sources, requiring independent piece rotation and exact endpoint reassembly. Existing Vite chunk/dynamic-import advisories remain. Browser replay checks could not run: Storybook exits with `Invariant failed: expected options to have a port`; no visual baseline was generated.
+- Learning: adapt the original piece models to the existing motion system to preserve both the brand cuts and their exact piece count.
+
+## 2026-10-29 — Pause chat assembly and lower the rendered cube
+- Focused app-shell follow-up; no architecture phase advanced. `config.agent.cubeAssembly` is now false and gates the existing chat replay clock. Both assembly implementations, triggers and replay logic are retained for re-enabling. The rendered monolith moves another 4px down in dock, chat and voice through its shared stylesheet.
+- Files: app/src/config.ts, components/shell/GlowDock.tsx and MonolithOrb.module.css; tests/visual/chatCubeAssembly.spec.ts; STATE.md.
+- Gate: 166 app tests, production build and diff check pass. Playwright lists all three adjusted cases; activity assertions follow the configured flag and the reduced-motion override case explicitly skips while assembly is disabled. Browser execution remains unverified because of the previously reproduced Storybook startup error (`Invariant failed: expected options to have a port`). Existing Vite advisories remain.
+- Learning: offset the rendered child to nudge the cube without changing the slot measurements used for travel animation.
+
+## 2026-10-29 — Tune Bastion navigation contrast and light-mode seams
+- Main pill navigation now dims unselected icons to the shared 55% opacity token and uses the suggestion-icon presence hue for the selected icon. Aura dark's selected glass fill, highlight and shadow are reduced; light aura is unchanged.
+- Light-mode cube seams now use maximum contained cut illumination at rest and while active, while halo, spill and body emission stay restrained so the shell remains white.
+- Files: app/src/components/shell/PillNavigation.module.css, app/src/theme/shell.css, app/src/theme/aura.css, app/src/components/shell/monolithOrbStates.ts and .test.ts; STATE.md.
+
+## 2026-10-29 — Lift inactive icons and restore orange in the pale cube
+- Scoped app-shell refinement; no architecture phase advanced. Inactive navigation opacity rises from 55% to the existing 70% token. Light-mode cube states now use Ivory Ceramic rather than legacy glass, whose non-transmission fallback added pale emission. Light cuts widen to 0.06 model units, with proportionally wider inner beams and 2.5% localized resting spill; resting halo and body illumination remain zero.
+- Enclosed light-mode cut walls retain a faint orange core bounce at depth, preventing dark slivers exposed by the wider slots. This shared shader correction fades away as pieces separate and is zero on dark ground. Active bloom/body limits remain unchanged. No dependencies added.
+- Files: app/src/theme/shell.css; app/src/components/shell/monolithOrbStates.ts and .test.ts; monolith/src/monolith/material/seamLight.ts; STATE.md.
+- Gate: 167 app tests, 175 renderer tests, renderer typecheck, production app build, theme parity and diff check pass. The live app was rendered in both Aura themes with computed inactive opacity 0.7. Element captures show increased saturated orange coverage on light ground; final capture: /tmp/bastion-aura-light-cube-after.png. The existing frame probe passes all 720 rotating light-mode idle/open/working samples, with zero dark pixels above its threshold and no halo-burst failures. Initial wider-slot probes exposed deep-wall darkness; matching beam width and adding enclosed core bounce corrected it.
+- Open items: token lint still fails on untouched rgb fallbacks in PillNavigation.module.css:142 and Sheet.module.css:22; existing build advisories and Safari/iOS verification remain. No existing app-cube golden snapshots cover this appearance change.
+- Learning: extra radiance alone cannot restore orange when a glass fallback and subpixel slot coverage wash it out; calibrate material, opening coverage and enclosed-wall illumination together.
+
+## 2026-10-29 — Restore Current's whiter light-mode finish
+- User found Ivory Ceramic too gray and requested Current; the pasted Studio values were illustrative. Light resting, landing and working states now use Current's frosted-light finish. Existing wider orange cuts, matched beam width, enclosed-wall core bounce, restrained bloom and small local spill are retained. No other pasted values are applied.
+- Files: app/src/components/shell/monolithOrbStates.ts; STATE.md. No architecture phase advanced, dependencies or tokens added.
+- Gate: nine focused preset tests, production app build and diff check pass. Paired live-app captures confirm a brighter neutral body while retaining orange seam coverage; /tmp/bastion-white-current.png is the final resting capture. The existing frame probe passes all 720 idle/open/working samples with no dark-pixel or halo-burst failures. Existing build advisories, token-lint fallbacks and Safari/iOS verification remain as recorded above.
+- Learning: preserve the user's preferred base material when strengthening structural light; saturation alone does not establish the intended white-body appearance.
+
+## 2026-10-29 — Align chat controls and localize stronger light-mode orange
+- Back, history, mic and voice controls now use the cube slot's shared 12px vertical drop, so their centers align in chat mode. The composer and cube travel remain unchanged.
+- Pale-ground plasma now stays closer to structural openings, retains more signal orange, and stains nearby shell pixels in proportion to the existing travelling seam source. The Current family and the shell's neutral body remain in place; dark-ground material stays unchanged.
+- Files: app/src/components/shell/GlowDock.module.css; monolith/src/monolith/material/ceramicShader.ts; STATE.md. No dependencies or new UI controls.
+- Gate: rendered chat centers all measure 738px at 392×792; 56px cube capture has 112 saturated orange pixels versus 40 before, with 2,931 pale pixels versus 3,043. Renderer tests 175/175, app production build and diff check pass. Rotating light cube probe passes all 720 idle/open/working frames with no dark or burst failures. Existing build advisories remain.
+- Learning: on a pale shell, extra emission alone washes toward white; let the moving seam source tint a narrow area of reflected material near the opening.
+
+## 2026-10-29 — Add soft moving plasma patches to the light cube
+- Replaced the sharp seam-source surface tint with broad, Gaussian-faded patches driven by the existing shared procedural plasma. Their distance falloff keeps untouched shell white; the structural seam light remains crisp.
+- The soft patch mask also colors the final frosted material output, after transmission and studio lighting, so orange remains visible in the app's small cube. Dark ground and reference material families are unchanged.
+- Files: monolith/src/monolith/material/ceramicShader.ts and opticalCeramic.ts; STATE.md. No dependencies or new controls.
+- Gate: 56px light-cube capture has 237 saturated orange pixels versus 112 before, with 2,632 pale pixels of 3,136. Live working-state capture: /tmp/bastion-light-active-cube.png. App production build, 175/175 renderer tests, diff check and 720 idle/open/working frame samples pass with zero dark or burst failures. Concurrent initial probe timed out before canvas readiness and three tests timed out under load; isolated reruns passed. Existing build advisories remain.
+- Learning: frosted transmission can wash out a pre-light surface stain; use the same spatially limited field after material shading to retain its color without tinting the whole shell.
+
+## 2026-10-29 — Preview app cube profiles in Bastion Studio
+- Studio Tuning now offers Light mode, Dark mode, Web light mode and Web dark mode as starting profiles. Web profiles use the app's shared resting material and intelligence values, the signature step-angle geometry and the transparent, non-interactive renderer path. The existing header appearance switch follows the selected profile family; Reset light restores that profile's starting values.
+- The app cube state definitions now live in the shared monolith package and are re-exported from the app's original module, preventing Studio and app presets from drifting. Added Pale warmth to the light-ground controls so the app's resting value is visible and tunable.
+- Files: monolith/src/appCubeStates.ts, monolith/src/index.ts, app/src/components/shell/monolithOrbStates.ts, brand-studio/src/state/studioStore.ts, brand-studio/src/ui/TuningPanel.tsx, brand-studio/src/scene/Stage.tsx, brand-studio/src/ui/tuning/SurfaceSection.tsx; STATE.md. No architecture phase advanced or dependencies added.
+- Gate: Studio and app production builds, 175 renderer tests, nine app cube-state tests and diff check pass. Live Studio interaction confirms all four dropdown choices; Web light shows Pale warmth 60% and Cut width 0.060, Web dark selects without browser errors.
+- Remaining visual differences: the app's small-canvas pixel ratio, framing, host backdrop and interaction timing are not Studio sliders; shader and scene constants also remain code-level. Studio edits preview locally and do not automatically write back to the app's profile definitions.
+
+## 2026-10-29 — Apply Apple-style typography restraint to Bastion themes
+- Installed the user-linked `apple-design` Codex skill. Applied its size-specific tracking and restrained hierarchy to the app UI: Inter for shell and Astryx body/heading text across all four Bastion themes, near-neutral body tracking, tighter h1/h2 tracking and semibold primary actions. Primary/secondary ink is now a quieter low-chroma grey in both grounds; orange action and monolith colors are unchanged.
+- Reused the already loaded Inter web font, removed the unused Poppins request/token, and kept app/Storybook font loading aligned. The Astryx bridge log records the current mapping. No new repo dependency, architecture phase or motion change.
+- Files: app/src/theme/tokens.base.css, theme.bastion.css, theme.bastion-light.css, theme.bastion-aura.css, theme.bastion-aura-light.css, shell.css, astryx-bridge.md, app/index.html, .storybook/preview-head.html; STATE.md.
+- Gate: app production build, 167 app tests, theme-parity check and diff check pass. Browser-computed dark/light h1 uses Inter with −0.72px tracking; root uses −0.128px tracking and resolves the expected grey ink tokens. `pnpm lint:tokens` remains red on pre-existing rgb fallbacks in PillNavigation.module.css:142 and Sheet.module.css:22, outside this typography pass.
+- Learning: keep the font choice and tracking split in semantic/theme-level mappings, while sizing display tracking separately; a theme-local primitive override fails the parity gate even when its visual output is correct.
+
+## 2026-10-29 — Strengthen Bastion's text and currency hierarchy
+- Scoped follow-up to the Inter pass; no architecture phase advanced. All four Bastion app themes now use 500 for body/supporting text, 600 for medium emphasis and smaller currency figures, and 700 for semibold/display roles and the shared hero balance. The reference informed weight hierarchy only; palette, spacing and WebGL are unchanged.
+- Added three reusable weight primitives and mapped them through Astryx's existing weight variables in the shell, preserving non-Bastion themes. Updated the app and Storybook Inter requests for 500 and 700 alongside 400/600.
+- Files: app/src/theme/tokens.base.css, shell.css, heroBalance.module.css, app/index.html, .storybook/preview-head.html; STATE.md. No dependency added.
+- Gate: app build, 167 tests, theme parity and diff check pass. Browser-computed weights are body 500, smaller currency 600, main balance 700 in dark/light; 320px and 392px layouts have no horizontal page overflow. Token lint still fails on pre-existing rgb fallbacks in PillNavigation.module.css:142 and Sheet.module.css:22, outside scope.
+- Learning: the shared Astryx weight bridge gives a consistent heavier register without per-screen typography overrides; verify actual rendered weight and narrow-width fit after changing font metrics.
+
+## 2026-10-29 — Use sourced asset artwork and currency flags
+- Visual-identity follow-up; no architecture phase advanced. Shared explicit artwork mapping now supplies Trust Wallet crypto logos, NVSTly stock/index and two crypto logos, and flag-icons USD/EUR/GBP flags. Explore forex pairs show both flags. Money's USD balance no longer uses an emoji; asset rows, discovery/detail views and purchase cards share the mapping. Fictional assets and unavailable tickers use category icons instead of unrelated placeholder logos.
+- Files: app/src/assets/identity/ (artwork, tests, notices, selected images), app/src/components/nodes/{AssetLogo.tsx,AssetLogo.module.css,CoinLogo.tsx,CoinLogo.module.css,PurchaseCard.tsx}, app/src/components/shell/{CoinLogo.module.css,ContributingBalanceRow.tsx,ContributingBalanceRow.module.css,MoneyPage.tsx}, STATE.md. No dependencies or scene-data changes.
+- Gate: app production build, 195/195 app tests and diff check pass. Visual screenshot gate unavailable: existing port 6006 did not respond, and sandbox denied a fresh Storybook/Vite bind on 6007. Token lint remains red only on pre-existing rgb fallbacks in PillNavigation.module.css:142 and Sheet.module.css:22.
+- Open risk: NVSTly publishes no license file for its logos; confirm redistribution rights before shipping externally. Existing GALA art retains its earlier attribution/licensing caveat. Existing screenshot baselines touching icons must be regenerated when a browser server is available.
+- Learning: logo selection must key from stable asset IDs across both universe data and authored Explore fixtures; the universe seed alone misses stock and forex scenes.
+
+## 2026-10-29 — Match Money balance logo sizes
+- Visual-identity follow-up; no architecture phase advanced. USD, USDT and USDC contributing-balance logos now fill the shared 44px asset-accessory footprint instead of a 24px wrapper; the existing flag and coin artwork is unchanged.
+- Files: app/src/components/shell/ContributingBalanceRow.module.css; STATE.md. No dependencies or token changes.
+- Gate: app production build, 195/195 app tests and diff check pass. Visual screenshot verification remains unavailable because the local browser server cannot bind in this sandbox; compare the wallet row in Storybook when available.
+- Learning: a fixed 32px coin mark inside a 24px wrapper made the sourced 24px flag read smaller than its peers; size the immediate child with the shared accessory token.
+
+## 2026-10-29 — Use Agent Home navigation on Attention Home Monolith
+- Attention Home Monolith now has Agent Home's left navigation menu, centered live cube, and right quick-actions button in place of the four-item pill. Its composer transition and attention-driven cube illumination remain connected; other home variants keep their existing docks. No architecture phase advanced.
+- Files: app/src/components/shell/MonolithNavigation.tsx, MonolithNavigation.module.css, MonolithNavigation.test.tsx, GlowDock.tsx, MobileFrame.tsx; STATE.md. Reused Agent Dock and Pill Navigation classes/tokens; no dependency added.
+- Gate: app production build, 197/197 app tests, focused navigation tests, and diff check pass. Token lint remains red only on pre-existing rgb fallbacks in PillNavigation.module.css:142 and Sheet.module.css:22. Visual gate unavailable because Storybook on port 6006 does not respond.
+- Learning: keep the center cube slot mounted across composer mode so DockCube's persistent renderer can travel between idle and chat without remounting.
+
+## 2026-10-29 — Open chat from the Attention Home cube
+- Fixed the cube-to-chat view transition after the navigation swap: composer travel now measures the visible monolith navigation row instead of requiring the removed pill. No architecture phase advanced.
+- Files: app/src/components/shell/dockComposer.ts, tests/visual/monolithNavigation.spec.ts; STATE.md. No dependencies or visual tokens changed.
+- Gate: app production build, 197/197 app tests, 2/2 focused browser interactions (dark and light), and diff check pass. Token lint remains red on pre-existing rgb fallbacks in PillNavigation.module.css:142 and Sheet.module.css:22.
+- Learning: an event handler can fire without changing state if a synchronous transition precondition throws; test the resulting composer state in a real browser, not only the button wiring.

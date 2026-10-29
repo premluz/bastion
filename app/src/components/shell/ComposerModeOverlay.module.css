@@ -55,7 +55,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--space-8);
+  padding: max(var(--shell-inset), var(--shell-safe-area-top)) var(--shell-inset) var(--space-8);
 }
 
 /* Same bottom-anchored stacking ConversationModeOverlay's own .transcript
@@ -77,7 +77,7 @@
    this became a full-screen overlay — the actual input box, pinned to
    the true bottom edge now instead of growing from the dock. */
 .composerBody {
-  padding: var(--shell-label-gap) var(--shell-inset) max(var(--shell-inset), env(safe-area-inset-bottom));
+  padding: var(--shell-label-gap) var(--shell-inset) max(var(--shell-inset), var(--shell-safe-area-bottom));
 }
 
 .composerBody button { min-height: var(--shell-control-size); min-width: var(--shell-control-size); }

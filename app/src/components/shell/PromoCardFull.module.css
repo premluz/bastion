@@ -79,7 +79,7 @@
 }
 .heroTitle {
   max-width: 12ch;
-  font-size: var(--text-24);
+  font-size: var(--text-20);
   font-weight: 400;
   line-height: 1.2;
   color: var(--ink-primary);

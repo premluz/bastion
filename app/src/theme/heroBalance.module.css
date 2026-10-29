@@ -11,15 +11,12 @@
    main balance by 20%"): 40px → 32px, one token step down the ramp. */
 .heroBalance {
   font-variant-numeric: tabular-nums;
-  font-size: var(--text-32);
+  font-size: var(--text-24);
   font-weight: 700;
 }
 
 :global(:is([data-theme='bastion'], [data-theme='bastion-light'], [data-theme='bastion-aura'], [data-theme='bastion-aura-light'])) .heroBalance {
-  /* Lighter (2026-10-23, direct feedback with an inspiration mock): regular, not black — then stronger again
-     (2026-10-28, direct feedback: the main values on Home, Money and Portfolio): semibold, a step under the
-     original 700. One value here, so every main balance changes together. */
-  font-weight: 600;
+  font-weight: var(--weight-bastion-money);
 }
 
 /* The transfer card's amount (PaymentCard) is a hero figure but not a balance,

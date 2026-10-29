@@ -8,6 +8,7 @@ import {
   FRAGMENT_EMISSION,
   FRAGMENT_HEADER,
   FRAGMENT_ROUGHNESS,
+  PALE_PLASMA,
   VERTEX_BODY,
   VERTEX_HEADER,
 } from './ceramicShader';
@@ -124,6 +125,8 @@ const FRAGMENT_GLOW_OUT = /* glsl */ `
 // Pale warmth: on a light ground the body reads as amber glass where its inner light reaches, filtering the cream behind
 // and the light it reflects; where the light is low the body keeps its own pale colour.
 gl_FragColor.rgb *= mix(vec3(1.0), vec3(1.0, 0.6, 0.36), uPaleWarmth * uLightGround * bsWarmHere);
+// The moving patch must survive frosted transmission and studio lighting without tinting untouched ceramic.
+gl_FragColor.rgb *= mix(vec3(1.0), uAmber, clamp(bsPatchHere * uLightGround * ${PALE_PLASMA.postTint}, 0.0, 1.0));
 #ifdef BS_GLOW_PASS
 gl_FragColor = vec4(totalEmissiveRadiance, 1.0);
 #endif

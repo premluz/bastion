@@ -18,6 +18,7 @@ const SEQUENCE: Record<StagePage, Sequence> = {
 /** The studio's stores, mapped onto the monolith component's props. */
 export function Stage({ page }: { readonly page: StagePage }) {
   const appearance = useStudio((s) => s.appearance);
+  const preset = useStudio((s) => s.preset);
   const variant = useStudio((s) => s.variant);
   const material = useStudio((s) => s.material);
   const intelligence = useStudio((s) => s.intelligence);
@@ -51,6 +52,8 @@ export function Stage({ page }: { readonly page: StagePage }) {
       progress={progress}
       settings={settings}
       transition="immediate"
+      transparent={preset === 'web-light' || preset === 'web-dark'}
+      interactive={preset === 'light' || preset === 'dark'}
       {...clock}
     />
   );

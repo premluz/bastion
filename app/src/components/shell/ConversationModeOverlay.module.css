@@ -103,7 +103,7 @@
   min-height: 0;
   overflow-y: auto;
   overflow-wrap: anywhere;
-  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--space-32);
+  padding: max(var(--shell-inset), var(--shell-safe-area-top)) var(--shell-inset) var(--space-32);
   mask: var(--shell-transcript-mask);
 }
 
@@ -112,7 +112,7 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--shell-inset);
-  padding-bottom: max(var(--shell-inset), env(safe-area-inset-bottom));
+  padding-bottom: max(var(--shell-inset), var(--shell-safe-area-bottom));
   gap: var(--shell-gap);
 }
 

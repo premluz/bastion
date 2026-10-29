@@ -46,7 +46,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--space-8);
+  padding: max(var(--shell-inset), var(--shell-safe-area-top)) var(--shell-inset) var(--space-8);
 }
 
 .body {

@@ -31,8 +31,8 @@
   /* Lines: half-pixel hairlines, very subtle (2026-10-06). */
   --hairline-width: .5px;
   /* Softer than the palette's warm white (2026-10-23, direct feedback: primary text too strong). */
-  --ink-primary: oklch(.88 .009 78.3);
-  --ink-secondary: oklch(.74 .01 78);
+  --ink-primary: oklch(.84 .005 265);
+  --ink-secondary: oklch(.7 .005 265);
   --ink-muted: oklch(.55 .01 78);
 
   /* Semantic split (2026-10-06, direct feedback): copper = action /
@@ -155,12 +155,10 @@
   --motion-table-stagger: 30ms;
   --motion-chart-reveal-duration: var(--duration-480);
   --motion-shimmer-duration: var(--duration-1600);
-  /* Geist sans / Geist Mono eyebrows (2026-10-06, direct feedback) — this
-     theme's own register, so --face-ui and Astryx's family variables are
-     overridden here only (logged in astryx-bridge.md). */
-  --face-ui: var(--font-poppins);
-  --font-family-body: var(--font-poppins);
-  --font-family-heading: var(--font-poppins);
+  /* Bastion's Inter face bridges both shell and Astryx typography. */
+  --face-ui: var(--font-inter);
+  --font-family-body: var(--font-inter);
+  --font-family-heading: var(--font-inter);
   --face-data: var(--font-data);
   --face-voice: var(--font-voice);
 
@@ -249,7 +247,7 @@
 :is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-button.primary:not(#\#):not(#\#):not(#\#) {
   background: var(--action-fill);
   color: var(--action-ink);
-  font-weight: 400;
+  font-weight: 600;
 }
 :is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-button.primary:not(:disabled):hover:not(#\#):not(#\#):not(#\#) {
   background: var(--action-fill-hover);
@@ -273,12 +271,12 @@
    follows; specificity matches Astryx's inflated text rules. */
 :is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-eyebrow]:not(#\#):not(#\#):not(#\#),
 :is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-eyebrow] :is(span, a, button):not(#\#):not(#\#):not(#\#) {
-  font-family: var(--font-poppins);
+  font-family: var(--font-inter);
   /* Aura: the size of body text (2026-10-27, direct feedback); 14 px is the card titles' own. */
   font-size: var(--text-14);
   font-weight: 400;
   /* Aura: normal case (2026-10-27, direct feedback); the wide tracking only ever served small capitals. */
-  letter-spacing: .01em;
+  letter-spacing: var(--tracking-bastion-interface);
   text-transform: none;
   color: var(--ink-muted);
 }

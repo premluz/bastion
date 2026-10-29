@@ -12,6 +12,8 @@ import { APPEARANCES } from './scene/appearance';
 import { AppearanceCrossfade } from './scene/AppearanceCrossfade';
 import { CameraRig, DEFAULT_CAMERA } from './scene/CameraRig';
 import { CubeStage } from './scene/CubeStage';
+import { MonolithCubeStage } from './scene/MonolithCubeStage';
+import { EdgeCoverage } from './scene/EdgeCoverage';
 import { ExportBridge, type ExportRequest } from './scene/export/ExportBridge';
 import { FractalStage } from './scene/FractalStage';
 import { GlowAlpha } from './scene/GlowAlpha';
@@ -135,7 +137,10 @@ export function BastionMonolith({
         )}
         <TurningGroup turn={composition.kind === 'fractal' ? still : turn}>
           {composition.kind === 'cube' && <CubeStage {...composition} settings={live} quality={spec} preset={preset} progress={staged} />}
-          {composition.kind === 'monolith' && (
+          {composition.kind === 'monolith' && composition.assembly === 'cube' && (
+            <MonolithCubeStage variant={composition.variant} settings={live} quality={spec} preset={preset} progress={staged} />
+          )}
+          {composition.kind === 'monolith' && composition.assembly !== 'cube' && (
             <VariantStage variant={composition.variant} settings={live} quality={spec} preset={preset} progress={staged} />
           )}
         </TurningGroup>
@@ -163,6 +168,7 @@ export function BastionMonolith({
           />
           <ToneMapping mode={ToneMappingMode.NEUTRAL} />
           {transparent ? <GlowAlpha /> : <></>}
+          {directAppearance && pixelRatio !== undefined ? <EdgeCoverage /> : <></>}
         </EffectComposer>
       </Canvas>
       {fade !== null && <AppearanceFade key={fade.key} bitmap={fade.bitmap} onDone={appearanceTransition.done} />}

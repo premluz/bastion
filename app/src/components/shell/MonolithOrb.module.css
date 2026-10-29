@@ -3,6 +3,7 @@
   display: block;
   width: 100%;
   height: 100%;
+  translate: 0 var(--space-4);
   /* Nothing underneath: no disc, no clip. The canvas extends past the slot and fades out inside itself. */
   pointer-events: none;
   --monolith-bleed: 90%;

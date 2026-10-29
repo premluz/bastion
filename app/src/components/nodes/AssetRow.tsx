@@ -1,10 +1,8 @@
 import { Item } from '@astryxdesign/core/Item';
 import { Text } from '@astryxdesign/core/Text';
-import { Tooltip } from '@astryxdesign/core/Tooltip';
 import { CoinLogo } from './CoinLogo';
 import { TrendDelta } from './TrendDelta';
 import type { AssetRowProps } from '../../contracts/props/asset-row';
-import { PROTOTYPE_NOTICE } from '../shell/PrototypeNotice';
 import styles from './ExploreComponents.module.css';
 
 export function AssetRow(props: AssetRowProps) {
@@ -21,7 +19,5 @@ export function AssetRow(props: AssetRowProps) {
     endContent={<span className={styles.values}><Text weight="medium" hasTabularNumbers>{props.value}</Text>
       {owned ? <Text type="supporting" color="secondary">{props.quantity} {props.symbol}</Text> : <TrendDelta value={props.deltaPercent} />}
     </span>} />;
-  return props.href.startsWith('#explore/')
-    ? <Tooltip content={PROTOTYPE_NOTICE} placement="above" hasHoverIndication={false}>{item}</Tooltip>
-    : item;
+  return item;
 }

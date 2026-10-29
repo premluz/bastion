@@ -16,6 +16,7 @@ export function SurfaceSection() {
         <ParamSlider label="Finish · matte to glossy" value={m.gloss} min={0} max={1} step={0.01} format={percent} onChange={(gloss) => set({ gloss })} />
         <ParamSlider label="Translucency" value={m.translucency ?? materialTranslucency(m.family, appearance)} min={0} max={1} step={0.01} format={percent} onChange={(translucency) => set({ translucency })} />
         <ParamSlider label="Spectral response" value={m.spectral} min={0} max={1} step={0.01} format={percent} onChange={(spectral) => set({ spectral })} />
+        {appearance === 'light' && <ParamSlider label="Pale warmth" value={m.paleWarmth} min={0} max={1} step={0.01} format={percent} onChange={(paleWarmth) => set({ paleWarmth })} />}
         <ParamSlider
           label="Corner radius"
           value={m.cornerRadius ?? (m.softCorners ? SOFT_CORNER_RADIUS : 0)}

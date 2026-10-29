@@ -8,7 +8,7 @@ export type MagicBorderPalette = 'spectrum' | 'brand' | 'prismatic';
 export interface MagicBorderProps {
   /** Something is being worked on: the rim glow swells in; off, it fades away. */
   isActive: boolean;
-  /** rim: a soft glow all around the inside of the edge. bottom: a glow along the foot, a thin line on the
+  /** rim: a travelling beam with a clipped inner halo. bottom: a glow along the foot, a thin line on the
    *  bottom edge and a highlight running across it (indeterminate progress). */
   variant?: MagicBorderVariant;
   /** prismatic (the default): the brand accent with pearlescent blue, violet and pink. spectrum: the brand accent

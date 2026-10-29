@@ -1,7 +1,7 @@
 /* position:relative + z-index:6 (above .scrim's own 5) so the nav pill/
    toggle stay clickable and undimmed ABOVE the modal scrim, rather than
    the scrim visually and interactively covering them too. */
-.root { position: relative; z-index: 6; display: flex; align-items: center; gap: var(--pill-detached-gap); width: 100%; padding: var(--pill-inset); padding-bottom: max(var(--pill-inset), env(safe-area-inset-bottom)); transition: opacity var(--motion-enter-duration) var(--motion-enter-ease); }
+.root { position: relative; z-index: 6; display: flex; align-items: center; gap: var(--pill-detached-gap); width: 100%; padding: var(--pill-inset); padding-bottom: max(var(--pill-inset), var(--shell-safe-area-bottom)); transition: opacity var(--motion-enter-duration) var(--motion-enter-ease); }
 /* Fades the nav pill/toggle during the transition INTO composer mode
    (2026-09-16, direct feedback, corrected after an initial attempt
    targeted conversation mode instead: "the change was requested on the
@@ -23,8 +23,9 @@
    makes it a backdrop root, so a blur on a child layer could only ever see
    the pill's own empty interior, never the page (measured). */
 .pill .destination { width: 100%; min-width: 0; min-height: var(--pill-item-size); padding: 0; border-radius: var(--pill-radius); color: var(--tab-ink); box-shadow: none; border-color: transparent; }
-.pill .destination[aria-current='page'] { color: var(--tab-active-ink); background: transparent; }
-.pill .destination:not([aria-current='page']) { color: var(--ink-muted); }
+.pill .destination[aria-current='page'] { color: var(--list-accessory-ink); background: transparent; }
+.pill .destination:not([aria-current='page']) { color: var(--ink-muted); opacity: var(--tab-inactive-opacity); }
+.pill .destination:not([aria-current='page']):focus-visible { opacity: 1; }
 /* While the quick-actions menu is open the pill keeps its glass pane and
    active highlight — it is dimmed only by its own scrim layer (.pill::after
    below), exactly like the page behind (2026-10-01, direct feedback: the
@@ -47,10 +48,10 @@
 .dock:not([data-composer-open='true']) .destination:nth-of-type(3) { view-transition-name: dock-nav-3; }
 .dock:not([data-composer-open='true']) .destination:nth-of-type(4) { view-transition-name: dock-nav-4; }
 .dock:not([data-composer-open='true']) .root .toggle { view-transition-name: dock-nav-5; }
-.pill .destination, .root .toggle { transition: scale var(--press-release-duration) var(--press-release-ease), color var(--pill-duration) var(--pill-ease); }
+.pill .destination, .root .toggle { transition: scale var(--press-release-duration) var(--press-release-ease), color var(--pill-duration) var(--pill-ease), opacity var(--pill-duration) var(--pill-ease); }
 @media (hover: hover) {
   .pill .destination:hover, .root .toggle:hover { scale: var(--press-hover-scale); }
-  .pill .destination:not([aria-current='page']):hover { color: var(--tab-hover-ink); }
+  .pill .destination:not([aria-current='page']):hover { color: var(--tab-hover-ink); opacity: 1; }
 }
 .pill .destination:active, .root .toggle:active { scale: var(--press-active-scale); transition-duration: var(--press-in-duration); transition-timing-function: var(--press-in-ease); }
 .popover:global(.astryx-popover) { padding: var(--pill-menu-padding); }

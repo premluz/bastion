@@ -2,10 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { MONOLITH_ORB_STATES, monolithOrbState } from './monolithOrbStates';
 
 describe.each(['dark', 'light'] as const)('%s cube emission', (appearance) => {
-  it('keeps resting light inside the cuts', () => {
+  it('keeps resting illumination close to the cuts', () => {
     const state = MONOLITH_ORB_STATES[monolithOrbState('rest', appearance)];
     const material = appearance === 'light' ? MONOLITH_ORB_STATES.restLight.material : MONOLITH_ORB_STATES.rest.material;
-    expect(material).toMatchObject({ halo: 0, spill: 0, bodyLight: 0 });
+    expect(material).toMatchObject({ halo: 0, bodyLight: 0 });
+    expect(material.spill).toBeLessThanOrEqual(0.04);
     expect(material.core).toBeGreaterThan(0);
     expect(material.cutLight).toBeGreaterThan(0);
     expect(material.edge).toBe(0.3);
@@ -22,6 +23,13 @@ describe.each(['dark', 'light'] as const)('%s cube emission', (appearance) => {
     if (appearance === 'light') expect(MONOLITH_ORB_STATES.workingLight.material.edge).toBe(0.6);
     else expect(MONOLITH_ORB_STATES.working.material.edge).toBe(0.6);
   });
+});
+
+it('keeps light-mode seam emphasis local to the openings', () => {
+  expect(MONOLITH_ORB_STATES.restLight.material).toMatchObject({ cutLight: 1, halo: 0, bodyLight: 0 });
+  expect(MONOLITH_ORB_STATES.restLight.material.spill).toBeLessThanOrEqual(0.04);
+  expect(MONOLITH_ORB_STATES.landingLight.material.cutLight).toBe(1);
+  expect(MONOLITH_ORB_STATES.workingLight.material.cutLight).toBe(1);
 });
 
 describe.each(['landing', 'working'] as const)('%s pale cube', (mood) => {

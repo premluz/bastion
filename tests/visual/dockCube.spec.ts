@@ -26,7 +26,7 @@ test.beforeEach(({ page, baseURL }, info) => {
 });
 test.afterEach(({ page }) => { expect(errors.get(page)).toEqual([]); });
 
-for (const [width, theme] of [[320, 'bastion'], [392, 'bastion-aura-light']] as const) {
+for (const [width, theme] of [[320, 'bastion'], [392, 'bastion-aura'], [392, 'bastion-aura-light']] as const) {
   test(`cube clears the matching-height composer at ${width}px in ${theme}`, async ({ page }) => {
     await page.setViewportSize({ width, height: 792 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -36,15 +36,27 @@ for (const [width, theme] of [[320, 'bastion'], [392, 'bastion-aura-light']] as 
     expect(await page.evaluate(recordCubeIdle)).toEqual([0, 0, 0, 0]);
     await expect(page.locator('[data-orb="none"] > div').first()).toHaveCSS('opacity', '0');
     const navHeight = await nav.evaluate((element) => element.getBoundingClientRect().height);
-    const muted = await nav.getByRole('button', { name: 'Explore', exact: true }).evaluate((element) => {
+    const inactive = await nav.getByRole('button', { name: 'Explore', exact: true }).evaluate((element) => {
       const probe = document.createElement('span');
       probe.style.color = 'var(--ink-muted)';
+      probe.style.opacity = 'var(--tab-inactive-opacity)';
       element.append(probe);
-      const colors = { actual: getComputedStyle(element).color, expected: getComputedStyle(probe).color };
+      const styles = { actualColor: getComputedStyle(element).color, expectedColor: getComputedStyle(probe).color,
+        actualOpacity: getComputedStyle(element).opacity, expectedOpacity: getComputedStyle(probe).opacity };
       probe.remove();
-      return colors;
+      return styles;
     });
-    expect(muted.actual).toBe(muted.expected);
+    expect(inactive.actualColor).toBe(inactive.expectedColor);
+    expect(inactive.actualOpacity).toBe(inactive.expectedOpacity);
+    const activeColor = await nav.locator('[aria-current="page"]').evaluate((element) => {
+      const probe = document.createElement('span');
+      probe.style.color = 'var(--list-accessory-ink)';
+      element.append(probe);
+      const color = { actual: getComputedStyle(element).color, expected: getComputedStyle(probe).color };
+      probe.remove();
+      return color;
+    });
+    expect(activeColor.actual).toBe(activeColor.expected);
     await expect(nav.getByRole('button')).toHaveCount(4);
     await page.getByRole('button', { name: 'Open assistant', exact: true }).click();
     const input = page.getByRole('textbox', { name: 'Message input', exact: true });

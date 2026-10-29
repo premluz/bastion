@@ -1,7 +1,7 @@
-/** Capture the visible pill before React replaces it, while the arriving composer remains interactive. */
+/** Capture the visible cube dock before React replaces it, while the arriving composer remains interactive. */
 export function prepareComposerTravel(): () => void {
-  const nav = document.querySelector('[data-testid="pill-navigation"] nav');
-  if (!(nav instanceof HTMLElement)) throw new Error('Composer travel requires the visible navigation pill');
+  const nav = document.querySelector('[data-testid="monolith-navigation"]');
+  if (!(nav instanceof HTMLElement)) throw new Error('Composer travel requires the visible monolith navigation');
   const source = nav.getBoundingClientRect();
   return () => {
     const body = document.querySelector('.astryx-chat-composer > div');

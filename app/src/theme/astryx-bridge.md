@@ -667,3 +667,7 @@ safe-one rules on Astryx stable classes (theme.safe-one.css):
 ## 2026-10-11 — Bastion Light
 
 `[data-theme='bastion-light']` (theme.bastion-light.css) carries the same direction-B bridge as Bastion: the full `--color-*` map onto its own semantic tokens, `--font-family-body`/`--font-family-heading` → `var(--font-poppins)`, and `color-scheme: light` so Astryx's unmapped `light-dark()` variables resolve light. Bastion's Astryx component overrides (panelFlat, cardSurface1, chat composer, text input, segmented control, tooltip, eyebrows) are shared: their selectors in theme.bastion.css match `:is([data-theme='bastion'], [data-theme='bastion-light'])`.
+
+## 2026-10-29 — Inter and restrained grey ink
+
+All four Bastion themes now bridge `--face-ui`, `--font-family-body` and `--font-family-heading` to `--font-inter`. Primary actions use semibold Inter; body tracking is near neutral while h1/h2 keep tighter display tracking. Primary and secondary ink move to low-chroma grey in both grounds, without changing semantic orange or the monolith. The older Poppins bridge entries above document their historical state.

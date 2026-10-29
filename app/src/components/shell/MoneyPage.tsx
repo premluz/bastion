@@ -22,7 +22,7 @@ import styles from './MoneyPage.module.css';
 // exists in the universe seed, same authored-stand-in posture as
 // MONEY_PLACEHOLDER; these three sum to MONEY_PLACEHOLDER.value.
 const CONTRIBUTING_BALANCES = [
-  { id: 'usd', code: 'USD', amount: 1024.11, flag: '🇺🇸' },
+  { id: 'usd', code: 'USD', amount: 1024.11 },
   { id: 'usdt', code: 'USDT', amount: 1850.00, assetId: 'usdt' },
   { id: 'usdc', code: 'USDC', amount: 601.34, assetId: 'usdc' },
 ] as const;

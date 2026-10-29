@@ -74,7 +74,7 @@
    rounded like the cards, lifted off the bottom edge. */
 .sheet[data-floating='true'] {
   width: calc(100% - var(--shell-inset) * 2);
-  margin-block-end: max(var(--shell-inset), env(safe-area-inset-bottom));
+  margin-block-end: max(var(--shell-inset), var(--shell-safe-area-bottom));
   border-radius: var(--sheet-floating-radius);
   box-shadow: var(--card-light);
 }

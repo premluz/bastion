@@ -1,10 +1,8 @@
-import { useRef } from 'react';
 import { Badge } from '@astryxdesign/core/Badge';
 import { Button } from '@astryxdesign/core/Button';
 import { Icon } from '@astryxdesign/core/Icon';
-import { Tooltip } from '@astryxdesign/core/Tooltip';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
-import { PROTOTYPE_NOTICE, notifyPrototypeUnavailable } from '../shell/PrototypeNotice';
+import { notifyPrototypeUnavailable } from '../shell/PrototypeNotice';
 import styles from './ExploreComponents.module.css';
 
 // The eyebrow section heading with its chevron link ("Trending >", "Perps >"), one
@@ -14,12 +12,8 @@ import styles from './ExploreComponents.module.css';
 // `size="title"` (2026-10-23, direct feedback, attention home): a sentence-case title instead
 // of the eyebrow, optionally with a count badge after it.
 export function SectionHeading({ title, href, size = 'eyebrow', count }: { title: string; href?: string; size?: 'eyebrow' | 'title'; count?: number }) {
-  const linkRef = useRef<HTMLButtonElement>(null);
-  return <>
-    <h2 className={styles.heading} data-size={size} {...(size === 'eyebrow' ? { 'data-eyebrow': '' } : {})}>{href ? <Button label={title} href={href} data-explore-link={href}
-      ref={linkRef} onClick={(event) => { event.preventDefault(); notifyPrototypeUnavailable(); }}
+  return <h2 className={styles.heading} data-size={size} {...(size === 'eyebrow' ? { 'data-eyebrow': '' } : {})}>{href ? <Button label={title} href={href} data-explore-link={href}
+      onClick={(event) => { event.preventDefault(); notifyPrototypeUnavailable(); }}
       variant="ghost" className={styles.headingLink} endContent={<Icon icon={ChevronRightIcon} size="sm" />} /> : title}
-      {count !== undefined && <Badge label={count} variant="orange" className={styles.headingCount} />}</h2>
-    {href && <Tooltip anchorRef={linkRef} content={PROTOTYPE_NOTICE} placement="above" hasHoverIndication={false} />}
-  </>;
+      {count !== undefined && <Badge label={count} variant="orange" className={styles.headingCount} />}</h2>;
 }

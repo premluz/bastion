@@ -6,7 +6,7 @@ export const SEAM_LIGHT = {
   ember: 0.4, peak: 3.8, activityGain: 0.63,
   hotColor: [1, 0.82, 0.52], hotThreshold: 0.45, hotPeak: 0.95,
   lipRadius: 0.045, lipGain: 0.22, blendRadius: 0.12,
-  wallWidth: 0.065, openWidth: 0.028, endFade: 0.08, openEmber: 0.1,
+  wallWidth: 0.065, openWidth: 0.028, endFade: 0.08, openEmber: 0.1, closedWallEmber: 0.06,
 } as const;
 
 export const SEAM_LIGHT_HEADER = /* glsl */ `
@@ -48,7 +48,10 @@ vec3 bsOpeningLight(vec3 p) {
 // Normalizing overlapping sources must not cancel the beam's distance falloff on exposed cut faces.
 float bsWallBeam(vec3 p) {
   float width = mix(${SEAM_LIGHT.wallWidth}, ${SEAM_LIGHT.openWidth}, uOpen) * uSeamTuning.w;
-  return exp(-pow(bsCutDistance(p) / width, 2.0));
+  float beam = exp(-pow(bsCutDistance(p) / width, 2.0));
+  // Enclosed pale slots catch core light at depth; separated faces retain the travelling beam alone.
+  float ember = ${SEAM_LIGHT.closedWallEmber} * uLightGround * (1.0 - uOpen);
+  return mix(ember, 1.0, beam);
 }
 
 vec3 bsSeamLip(vec3 p, vec3 source) {

@@ -11,7 +11,7 @@ import {
   PauseCircleIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
-import { PROTOTYPE_NOTICE, notifyPrototypeUnavailable } from './PrototypeNotice';
+import { notifyPrototypeUnavailable } from './PrototypeNotice';
 import styles from './WalletActionRow.module.css';
 
 // Extracted out of AssetsHomeHeader.tsx (2026-09-13, direct feedback:
@@ -96,7 +96,7 @@ export function WalletActionRow({ variant = 'wallet', shape = 'roundedSquare', s
               tile (icon + label) its own panel and hover. ghost strips
               that panel; the shape/fill/color this component already
               applied to the icon now lives directly on the real button. */}
-          <IconButton label={label} tooltip={PROTOTYPE_NOTICE} onClick={notifyPrototypeUnavailable}
+          <IconButton label={label} onClick={notifyPrototypeUnavailable}
             icon={<Icon icon={icon} size={size === 'compact' ? 'sm' : 'md'} />} variant="ghost"
             className={styles.iconShape} data-shape={shape} data-size={size} />
           <Text type="supporting" color="secondary" className={styles.caption}>

@@ -1,11 +1,9 @@
 import type { ReactNode } from 'react';
 import { ClickableCard } from '@astryxdesign/core/ClickableCard';
 import { Text } from '@astryxdesign/core/Text';
-import { Tooltip } from '@astryxdesign/core/Tooltip';
 import { CoinLogo } from './CoinLogo';
 import { TrendDelta } from './TrendDelta';
 import type { ProminentAssetCardProps } from '../../contracts/props/prominent-asset-card';
-import { PROTOTYPE_NOTICE } from '../shell/PrototypeNotice';
 import styles from './ExploreComponents.module.css';
 
 export function ProminentAssetCard(props: ProminentAssetCardProps & { children?: ReactNode }) {
@@ -23,7 +21,5 @@ export function ProminentAssetCard(props: ProminentAssetCardProps & { children?:
       {props.children && <div className={styles.chart}>{props.children}</div>}
     </div>
   </ClickableCard></div>;
-  return props.href.startsWith('#explore/')
-    ? <Tooltip content={PROTOTYPE_NOTICE} placement="above" hasHoverIndication={false}>{card}</Tooltip>
-    : card;
+  return card;
 }

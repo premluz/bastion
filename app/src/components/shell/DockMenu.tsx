@@ -1,11 +1,10 @@
-import { useRef, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Button } from '@astryxdesign/core/Button';
 import { Icon } from '@astryxdesign/core/Icon';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Popover } from '@astryxdesign/core/Popover';
-import { Tooltip } from '@astryxdesign/core/Tooltip';
 import type { HomeIcon } from '@heroicons/react/24/outline';
-import { PROTOTYPE_NOTICE, notifyPrototypeUnavailable } from './PrototypeNotice';
+import { notifyPrototypeUnavailable } from './PrototypeNotice';
 import styles from './PillNavigation.module.css';
 
 export interface DockMenuItem {
@@ -18,12 +17,8 @@ export interface DockMenuItem {
 }
 
 function DockMenuAction({ item, onSelect }: { item: DockMenuItem; onSelect: (item: DockMenuItem) => void }) {
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  return <>
-    <Button ref={buttonRef} label={item.label} endContent={<Icon icon={item.icon} size="md" color="tertiary" />} variant="ghost" className={styles.action}
-      aria-current={item.isCurrent ? 'page' : undefined} onClick={() => onSelect(item)} />
-    {item.isPrototype && <Tooltip anchorRef={buttonRef} content={PROTOTYPE_NOTICE} placement="above" hasHoverIndication={false} />}
-  </>;
+  return <Button label={item.label} endContent={<Icon icon={item.icon} size="md" color="tertiary" />} variant="ghost" className={styles.action}
+    aria-current={item.isCurrent ? 'page' : undefined} onClick={() => onSelect(item)} />;
 }
 
 export interface DockMenuProps {

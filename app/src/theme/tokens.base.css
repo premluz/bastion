@@ -29,21 +29,22 @@
   --font-ui: var(--font-family-body, system-ui, sans-serif);
   --font-data: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
   --font-variant-data: tabular-nums;
-  /* Voice face (Phase 8E typography audit, Prem's ◆ ruling: three-voice
-     system; Merriweather per direct feedback, superseding the original
-     Crimson choice) — reserved for the agent's interpretive prose only
-     (findings, recommendations); never numerals, never labels, never data.
-     Actually loaded as a web font now (.storybook/preview-head.html) —
-     Crimson never was, so this stack's fallback tail is kept as a
-     genuine safety net (a blocked/slow font request), not the only
-     thing actually rendering. */
-  --font-voice: "Merriweather", Georgia, "Times New Roman", serif;
+  /* Keep the interpretive-copy role hook, but use the interface sans rather
+     than a separate serif face (2026-10-29 direct request). */
+  --font-voice: var(--font-ui);
   /* Geist / Geist Mono (2026-10-06): loaded in .storybook/preview-head.html,
      the same sanctioned web-font injection point as Merriweather. */
   --font-geist: "Geist", system-ui, sans-serif;
   --font-geist-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
-  /* Poppins (2026-10-27, direct request): the Bastion themes' sans, loaded in the same two places as Geist. */
-  --font-poppins: "Poppins", system-ui, sans-serif;
+  /* Inter is the Bastion interface face in the app and Storybook. */
+  --font-inter: "Inter", system-ui, sans-serif;
+  --tracking-interface: -0.03em;
+  --tracking-bastion-interface: -0.008em;
+  --tracking-display: -0.03em;
+  --tracking-eyebrow: 0.04em;
+  --weight-bastion-body: 500;
+  --weight-bastion-emphasis: 600;
+  --weight-bastion-money: 700;
 
   /* Type ramp — dense-data bias, 13 is body */
   /* 10 added 2026-10-06 for bastion's eyebrow labels (direct feedback:
@@ -78,6 +79,7 @@
      to an event) needed a real ~1.5-2.5s pace, not a borrowed 480ms
      reused past its own intended job. */
   --duration-1600: 1600ms;
+  --duration-4800: 4800ms;
   --ease-standard: cubic-bezier(.2, 0, 0, 1);
   --ease-decel: cubic-bezier(0, 0, .2, 1);
   --ease-float: cubic-bezier(.16, 1, .3, 1);

@@ -84,6 +84,8 @@ export const config = {
     orbRises: false,
   },
   agent: {
+    // Retained for later: replay piece assembly on chat messages and transcript actions.
+    cubeAssembly: false,
     // After a scenario finishes (send, top-up…) the agent used to go straight on to
     // the next recommended action by itself (2026-10-09). Off (2026-10-14, direct
     // feedback): a finished scenario ends there; the home's suggestions are the way

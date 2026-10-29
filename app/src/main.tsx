@@ -18,6 +18,8 @@ import './theme/aura.css';
 import './theme/shell.css';
 import { MobileFrame } from './components/shell/MobileFrame';
 import { startAppearance } from './engine/stores/appearanceStore';
+import { startTooltips } from './engine/stores/tooltipsStore';
+import { startSafeAreaPadding } from './engine/stores/safeAreaPaddingStore';
 
 // The app shell — the one place a screen is mounted from application code
 // (CLAUDE.md §2.1). Theme is set statically on <html> in index.html
@@ -27,6 +29,8 @@ import { startAppearance } from './engine/stores/appearanceStore';
 // Shell/MobileFrame's AttentionHomeMonolith story; the assets home stays available
 // as MobileFrame's default for Storybook.
 startAppearance();
+startTooltips();
+startSafeAreaPadding();
 const root = document.getElementById('root');
 if (!root) throw new Error('index.html is missing its #root mount point.');
 createRoot(root).render(

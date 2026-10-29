@@ -38,7 +38,7 @@ import { config } from '../../config';
 import '../../theme/page-recede.css';
 import { useShellBack } from './useShellBack';
 import { useAssistantSounds } from './useAssistantSounds';
-import { PrototypeNoticeProvider, PROTOTYPE_NOTICE, notifyPrototypeUnavailable } from './PrototypeNotice';
+import { PrototypeNoticeProvider, notifyPrototypeUnavailable } from './PrototypeNotice';
 import styles from './MobileFrame.module.css';
 
 // Bastion's mobile app shell — the counterpart to Merlin's Frame.tsx, and
@@ -120,7 +120,7 @@ export function MobileFrame(props: MobileFrameProps) {
             <Button label="Open account menu" variant="ghost" icon={<Avatar {...avatarProps(USER_NAME)} size="medium" />} isIconOnly onClick={openAccounts} />
             {/* Agent home moves Explore into the dock's menu; the spacer keeps the avatar its own size. */}
             {isGlowHome ? <span className={styles.headerEnd}>
-              <IconButton label="Search" icon={<Icon icon="search" />} variant="ghost" tooltip={PROTOTYPE_NOTICE} onClick={notifyPrototypeUnavailable} />
+              <IconButton label="Search" icon={<Icon icon="search" />} variant="ghost" onClick={notifyPrototypeUnavailable} />
             </span>
               : hasAgentPage ? <span aria-hidden="true" />
               : <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />}
@@ -153,6 +153,7 @@ export function MobileFrame(props: MobileFrameProps) {
           <div className={styles.bottomFade} aria-hidden="true" />
           {isGlowHome ? <GlowDock state={state} onOpen={glow.open} onClose={glow.close} isWorking={glow.isWorking} threadRef={composerScrollRef} onSuggestion={glow.ask} orb={isAttentionHome ? 'none' : 'plasma'}
             landingMonolith={isAttentionHome && props.orbVariant === 'monolith'}
+            monolithWorking={attention.tasks.length > 0 || glow.isWorking}
             {...(isAttentionHome ? { trailing: <OrbTrigger onOpen={glow.open} variant={props.orbVariant ?? 'plasma'} working={attention.tasks.length > 0 || glow.isWorking} />, status: <AgentWorkQueue tasks={attention.tasks} variant="status" /> } : {})}
             thread={transcript.slice(glow.threadStart)} composer={<MobileFrameComposer isActionsOutside state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />}
             composerActions={<MobileFrameComposerActions state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />} />

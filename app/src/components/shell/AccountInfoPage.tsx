@@ -2,6 +2,8 @@ import { Text } from '@astryxdesign/core/Text';
 import { Item } from '@astryxdesign/core/Item';
 import { Switch } from '@astryxdesign/core/Switch';
 import { useShowTouchesStore } from '../../engine/stores/showTouchesStore';
+import { useTooltipsStore } from '../../engine/stores/tooltipsStore';
+import { useSafeAreaPaddingStore } from '../../engine/stores/safeAreaPaddingStore';
 import { useAppearanceStore } from '../../engine/stores/appearanceStore';
 import type { HistoryEntry } from '../../contracts/props/history-item';
 import type { AccountScreen, PreviewAccount } from './accountTypes';
@@ -21,6 +23,8 @@ export function AccountInfoPage({ screen, account, entry, update }: {
   update: (patch: Partial<PreviewAccount>) => void;
 }) {
   const showTouches = useShowTouchesStore();
+  const tooltips = useTooltipsStore();
+  const safeAreaPadding = useSafeAreaPaddingStore();
   const appearance = useAppearanceStore();
   return <div className={styles.body}>
     {screen === 'addresses' && <><Text color="secondary">Demo addresses for {account.name}</Text>
@@ -33,6 +37,10 @@ export function AccountInfoPage({ screen, account, entry, update }: {
         onChange={(notifications) => update({ notifications })} />
       <Switch label="Show touches" description="Draw a dot under each finger, for demos and recordings."
         value={showTouches.enabled} onChange={showTouches.setEnabled} />
+      <Switch label="Tooltips" description="Show helpful tips on controls and chart data."
+        value={tooltips.enabled} onChange={tooltips.setEnabled} />
+      <Switch label="Safe area padding" description="Keep content clear of the status bar, Dynamic Island, and home indicator."
+        value={safeAreaPadding.enabled} onChange={safeAreaPadding.setEnabled} />
       <InstallAppRow />
     </>}
     {screen === 'transaction' && entry && <>

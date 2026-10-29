@@ -51,7 +51,7 @@
      stacking context, so the pseudo-element painted its gradient over
      the header's real children instead of only over page content). */
   z-index: 3;
-  padding: max(var(--shell-inset), env(safe-area-inset-top)) var(--shell-inset) var(--shell-inset);
+  padding: max(var(--shell-inset), var(--shell-safe-area-top)) var(--shell-inset) var(--shell-inset);
 }
 
 .headerEnd { display: flex; justify-content: flex-end; }
