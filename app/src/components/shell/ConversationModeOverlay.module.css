@@ -25,8 +25,8 @@
 /* The orb is the composer bar's other shape: same `dock-bar` name while
    open, so starting conversation mode shrinks the bar into this sphere. */
 .root[open]:not([data-shared-orb='true']) .indicator > :first-child { view-transition-name: dock-bar; }
-/* The monolith is not the bar's other shape: it has its own name, and arrives as the bar sinks away
-   (theme/dock-morph.css, to-monolith / from-monolith). */
+/* The monolith is not the bar's other shape: the bar sinks away (theme/dock-morph.css, to-monolith / from-monolith)
+   and the cube, which has its own name, stays where it is (theme/dock-cube.css). */
 .root[open][data-monolith]:not([data-shared-orb='true']) .indicator > :first-child { view-transition-name: none; }
 
 
@@ -43,22 +43,17 @@
    double it. */
 .root[data-shared-orb='true']::after { display: none; }
 .orbSpace { width: var(--assistant-orb-expanded-size); height: var(--assistant-orb-expanded-size); }
-/* The monolith between the mic and close buttons: a little larger than the slot, nudged right and down; the bar sits flush with the screen's bottom, so there is only ~28 px of room under the cube — 1.2× would cut its base off (2026-10-25, direct feedback). */
+/* The monolith between the mic and close buttons: the same size, and in a row of the same height, as the chat's bottom
+   row holds it (GlowDock.module.css), so switching to voice does not move it (2026-10-28, direct feedback). The two share
+   a transition name (theme/dock-cube.css), which carries it through the switch in either direction. */
+.root[data-monolith] .orbSpace { display: grid; place-items: center; height: var(--dock-controls-height); }
 .monolithMark {
   display: block;
-  width: 100%;
-  height: 100%;
-  scale: 1.1;
-  translate: var(--space-8) var(--space-4);
-  /* It emerges once the composer has sunk away: a fade that settles early, a scale that takes its time. */
-  transition: opacity var(--duration-550) var(--motion-enter-ease), scale var(--duration-1600) var(--ease-float);
+  width: var(--dock-cube-size);
+  height: var(--dock-cube-size);
+  translate: 0 var(--dock-cube-drop);
 }
-:global(html[data-monolith-arriving]) .monolithMark { opacity: 0; scale: calc(1.1 * .8); transition: none; }
-:global(html[data-monolith-leaving]) .monolithMark {
-  opacity: 0;
-  scale: calc(1.1 * .85);
-  transition: opacity var(--monolith-leave-duration) var(--motion-exit-ease), scale var(--monolith-leave-duration) var(--motion-exit-ease);
-}
+.root[open] .monolithMark { view-transition-name: dock-cube; }
 
 .layout {
   display: flex;

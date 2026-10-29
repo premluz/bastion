@@ -1,40 +1,43 @@
-import type { MonolithState } from '@bastion/monolith';
+import { DEFAULT_SETTINGS, type MonolithState } from '@bastion/monolith';
 
-// What the light-ground moods share: the inner light at full, and seen through amber glass rather than scattering to peach-white.
-const LIGHT_GROUND = { core: 1, cutLight: 0.95, spill: 0.3, diffusion: 0.35, bodyLight: 0.75, softCorners: true, paleWarmth: 1 } as const;
+// Preserve the resting pale finish separately from the active optical treatment.
+const EDGE_ILLUMINATION = 0.3;
+const ACTIVE_EDGE_ILLUMINATION = 0.6;
+const LIGHT_GROUND = { core: 1, cutLight: 0.95, spill: 0.3, diffusion: 0.35, bodyLight: 0.75, edge: EDGE_ILLUMINATION, softCorners: true, paleWarmth: 0.35 } as const;
+const REST_LIGHT = { halo: 0, core: DEFAULT_SETTINGS.material.core, cutLight: DEFAULT_SETTINGS.material.cutLight,
+  spill: 0, bodyLight: 0 } as const;
+// Keep activation concentrated in the cuts; a thin, low-transmission shell stays visibly white.
+const ACTIVE_LIGHT = { ...LIGHT_GROUND, halo: 0.04, core: 0.85, spill: 0.04, diffusion: 0.15,
+  bodyLight: 0.06, edge: ACTIVE_EDGE_ILLUMINATION, paleWarmth: 0, translucency: 0.12, opticalThickness: 0.45, spectral: 0.15 } as const;
 
-// The orb's moods, as data on the monolith's own state mechanism. Resting still has an engaged
-// intelligence (thinking, slow convection): an icon that sits in the navigation should read as alive,
-// not as dormant. Working turns the same light up and across, never faster than it can be followed.
+// Rest keeps light in the seams; working reveals more of the same source without changing the structure.
 export const MONOLITH_ORB_STATES = {
-  // In the navigation slot, beside the phone's edge: a quiet glow that is not cut by it.
+  // In the navigation slot, a contained seam ember reads against the dark page.
   rest: {
-    intelligence: { mode: 'thinking', style: 'convection', activity: 0.2, flowSpeed: 0.25 },
-    material: { halo: 0.15, core: 0.8, softCorners: true, bodyLight: 0.4 },
+    intelligence: { mode: 'thinking', style: 'convection', activity: 0.2, flowSpeed: 0 },
+    material: { ...REST_LIGHT, edge: EDGE_ILLUMINATION, softCorners: true },
   },
   // On the assistant's landing, with room around it: the fuller glow.
   landing: {
-    intelligence: { mode: 'thinking', style: 'convection', activity: 0.2, flowSpeed: 0.25 },
-    material: { halo: 0.35, core: 0.8, softCorners: true, bodyLight: 0.4 },
+    intelligence: { mode: 'thinking', style: 'convection', activity: 0.2, flowSpeed: 0.18 },
+    material: { halo: 0.08, core: 0.8, edge: ACTIVE_EDGE_ILLUMINATION, softCorners: true, bodyLight: 0.4 },
   },
   working: {
-    intelligence: { mode: 'thinking', style: 'currents', activity: 0.6, flowSpeed: 0.55 },
-    material: { halo: 0.3, core: 1, softCorners: true, bodyLight: 0.4 },
+    intelligence: { mode: 'thinking', style: 'currents', activity: 0.6, flowSpeed: 0.18 },
+    material: { halo: 0.08, core: 1, edge: ACTIVE_EDGE_ILLUMINATION, softCorners: true, bodyLight: 0.4 },
   },
-  // On a pale ground the same moods run hotter (2026-10-27, direct feedback: the cube read faint beside dark mode's, and
-  // should match the light Explore button's strength and tone): more light from within and through the cuts, a fuller halo.
-  // At rest the body keeps its light colour, with glows travelling across it rather than lit through (2026-10-27, direct feedback).
+  // Rest retains the existing pale finish; activation reveals orange seams without tinting the whole body pink.
   restLight: {
-    intelligence: { mode: 'thinking', style: 'convection', activity: 0.3, flowSpeed: 0.25 },
-    material: { ...LIGHT_GROUND, core: 0.8, bodyLight: 0, spill: 0.1, paleWarmth: 0.6, halo: 0.35 },
+    intelligence: { mode: 'thinking', style: 'convection', activity: 0.3, flowSpeed: 0 },
+    material: { ...LIGHT_GROUND, paleWarmth: 0.6, ...REST_LIGHT, edge: LIGHT_GROUND.edge },
   },
   landingLight: {
-    intelligence: { mode: 'thinking', style: 'convection', activity: 0.3, flowSpeed: 0.25 },
-    material: { ...LIGHT_GROUND, halo: 0.6 },
+    intelligence: { mode: 'thinking', style: 'convection', activity: 0.3, flowSpeed: 0.18 },
+    material: ACTIVE_LIGHT,
   },
   workingLight: {
-    intelligence: { mode: 'thinking', style: 'currents', activity: 0.7, flowSpeed: 0.55 },
-    material: { ...LIGHT_GROUND, halo: 0.6 },
+    intelligence: { mode: 'thinking', style: 'currents', activity: 0.7, flowSpeed: 0.18 },
+    material: ACTIVE_LIGHT,
   },
 } as const satisfies Record<string, MonolithState>;
 

@@ -1,0 +1,85 @@
+{
+  "id": "payment-request",
+  "title": "Review a payment request",
+  "intents": [],
+  "thinking": [
+    {
+      "id": "request",
+      "kind": "retrieve",
+      "label": "Opening Priya’s request…",
+      "detail": "Lumen Studio · invoice INV-2041 for $240.00, due Friday.",
+      "durationMs": 850
+    },
+    {
+      "id": "sender",
+      "kind": "verify",
+      "label": "Checking who it’s from…",
+      "detail": "Priya Nair is in your contacts, and you’ve paid Lumen Studio before.",
+      "durationMs": 850
+    },
+    {
+      "id": "match",
+      "kind": "correlate",
+      "label": "Checking it against your records…",
+      "detail": "It matches the $240 you approved in October, and your Money balance covers it.",
+      "durationMs": 850
+    }
+  ],
+  "data": {},
+  "layout": {
+    "id": "root",
+    "type": "content-group",
+    "props": {
+      "layout": "stack"
+    },
+    "children": [
+      {
+        "id": "request-findings",
+        "type": "thinking-findings",
+        "props": {
+          "label": "Checking the request",
+          "steps": [
+            {
+              "id": "request",
+              "kind": "retrieve",
+              "label": "Opening Priya’s request…",
+              "detail": "Lumen Studio · invoice INV-2041 for $240.00, due Friday.",
+              "durationMs": 850
+            }
+          ],
+          "activeIndex": 0,
+          "isComplete": false
+        }
+      },
+      {
+        "id": "request-message",
+        "type": "text-block",
+        "props": {
+          "text": "Priya Nair at Lumen Studio is asking for $240.00 for invoice INV-2041, the final milestone of your brand refresh. It matches the quote you approved, and your Money balance covers it."
+        }
+      },
+      {
+        "id": "request-payment",
+        "type": "payment-card",
+        "props": {
+          "title": "Pay Priya Nair",
+          "recipient": "Priya Nair",
+          "amount": "240.00",
+          "purpose": "Lumen Studio · INV-2041",
+          "from": "Money balance",
+          "fee": "No fees",
+          "arrival": "Today",
+          "balance": "$3,475.45",
+          "isEditable": false
+        }
+      },
+      {
+        "id": "request-outcome",
+        "type": "text-block",
+        "props": {
+          "text": "Done. $240.00 is on its way to Priya Nair at Lumen Studio, and I’ve saved the receipt for INV-2041."
+        }
+      }
+    ]
+  }
+}

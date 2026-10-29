@@ -27,7 +27,6 @@
   --magic-border-blur: var(--blur-z1);
   --magic-border-glow-strength: var(--opacity-55);
   --magic-border-line-strength: var(--opacity-40);
-  --magic-border-colors: var(--accent-signal), var(--info-glow), var(--gain-glow), var(--accent-signal);
   --magic-border-gradient: conic-gradient(from var(--magic-border-angle), var(--magic-border-colors));
   --magic-border-cycle: calc(var(--duration-1600) * 2);
   /* Soft arrival (2026-10-27, direct feedback: "appears too abruptly"): the glow fades in slowly
@@ -117,8 +116,7 @@
   --magic-border-glow-strength: var(--opacity-40);
   --magic-border-rim-active: var(--space-24);
   --magic-border-blur: var(--blur-16);
-  --magic-border-spectrum: linear-gradient(to right,
-    var(--info-glow), var(--accent-alert), var(--accent-signal), var(--gain-glow), var(--info-glow));
+  --magic-border-spectrum: linear-gradient(to right, var(--magic-border-spectrum-stops));
   --magic-border-sweep-cycle: calc(var(--duration-1600) * 1.5);
   /* The line climbs the corners only as far as their curve, fading out on the way up. */
   --magic-border-foot: linear-gradient(to top, black, transparent var(--magic-border-shape));

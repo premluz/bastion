@@ -90,6 +90,14 @@ export const config = {
     // to the next one. Flip to true to bring the handover back.
     autoHandover: false,
   },
+  streaming: {
+    // How the assistant's replies arrive (2026-10-28, direct request, after Merlin's feathered stream): characters
+    // released at an even pace, one per this many milliseconds, the newest fading in; a long reply still lands
+    // within maxMs. (A thinking step's label keeps its own duration: it streams across the step's real time.)
+    // Faster (2026-10-28, direct feedback): 14 ms → 8 ms per character, 3.5 s → 2 s at most.
+    msPerChar: 8,
+    maxMs: 2000,
+  },
   attention: {
     // How long the assistant works on a delegated item before it is done and leaves its
     // queue (the attention home, 2026-10-23).

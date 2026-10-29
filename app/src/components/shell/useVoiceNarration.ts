@@ -1,25 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { useSpeechRecognition } from './useSpeechRecognition';
 import welcomeClip from '../../../scenes/how-can-i-help.mp3?url';
-import { pickNarrationVoice } from './narrationVoice';
+import { watchNarrationVoice } from './narrationVoice';
 import { speechLanguage } from './speechLanguage';
 import { canSpeak, speakText, unlockSpeech } from './speakText';
 import { hasNativeVoice, speakNatively } from './nativeVoice';
+import type { NarrationLine, NarrationTarget } from './narrationTypes';
 
-// One line the assistant says: a recorded clip, or text for the browser's
-// speech synthesis when no clip exists yet (2026-10-09, Prem: "browser TTS
-// now"). Callbacks let a scenario react to its own narration.
-export interface NarrationLine {
-  key: string;
-  clip?: string;
-  text?: string;
-  onPlaying?: (durationMs: number) => void;
-  onEnd?: () => void;
-  onFail?: () => void;
-}
-/** A line the thread wants said, keyed by the message it belongs to. */
-export interface NarrationTarget { id: number; line: NarrationLine | null }
 interface Queued { key: string; line: NarrationLine }
+
+const SKIP_SETTLE_MS = 400; // how long the new state has to hand over its line after a skip
 
 type SpeechPlaybackControl = Pick<ReturnType<typeof useSpeechRecognition>, 'pauseForPlayback' | 'resumeAfterPlayback'>;
 
@@ -42,17 +32,13 @@ export function useVoiceNarration(isVoiceMode: boolean, targets: readonly Narrat
   const playedRef = useRef(new Set<string>());
   // Speech synthesis is touched only once a tap or a line needs it: Chromium
   // initialises it synchronously, which held up the first render by ~0.8s
-  // when this ran on mount (measured, 2026-10-09). Chrome fills the voice list
-  // asynchronously, so the voice is picked again when it changes.
+  // when this ran on mount (measured, 2026-10-09).
   const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const synthesisRef = useRef<(() => void) | null>(null);
   const cancelSpeechRef = useRef<(() => void) | null>(null);
   const startSynthesis = () => {
     if (synthesisRef.current || !canSpeak()) return;
-    const choose = () => { voiceRef.current = pickNarrationVoice(window.speechSynthesis.getVoices(), speechLanguage(navigator.language)); };
-    choose();
-    window.speechSynthesis.addEventListener('voiceschanged', choose);
-    synthesisRef.current = () => window.speechSynthesis.removeEventListener('voiceschanged', choose);
+    synthesisRef.current = watchNarrationVoice((voice) => { voiceRef.current = voice; });
   };
   useEffect(() => () => synthesisRef.current?.(), []);
 
@@ -134,16 +120,32 @@ export function useVoiceNarration(isVoiceMode: boolean, targets: readonly Narrat
   const actions = useRef({ finish, fail, playNext, getElement, unlockSynthesis });
   actions.current = { finish, fail, playNext, getElement, unlockSynthesis };
 
-  const stop = useCallback(() => {
-    // Only a playing line is paused: pausing an idle element would abort a
-    // prime() still unlocking it inside the user's tap.
+  // Cuts what is playing and what is queued. Only a playing line is paused: pausing an idle element would abort a
+  // prime() still unlocking it inside the user's tap.
+  const cutLines = () => {
     if (currentRef.current) elementRef.current?.pause();
     currentRef.current = null;
     queueRef.current = [];
     cancelSpeechRef.current?.();
     cancelSpeechRef.current = null;
+  };
+  const stop = useCallback(() => {
+    cutLines();
     setIsSpeaking(false);
     suspendedRef.current = false;
+  }, []);
+
+  // A choice made by hand cuts the line being read (2026-10-28, direct feedback) and what was queued behind it: both
+  // belonged to the answered state; the new state's own line arrives with the next render. The microphone stays
+  // paused across the gap (no flicker), and is released if no line follows.
+  const skip = useCallback(() => {
+    if (!currentRef.current && !queueRef.current.length) return;
+    cutLines();
+    window.setTimeout(() => {
+      if (currentRef.current || queueRef.current.length) return;
+      setIsSpeaking(false);
+      releaseMicrophone();
+    }, SKIP_SETTLE_MS);
   }, []);
 
   // Inside a tap: unlocks the audio element (a muted play) and speech
@@ -185,5 +187,5 @@ export function useVoiceNarration(isVoiceMode: boolean, targets: readonly Narrat
   }, [isVoiceMode, keys, stop]);
 
   useEffect(() => stop, [stop]);
-  return { error, playWelcome, prime, isSpeaking };
+  return { error, playWelcome, prime, isSpeaking, skip };
 }

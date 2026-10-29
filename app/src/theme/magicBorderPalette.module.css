@@ -1,0 +1,23 @@
+/* The magic border's palettes (2026-10-28, direct request; shapes: magicBorder.module.css). Each sets the two
+   colour lists the border draws with: `colors` runs round the rim (a conic gradient, so it starts and ends on
+   the same colour), `spectrum-stops` runs along the bottom line (left to right). Tokens only. */
+
+/* The colourful one, the original: the brand accent with the blue and green accents. */
+.spectrum {
+  --magic-border-colors: var(--accent-signal), var(--info-glow), var(--gain-glow), var(--accent-signal);
+  --magic-border-spectrum-stops: var(--info-glow), var(--accent-alert), var(--accent-signal), var(--gain-glow), var(--info-glow);
+}
+
+/* Just the brand accent: it breathes between full strength and a fainter tint, so the run still shows. */
+.brand {
+  --magic-border-fade: color-mix(in oklab, var(--accent-signal) 40%, transparent);
+  --magic-border-colors: var(--accent-signal), var(--magic-border-fade), var(--accent-signal);
+  --magic-border-spectrum-stops: var(--magic-border-fade), var(--accent-signal), var(--magic-border-fade);
+}
+
+/* The brand accent together with the pearlescent blue, violet and pink (the prismatic cube). */
+.prismatic {
+  --magic-border-colors: var(--accent-signal), var(--prism-pink), var(--prism-violet), var(--prism-blue), var(--accent-signal);
+  --magic-border-spectrum-stops: var(--prism-blue), var(--prism-violet), var(--prism-pink), var(--accent-signal),
+    var(--prism-pink), var(--prism-violet), var(--prism-blue);
+}

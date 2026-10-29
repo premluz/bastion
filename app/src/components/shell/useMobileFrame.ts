@@ -1,5 +1,6 @@
 import { parseSendRequest, type SendRequest } from '../../engine/sendMoneyState';
 import { parseTopUpRequest, type TopUpRequest } from '../../engine/mortgageTopUpState';
+import { parsePaymentRequest } from '../../engine/paymentRequestState';
 import type { AgendaItemId } from '../../engine/agentAgenda';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { TranscriptMessage } from './transcriptMessage';
@@ -76,7 +77,8 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   const [messages, setMessages] = useState<TranscriptMessage[]>(() => {
     const seeded: TranscriptMessage[] = initialMessages.map((text, id) => {
       const sendRequest = parseSendRequest(text);
-      return { id, text, ...(sendRequest ? { sendRequest } : {}) };
+      const paymentRequest = sendRequest ? null : parsePaymentRequest(text);
+      return { id, text, ...(sendRequest ? { sendRequest } : {}), ...(paymentRequest ? { paymentRequest } : {}) };
     });
     const buyAmount = initialPurchaseQuery ? parseBuyEthAmount(initialPurchaseQuery) : null;
     if (initialPurchaseQuery && buyAmount !== null) {
@@ -96,7 +98,7 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   const nextId = useRef(messages.length);
   const resolver = useMemo(() => createKeywordResolver(), []);
   const recognizesVoiceScenario = async (text: string) => parseSendRequest(text) !== null || parseTopUpRequest(text) !== null
-    || parseBuyEthAmount(text) !== null || (await resolver.resolve(text)) !== null;
+    || parsePaymentRequest(text) !== null    || parseBuyEthAmount(text) !== null || (await resolver.resolve(text)) !== null;
   const inputRef = useRef<ChatComposerInputHandle>(null);
   const assistantRef = useRef<HTMLButtonElement>(null);
   const conversationRef = useRef<HTMLButtonElement>(null);
@@ -122,10 +124,12 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
     const buyAmount = parseBuyEthAmount(intent);
     const sendRequest = parseSendRequest(intent);
     const topUpRequest = sendRequest ? null : parseTopUpRequest(intent);
+    const paymentRequest = sendRequest || topUpRequest ? null : parsePaymentRequest(intent);
     setMessages((current) => [...current, { id, text: trimmed, ...(sendRequest ? { sendRequest } : {}), ...(topUpRequest ? { topUpRequest } : {}),
+      ...(paymentRequest ? { paymentRequest } : {}),
       ...(buyAmount !== null ? { buyAmount } : {}), ...(source ? { source } : {}) }]);
     setValue('');
-    if (sendRequest || topUpRequest) return;
+    if (sendRequest || topUpRequest || paymentRequest) return;
     // Fire-and-attach: the message is already in the transcript by the time
     // this settles, same "honest non-match" contract submitQuery.ts
     // documents — a null result just leaves the message plain text, no
@@ -161,8 +165,9 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   const selectTab = (tab: TabDestination) => { setActiveTab(tab); setMode('idle'); };
   const openConversation = () => morphDock(() => { submit(value); setMode('conversation'); }, [`to-${voiceShape}`]);
   const closeConversation = () => morphDock(() => setMode('composer'), [`from-${voiceShape}`]);
-  const toggleComposer = () => morphDock(() => setMode((current) => current === 'idle' ? 'composer' : 'idle'));
-  const closeComposer = () => { morphDock(() => setMode('idle')); assistantRef.current?.focus(); };
+  const toggleComposer = () => morphDock(() => setMode((current) => current === 'idle' ? 'composer' : 'idle'),
+    voiceShape === 'monolith' ? [mode === 'idle' ? 'cube-to-chat' : 'cube-to-nav'] : []);
+  const closeComposer = () => { morphDock(() => setMode('idle'), voiceShape === 'monolith' ? ['cube-to-nav'] : []); assistantRef.current?.focus(); };
   // Home's "Money" card jumps straight to the assets tab, preset to Money
   // (2026-09-15) — a real navigation, not just a tab preselect, since
   // Money currently only opens from Home or the nav's own Wallet icon.

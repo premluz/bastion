@@ -1,11 +1,14 @@
 import { useSendMoneyFlows } from '../../engine/useSendMoneyFlows';
 import { useTopUpFlows } from '../../engine/useTopUpFlows';
+import { usePaymentRequestFlows } from '../../engine/usePaymentRequestFlows';
 import { parseSendVoiceChoice } from '../../engine/sendMoneyVoiceChoice';
 import { isTopUpFinished, parseTopUpVoice } from '../../engine/mortgageTopUpState';
 import { topUpNarration } from '../../engine/mortgageTopUpScenes';
+import { isPaymentRequestFinished, parsePaymentRequestVoice } from '../../engine/paymentRequestState';
+import { paymentRequestNarration } from '../../engine/paymentRequestScenes';
 import { AGENDA, parseOfferAnswer } from '../../engine/agentAgenda';
 import { sendNarration } from './sendVoiceCues';
-import type { NarrationTarget } from './useVoiceNarration';
+import type { NarrationTarget } from './narrationTypes';
 import type { useMobileFrame } from './useMobileFrame';
 
 // Every scenario in one thread (2026-10-09, direct feedback: go over several
@@ -15,6 +18,7 @@ import type { useMobileFrame } from './useMobileFrame';
 export function useScenarioThread(state: ReturnType<typeof useMobileFrame>) {
   const send = useSendMoneyFlows(state.messages);
   const topUp = useTopUpFlows(state.messages);
+  const paymentRequest = usePaymentRequestFlows(state.messages);
 
   // The most recent turn still waiting on the user decides what an answer means.
   const routeVoice = (text: string): (() => void) | null => {
@@ -37,6 +41,11 @@ export function useScenarioThread(state: ReturnType<typeof useMobileFrame>) {
         const action = parseTopUpVoice(text, topUpFlow);
         return action ? () => topUp.dispatch(message.id, action) : null;
       }
+      const requestFlow = paymentRequest.flows[message.id];
+      if (requestFlow?.stage === 'review') {
+        const action = parsePaymentRequestVoice(text, requestFlow);
+        return action ? () => paymentRequest.dispatch(message.id, action) : null;
+      }
     }
     return null;
   };
@@ -47,6 +56,8 @@ export function useScenarioThread(state: ReturnType<typeof useMobileFrame>) {
     if (message.role === 'assistant') return [{ id: message.id, line: { key: 'say', text: message.text } }];
     const topUpFlow = topUp.flows[message.id];
     if (topUpFlow && (message.source === 'voice' || topUpFlow.stage === 'sending')) return [{ id: message.id, line: topUpNarration(topUpFlow) }];
+    const requestFlow = paymentRequest.flows[message.id];
+    if (requestFlow && (message.source === 'voice' || requestFlow.stage === 'sending')) return [{ id: message.id, line: paymentRequestNarration(requestFlow) }];
     const sendFlow = send.flows[message.id];
     if (sendFlow && (message.source === 'voice' || sendFlow.stage === 'confirming' || sendFlow.stage === 'sending'))
       return [{ id: message.id, line: sendNarration(sendFlow, (action) => send.dispatch(message.id, action)) }];
@@ -58,8 +69,10 @@ export function useScenarioThread(state: ReturnType<typeof useMobileFrame>) {
     const sendFlow = send.flows[id];
     if (sendFlow) return sendFlow.stage === 'sent' || sendFlow.stage === 'cancelled';
     const topUpFlow = topUp.flows[id];
-    return topUpFlow ? isTopUpFinished(topUpFlow) : false;
+    if (topUpFlow) return isTopUpFinished(topUpFlow);
+    const requestFlow = paymentRequest.flows[id];
+    return requestFlow ? isPaymentRequestFinished(requestFlow) : false;
   };
 
-  return { send, topUp, routeVoice, narrationTargets: narrationTargets(), isFinished };
+  return { send, topUp, paymentRequest, routeVoice, narrationTargets: narrationTargets(), isFinished };
 }

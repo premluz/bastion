@@ -41,7 +41,7 @@ export function MobileFrameComposerActions(props: ComposerProps): ReactNode {
   return <>
     {microphone(props)}
     {state.value.trim() === '' ? conversation(props)
-      : <IconButton label="Send" icon={<Icon icon={ArrowUpIcon} />} variant="ghost" onClick={() => state.submit(state.value)} />}
+      : <IconButton label="Send" icon={<Icon icon={ArrowUpIcon} />} variant="ghost" onClick={() => state.submit(state.value)} data-dock-item="send" />}
   </>;
 }
 

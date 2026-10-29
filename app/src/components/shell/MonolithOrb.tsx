@@ -27,7 +27,7 @@ export function MonolithOrb({ working = false, className }: MonolithOrbProps) {
       {appearance !== null && (
         <span className={styles.bleed}>
           <Suspense fallback={null}>
-            <MonolithCanvas mood={working ? 'working' : 'rest'} appearance={appearance} framing={FRAMING} />
+            <MonolithCanvas mood={working ? 'working' : 'rest'} appearance={appearance} framing={FRAMING} turnWithDock />
           </Suspense>
         </span>
       )}

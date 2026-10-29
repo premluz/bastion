@@ -3,3 +3,7 @@
 .agentReply { font-family: var(--face-voice); }
 .choices { display: flex; flex-wrap: wrap; gap: var(--space-8); }
 .choices .choice { border-radius: var(--radius-full); background: var(--surface-2); min-height: var(--space-40); padding-inline: var(--space-20); }
+/* The follow-up actions read as the suggestion rows do (2026-10-28, direct feedback: same weight and style): regular,
+   in the body ink, where Astryx's button sets medium. The inflated selector matches Astryx's own text rules. */
+.choices .choice:not(#\#):not(#\#):not(#\#),
+.choices .choice :is(span, div):not(#\#):not(#\#):not(#\#) { font-weight: 400; color: var(--ink-primary); }

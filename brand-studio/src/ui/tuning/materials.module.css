@@ -1,0 +1,6 @@
+.root { display: grid; gap: var(--overlay-gap); }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--material-gap); }
+.grid > * { min-width: 0; overflow: hidden; border-radius: var(--panel-padding); }
+.preview { height: var(--material-preview-height); pointer-events: none; }
+.label { display: block; padding: var(--material-gap); font-size: var(--material-label-size); }
+.description { margin: 0; font-size: var(--material-label-size); line-height: var(--material-leading); }

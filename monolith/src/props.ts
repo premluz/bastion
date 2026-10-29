@@ -41,6 +41,8 @@ export interface BastionMonolithProps {
   readonly sequence?: Sequence;
   /** 0–1 along the sequence. A function is read every frame, so a host can drive it without re-rendering. */
   readonly progress?: number | (() => number);
+  /** Additional yaw in radians for cube/monolith compositions, read every frame. */
+  readonly rotationY?: () => number;
   /** A named state (from `states`, or the built-in ones) or an inline one. Applied over `settings`. */
   readonly state?: string | MonolithState;
   /** Extra or replacement named states; merged over the built-in ones. */
@@ -55,6 +57,8 @@ export interface BastionMonolithProps {
   readonly interactive?: boolean;
   /** Highest pixel ratio the canvas may use; overrides the quality tier's. A small canvas can afford the full device ratio. */
   readonly maxPixelRatio?: number;
+  /** Fixed render pixel ratio, independent of display density; supersamples small canvases before browser downscaling. */
+  readonly pixelRatio?: number;
   /**
    * Draw no background: the host's shows through, and the glow adds light over it. Glass transmission
    * is replaced by the lit-body fallback, since it would sample an empty backdrop. `ground` is ignored.

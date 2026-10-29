@@ -36,9 +36,10 @@ interface ThinkingTrailProps {
 // `turn.trail`, per node-vocabulary.md "settled steps stay visible as the
 // record"). No behavior change for the live case.
 //
-// Once complete, the whole trail becomes an Astryx Collapsible
-// (defaultIsOpen — nothing hides by default, matching "stay visible as
-// the record") with a summary trigger, adopting the collapsible
+// Once complete, the whole trail becomes an Astryx Collapsible with a
+// summary trigger, closed by default (2026-10-28, direct feedback: the
+// trail should not be expanded in chat and voice mode; it was open before,
+// matching "stay visible as the record" — the record is one tap away), adopting the collapsible
 // settled-group pattern from the ai-chat template's ChatToolCalls
 // (.astryx-scratch/ai-chat/page.tsx: "Group header: a wrench icon with a
 // call count, clicking toggles between the summary and the full list").
@@ -72,7 +73,7 @@ export function ThinkingTrail({ steps, activeIndex, isComplete, elapsedMs, skip 
   if (isComplete) {
     return (
       <Collapsible
-        defaultIsOpen
+        defaultIsOpen={false}
         trigger={
           <div className={styles.triggerHeader}>
             <Icon icon="wrench" color="secondary" size="sm" />

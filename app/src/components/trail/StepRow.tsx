@@ -1,9 +1,10 @@
-import { Icon, type IconName } from '@astryxdesign/core/Icon';
+import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
 import type { ThinkingStep } from '../../contracts/thinking';
 import { SourceChip } from './SourceChip';
 import { ConfidenceBadge } from './ConfidenceBadge';
 import { SearchResultsCard } from './SearchResultsCard';
+import { ActivityOrb } from './ActivityOrb';
 import { LabelReveal } from './LabelReveal';
 import './trail.css';
 import styles from './StepRow.module.css';
@@ -58,8 +59,6 @@ interface StepRowProps {
 // isActive flips from true to false and this branch renders for the
 // first time.
 export function StepRow({ step, isActive, isLast = false }: StepRowProps) {
-  const iconName: IconName = isActive ? 'wrench' : 'check';
-  const iconBoxClasses = isActive ? `${styles.iconBox} ${styles.activeIndicator}` : styles.iconBox;
 
   return (
     <div className={styles.root}>
@@ -68,8 +67,9 @@ export function StepRow({ step, isActive, isLast = false }: StepRowProps) {
           below it to reach — see StepRow.module.css's .rail comment for
           the full concatenation mechanism. */}
       {!isLast && <div className={styles.rail} aria-hidden="true" />}
-      <div className={iconBoxClasses}>
-        <Icon icon={iconName} color={isActive ? 'accent' : 'secondary'} size="sm" />
+      {/* While thinking, the mark is the activity orb (2026-10-28, direct request: S2); a settled step shows its check. */}
+      <div className={styles.iconBox}>
+        {isActive ? <ActivityOrb variant="S2" size="sm" label="Thinking…" /> : <Icon icon="check" color="secondary" size="sm" />}
       </div>
       <div className={styles.contentBlock}>
         <div className={styles.headerRow}>

@@ -1,5 +1,9 @@
 /* Brand ground colours mirror src/brand/palette.ts (groundDark / groundLight). */
 :root {
+  --material-gap: 8px;
+  --material-preview-height: 112px;
+  --material-label-size: 12px;
+  --material-leading: 1.5;
   --ground: #101113;
   --panel-surface: color-mix(in oklab, var(--ground) 74%, transparent);
   --panel-edge: color-mix(in oklab, white 9%, transparent);

@@ -2,6 +2,8 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests/visual',
+  // The material harness runs against Vite, not Storybook (tests/materials.config.ts).
+  testIgnore: /materials\.spec\.ts/,
   fullyParallel: true,
   // 'list' for terminal output (unchanged, still the primary gate-evidence
   // format per CLAUDE.md's session protocol); 'html' additionally writes a

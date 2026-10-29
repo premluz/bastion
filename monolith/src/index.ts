@@ -11,6 +11,11 @@ export type {
   MonolithSettingsInput,
 } from './settings';
 export { DEFAULT_SETTINGS } from './settings';
+export { DEFAULT_OPTICAL_TUNING, OPTICAL_CONTROLS, OPTICAL_TUNING_KEYS } from './opticalTuning';
+export type { OpticalTuning, OpticalTuningKey } from './opticalTuning';
+export { MATERIAL_FAMILIES, materialTranslucency, isReferenceMaterial } from './scene/materialFamilies';
+export type { MaterialFamily } from './scene/materialFamilies';
+export { MAX_CORNER_RADIUS, SOFT_CORNER_RADIUS } from './fractal/geometry/bevel';
 export type { MonolithState } from './states';
 export { DEFAULT_STATES } from './states';
 export { phaseNameFor } from './phaseNames';

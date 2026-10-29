@@ -1,8 +1,8 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import { Quaternion, Vector3, type Group } from 'three';
-import { BEVEL, cornerRadius } from '../fractal/geometry/bevel';
-import { applySurface } from './material/applySurface';
+import { bevelSize, cornerRadius } from '../fractal/geometry/bevel';
+import { applyMaterial } from './material/applySurface';
 import { PALETTE } from '../brand/palette';
 import type { AppearancePreset } from '../scene/appearance';
 import type { LiveSettings } from '../live';
@@ -35,11 +35,12 @@ const pivot = new Vector3();
 const rotatedPivot = new Vector3();
 
 export function Monolith({ variant, settings, quality, preset, progress, dissolve }: MonolithProps) {
-  const { cutWidth, softCorners } = settings.target.material;
-  const round = cornerRadius(softCorners);
+  const { cutWidth, softCorners, cornerRadius: explicitRadius } = settings.target.material;
+  const round = cornerRadius(softCorners, explicitRadius);
+  const bevel = bevelSize(softCorners, explicitRadius);
   const model = useMemo(
-    () => buildMonolith(variantById(variant), { cutWidth, bevel: BEVEL, round }),
-    [variant, cutWidth, round],
+    () => buildMonolith(variantById(variant), { cutWidth, bevel, round }),
+    [variant, cutWidth, bevel, round],
   );
   const motions = useMemo(() => pieceMotions(model), [model]);
   const parts = useMemo(
@@ -69,7 +70,7 @@ export function Monolith({ variant, settings, quality, preset, progress, dissolv
     const { material } = settings.eased.current;
     for (const part of parts) {
       for (const m of part.materials) {
-        applySurface(m, preset.surface, { base: preset.base, roughness: material.roughness, reflectance: material.reflectance, transmission: quality.transmission });
+        applyMaterial(m, preset, material, quality.transmission);
       }
       part.uniforms.uAmber.value.set(PALETTE.signal);
       part.uniforms.uEdgeColor.value.set(preset.edgeColor);
@@ -103,7 +104,7 @@ export function Monolith({ variant, settings, quality, preset, progress, dissolv
       group.position.copy(pivot).sub(rotatedPivot).add(axis.set(...transform.translation));
 
       for (const m of part.materials) {
-        applySurface(m, preset.surface, { base: preset.base, roughness: material.roughness, reflectance: material.reflectance, transmission: quality.transmission });
+        applyMaterial(m, preset, material, quality.transmission);
       }
       writeFrameUniforms(part.uniforms, frame, material, preset);
       part.uniforms.uDissolve.value = fade;

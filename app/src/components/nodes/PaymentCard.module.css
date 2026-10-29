@@ -30,6 +30,9 @@
 .summary { display: grid; gap: var(--space-16); padding: var(--space-16); text-align: center; }
 .meta { display: grid; gap: var(--space-8); text-align: start; }
 .metaRow { display: flex; justify-content: space-between; gap: var(--space-16); }
+/* Quiet details (2026-10-28, direct feedback): labels and values one size, the values in the secondary ink and the labels
+   a step under it (Astryx reads its secondary-text variable, so the label sets it to the muted ink). */
+.metaLabel { --color-text-secondary: var(--ink-muted); }
 .fields { display: grid; gap: var(--space-16); padding: var(--space-16); }
 .actionsViewport { display: grid; grid-template-rows: minmax(0, 1fr); transition: grid-template-rows var(--duration-480) var(--ease-float), opacity var(--duration-200) var(--motion-exit-ease); }
 .actionsViewport[data-hidden] { grid-template-rows: minmax(0, 0fr); opacity: 0; pointer-events: none; }

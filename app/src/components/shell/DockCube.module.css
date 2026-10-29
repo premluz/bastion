@@ -1,0 +1,17 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: var(--dock-cube-layer);
+  pointer-events: none;
+  view-transition-name: none;
+}
+.layer::before { content: ''; position: absolute; inset: 0; view-transition-name: dock-live-clock; }
+.layer[data-hidden='true'] { visibility: hidden; }
+.cube {
+  position: absolute;
+  left: var(--dock-cube-x, 0px);
+  top: var(--dock-cube-y, 0px);
+  display: block;
+  width: var(--dock-cube-size);
+  height: var(--dock-cube-size);
+}

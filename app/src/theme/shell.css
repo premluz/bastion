@@ -243,6 +243,10 @@
      were not asked to change. Same --shell-fade gradient, same top:0/
      bottom:0 anchoring — only the band's own height grows. */
   --shell-chrome-fade-height: var(--space-64);
+  /* The bottom fade is as tall as the navigation (2026-10-28, direct feedback: "pull up the bottom shadow … so it affects content
+     throughout the nav height, about 90px"): content fades across the whole band the nav sits in, not just its last
+     32 px. It is the page mask's bottom ramp and the .bottomFade overlay's height; the top keeps its own spans. */
+  --shell-bottom-fade-height: var(--shell-nav-height);
   --shell-fade: linear-gradient(to bottom, var(--surface-0), transparent);
   /* Fade span was --shell-inset (16px) — nearly invisible against a
      ~700-900px transcript, reading as a hard cutoff rather than a soft
@@ -440,3 +444,7 @@ html { overscroll-behavior-x: none; }
      mean its parent's width. */
   :root { --shell-frame-max-width: 100vw; }
 }
+
+/* Tooltips only inform (2026-10-28, direct feedback: one left over the composer's right half, under a pointer that had
+   just tapped the cube, took its clicks — an arrow cursor where the text cursor belonged). They never take the pointer. */
+.astryx-tooltip { pointer-events: none; }

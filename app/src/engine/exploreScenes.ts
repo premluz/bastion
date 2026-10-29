@@ -46,7 +46,7 @@ function drilldown(route: string): SceneNode[] {
     const asset = assets.find((item) => item.props?.entityId === id);
     if (!asset) throw new Error(`Unknown Explore asset: ${id}`);
     return [back, { id: 'asset-preview', type: 'content-group', props: { title: String(asset.props?.name ?? asset.props?.symbol) },
-      children: [asset, { id: 'preview-note', type: 'text-block', props: { text: 'Simulated market preview. Prices and yields are illustrative.' } }] }];
+      children: [asset] }];
   }
   throw new Error(`Unknown Explore route: ${route}`);
 }

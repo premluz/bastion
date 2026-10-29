@@ -8,6 +8,7 @@ import { MonolithOrb } from './MonolithOrb';
 import type { useSpeechRecognition } from './useSpeechRecognition';
 import { useUserSpeaking } from './useUserSpeaking';
 import { GlowLight } from './GlowLight';
+import { VoiceGlow } from './VoiceGlow';
 import '../../theme/agent-dock.css';
 import styles from './ConversationModeOverlay.module.css';
 
@@ -48,6 +49,8 @@ export function ConversationModeOverlay({ isOpen, onClose, speech, audioError, c
             lives on the COMPOSER screen only (MobileFrameComposer.tsx);
             voice/conversation mode goes back to its original bottom-only
             controls, mic/orb/close, unchanged from before this feature. */}
+        {/* The voice, at the bottom of the screen (2026-10-28, direct request): a beam of light that follows the user's voice. */}
+        <VoiceGlow isActive={isOpen && speech.isListening} isSpeaking={userSpeaking} />
         <div ref={scrollRef} className={styles.transcript} role="log" aria-label="Conversation transcript" tabIndex={0}>
           {children}
           {speech.text && <ChatMessage sender="user"><ChatMessageBubble>{speech.text}</ChatMessageBubble></ChatMessage>}

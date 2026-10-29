@@ -8,6 +8,8 @@ import type { useScenarioThread } from './useScenarioThread';
 import { BuyEthTranscriptView } from './BuyEthTranscript';
 import { SendMoneyTranscript } from './SendMoneyTranscript';
 import { TopUpTranscript } from './TopUpTranscript';
+import { PaymentRequestTranscript } from './PaymentRequestTranscript';
+import { StreamedText, StreamScope } from '../trail/StreamedText';
 import type { useMobileFrame } from './useMobileFrame';
 import styles from './MobileFrame.module.css';
 
@@ -15,8 +17,10 @@ import styles from './MobileFrame.module.css';
 // the agent home added a third place it renders): the same nodes mount in
 // the composer overlay, the conversation overlay and the agent home's
 // in-place thread.
-export function useTranscriptNodes(state: ReturnType<typeof useMobileFrame>, { send, topUp }: ReturnType<typeof useScenarioThread>,
-  sendPresentation: 'inline' | 'overlay') {
+export function useTranscriptNodes(state: ReturnType<typeof useMobileFrame>, { send, topUp, paymentRequest }: ReturnType<typeof useScenarioThread>,
+  sendPresentation: 'inline' | 'overlay',
+  /** A choice made by hand in a scenario: the line being read in voice mode is cut so the next one starts. */
+  onManualChoice: () => void) {
   // Live trail state (2026-09-13) — subscribed via the hook, not
   // getState(), so this component re-renders as playTrail advances
   // activeIndex/elapsedMs. Read unconditionally (cheap, a handful of
@@ -49,13 +53,17 @@ export function useTranscriptNodes(state: ReturnType<typeof useMobileFrame>, { s
     const isLive = state.liveTrailMessageId === id;
     // The assistant speaking on its own (an agenda handover): no user turn.
     if (role === 'assistant') return (
-      <div key={id}><ChatMessage sender="assistant"><Text type="body" as="p" className={styles.agentReply}>{text}</Text></ChatMessage></div>
+      <StreamScope.Provider key={id} value={`turn-${id}`}>
+        <div><ChatMessage sender="assistant"><Text type="body" as="p" className={styles.agentReply}><StreamedText text={text} /></Text></ChatMessage></div>
+      </StreamScope.Provider>
     );
     const topUpFlow = topUp.flows[id];
+    const requestFlow = paymentRequest.flows[id];
     return (
-      <div key={id}>
+      <StreamScope.Provider key={id} value={`turn-${id}`}>
+      <div>
         <ChatMessage sender="user"><ChatMessageBubble>{text}</ChatMessageBubble></ChatMessage>
-        {voiceFeedback && <ChatMessage sender="assistant"><Text type="body" as="p" className={styles.agentReply}>{voiceFeedback}</Text></ChatMessage>}
+        {voiceFeedback && <ChatMessage sender="assistant"><Text type="body" as="p" className={styles.agentReply}><StreamedText text={voiceFeedback} /></Text></ChatMessage>}
         {isLive && (
           <ThinkingTrail steps={liveSteps} activeIndex={liveActiveIndex} isComplete={liveIsComplete}
             elapsedMs={liveElapsedMs} skip={liveSkip} />
@@ -66,9 +74,11 @@ export function useTranscriptNodes(state: ReturnType<typeof useMobileFrame>, { s
         {scene && <SceneRenderer scene={scene} />}
         {send.flows[id] && <SendMoneyTranscript state={send.flows[id]} presentation={sendPresentation}
           interactionMode={voice ? 'voice' : 'chat'}
-          dispatch={(action) => send.dispatch(id, action)} />}
+          dispatch={(action) => { onManualChoice(); send.dispatch(id, action); }} />}
         {topUpFlow && <TopUpTranscript state={topUpFlow} presentation={sendPresentation}
-          dispatch={(action) => topUp.dispatch(id, action)} />}
+          dispatch={(action) => { onManualChoice(); topUp.dispatch(id, action); }} />}
+        {requestFlow && <PaymentRequestTranscript state={requestFlow} presentation={sendPresentation}
+          dispatch={(action) => { onManualChoice(); paymentRequest.dispatch(id, action); }} />}
         {/* Buy flow renders inline, as one more result under its own
             message (2026-09-13, direct feedback: "inline — for all
             scenarios entering into composer just runs the scenario in
@@ -81,6 +91,7 @@ export function useTranscriptNodes(state: ReturnType<typeof useMobileFrame>, { s
             same message. */}
         {buyAmount != null && <BuyEthTranscriptView query={text} amount={buyAmount} hideQuery flow={buyFlow} />}
       </div>
+      </StreamScope.Provider>
     );
   });
   return transcript;

@@ -31,6 +31,8 @@ import { useAppearanceTransition } from './useAppearanceTransition';
  * scatter at all, strengthens it and widens it.
  */
 const HALO = { gain: 2.5, radius: 0.15, incandescentGain: 1.1, side: 1 } as const;
+// A dock canvas has no opaque ground to absorb bloom; keep its light close to the seams.
+const TRANSPARENT_BLOOM = { base: 0.08, halo: 0.45, radius: 0.4 } as const;
 /** Headroom between the ground's own luminance and the bloom threshold, so the background never glows. */
 const GROUND_MARGIN = 1.15;
 const GROUND_PAD = 0.05;
@@ -45,6 +47,7 @@ export function BastionMonolith({
   appearance = 'dark',
   sequence = 'rest',
   progress,
+  rotationY,
   state,
   states,
   settings,
@@ -53,6 +56,7 @@ export function BastionMonolith({
   interactive = true,
   framing = 1,
   maxPixelRatio,
+  pixelRatio,
   transparent = false,
   paused = false,
   ground,
@@ -62,7 +66,12 @@ export function BastionMonolith({
 }: BastionMonolithProps) {
   // Transmission would sample the empty backdrop of a transparent canvas, so the body is lit from within instead.
   const spec = transparent ? { ...QUALITY[quality], transmission: false } : QUALITY[quality];
-  const { displayed, fade, snapshot, failure, done } = useAppearanceTransition(appearance);
+  const appearanceTransition = useAppearanceTransition(appearance);
+  // A transparent, non-interactive dock cube cannot safely crossfade captured alpha frames.
+  // The dock's HDR target uses single-scale bloom and a single sample to avoid Chrome resolve artifacts.
+  const directAppearance = transparent && !interactive;
+  const displayed = directAppearance ? appearance : appearanceTransition.displayed;
+  const fade = directAppearance ? null : appearanceTransition.fade;
   const preset = APPEARANCES[displayed];
 
   const target = useMemo(
@@ -82,7 +91,7 @@ export function BastionMonolith({
     (): number => (sequence === 'rest' ? 1 : sequence === 'shape-to-shape' ? releaseThenAssemble(readProgress()) : readProgress()),
     [sequence, readProgress],
   );
-  const turn = useCallback((): number => (sequence === 'shape-to-shape' ? formationTurn(readProgress()) : 0), [sequence, readProgress]);
+  const turn = useCallback((): number => (sequence === 'shape-to-shape' ? formationTurn(readProgress()) : 0) + (rotationY?.() ?? 0), [sequence, readProgress, rotationY]);
   const still = useCallback((): number => 0, []);
 
   const [resetToken, setResetToken] = useState(0);
@@ -112,7 +121,7 @@ export function BastionMonolith({
     <div className={`${styles.root}${className === undefined ? '' : ` ${className}`}`} data-interactive={interactive}>
       <Canvas
         className={styles.stage}
-        dpr={[spec.dpr[0], maxPixelRatio ?? spec.dpr[1]]}
+        dpr={pixelRatio ?? [spec.dpr[0], maxPixelRatio ?? spec.dpr[1]]}
         frameloop={paused ? 'never' : 'always'}
         gl={{ antialias: false, alpha: transparent, powerPreference: 'high-performance' }}
         camera={{ fov: 22, near: 0.1, far: 100, position: DEFAULT_CAMERA }}
@@ -120,7 +129,7 @@ export function BastionMonolith({
       >
         {groundColor !== null && <color attach="background" args={[groundColor.r, groundColor.g, groundColor.b]} />}
         <SettingsEaser live={live} transition={transition} />
-        <StudioLighting appearance={displayed} preset={preset} />
+        <StudioLighting appearance={displayed} preset={preset} family={target.material.family} />
         {composition.kind === 'fractal' && (
           <FractalStage {...composition} settings={live} quality={spec} preset={preset} progress={staged} />
         )}
@@ -139,20 +148,24 @@ export function BastionMonolith({
           framing={framing}
         />
         <ExportBridge queue={exports} base={preset.base} />
-        <AppearanceCrossfade requested={appearance} displayed={displayed} fading={fade !== null} onSnapshot={snapshot} onFailure={failure} />
-        <EffectComposer multisampling={spec.multisampling}>
-          {spec.sideGlow ? <SideGlow strength={sideGlow} /> : <></>}
+        {!directAppearance && <AppearanceCrossfade requested={appearance} displayed={displayed} fading={fade !== null}
+          onSnapshot={appearanceTransition.snapshot} onFailure={appearanceTransition.failure} />}
+        <EffectComposer multisampling={directAppearance ? QUALITY.low.multisampling : spec.multisampling}>
+          {sideGlow > 0 ? <SideGlow strength={sideGlow} /> : <></>}
           <OuterGlowBloom
+            mipmapBlur={!directAppearance}
             threshold={baseThreshold + (floorThreshold - baseThreshold) * Math.sqrt(halo)}
             smoothing={0.25 + 0.2 * halo}
-            intensity={preset.bloom * (1 + HALO.gain * halo) * (incandescent ? HALO.incandescentGain : 1)}
-            radius={0.62 + HALO.radius * halo}
+            intensity={preset.bloom * (transparent
+              ? TRANSPARENT_BLOOM.base + TRANSPARENT_BLOOM.halo * halo
+              : (1 + HALO.gain * halo) * (incandescent ? HALO.incandescentGain : 1))}
+            radius={transparent ? TRANSPARENT_BLOOM.radius : 0.62 + HALO.radius * halo}
           />
           <ToneMapping mode={ToneMappingMode.NEUTRAL} />
           {transparent ? <GlowAlpha /> : <></>}
         </EffectComposer>
       </Canvas>
-      {fade !== null && <AppearanceFade key={fade.key} bitmap={fade.bitmap} onDone={done} />}
+      {fade !== null && <AppearanceFade key={fade.key} bitmap={fade.bitmap} onDone={appearanceTransition.done} />}
     </div>
   );
 }

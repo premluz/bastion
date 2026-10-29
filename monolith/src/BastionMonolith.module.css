@@ -19,10 +19,17 @@
   cursor: grabbing;
 }
 
-/* Not an orbit surface: leave the page's own scrolling and the host's cursor alone. */
+/* Not an orbit surface: leave the page's own scrolling and the host's cursor alone, and take no pointer at all —
+   the canvas is far larger than the cube it draws (its glow needs the room), so a canvas that caught pointers
+   covered the controls around it (2026-10-28: a composer that could not be clicked). react-three-fiber writes
+   pointer-events: auto inline on the canvas and its wrapper, which only !important beats. */
 .root[data-interactive='false'] .stage {
   touch-action: auto;
   cursor: inherit;
+}
+.root[data-interactive='false'] .stage,
+.root[data-interactive='false'] .stage * {
+  pointer-events: none !important;
 }
 
 .fade {

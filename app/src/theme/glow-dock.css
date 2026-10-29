@@ -52,7 +52,8 @@
      and its scale there (1 = its square canvas, --glow-orb-size) once it has rounded out. */
   --glow-landing-orb-y: 32cqh;
   --glow-landing-orb-scale: 1;
-  --glow-landing-bottom: calc(var(--space-64) * 2 + var(--space-16));
+  --glow-landing-composer-gap: var(--space-24);
+  --glow-landing-bottom: calc(var(--dock-bar-height) + var(--dock-cube-gap) + var(--dock-controls-height) + max(var(--shell-inset), env(safe-area-inset-bottom)) + var(--shell-label-gap) + var(--glow-landing-composer-gap));
   /* Much earlier, on the recede's own cadence (2026-10-23, direct feedback): the welcome two
      beats in, the suggestions one beat after it and one beat apart — arriving while the page
      is still leaving, the same stagger run the other way. */
@@ -88,4 +89,20 @@
   --glow-status-max-width: calc(var(--space-64) * 4);
   --glow-reveal-duration: var(--duration-480);
   --glow-reveal-ease: var(--ease-spring-soft);
+  /* The cube (2026-10-28, direct feedback with a mock): one size everywhere it stands — the navigation's + slot, the
+     middle of the chat's bottom row and of the voice controls — in a row of one height, so it does not move between them. */
+  --dock-cube-size: var(--pill-toggle-size);
+  --dock-cube-layer: 8;
+  --dock-cube-travel-ease: var(--ease-spring-soft);
+  --dock-controls-height: var(--assistant-orb-expanded-size);
+  /* How far the cube sits below the middle of its row (2026-10-28, direct feedback: slightly lower); one value for the chat row and the voice controls. */
+  --dock-cube-drop: var(--space-8);
+  --dock-bar-height: calc(var(--pill-item-size) + var(--pill-padding) * 2 + var(--pill-edge-width) * 2);
+  --dock-cube-gap: var(--space-16);
+  --dock-cube-travel-delay: 0ms;
+  --dock-cube-travel-duration: var(--duration-550);
+  --dock-controls-in-delay: calc(var(--dock-cube-travel-duration) - var(--dock-item-in-duration) - var(--dock-item-stagger) * 3);
+  /* Two face-to-face turns (180 degrees) track travel; closing chat unwinds them. */
+  --dock-cube-turn: .5;
+  --dock-cube-idle-period: 30s;
 }

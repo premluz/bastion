@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import styles from './LabelReveal.module.css';
 
 interface LabelRevealProps {
@@ -5,41 +6,60 @@ interface LabelRevealProps {
   durationMs: number;
 }
 
-// Streams a step's real label in the instant it settles (2026-09-06,
-// direct order: "we lost text streaming... let's analyze this one" —
-// restoring the reveal TextChunkReveal.tsx used to provide, deleted the
-// same round StepRow's active state switched to a fixed "Thinking" label
-// with nothing left for it to reveal). Replaces that per-word <span>
-// technique entirely: evaluated the ai-elements "reasoning" component's
-// own registry source directly (registry.ai-sdk.dev/reasoning.json) —
-// its shimmer is the identical bg-clip-text + animated background-
-// position technique this app already built itself (ThinkingTrail.
-// module.css's own .shimmerText, no new dependency needed there), and
-// its word/letter streaming isn't in that component at all — it's
-// delegated to Streamdown, a separate markdown-streaming renderer, off
-// this project's closed dependency list and far more than a plain-text
-// step label needs.
-//
-// Direct order for THIS component specifically: "letter by letter...
-// without breaking apart words into individual letters for animation
-// and entering html tag wrapped for each letter... still in code can
-// select whole sentence nicely." A per-letter/per-word <span> reveal
-// (TextChunkReveal's own prior technique) fails exactly that — each
-// span is its own selection boundary, so selecting the sentence mid- or
-// post-stream selects word-by-word fragments, not clean prose. This
-// renders the label as ONE real text node (zero wrapper spans inside
-// it) and reveals it with an animated clip-path sweep instead — the
-// same "animate a mask over real content" philosophy TimeSeries.tsx's
-// chart-reveal and AssetTrendGlyph's line-draw already use elsewhere in
-// this app, just applied to text. Genuinely selectable as a whole
-// sentence at any point, including mid-animation.
+// How many of the newest characters sit in the fading tail at once.
+const FEATHER_CHARS = 8;
+const MIN_REVEAL_MS = 300;
+
+// Streams a step's real label in the instant it settles. Reworked
+// 2026-10-20 (direct order: "the effect feels like a mask — build it like
+// the vivid-layer Streaming component, no dependency"). That component
+// releases characters at an even pace and fades each new one in, so the
+// leading edge is feathered instead of a hard clip line. Its DOM — a <span>
+// per character via Streamdown — would break this component's own standing
+// order (2026-09-06: no tag per letter; the sentence must stay selectable
+// whole), so the look is rebuilt with three runs of the SAME string:
+//   settled  plain text, fully inked
+//   tail     the newest FEATHER_CHARS, one span, gradient-filled ink→clear
+//   pending  the rest, present but transparent — layout never reflows as
+//            text arrives (the reference grows the text and re-wraps), and
+//            a selection always covers the whole sentence
+// Pace: even, across the same budget the clip-path sweep used — the step's
+// own durationMs, floored. When done it is one plain text node again.
 export function LabelReveal({ text, durationMs }: LabelRevealProps) {
+  const glyphs = useMemo(() => Array.from(text), [text]);
+  const [revealed, setRevealed] = useState(() => (prefersReducedMotion() ? glyphs.length : 0));
+
+  useEffect(() => {
+    if (prefersReducedMotion()) {
+      setRevealed(glyphs.length);
+      return;
+    }
+    // The tail drains too: the run ends once the feather has passed the
+    // last character, so the final letters fade in like every other.
+    const total = glyphs.length + FEATHER_CHARS;
+    const msPerGlyph = Math.max(durationMs, MIN_REVEAL_MS) / total;
+    const start = performance.now();
+    let frame = requestAnimationFrame(function tick(now) {
+      const next = Math.min(total, Math.floor((now - start) / msPerGlyph));
+      setRevealed(next);
+      if (next < total) frame = requestAnimationFrame(tick);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [glyphs, durationMs]);
+
+  if (revealed >= glyphs.length + FEATHER_CHARS) return <span>{text}</span>;
+
+  const tailStart = Math.max(0, revealed - FEATHER_CHARS);
+  const tailEnd = Math.min(glyphs.length, revealed);
   return (
-    <span
-      className={styles.reveal}
-      style={{ '--reveal-duration': `${Math.max(durationMs, 300)}ms` } as React.CSSProperties}
-    >
-      {text}
+    <span>
+      {glyphs.slice(0, tailStart).join('')}
+      <span className={styles.tail}>{glyphs.slice(tailStart, tailEnd).join('')}</span>
+      <span className={styles.pending}>{glyphs.slice(tailEnd).join('')}</span>
     </span>
   );
+}
+
+function prefersReducedMotion(): boolean {
+  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }

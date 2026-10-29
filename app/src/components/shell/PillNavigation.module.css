@@ -24,6 +24,7 @@
    the pill's own empty interior, never the page (measured). */
 .pill .destination { width: 100%; min-width: 0; min-height: var(--pill-item-size); padding: 0; border-radius: var(--pill-radius); color: var(--tab-ink); box-shadow: none; border-color: transparent; }
 .pill .destination[aria-current='page'] { color: var(--tab-active-ink); background: transparent; }
+.pill .destination:not([aria-current='page']) { color: var(--ink-muted); }
 /* While the quick-actions menu is open the pill keeps its glass pane and
    active highlight — it is dimmed only by its own scrim layer (.pill::after
    below), exactly like the page behind (2026-10-01, direct feedback: the

@@ -9,6 +9,7 @@ interface BloomValues {
   readonly smoothing: number;
   readonly intensity: number;
   readonly radius: number;
+  readonly mipmapBlur?: boolean;
 }
 
 /** Calm: ~95% of the way in 0.75 s. */
@@ -43,5 +44,5 @@ export function OuterGlowBloom(values: BloomValues) {
     bloom.mipmapBlurPass.radius = next.radius;
   });
 
-  return <Bloom ref={effect} mipmapBlur />;
+  return <Bloom ref={effect} mipmapBlur={values.mipmapBlur ?? true} />;
 }

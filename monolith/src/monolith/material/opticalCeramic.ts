@@ -12,8 +12,14 @@ import {
   VERTEX_HEADER,
 } from './ceramicShader';
 import { FRAGMENT_CLEARCOAT_FACING, FRAGMENT_FACING } from './facingShader';
+import { OPTICAL_FILM, OPTICAL_FILM_HEADER } from './opticalFilm';
+import { REFERENCE_HEADER, REFERENCE_EMISSION, referenceTransmission } from './referenceOptics';
+import { SEAM_LIGHT_HEADER } from './seamLight';
 
 export interface CeramicUniforms {
+  readonly uSeamTuning: IUniform<Vector4>;
+  readonly uOpticalProfile: IUniform<Vector4>;
+  readonly uFilmVariation: IUniform<number>;
   readonly [name: string]: IUniform;
   readonly uSegA: IUniform<Vector3[]>;
   readonly uSegB: IUniform<Vector3[]>;
@@ -62,6 +68,9 @@ export function createCeramicUniforms(openings: readonly Segment[]): CeramicUnif
       return p === undefined ? new Vector3() : new Vector3(p[0], p[1], p[2]);
     });
   return {
+    uOpticalProfile: { value: new Vector4() },
+    uSeamTuning: { value: new Vector4(1, 1, 1, 1) },
+    uFilmVariation: { value: 0 },
     uSegA: { value: pad(0) },
     uSegB: { value: pad(1) },
     uSegCount: { value: openings.length },
@@ -153,12 +162,17 @@ export function createCeramicMaterial(
     shader.vertexShader = inject(shader.vertexShader, '#include <common>', VERTEX_HEADER);
     shader.vertexShader = inject(shader.vertexShader, '#include <begin_vertex>', VERTEX_BODY);
     shader.fragmentShader = inject(shader.fragmentShader, '#include <common>', FRAGMENT_HEADER);
+    shader.fragmentShader = inject(shader.fragmentShader, '#include <common>', OPTICAL_FILM_HEADER);
+    shader.fragmentShader = shader.fragmentShader.replace(FRAGMENT_HEADER, `${FRAGMENT_HEADER}\n${REFERENCE_HEADER}\n${SEAM_LIGHT_HEADER}`);
+    shader.fragmentShader = shader.fragmentShader.replace('#include <transmission_fragment>', referenceTransmission());
+    shader.fragmentShader = inject(shader.fragmentShader, '#include <lights_physical_fragment>', OPTICAL_FILM);
     shader.fragmentShader = inject(shader.fragmentShader, '#include <clipping_planes_fragment>', FRAGMENT_DISSOLVE);
     shader.fragmentShader = inject(shader.fragmentShader, '#include <color_fragment>', FRAGMENT_COLOR);
     shader.fragmentShader = inject(shader.fragmentShader, '#include <roughnessmap_fragment>', FRAGMENT_ROUGHNESS);
     shader.fragmentShader = inject(shader.fragmentShader, '#include <normal_fragment_maps>', FRAGMENT_FACING);
     shader.fragmentShader = inject(shader.fragmentShader, '#include <clearcoat_normal_fragment_maps>', FRAGMENT_CLEARCOAT_FACING);
-    shader.fragmentShader = inject(shader.fragmentShader, '#include <emissivemap_fragment>', FRAGMENT_EMISSION);
+    shader.fragmentShader = inject(shader.fragmentShader, '#include <emissivemap_fragment>',
+      `if (uOpticalProfile.x > 0.5) { ${REFERENCE_EMISSION} } else { ${FRAGMENT_EMISSION} }`);
     shader.fragmentShader = inject(shader.fragmentShader, '#include <opaque_fragment>', FRAGMENT_GLOW_OUT);
   };
   return material;

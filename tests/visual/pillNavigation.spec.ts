@@ -12,7 +12,12 @@ test('destinations follow the requested order and selection changes', async ({ p
     await nav.getByRole('button', { name, exact: true }).click();
     await expect(nav.getByRole('button', { name, exact: true })).toHaveAttribute('aria-current', 'page');
   }
-  await expect(page.getByTestId('pill-navigation')).toHaveScreenshot('pill-navigation.png');
+  const dock = page.getByTestId('pill-navigation');
+  await expect(dock).toHaveScreenshot('pill-navigation.png');
+  if (test.info().config.updateSnapshots === 'all') {
+    await dock.screenshot({ path: test.info().snapshotPath('pill-navigation.png') });
+    console.log('Regenerated navigation baseline: pill-navigation.png');
+  }
 });
 
 test('plus toggles the anchored menu and each action dispatches', async ({ page }) => {

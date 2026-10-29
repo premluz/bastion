@@ -54,7 +54,5 @@ export function buildPaymentScene(state: SendState, presentation: PaymentCardPro
     from: funding ? state.funding === 'swap' ? 'ETH balance' : 'Visa •• 4242'
       : state.consolidated ? 'Main USDT (after consolidation)' : 'Main USDT',
     fee: funding ? 'No fees' : '$0.08', balance: `$${dollars(state.balanceCents)}`, error: state.error,
-    note: funding ? `Simulated funding. Confirming this does not send money to ${name}.`
-      : state.consolidated ? '' : 'Simulated transfer.',
   } } };
 }

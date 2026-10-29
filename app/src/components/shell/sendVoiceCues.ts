@@ -1,6 +1,6 @@
 // The send flow's narration: one recorded clip per stage it speaks at.
 import type { SendAction, SendState } from '../../engine/sendMoneyState';
-import type { NarrationLine } from './useVoiceNarration';
+import type { NarrationLine } from './narrationTypes';
 import promptClip from '../../../scenes/send-paul/01.mp3?url';
 import recipientClip from '../../../scenes/send-paul/02.mp3?url';
 import fundingClip from '../../../scenes/send-paul/03.mp3?url';

@@ -2,6 +2,7 @@ import { Button } from '@astryxdesign/core/Button';
 import { ChatMessage } from '@astryxdesign/core/Chat';
 import { Text } from '@astryxdesign/core/Text';
 import { SceneRenderer } from '../../renderer/SceneRenderer';
+import { StreamedText } from '../trail/StreamedText';
 import { buildSendQuestionScene, buildSendTransferScene } from '../../engine/sendMoneyConversation';
 import { displayDollars, dollars, type SendState, type SendAction, type SendInteractionMode } from '../../engine/sendMoneyState';
 import { recipientName } from '../../engine/sendMoneyQuestions';
@@ -32,7 +33,7 @@ export function SendMoneyTranscript({ state, presentation, interactionMode, disp
     {state.stage !== 'checking' && state.stage !== 'options' && <SceneRenderer scene={buildSendTransferScene(state, presentation)} />}
     {state.stage === 'sent' && <div className={styles.followUp}>
       <ChatMessage sender="assistant"><Text type="body" as="p" className={styles.agentReply}>
-        {displayDollars(state.amountCents)} was sent to {recipientName(state)}. Anything else, Prem?
+        <StreamedText text={`${displayDollars(state.amountCents)} was sent to ${recipientName(state)}. Anything else, Prem?`} />
       </Text></ChatMessage>
       <div className={styles.choices}>
         <Button label="Send message to Daniel" variant="ghost" size="sm" className={styles.choice}
@@ -40,8 +41,8 @@ export function SendMoneyTranscript({ state, presentation, interactionMode, disp
         <Button label="Check balance" variant="ghost" size="sm" className={styles.choice}
           onClick={() => dispatch({ type: 'followUp', value: 'balance' })} />
       </div>
-      {state.followUp === 'message' && <Text role="status">Messaging Daniel is not available in this preview.</Text>}
-      {state.followUp === 'balance' && <Text role="status">Main USDT balance: ${dollars(state.balanceCents)}</Text>}
+      {state.followUp === 'message' && <Text role="status"><StreamedText text="Messaging Daniel is not available in this preview." /></Text>}
+      {state.followUp === 'balance' && <Text role="status"><StreamedText text={`Main USDT balance: $${dollars(state.balanceCents)}`} /></Text>}
     </div>}
   </section>;
 }

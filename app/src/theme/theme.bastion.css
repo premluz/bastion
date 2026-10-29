@@ -99,6 +99,10 @@
   /* Information (2026-10-26, direct feedback: a request is info, so bluish): the mark's colour, and the vivid hue its card's glow takes. */
   --accent-info: oklch(.74 .09 245);
   --info-glow: oklch(.72 .16 250);
+  /* The prismatic magic border's blue, violet and pink (2026-10-28, direct request): pearlescent hues beside the brand accent. */
+  --prism-blue: oklch(.78 .11 235);
+  --prism-violet: oklch(.74 .13 300);
+  --prism-pink: oklch(.82 .11 350);
   --orb-color-third: oklch(.68 .07 245);
   --orb-rim: oklch(.951 .009 78.3 / .55);
   --orb-light-ground: 0;

@@ -1,3 +1,4 @@
+import { speechLanguage } from './speechLanguage';
 // The synthetic voice for lines without a recorded clip (2026-10-09, direct
 // feedback: "change to more similar"). The recorded assistant is a male
 // speaker (median pitch 103–130 Hz across the send clips, measured), so
@@ -29,4 +30,13 @@ export function pickNarrationVoice<V extends VoiceLike>(voices: readonly V[], la
     return matches.find((voice) => voice.lang.toLowerCase().replace('_', '-') === region) ?? matches[0]!;
   }
   return null;
+}
+
+// Keeps `onVoice` told of the voice to use. Chrome fills the voice list asynchronously, so it is picked again
+// whenever the list changes. Returns the stop function.
+export function watchNarrationVoice(onVoice: (voice: SpeechSynthesisVoice | null) => void): () => void {
+  const choose = () => onVoice(pickNarrationVoice(window.speechSynthesis.getVoices(), speechLanguage(navigator.language)));
+  choose();
+  window.speechSynthesis.addEventListener('voiceschanged', choose);
+  return () => window.speechSynthesis.removeEventListener('voiceschanged', choose);
 }

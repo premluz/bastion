@@ -1,0 +1,11 @@
+.grid { display: flex; flex-direction: column; gap: var(--space-24); padding: var(--space-24) var(--shell-inset); }
+.frame { --magic-border-radius: var(--list-card-radius); }
+.pane {
+  display: grid;
+  place-items: center;
+  min-height: var(--attention-card-height);
+  border-radius: var(--list-card-radius);
+  border: var(--shell-edge-width) solid var(--card-rim);
+  background: var(--list-card-fill-raised);
+  color: var(--ink-secondary);
+}

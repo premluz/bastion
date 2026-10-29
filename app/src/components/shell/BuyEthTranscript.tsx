@@ -57,6 +57,5 @@ export function BuyEthTranscriptView({ query, amount, hideQuery = false, flow }:
     {(flow.stage === 'quote' || flow.stage === 'confirmed') && flow.currency && <>
       <Text>{BUY_ETH_COPY.introduction}</Text><SceneRenderer scene={buildQuoteScene(amount, flow.currency, flow.stage === 'confirmed')} />
     </>}
-    {flow.stage === 'confirmed' && <Text role="status">Purchase simulated. Your real balances are unchanged.</Text>}
   </div>;
 }

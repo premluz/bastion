@@ -48,4 +48,5 @@ export const ConversationMode: Story = {
 };
 
 export const SendToDaniel: Story = { args: { initialMode: 'composer', initialMessages: ['Send $50 to Daniel for coffee'] } };
+export const ReviewPaymentRequest: Story = { args: { initialMode: 'composer', initialMessages: ['Review Priya’s payment request'] } };
 export const SendToDanielOverlay: Story = { args: { initialMode: 'composer', initialMessages: ['Send $50 to Daniel for coffee'], sendPresentation: 'overlay' } };

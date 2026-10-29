@@ -108,7 +108,7 @@
 }
 
 .topFade { top: 0; }
-.bottomFade { bottom: 0; transform: rotate(180deg); }
+.bottomFade { bottom: 0; height: var(--shell-bottom-fade-height); transform: rotate(180deg); }
 
 /* Suppressed whenever .page is the active sibling (2026-09-16, direct
    feedback: "gradient glow is cut off by shadow gradient, should be on
@@ -219,7 +219,7 @@
   mask: linear-gradient(to bottom,
     transparent, transparent var(--shell-mask-inset),
     var(--surface-0) calc(var(--shell-mask-inset) + var(--shell-mask-top)),
-    var(--surface-0) calc(100% - var(--shell-mask-inset) - var(--shell-mask-span)),
+    var(--surface-0) calc(100% - var(--shell-mask-inset) - var(--shell-bottom-fade-height)),
     transparent calc(100% - var(--shell-mask-inset)), transparent);
 }
 @supports (animation-timeline: scroll()) {

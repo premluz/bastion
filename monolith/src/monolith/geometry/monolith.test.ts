@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { applyTransform, pieceMotions, pieceTransform } from '../assembly/pieceMotion';
+import { bevelSize, cornerRadius, MAX_CORNER_RADIUS, SOFT_CORNER_RADIUS } from '../../fractal/geometry/bevel';
 import { MAX_OPENINGS } from '../limits';
 import { VARIANTS } from '../variants';
 import { resolveBound } from './bounds';
@@ -111,6 +112,24 @@ describe('soft corners', () => {
         const d = p.map((v) => Math.max(0, Math.abs(v) - (1 - 0.16)));
         expect(Math.hypot(...d)).toBeLessThanOrEqual(facet + 1e-6);
       }
+    }
+  });
+});
+
+describe('corner radius control', () => {
+  it('keeps legacy rounding while allowing a truly sharp explicit radius', () => {
+    expect(cornerRadius(true)).toBe(SOFT_CORNER_RADIUS);
+    expect(cornerRadius(false, 0)).toBe(0);
+    expect(bevelSize(false, 0)).toBe(0);
+    expect(cornerRadius(false, MAX_CORNER_RADIUS + 1)).toBe(MAX_CORNER_RADIUS);
+  });
+
+  it('builds axis-aligned exterior faces when the explicit radius is zero', () => {
+    const variant = VARIANTS[0];
+    if (variant === undefined) throw new Error('No monolith variants available for the sharp-geometry test');
+    const model = buildMonolith(variant, { cutWidth: 0.034, bevel: bevelSize(false, 0), round: cornerRadius(false, 0) });
+    for (const polygon of model.pieces.flatMap((piece) => piece.outer)) {
+      expect(polygon.normal.some((component) => Math.abs(Math.abs(component) - 1) < 1e-9)).toBe(true);
     }
   });
 });

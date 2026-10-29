@@ -7,7 +7,7 @@ import { GlowLight, type GlowOrbStyle } from './GlowLight';
 import { config } from '../../config';
 import { AssistantLanding } from './AssistantLanding';
 import { MobileFrameDock } from './MobileFrameDock';
-import { MonolithOrb } from './MonolithOrb';
+import { DockCube } from './DockCube';
 import type { useMobileFrame } from './useMobileFrame';
 import { useSwipeUp } from './useSwipeUp';
 import '../../theme/agent-dock.css';
@@ -35,7 +35,7 @@ export interface GlowDockProps {
   trailing?: ReactNode;
   /** The agent's status line, floating above the trailing slot (the attention home's work queue). */
   status?: ReactNode;
-  /** The Bastion monolith stands in for the plasma orb: above the landing's welcome and, once chatting, in the chat bar. */
+  /** The Bastion monolith stands in for the plasma orb: it sits in the middle of the chat's bottom row. */
   landingMonolith?: boolean;
 }
 
@@ -69,11 +69,11 @@ export function GlowDock({ state, onOpen, onClose, composer, composerActions, th
     {/* Box-less (display: contents): pointer events from the pill still bubble here,
         and the glow's custom properties still inherit, but the pill dock's own scrim
         keeps sizing itself to the whole screen. */}
-    <div ref={swipe.ref} className={styles.swipe} data-composer-open={isOpen} data-orb-rise={config.landing.orbRises ? '' : undefined}
-      data-landing={config.landing.orbRises && isOpen && !isWorking ? '' : undefined} {...(isOpen ? {} : swipe.handlers)}>
+    <div ref={swipe.ref} className={styles.swipe} data-composer-open={isOpen} data-assistant-mode={state.mode} data-orb-rise={config.landing.orbRises ? '' : undefined}
+      data-monolith={landingMonolith ? '' : undefined} data-landing={config.landing.orbRises && isOpen && !isWorking ? '' : undefined} {...(isOpen ? {} : swipe.handlers)}>
       {isOpen && <div className={styles.shade} aria-hidden="true" />}
       <GlowLight isOpen={isOpen} orb={orb} />
-      <AssistantLanding isOpen={isOpen} isAway={isWorking} onSuggestion={onSuggestion} monolith={landingMonolith} />
+      <AssistantLanding isOpen={isOpen} isAway={isWorking} onSuggestion={onSuggestion} />
       {/* Beside the dock, not inside it (2026-10-23): hanging out of the dock's box, its glass
           could not blur the page behind it. */}
       {status && !isOpen && <div className={styles.status}>{status}</div>}
@@ -81,20 +81,21 @@ export function GlowDock({ state, onOpen, onClose, composer, composerActions, th
     </div>
     {isOpen && !isWorking && <button type="button" className={styles.dismiss} aria-label="Close assistant" onClick={onClose} />}
     {isOpen && <div className={styles.sheet}>
-      {/* Once chatting, the monolith holds the top of the chat view. */}
-      {landingMonolith && isWorking && <div className={styles.chatBar}><span className={styles.chatMark}><MonolithOrb /></span></div>}
       {isWorking && <div ref={threadRef} className={styles.thread} role="log" aria-label="Assistant transcript" tabIndex={0}>{thread}</div>}
       <div className={styles.composer} {...closeSwipe.handlers}>
         {composer}
-        {/* Below the bar (2026-10-27, direct feedback): back and chat history on the left, the voice buttons on the right. */}
+        {/* Below the bar (2026-10-27, direct feedback): back and chat history on the left, the voice buttons on the right,
+            and (2026-10-28) the cube in the middle, where the voice controls hold it too. */}
         <div className={styles.actions}>
+          {landingMonolith && <span className={styles.cube} data-chat-cube="" aria-hidden="true" />}
           <div className={styles.nav}>
-            <IconButton label="Back" tooltip="Back" icon={<Icon icon={ArrowLeftIcon} />} variant="ghost" onClick={onClose} />
-            <IconButton label="Chat history" icon={<Icon icon={ClockIcon} />} variant="ghost" onClick={notifyPrototypeUnavailable} />
+            <IconButton label="Back" tooltip="Back" icon={<Icon icon={ArrowLeftIcon} />} variant="ghost" onClick={onClose} data-dock-item="back" />
+            <IconButton label="Chat history" icon={<Icon icon={ClockIcon} />} variant="ghost" onClick={notifyPrototypeUnavailable} data-dock-item="history" />
           </div>
           <div className={styles.voice}>{composerActions}</div>
         </div>
       </div>
     </div>}
+    {landingMonolith && <DockCube mode={state.mode} working={isWorking} />}
   </div>;
 }

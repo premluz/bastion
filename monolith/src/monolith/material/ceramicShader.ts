@@ -53,9 +53,6 @@ uniform float uPaleWarmth;
 // How much inner light reaches this fragment (0–1), for the amber-glass filter applied after lighting.
 float bsWarmHere = 0.0;
 
-const vec3 BS_GLASS_LIGHT = vec3(1.0, 0.72, 0.52);
-const vec3 BS_PALE_WARM = vec3(1.0, 0.48, 0.2);
-
 float bsHash(vec3 p) {
   p = fract(p * 0.3183099 + vec3(0.71, 0.113, 0.419));
   p *= 17.0;
@@ -113,7 +110,7 @@ float bsEnergy(vec3 p) {
   e += uImpulse.y * exp(-front * front);
   e += uImpulse.z * exp(-r2 / 0.1);
   // Light reaches outward from the core; beyond the reveal radius the cuts keep a low ember, never dark.
-  return e * mix(0.55, 1.0, smoothstep(uReveal + 0.8, uReveal - 0.8, r));
+  return e * mix(0.55, 1.0, 1.0 - smoothstep(uReveal - 0.8, uReveal + 0.8, r));
 }
 ${INCANDESCENCE_FUNCTIONS}
 `;
@@ -131,7 +128,7 @@ diffuseColor.rgb *= 1.0 + (bsHash(floor(vMonoPos * uGrainScale)) - 0.5) * 0.03 *
 diffuseColor.rgb *= mix(0.55, 0.1, uLightGround);
 #endif
 // A body lit from within reflects less of the studio, so its own light reads.
-diffuseColor.rgb *= 1.0 - 0.75 * uIncandescence;
+diffuseColor.rgb *= 1.0 - 0.75 * uIncandescence * (1.0 - uOpticalProfile.x);
 `;
 
 export const FRAGMENT_ROUGHNESS = /* glsl */ `
@@ -143,42 +140,36 @@ export const FRAGMENT_EMISSION = /* glsl */ `
   float bsDist = bsCutDistance(vMonoPos);
   float bsNdv = clamp(dot(normal, normalize(vViewPosition)), 0.0, 1.0);
   float bsEnergyHere = bsEnergy(vMonoPos) * uGlow * uCore;
-  float bsMaterialize = smoothstep(uDissolve + 0.05, uDissolve, bsGrain) * step(0.001, uDissolve);
+  float bsMaterialize = (1.0 - smoothstep(uDissolve, uDissolve + 0.05, bsGrain)) * step(0.001, uDissolve);
 #ifdef BS_WALL
   // Deeper into the slot is closer to the hidden core, so the wall brightens with depth.
   float bsDeep = smoothstep(0.0, 0.22, bsDist);
   // An opened slot spills its light; the walls only carry it fully once the gap has closed.
   float bsClosed = mix(1.0, 0.6, uOpen);
-  totalEmissiveRadiance += uAmber * uWall * uCutLight * bsClosed * (0.45 + 0.55 * bsDeep) * bsEnergyHere;
+  totalEmissiveRadiance += bsOpeningLight(vMonoPos) * uWall * bsClosed * bsWallBeam(vMonoPos);
 ${INCANDESCENT_WALL}
 #else
   // Exterior spill is its own channel: zero spill leaves the skin neutral while the cuts still glow.
-  float bsRadius = max(uDiffusion, 1e-4);
+  float bsRadius = max(uDiffusion, 1e-4) * mix(1.0, 0.2, uOpen);
   float bsLip = exp(-pow(bsDist / 0.01, 2.0));
   // A tight core plus a long, soft tail: scattered light, not a hard frame along each edge.
   float bsBeneath = 0.55 * bsProximityField(vMonoPos, bsRadius, uFalloff) + 0.45 * bsProximityField(vMonoPos, bsRadius * 2.8, 1.2);
-  float bsProximity = bsProximityField(vMonoPos, 0.35, 2.0);
+  float bsProximity = bsProximityField(vMonoPos, mix(0.35, 0.035, uOpen), 2.0);
   // The same world-space plasma that heats an incandescent body also breathes through the spill.
   float bsPlasmaHere = bsPlasma(vWorldPos);
   // A grazing view looks through a longer optical path, which scatters slightly more light back.
   float bsPath = mix(0.75, 1.2, pow(1.0 - bsNdv, 1.5));
-  // Absorption dims the light and shifts it deeper amber the further it travels through the ceramic.
-  float bsTravel = clamp(bsDist / bsRadius, 0.0, 1.0);
-  vec3 bsTint = mix(uAmber, uAmber * vec3(0.95, 0.42, 0.18), bsTravel * uAbsorption);
-  // Through pale glass the inner light scatters to a peach-white rather than reading as orange paint.
-  vec3 bsPale = mix(BS_GLASS_LIGHT, BS_PALE_WARM, uPaleWarmth);
-  bsTint = mix(bsTint, bsPale, 0.5 * uLightGround);
   float bsKeep = mix(1.0, 0.35, uAbsorption);
   float bsSwing = mix(1.0 - 0.85 * uPlasmaShape.y, 1.0 + 1.1 * uPlasmaShape.y, bsPlasmaHere);
   float bsSpill = uSpill * uExterior * (0.45 * bsLip + 0.55 * bsBeneath) * bsSwing * bsPath * bsKeep * mix(1.0, 0.6, uOpen);
-  totalEmissiveRadiance += bsTint * bsSpill * bsEnergyHere;
-  // Body light: the inner light fills the whole body, strongest near the cuts and never gone far from them, so the
-  // cube reads as lit from within rather than solid with glowing seams. Warm, whitening on a pale ground.
-  float bsBody = uBodyLight * uCore * uGlow * (0.45 + 0.55 * bsProximityField(vMonoPos, 0.9, 1.4)) * mix(0.8, 1.2, bsPlasmaHere) * mix(1.0, 0.5, uOpen);
-  totalEmissiveRadiance += mix(uAmber * vec3(1.0, 0.62, 0.38), bsPale, 0.2 * uLightGround) * bsBody * mix(0.55, 0.85, uLightGround);
-  // The veil: organic light flowing across whole faces, strongest near the cuts but never only there.
-  float bsVeil = uPlasmaShape.z * smoothstep(0.42, 0.88, bsPlasmaHere) * mix(0.35, 1.0, bsProximity) * uCore * uGlow * mix(1.0, 0.6, uOpen);
-  totalEmissiveRadiance += mix(mix(uAmber, uAmber * vec3(0.95, 0.42, 0.18), 0.5 * uAbsorption), bsPale, 0.5 * uLightGround) * bsVeil;
+  vec3 bsSource = bsOpeningLight(vMonoPos);
+  totalEmissiveRadiance += bsSource * bsSpill + bsSeamLip(vMonoPos, bsSource);
+  // In contained mode, body light follows the same source rather than filling the face uniformly.
+  float bsBody = uBodyLight * exp(-bsDist / max(bsRadius, 0.035)) * mix(1.0, 0.5, uOpen);
+  totalEmissiveRadiance += bsSource * bsBody;
+  // Keep the residual plasma near the openings; incandescent mode owns whole-body illumination.
+  float bsVeil = uPlasmaShape.z * smoothstep(0.42, 0.88, bsPlasmaHere) * bsProximity * uCutLight * uCore * uGlow * mix(1.0, 0.6, uOpen);
+  totalEmissiveRadiance += mix(mix(uAmber, uAmber * vec3(0.95, 0.42, 0.18), 0.5 * uAbsorption), vec3(1.0), 0.85 * uLightGround) * bsVeil;
   // Light passing through tinted ceramic colours what the surface reflects, not only what it adds;
   // on a pale ground this keeps the amber visible instead of brightening an already light surface.
   // On paper, light added to a white body only whitens it; body light also warms what the body reflects.

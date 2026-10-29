@@ -3,11 +3,15 @@ import { Uniform, type Texture } from 'three';
 
 // Adds the blurred all-faces emission around the silhouette. The blurred coverage (alpha) marks the
 // body itself, where the glow is faded out so it reads as light in the air, not haze on the front face.
-const FRAGMENT = /* glsl */ `
+export const SIDE_GLOW_FRAGMENT = /* glsl */ `
 uniform sampler2D glowMap;
 uniform float strength;
 
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
+  if (strength <= 0.0) {
+    outputColor = vec4(0.0);
+    return;
+  }
   vec4 glow = texture2D(glowMap, uv);
   float body = smoothstep(0.3, 1.0, min(glow.a, 1.0));
   body *= body;
@@ -28,7 +32,7 @@ export class SideGlowEffect extends Effect {
   constructor() {
     const glowUniform = new Uniform<Texture | null>(null);
     const strengthUniform = new Uniform(0);
-    super('SideGlowEffect', FRAGMENT, {
+    super('SideGlowEffect', SIDE_GLOW_FRAGMENT, {
       blendFunction: BlendFunction.ADD,
       uniforms: new Map<string, Uniform>([
         ['glowMap', glowUniform],

@@ -1,0 +1,1 @@
+.stage { position: relative; width: min(100%, var(--shell-frame-max-width)); height: calc(var(--space-64) * 6); margin-inline: auto; background: var(--surface-0); overflow: hidden; }

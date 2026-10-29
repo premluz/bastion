@@ -13,13 +13,13 @@ export function useAgentAgenda(state: ReturnType<typeof useMobileFrame>, isFinis
     const last = thread.at(-1);
     if (!last || last.role === 'assistant') return;
     // Never talk over a scenario still in progress, whatever was said since.
-    if (thread.some((message) => (message.sendRequest || message.topUpRequest) && !isFinished(message.id))) return;
-    const settled = last.sendRequest || last.topUpRequest ? isFinished(last.id) : Boolean(last.voiceFeedback || last.declinedOffer);
+    if (thread.some((message) => (message.sendRequest || message.topUpRequest || message.paymentRequest) && !isFinished(message.id))) return;
+    const settled = last.sendRequest || last.topUpRequest || last.paymentRequest ? isFinished(last.id) : Boolean(last.voiceFeedback || last.declinedOffer);
     if (!settled) return;
     const handled = new Set<string>();
     for (const message of thread) {
       if (message.topUpRequest) handled.add('mortgage');
-      if (message.sendRequest) handled.add('payment-request');
+      if (message.paymentRequest) handled.add('payment-request');
       if (message.declinedOffer) handled.add(message.declinedOffer);
     }
     const item = nextAgendaItem(handled);

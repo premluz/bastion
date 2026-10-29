@@ -79,7 +79,7 @@ export function MobileFrame(props: MobileFrameProps) {
   useAssistantSounds(state.mode, speech.isListening, speech.isSuspended);
   const sendPresentation = props.sendPresentation ?? 'inline';
   const sendingOpen = sendPresentation === 'overlay' && isSendingScreenOpen(send.flows);
-  const transcript = useTranscriptNodes(state, thread, sendPresentation);
+  const transcript = useTranscriptNodes(state, thread, sendPresentation, voicePlayback.skip);
   // Home tab (2026-09-12, revised 2026-09-13): renders AssetsHomePage below
   // the SAME shared avatar/search header every other tab uses, rather than
   // a second copy of it — direct feedback clarified the fixed region is

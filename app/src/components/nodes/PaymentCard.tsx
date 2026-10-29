@@ -50,12 +50,12 @@ function InlineStateLabel({ label, pending }: { label: string; pending: boolean 
   </div>;
 }
 
-function PaymentActions({ mode, error }: Pick<PaymentCardProps, 'mode' | 'error'>) {
+function PaymentActions({ mode, error, isEditable }: Pick<PaymentCardProps, 'mode' | 'error' | 'isEditable'>) {
   const editing = mode === 'editing';
   const terminal = mode === 'confirming' || mode === 'sending' || mode === 'sent' || mode === 'cancelled';
   const primary = <span data-payment-action={editing ? 'save' : 'accept'}><Button label={editing ? 'Review changes' : 'Confirm'}
     variant="primary" className={styles.chip} isDisabled={Boolean(error)} /></span>;
-  const edit = !editing && mode !== 'funding' && <span data-payment-action="edit"><Button label="Edit" className={styles.chip} /></span>;
+  const edit = !editing && isEditable && mode !== 'funding' && <span data-payment-action="edit"><Button label="Edit" className={styles.chip} /></span>;
   const cancel = <span data-payment-action="cancel"><Button label="Cancel" variant="ghost" className={styles.chip} /></span>;
   // Cancel · Edit · Confirm, pushed right so the primary sits under the thumb
   // (2026-10-07 voice, extended to chat 2026-10-09); DOM order matches visual.
@@ -87,16 +87,16 @@ export function PaymentCard(props: PaymentCardProps) {
         <div className={styles.summary}>
           <Text type="display-1" className={heroBalanceStyles.heroAmount} hasTabularNumbers display="block">${props.amount}</Text>
           <div className={styles.meta}>
-            <div className={styles.metaRow}><Text type="supporting" color="secondary">Arrives</Text>
-              <Text type="body">{props.arrival}</Text></div>
-            <div className={styles.metaRow}><Text type="supporting" color="secondary">Network fee</Text>
-              <Text type="body">{props.fee}</Text></div>
+            <div className={styles.metaRow}><Text type="supporting" color="secondary" className={styles.metaLabel}>Arrives</Text>
+              <Text type="supporting" color="secondary" hasTabularNumbers>{props.arrival}</Text></div>
+            <div className={styles.metaRow}><Text type="supporting" color="secondary" className={styles.metaLabel}>Network fee</Text>
+              <Text type="supporting" color="secondary" hasTabularNumbers>{props.fee}</Text></div>
           </div>
         </div>
       </>}
       {editing && <Text type="supporting" color="secondary">Main balance: {props.balance}</Text>}
       {props.error && <Text role="alert">{props.error}</Text>}
-      <PaymentActions mode={props.mode} error={props.error} />
+      <PaymentActions mode={props.mode} error={props.error} isEditable={props.isEditable} />
     </Card>
     {props.note && <Text type="supporting" color="secondary">{props.note}</Text>}
   </div>;

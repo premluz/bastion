@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import type { Group } from 'three';
-import { applySurface } from '../monolith/material/applySurface';
+import { applyMaterial } from '../monolith/material/applySurface';
 import { PALETTE } from '../brand/palette';
 import { pieceGeometry } from '../monolith/geometry/toBufferGeometry';
 import { cornerRadius } from './geometry/bevel';
@@ -33,7 +33,8 @@ export interface FractalMonolithProps {
 
 export function FractalMonolith({ model, search, settings, quality, preset, progress }: FractalMonolithProps) {
   const motion = useMemo(() => fractalMotions(model, search), [model, search]);
-  const round = cornerRadius(settings.target.material.softCorners);
+  const { softCorners, cornerRadius: explicitRadius } = settings.target.material;
+  const round = cornerRadius(softCorners, explicitRadius);
   const parts = useMemo(
     () =>
       model.pieces.map((piece) => {
@@ -62,7 +63,7 @@ export function FractalMonolith({ model, search, settings, quality, preset, prog
     const { material } = settings.eased.current;
     for (const part of parts) {
       for (const m of part.materials) {
-        applySurface(m, preset.surface, { base: preset.base, roughness: material.roughness, reflectance: material.reflectance, transmission: quality.transmission });
+        applyMaterial(m, preset, material, quality.transmission);
       }
       part.uniforms.uAmber.value.set(PALETTE.signal);
       part.uniforms.uEdgeColor.value.set(preset.edgeColor);
@@ -94,7 +95,7 @@ export function FractalMonolith({ model, search, settings, quality, preset, prog
       group.scale.setScalar(rigid.scale);
 
       for (const m of part.materials) {
-        applySurface(m, preset.surface, { base: preset.base, roughness: material.roughness, reflectance: material.reflectance, transmission: quality.transmission });
+        applyMaterial(m, preset, material, quality.transmission);
       }
       writeFrameUniforms(part.uniforms, frame, material, preset);
       part.uniforms.uDissolve.value = 0;

@@ -1,0 +1,120 @@
+/* The activity orbs (see ActivityOrb.tsx). The geometry is authored on a 28 px stage and scaled to the size, so the
+   hand-tuned dot sizes and pitch hold at every size; colour is currentColor. */
+@property --orb-spin {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0deg;
+}
+
+.root {
+  --orb-stage: 28;
+  --orb-size: 20;
+  --orb-k: calc(var(--orb-size) / var(--orb-stage));
+  /* The ink of an unlit lattice cell: the grid stays legible between beats. */
+  --orb-rest: var(--opacity-18);
+  --orb-wave-duration: var(--duration-1600);
+  --orb-spin-duration: calc(var(--duration-1600) * 2.8);
+  position: relative;
+  display: inline-block;
+  flex: none;
+  vertical-align: middle;
+  width: calc(var(--orb-size) * 1px);
+  height: calc(var(--orb-size) * 1px);
+  color: var(--ink-primary);
+  contain: layout paint;
+}
+.root[data-size='sm'] { --orb-size: 16; }
+.root[data-size='lg'] { --orb-size: 28; }
+
+/* --- S1: three 3 px dots on a 6 px pitch, a swell radiating from the centre. The delay grows with the distance from
+   the middle (centre a beat early, edges at one pitch, corners at √2 pitches), which is what makes the wavefront round. */
+.lattice {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 3px);
+  grid-auto-rows: 3px;
+  gap: 3px;
+  place-content: center;
+  scale: var(--orb-k);
+}
+.cell {
+  border-radius: 50%;
+  background: currentColor;
+  opacity: var(--orb-rest);
+  animation: orb-wave var(--orb-wave-duration) var(--ease-swell) 990ms infinite both;
+}
+.root[data-variant='S1'] .cell:nth-child(even) { animation-delay: 700ms; }
+.root[data-variant='S1'] .cell:nth-child(5) { animation-delay: -180ms; }
+
+/* --- S2: the same dots and swell; the delay grows with x + y, so a broad band crosses the grid on the diagonal. The
+   spread (0 to 1.5 s) is close to the wave's length, which widens the band and makes the sweep continuous — the far
+   corner restarts as the near one does. Cells in order, row by row: the diagonals are 1 / 2, 4 / 3, 5, 7 / 6, 8 / 9. */
+.root[data-variant='S2'] .cell { animation-delay: 0ms; }
+.root[data-variant='S2'] .cell:is(:nth-child(2), :nth-child(4)) { animation-delay: 375ms; }
+.root[data-variant='S2'] .cell:is(:nth-child(3), :nth-child(5), :nth-child(7)) { animation-delay: 750ms; }
+.root[data-variant='S2'] .cell:is(:nth-child(6), :nth-child(8)) { animation-delay: 1125ms; }
+.root[data-variant='S2'] .cell:nth-child(9) { animation-delay: 1500ms; }
+
+/* Swells and subsides on the same curve: it rises out of its resting ink and sinks back into it. The long tail after
+   56% is the gap between beats. */
+@keyframes orb-wave {
+  0% { opacity: var(--orb-rest); transform: scale(1); }
+  28% { opacity: 1; transform: scale(1.18); }
+  56%, 100% { opacity: var(--orb-rest); transform: scale(1); }
+}
+
+/* --- G1: five latitudes of eight 2 px dots on a sphere of radius 8.5, tilted 14°, turning once every 4.5 s. Each dot's
+   place is worked out here, each frame, from its latitude, its longitude and the one animated angle: it turns about
+   the vertical axis, then the sphere tips toward the viewer; depth sets the opacity, so the far side recedes. */
+.globe {
+  --orb-radius: 8.5;
+  --orb-tilt: 14deg;
+  position: absolute;
+  inset: 0;
+  scale: var(--orb-k);
+  animation: orb-spin var(--orb-spin-duration) linear infinite;
+}
+.latitude { display: contents; }
+.latitude:nth-child(1) { --orb-lat: 52deg; }
+.latitude:nth-child(2) { --orb-lat: 26deg; }
+.latitude:nth-child(3) { --orb-lat: 0deg; }
+.latitude:nth-child(4) { --orb-lat: -26deg; }
+.latitude:nth-child(5) { --orb-lat: -52deg; }
+
+.dot {
+  --ring: calc(cos(var(--orb-lat)) * var(--orb-radius));
+  --lift: calc(sin(var(--orb-lat)) * var(--orb-radius));
+  --turn: calc(var(--orb-lon) + var(--orb-spin));
+  --across: calc(sin(var(--turn)) * var(--ring));
+  --x: calc(cos(var(--turn)) * var(--ring));
+  --y: calc(var(--lift) * cos(var(--orb-tilt)) - var(--across) * sin(var(--orb-tilt)));
+  --depth: calc(var(--lift) * sin(var(--orb-tilt)) + var(--across) * cos(var(--orb-tilt)));
+  --near: clamp(0, calc((var(--depth) / var(--orb-radius) + .15) / 1.15), 1);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px;
+  height: 2px;
+  margin: -1px 0 0 -1px;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translate(calc(var(--x) * 1px), calc(var(--y) * -1px));
+  opacity: calc(.12 + .88 * var(--near) * var(--near));
+}
+.dot:nth-child(1) { --orb-lon: 0deg; }
+.dot:nth-child(2) { --orb-lon: 45deg; }
+.dot:nth-child(3) { --orb-lon: 90deg; }
+.dot:nth-child(4) { --orb-lon: 135deg; }
+.dot:nth-child(5) { --orb-lon: 180deg; }
+.dot:nth-child(6) { --orb-lon: 225deg; }
+.dot:nth-child(7) { --orb-lon: 270deg; }
+.dot:nth-child(8) { --orb-lon: 315deg; }
+
+@keyframes orb-spin { to { --orb-spin: 360deg; } }
+
+/* Reduced motion: a still frame — the lattice with its centre lit, the globe at rest. */
+@media (prefers-reduced-motion: reduce) {
+  .cell, .globe { animation: none; }
+  .cell:nth-child(5) { opacity: 1; }
+}

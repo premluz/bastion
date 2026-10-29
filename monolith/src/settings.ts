@@ -1,4 +1,6 @@
 import type { IntelligenceParams } from './monolith/intelligence/field';
+import type { MaterialFamily } from './scene/materialFamilies';
+import { DEFAULT_OPTICAL_TUNING, type OpticalTuning } from './opticalTuning';
 
 export type Appearance = 'dark' | 'light';
 
@@ -6,7 +8,14 @@ export type Appearance = 'dark' | 'light';
 export type GlowMode = 'contained' | 'incandescent';
 
 /** Light channels and diffusion are 0–1 artistic levels; the scene maps them to physical-ish values. */
-export interface MaterialParams {
+export interface MaterialParams extends Partial<OpticalTuning> {
+  readonly family: MaterialFamily;
+  /** 0 removes specular, clearcoat and sheen; 1 retains the chosen finish. */
+  readonly gloss: number;
+  /** Absolute transmission; omitted uses the family's appearance-specific default. */
+  readonly translucency?: number;
+  /** Strength of angle-dependent thin-film colour and dispersion. */
+  readonly spectral: number;
   /** Slot width in model units (the cube spans 2). */
   readonly cutWidth: number;
   readonly roughness: number;
@@ -30,8 +39,10 @@ export interface MaterialParams {
   readonly incandescence: number;
   /** Outer glow around the monolith, in either glow mode. */
   readonly halo: number;
-  /** Rounds the cube's edges and corners (a geometry change: pieces rebuild). */
+  /** Legacy on/off rounding control; cornerRadius takes precedence when supplied. */
   readonly softCorners: boolean;
+  /** Rounded edge radius in model units. Omit to use the legacy softCorners setting. */
+  readonly cornerRadius?: number;
   /** Light filling the whole body from within, on top of the cuts' own (0 = only near the cuts). */
   readonly bodyLight: number;
   /** On a pale ground: 0 lets the inner light scatter to peach-white, 1 keeps it a saturated apricot. */
@@ -39,6 +50,10 @@ export interface MaterialParams {
 }
 
 export const DEFAULT_MATERIAL: MaterialParams = {
+  ...DEFAULT_OPTICAL_TUNING,
+  family: 'current',
+  gloss: 1,
+  spectral: 1,
   cutWidth: 0.034,
   roughness: 0.72,
   reflectance: 0.45,

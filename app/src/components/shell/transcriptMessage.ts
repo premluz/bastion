@@ -1,5 +1,6 @@
 import type { SendRequest } from '../../engine/sendMoneyState';
 import type { TopUpRequest } from '../../engine/mortgageTopUpState';
+import type { PaymentRequest } from '../../engine/paymentRequestState';
 import type { AgendaItemId } from '../../engine/agentAgenda';
 import type { HydratedScene } from '../../contracts/scene';
 import type { ThinkingStep } from '../../contracts/thinking';
@@ -38,6 +39,7 @@ export interface TranscriptMessage {
   buyAmount?: number;
   sendRequest?: SendRequest;
   topUpRequest?: TopUpRequest;
+  paymentRequest?: PaymentRequest;
   source?: 'voice';
   voiceFeedback?: string;
   /** The assistant speaking unprompted (an agenda handover), not a user turn. */

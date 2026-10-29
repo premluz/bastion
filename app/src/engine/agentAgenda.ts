@@ -6,8 +6,8 @@ export const AGENT_SUGGESTIONS = [
   { id: 'mortgage', text: 'Top up the mortgage account, it’s short for today’s repayment.', prompt: 'Top up the mortgage account',
     handover: 'your mortgage account is $190 short for today’s repayment. Shall we top it up?' },
   { id: 'positions', text: 'Review stale positions — the market has rebounded.' },
-  { id: 'payment-request', text: 'Review Daniel’s $50 payment request.', prompt: 'Send $50 to Daniel for coffee',
-    handover: 'Daniel asked you for $50 for coffee. Shall we send it?' },
+  { id: 'payment-request', text: 'Review Priya’s $240 payment request.', prompt: 'Review Priya’s payment request',
+    handover: 'Priya Nair at Lumen Studio sent you a $240 invoice. Shall we review it?' },
   { id: 'portfolio', text: 'View portfolio details — it’s up this week.' },
 ] as const;
 
