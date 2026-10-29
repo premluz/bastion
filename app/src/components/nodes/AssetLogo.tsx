@@ -31,7 +31,7 @@ export function AssetLogo({ id, size = 'default' }: { id: string; size?: 'compac
   if (flag) return <span className={styles.root} data-size={size} aria-hidden="true">
     <img className={styles.flag} src={flag} alt="" />
   </span>;
-  if (flags) return <span className={styles.root} data-size={size} aria-hidden="true">
+  if (flags) return <span className={styles.root} data-size={size} data-variant="forex" aria-hidden="true">
     <span className={styles.flagPair}>
       <img src={flags[0]} alt="" /><img src={flags[1]} alt="" />
     </span>

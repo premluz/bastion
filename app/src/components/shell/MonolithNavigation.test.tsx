@@ -3,7 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { MonolithNavigation } from './MonolithNavigation';
 
 function renderNavigation(isComposerOpen: boolean) {
-  return renderToStaticMarkup(<MonolithNavigation activeTab="home" onNavigate={() => undefined}
+  return renderToStaticMarkup(<MonolithNavigation activeTab="home" walletTab="money" onNavigate={() => undefined}
+    onMoney={() => undefined} onInvestments={() => undefined}
     onOpen={() => undefined} isComposerOpen={isComposerOpen} working={false} />);
 }
 

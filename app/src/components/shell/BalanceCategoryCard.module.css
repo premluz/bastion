@@ -40,6 +40,7 @@
 
 .value {
   font-variant-numeric: tabular-nums;
+  font-size: var(--text-20);
 }
 
 .changeRow {

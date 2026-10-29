@@ -18,6 +18,9 @@ import '../app/src/theme/aura.css';
 // registered theme) — loaded here rather than from a component so the shell
 // has its chrome tokens regardless of which components a story mounts.
 import '../app/src/theme/shell.css';
+import { startSafeAreaPadding } from '../app/src/engine/stores/safeAreaPaddingStore';
+
+startSafeAreaPadding();
 
 const preview: Preview = {
   parameters: {

@@ -1560,3 +1560,27 @@ Direct feedback: light mode needs a more near-white main background. bastion-lig
 - Files: app/src/components/shell/dockComposer.ts, tests/visual/monolithNavigation.spec.ts; STATE.md. No dependencies or visual tokens changed.
 - Gate: app production build, 197/197 app tests, 2/2 focused browser interactions (dark and light), and diff check pass. Token lint remains red on pre-existing rgb fallbacks in PillNavigation.module.css:142 and Sheet.module.css:22.
 - Learning: an event handler can fire without changing state if a synchronous transition precondition throws; test the resulting composer state in a real browser, not only the button wiring.
+
+## 2026-10-29 — Give Attention Home Monolith its own navigation menu treatment
+- Attention Home Monolith alone now uses a three-item Search/Explore/Home menu with search and globe icons, a card-material popover and selected-row fill. Its menu backdrop is the existing bottom fade stretched to cover the phone, with no backdrop blur; the top-right Search control is removed for this variant. Agent Home's shared menu and other home variants are unchanged. No architecture phase advanced.
+- Files: app/src/components/shell/MonolithNavMenu.tsx, MonolithNavMenu.module.css, MonolithNavigation.tsx, MonolithNavigation.module.css, MobileFrame.tsx; tests/visual/monolithNavigation.spec.ts; STATE.md. No new dependencies or tokens.
+- Gate: app production build, 197/197 app tests, 4/4 focused browser tests across aura dark/light and diff check pass. Inspected one menu-card capture at /tmp/bastion-monolith-nav-menu.png. Token lint remains red only on pre-existing rgb fallbacks in PillNavigation.module.css:142 and Sheet.module.css:22.
+- Learning: scoping a new dock menu at the Monolith branch preserves Agent Home's navigation contract; the same existing card tokens yield the intended surface in both themes without a new material scale.
+
+## 2026-10-29 — Match Monolith menus and restore safe-area preference
+- Attention Home Monolith's left menu now routes Search, Explore, Money, Investments, Home; its right quick-actions menu uses the same card surface and row treatment. Agent Home remains unchanged. Storybook now starts the saved safe-area preference; shared page and account overlays reserve top/bottom insets when enabled and remove them when disabled. No architecture phase advanced.
+- Files: .storybook/preview.ts; app/src/components/shell/{MonolithNavMenu.tsx,MonolithNavMenu.module.css,MonolithActionMenu.tsx,MonolithNavigation.tsx,MonolithNavigation.test.tsx,GlowDock.tsx,MobileFrame.module.css,AccountExperience.module.css}; tests/visual/{monolithNavigation.spec.ts,safeAreaPadding.spec.ts}; STATE.md. No dependencies or new tokens.
+- Gate: app build, Storybook build, 197/197 app tests, 5/5 focused browser tests, and diff check pass. Token lint remains red only on pre-existing rgb fallbacks in PillNavigation.module.css:142 and Sheet.module.css:22.
+- Learning: the saved setting was live in the app but inert in Storybook because its bootstrap was absent; test both visual spacing and persistence after reload.
+
+## 2026-10-29 — Overlapping complete flags for forex pairs
+- AssetLogo's forex variant now renders two full circular flags, staggered top-left and bottom-right, instead of two clipped halves. Existing USD, crypto and market artwork variants are unchanged. No architecture phase advanced.
+- Files: app/src/components/nodes/{AssetLogo.tsx,AssetLogo.module.css}; tests/visual/forexFlags.spec.ts; STATE.md. Reused the existing artwork and spacing/radius tokens; no dependencies or asset downloads.
+- Gate: app build, 197/197 app tests, focused browser geometry test for EUR/USD and GBP/USD, and diff check pass.
+- Learning: the shared logo can express a pair within the same accessory footprint by positioning complete circular images, with the quote currency in front.
+
+## 2026-10-29 — Set main and card money type sizes
+- Shared Home/Money/Investments hero balance numbers now use the 32px type token. Home balance cards and Money's USD/USDT/USDC cards use the 20px XL step; supporting labels and change figures are unchanged. No architecture phase advanced.
+- Files: app/src/theme/heroBalance.module.css; app/src/components/shell/{BalanceCategoryCard.tsx,BalanceCategoryCard.module.css,ContributingBalanceRow.tsx,ContributingBalanceRow.module.css}; tests/visual/moneyTypeScale.spec.ts; STATE.md. No dependencies or new tokens.
+- Gate: app build, 197/197 app tests, focused browser computed-size and 320px fit test, and diff check pass. Token lint remains red only on pre-existing rgb fallbacks in PillNavigation.module.css:142 and Sheet.module.css:22.
+- Learning: Astryx Text's size="xl" prop did not override type="large" in the rendered cascade; component CSS with the existing --text-20 token produced the intended size.

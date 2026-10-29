@@ -83,7 +83,8 @@ export function GlowDock({ state, onOpen, onClose, composer, composerActions, th
           could not blur the page behind it. */}
       {status && !isOpen && <div className={styles.status}>{status}</div>}
       {landingMonolith
-        ? <MonolithNavigation activeTab={state.activeTab} onNavigate={state.selectTab} onOpen={onOpen}
+        ? <MonolithNavigation activeTab={state.activeTab} walletTab={state.walletTab} onNavigate={state.selectTab}
+          onMoney={state.openMoney} onInvestments={state.openInvestments} onOpen={onOpen}
           isComposerOpen={isOpen} working={monolithWorking || isWorking} />
         : <MobileFrameDock state={dockState} variant="pill" destinationSet="glow" {...(trailing ? { trailing } : {})} />}
     </div>

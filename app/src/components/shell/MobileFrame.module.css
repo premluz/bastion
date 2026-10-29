@@ -201,7 +201,7 @@
      scrolling is what slides content under the chrome, not the initial
      layout (2026-09-14, direct feedback). */
   padding-top: var(--shell-header-height);
-  padding-bottom: var(--shell-nav-height);
+  padding-bottom: calc(var(--shell-nav-height) + var(--shell-safe-area-bottom));
   /* The fade belongs to the scrolling page, not the header (2026-09-13,
      direct feedback: "maybe the shade gradient should not be part of the
      header"). A gradient painted in the header's band could never fix

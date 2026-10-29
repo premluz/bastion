@@ -44,12 +44,6 @@ export function BalanceCategoryCard({ label, value, changeAbs, changePercent, ea
         </Text>
         <Icon icon={ChevronRightIcon} size="sm" color="secondary" />
       </div>
-      {/* large, medium weight since 2026-10-27 (the stock names' weight, direct feedback; regular from 2026-10-23, semibold before) (2026-09-13, second follow-up: "balance cards
-          balances slight larger, 1 scale up") — one step up from body on
-          Astryx's own type ramp (body < large < display-3), landing
-          between the earlier display-3 (too close to the page's own Total
-          balance hero) and body (read too small once compared directly
-          against the hero card next to it). */}
       <Text type="large" weight="medium" hasTabularNumbers className={styles.value}>
         ${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
       </Text>

@@ -119,7 +119,7 @@ export function MobileFrame(props: MobileFrameProps) {
           <header className={styles.header} aria-label="Asset search">
             <Button label="Open account menu" variant="ghost" icon={<Avatar {...avatarProps(USER_NAME)} size="medium" />} isIconOnly onClick={openAccounts} />
             {/* Agent home moves Explore into the dock's menu; the spacer keeps the avatar its own size. */}
-            {isGlowHome ? <span className={styles.headerEnd}>
+            {isMonolithVoice ? <span aria-hidden="true" /> : isGlowHome ? <span className={styles.headerEnd}>
               <IconButton label="Search" icon={<Icon icon="search" />} variant="ghost" onClick={notifyPrototypeUnavailable} />
             </span>
               : hasAgentPage ? <span aria-hidden="true" />
