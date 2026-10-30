@@ -25,6 +25,7 @@ export function writeFrameUniforms(u: CeramicUniforms, frame: FrameLight, m: Mat
   u.uGlow.value = light.glow;
   u.uCore.value = m.core;
   u.uCutLight.value = m.cutLight;
+  u.uInnerWallGlow.value = m.innerWallGlow;
   u.uSpill.value = m.spill * SPILL_GAIN * preset.skinGlow;
   u.uDiffusion.value = (DIFFUSION_MIN + DIFFUSION_RANGE * m.diffusion) * light.diffusionScale;
   u.uAbsorption.value = m.absorption;

@@ -1,10 +1,15 @@
 import { describe, expect, it } from 'vitest';
+import { WEB_LIGHT_DEFAULT } from '@bastion/monolith';
 import { MONOLITH_ORB_STATES, monolithOrbState } from './monolithOrbStates';
 
 describe.each(['dark', 'light'] as const)('%s cube emission', (appearance) => {
-  it('keeps resting illumination close to the cuts', () => {
+  it('uses the theme-specific resting material', () => {
     const state = MONOLITH_ORB_STATES[monolithOrbState('rest', appearance)];
-    const material = appearance === 'light' ? MONOLITH_ORB_STATES.restLight.material : MONOLITH_ORB_STATES.rest.material;
+    if (appearance === 'light') {
+      expect(state).toEqual(WEB_LIGHT_DEFAULT);
+      return;
+    }
+    const material = MONOLITH_ORB_STATES.rest.material;
     expect(material).toMatchObject({ halo: 0, bodyLight: 0 });
     expect(material.spill).toBeLessThanOrEqual(0.04);
     expect(material.core).toBeGreaterThan(0);
@@ -25,9 +30,8 @@ describe.each(['dark', 'light'] as const)('%s cube emission', (appearance) => {
   });
 });
 
-it('keeps light-mode seam emphasis local to the openings', () => {
-  expect(MONOLITH_ORB_STATES.restLight.material).toMatchObject({ cutLight: 1, halo: 0, bodyLight: 0 });
-  expect(MONOLITH_ORB_STATES.restLight.material.spill).toBeLessThanOrEqual(0.04);
+it('uses the calibrated web-light seam and body channels at rest', () => {
+  expect(MONOLITH_ORB_STATES.restLight.material).toMatchObject({ cutLight: 0.14, halo: 0, bodyLight: 0.23, spill: 0.21, edge: 0.91 });
   expect(MONOLITH_ORB_STATES.landingLight.material.cutLight).toBe(1);
   expect(MONOLITH_ORB_STATES.workingLight.material.cutLight).toBe(1);
 });

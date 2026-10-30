@@ -79,6 +79,7 @@ export function IntelligenceSection() {
         <Switch label="Pause intelligence" value={intel.paused} onChange={(paused) => setIntel({ paused })} labelSpacing="spread" />
         <ParamSlider label="Core intensity" value={m.core} min={0} max={1} step={0.01} format={percent} onChange={(core) => setMaterial({ core })} />
         <ParamSlider label="Cut illumination" value={m.cutLight} min={0} max={1} step={0.01} format={percent} onChange={(cutLight) => setMaterial({ cutLight })} />
+        <ParamSlider label="Inner surface glow" value={m.innerWallGlow} min={0} max={1} step={0.01} format={percent} onChange={(innerWallGlow) => setMaterial({ innerWallGlow })} />
         <ParamSlider label="Exterior spill" value={m.spill} min={0} max={1} step={0.01} format={percent} onChange={(spill) => setMaterial({ spill })} />
         <ParamSlider label="Body illumination" value={m.bodyLight} min={0} max={1} step={0.01} format={percent} onChange={(bodyLight) => setMaterial({ bodyLight })} />
         <ParamSlider label="Diffusion radius" value={m.diffusion} min={0} max={1} step={0.01} format={percent} onChange={(diffusion) => setMaterial({ diffusion })} />

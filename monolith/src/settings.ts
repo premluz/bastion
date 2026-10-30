@@ -28,6 +28,8 @@ export interface MaterialParams extends Partial<OpticalTuning> {
   readonly core: number;
   /** B — brightness of the slot walls. */
   readonly cutLight: number;
+  /** Steady orange emission from the real interior cut faces, independent of travelling seam light. */
+  readonly innerWallGlow: number;
   /** C — internal light reaching the exterior ceramic. */
   readonly spill: number;
   /** D — how far that light penetrates beneath the surface. */
@@ -62,6 +64,7 @@ export const DEFAULT_MATERIAL: MaterialParams = {
   grainAmount: 0.5,
   core: 0.75,
   cutLight: 0.65,
+  innerWallGlow: 0,
   spill: 0.08,
   diffusion: 0.15,
   absorption: 0.6,

@@ -30,6 +30,7 @@ export interface CeramicUniforms {
   readonly uGlow: IUniform<number>;
   readonly uCore: IUniform<number>;
   readonly uCutLight: IUniform<number>;
+  readonly uInnerWallGlow: IUniform<number>;
   readonly uSpill: IUniform<number>;
   readonly uDiffusion: IUniform<number>;
   readonly uAbsorption: IUniform<number>;
@@ -80,6 +81,7 @@ export function createCeramicUniforms(openings: readonly Segment[]): CeramicUnif
     uGlow: { value: 0 },
     uCore: { value: 1 },
     uCutLight: { value: 1 },
+    uInnerWallGlow: { value: 0 },
     uSpill: { value: 0 },
     uDiffusion: { value: 0.03 },
     uAbsorption: { value: 0.5 },

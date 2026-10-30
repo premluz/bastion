@@ -1584,3 +1584,9 @@ Direct feedback: light mode needs a more near-white main background. bastion-lig
 - Files: app/src/theme/heroBalance.module.css; app/src/components/shell/{BalanceCategoryCard.tsx,BalanceCategoryCard.module.css,ContributingBalanceRow.tsx,ContributingBalanceRow.module.css}; tests/visual/moneyTypeScale.spec.ts; STATE.md. No dependencies or new tokens.
 - Gate: app build, 197/197 app tests, focused browser computed-size and 320px fit test, and diff check pass. Token lint remains red only on pre-existing rgb fallbacks in PillNavigation.module.css:142 and Sheet.module.css:22.
 - Learning: Astryx Text's size="xl" prop did not override type="large" in the rendered cascade; component CSS with the existing --text-20 token produced the intended size.
+
+## 2026-10-29 — Calibrate the web-light monolith default
+- Studio's Web light mode profile and the app embed's resting light cube now share the supplied surface, optical, seam-light and intelligence settings. Dark and non-web Studio profiles, plus the app's landing/working states, are unchanged. No architecture phase advanced.
+- Files: monolith/src/{appCubeStates.ts,appCubeStates.test.ts,index.ts}; brand-studio/src/state/studioStore.ts; app/src/components/shell/monolithOrbStates.test.ts; STATE.md. No dependencies or shader changes.
+- Gate: monolith typecheck and 177/177 tests, app build and 197/197 tests, Studio build, two focused dark/light cube browser interactions, and diff check pass. Token lint remains red only on pre-existing rgb fallbacks in PillNavigation.module.css:142 and Sheet.module.css:22.
+- Learning: a shared preset keeps Studio's Web light selector aligned with the real embedded resting cube while preserving separate active-response states.

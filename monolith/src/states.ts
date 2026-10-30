@@ -52,7 +52,7 @@ export function resolveState(
 const EASED_MATERIAL: readonly (keyof MaterialParams)[] = [
   ...OPTICAL_TUNING_KEYS,
   'gloss', 'translucency', 'spectral',
-  'roughness', 'reflectance', 'edge', 'grainAmount', 'core', 'cutLight', 'spill', 'diffusion', 'absorption', 'falloff', 'incandescence', 'halo', 'bodyLight', 'paleWarmth',
+  'roughness', 'reflectance', 'edge', 'grainAmount', 'core', 'cutLight', 'innerWallGlow', 'spill', 'diffusion', 'absorption', 'falloff', 'incandescence', 'halo', 'bodyLight', 'paleWarmth',
 ];
 const EASED_INTELLIGENCE: readonly (keyof IntelligenceSettings)[] = ['activity', 'flowSpeed', 'impulse'];
 

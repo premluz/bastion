@@ -1,4 +1,4 @@
-import { DEFAULT_SETTINGS, MONOLITH_ORB_STATES, type Appearance, type IntelligenceSettings, type MaterialParams, type VariantId } from '@bastion/monolith';
+import { DEFAULT_SETTINGS, MONOLITH_ORB_STATES, WEB_LIGHT_DEFAULT, type Appearance, type IntelligenceSettings, type MaterialParams, type VariantId } from '@bastion/monolith';
 import { create } from 'zustand';
 
 const STUDIO_CUT_LIGHT = 0.82;
@@ -15,10 +15,10 @@ function profileSettings(preset: StudioPreset): {
   if (preset === 'light' || preset === 'dark') {
     return { appearance: preset, material: STUDIO_MATERIAL, intelligence: DEFAULT_SETTINGS.intelligence };
   }
-  const appearance: Appearance = preset === 'web-light' ? 'light' : 'dark';
-  const state = appearance === 'light' ? MONOLITH_ORB_STATES.restLight : MONOLITH_ORB_STATES.rest;
+  if (preset === 'web-light') return { appearance: 'light', ...WEB_LIGHT_DEFAULT };
+  const state = MONOLITH_ORB_STATES.rest;
   return {
-    appearance,
+    appearance: 'dark',
     material: { ...DEFAULT_SETTINGS.material, ...state.material },
     intelligence: { ...DEFAULT_SETTINGS.intelligence, ...state.intelligence },
   };

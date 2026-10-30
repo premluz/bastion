@@ -11,7 +11,7 @@ export type {
   MonolithSettingsInput,
 } from './settings';
 export { DEFAULT_SETTINGS } from './settings';
-export { MONOLITH_ORB_STATES, monolithOrbState } from './appCubeStates';
+export { MONOLITH_ORB_STATES, WEB_LIGHT_DEFAULT, monolithOrbState } from './appCubeStates';
 export type { MonolithOrbMood } from './appCubeStates';
 export { DEFAULT_OPTICAL_TUNING, OPTICAL_CONTROLS, OPTICAL_TUNING_KEYS } from './opticalTuning';
 export type { OpticalTuning, OpticalTuningKey } from './opticalTuning';

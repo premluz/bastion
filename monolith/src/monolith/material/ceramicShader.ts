@@ -1,10 +1,9 @@
 import { INCANDESCENCE_FUNCTIONS, INCANDESCENT_SKIN, INCANDESCENT_WALL } from './incandescenceShader';
-
+import { INNER_WALL_LIGHT } from './innerWallLight';
 export const PALE_PLASMA = { reach: 0.16, whiteMix: 0.25, stainGain: 4,
   patchReach: 0.4, patchStart: 0.38, patchPeak: 0.62, patchStain: 2, postTint: 1.5 } as const;
 
 /** GLSL injected into MeshPhysicalMaterial. All identifiers are prefixed `bs` to avoid three.js collisions. */
-
 export const VERTEX_HEADER = /* glsl */ `
 varying vec3 vMonoPos;
 varying vec3 vWorldPos;
@@ -26,6 +25,7 @@ uniform vec3 uEdgeColor;
 uniform float uGlow;
 uniform float uCore;
 uniform float uCutLight;
+uniform float uInnerWallGlow;
 uniform float uSpill;
 uniform float uDiffusion;
 uniform float uAbsorption;
@@ -53,7 +53,6 @@ uniform float uExterior;
 uniform float uEdgeLight;
 uniform float uBodyLight;
 uniform float uPaleWarmth;
-// How much inner light reaches this fragment (0–1), for the amber-glass filter applied after lighting.
 float bsWarmHere = 0.0;
 float bsPatchHere = 0.0;
 
@@ -151,6 +150,7 @@ export const FRAGMENT_EMISSION = /* glsl */ `
   // An opened slot spills its light; the walls only carry it fully once the gap has closed.
   float bsClosed = mix(1.0, 0.6, uOpen);
   totalEmissiveRadiance += bsOpeningLight(vMonoPos) * uWall * bsClosed * bsWallBeam(vMonoPos);
+${INNER_WALL_LIGHT}
 ${INCANDESCENT_WALL}
 #else
   // Exterior spill is its own channel: zero spill leaves the skin neutral while the cuts still glow.
