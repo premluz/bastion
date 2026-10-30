@@ -55,6 +55,12 @@
   gap: var(--shell-gap);
   padding: 0 var(--shell-inset) var(--shell-inset);
 }
+/* The way back is at the bottom, in the dock (2026-10-30): the header keeps only Add card, on the right, and the page
+   ends clear of the dock so its last rows can be scrolled above the back button. */
+.root[data-back-in-dock] .header { justify-content: flex-end; }
+.root[data-back-in-dock] .body {
+  padding-bottom: calc(var(--dock-context-button-size) + var(--pill-inset) * 2 + var(--shell-safe-area-bottom));
+}
 
 /* The shared-element transform target — CardDetailPage.tsx writes
    transform/transition directly onto this element's own style, not via

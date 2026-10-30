@@ -29,3 +29,64 @@
   .dock .row { transition: none; }
   .scrim { animation: none; }
 }
+
+/* One scale larger (2026-10-30, direct feedback): the menu and + buttons, 56 → 64 px; the cube's column between them is
+   unchanged. Doubled / tripled selectors out-rank the pill's and the agent dock's own rules for the same boxes. */
+.row.row { grid-template-columns: var(--dock-context-button-size) minmax(0, 1fr) var(--dock-context-button-size); }
+.row .button.button {
+  width: var(--dock-context-button-size);
+  height: var(--dock-context-button-size);
+  min-width: var(--dock-context-button-size);
+}
+
+/* --- Contextual dock (theme/dock-context.css): the way back takes the menu's place. Both sit in one cell; the menu's
+   glass button stays put underneath and only its icon gives way, so nothing jumps and the glass never dims. */
+/* Over a page that has taken the whole screen, so its way back sits on top of it. */
+.dock[data-dock-context='back'] { z-index: var(--dock-context-layer); }
+.lead { display: grid; place-items: center; transition: scale var(--press-release-duration) var(--press-release-ease); }
+.menu, .back { grid-area: 1 / 1; display: grid; place-items: center; }
+.back { pointer-events: none; }
+.dock[data-dock-context='back'] .back { pointer-events: auto; }
+.backButton:not(#\#):not(#\#):not(#\#) {
+  width: var(--dock-context-button-size);
+  height: var(--dock-context-button-size);
+  border-radius: var(--radius-full);
+  border-color: transparent;
+  background: none;
+  box-shadow: none;
+  color: var(--ink-primary);
+}
+/* Press: the whole button answers, glass and arrow together. */
+.dock[data-dock-context='back'] .lead:has(.backButton:active) {
+  scale: var(--press-active-scale);
+  transition-duration: var(--press-in-duration);
+  transition-timing-function: var(--press-in-ease);
+}
+
+/* Arriving: a beat after the others have started to leave, a little longer, settling on the soft spring. */
+.leaves, .menu svg, .back svg {
+  transition: opacity var(--dock-context-in-duration) var(--motion-enter-ease) var(--dock-context-in-delay),
+    scale var(--dock-context-in-duration) var(--ease-spring-soft) var(--dock-context-in-delay),
+    translate var(--dock-context-in-duration) var(--ease-spring-soft) var(--dock-context-in-delay),
+    filter var(--dock-context-in-duration) var(--motion-enter-ease) var(--dock-context-in-delay);
+}
+/* Leaving: fast, ease-out, to .8 with a little blur (never from nothing), right to left one short beat apart: the +,
+   then the cube, then the menu's icon. */
+.dock[data-dock-context='back'] :is(.leaves, .menu svg),
+.dock[data-dock-context='root'] .back svg {
+  opacity: 0;
+  scale: var(--dock-item-scale);
+  filter: blur(var(--dock-morph-blur));
+  transition-duration: var(--dock-context-out-duration);
+  transition-timing-function: var(--motion-exit-ease);
+  transition-delay: 0s;
+}
+.dock[data-dock-context='back'] .leaves[data-leave-order='2'] { transition-delay: var(--dock-context-stagger); }
+.dock[data-dock-context='back'] .menu svg { transition-delay: calc(var(--dock-context-stagger) * 2); }
+/* The arrow comes in moving the way it points. */
+.dock[data-dock-context='root'] .back svg { translate: var(--dock-context-arrive-shift) 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .leaves, .menu svg, .back svg { transition-property: opacity; }
+  .dock[data-dock-context] :is(.leaves, .menu svg, .back svg) { scale: none; translate: none; filter: none; }
+}

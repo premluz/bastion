@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type AnimationEvent, type MouseEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type AnimationEvent, type MouseEvent } from 'react';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
@@ -25,7 +25,13 @@ export interface CardDetailPageProps {
   // possible, kept optional rather than widening MobileFrame.tsx's own
   // non-null assertion into a real runtime branch nothing exercises).
   sourceRect: DOMRect;
+  /** Leaving has been asked for: the page plays its exit, then calls onClose. */
+  isClosing: boolean;
+  /** Asks to leave (the header's Back, when the page has one). */
+  onCloseRequest: () => void;
   onClose: () => void;
+  /** The way back is the dock's (MonolithNavigation, theme/dock-context.css), so the header has none. */
+  isBackInDock: boolean;
 }
 
 type DetailTab = 'transactions' | 'benefits';
@@ -64,9 +70,8 @@ const DETAIL_TABS = [
 // exactly where the deck's card was, then clear it one frame later WITH
 // a transition — the browser animates the card from the deck's position
 // into its resting spot. Reversed symmetrically on close.
-export function CardDetailPage({ card, sourceRect, onClose }: CardDetailPageProps) {
+export function CardDetailPage({ card, sourceRect, isClosing, onCloseRequest, onClose, isBackInDock }: CardDetailPageProps) {
   const [tab, setTab] = useState<DetailTab>('transactions');
-  const [isClosing, setIsClosing] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const cardIndex = WALLET_CARDS.findIndex((candidate) => candidate.id === card.id);
@@ -108,22 +113,22 @@ export function CardDetailPage({ card, sourceRect, onClose }: CardDetailPageProp
   // back toward the card it opened from and fades, its sections leaving bottom-up — the
   // entrance run backwards. The page may be scrolled far from the card, so it is the page
   // that returns, not the card. Unmounts when the page's own exit animation ends.
-  function close() {
+  useLayoutEffect(() => {
+    if (!isClosing) return;
     const root = rootRef.current;
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!root || reduced) { onClose(); return; }
+    if (!root || matchMedia('(prefers-reduced-motion: reduce)').matches) { onClose(); return; }
     const rootRect = root.getBoundingClientRect();
     root.style.setProperty('--detail-exit-origin', `${sourceRect.left + sourceRect.width / 2 - rootRect.left}px ${sourceRect.top + sourceRect.height / 2 - rootRect.top}px`);
-    setIsClosing(true);
-  }
+    // Runs once per close: the page unmounts when its exit ends.
+  }, [isClosing]);
   function onAnimationEnd(event: AnimationEvent<HTMLDivElement>) {
     if (isClosing && event.target === event.currentTarget) onClose();
   }
 
   return (
-    <div ref={rootRef} className={styles.root} data-closing={isClosing} role="dialog" aria-label={`${card.name} details`} onAnimationEnd={onAnimationEnd}>
+    <div ref={rootRef} className={styles.root} data-closing={isClosing} data-back-in-dock={isBackInDock ? '' : undefined} role="dialog" aria-label={`${card.name} details`} onAnimationEnd={onAnimationEnd}>
       <header className={styles.header}>
-        <IconButton label="Back" icon={<Icon icon="chevronLeft" />} variant="ghost" onClick={close} />
+        {!isBackInDock && <IconButton label="Back" icon={<Icon icon="chevronLeft" />} variant="ghost" onClick={onCloseRequest} />}
         <IconButton label="Add card" icon={<Icon icon={PlusIcon} />} variant="ghost" />
       </header>
       <div className={styles.body}>

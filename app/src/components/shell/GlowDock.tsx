@@ -8,6 +8,7 @@ import { config } from '../../config';
 import { AssistantLanding } from './AssistantLanding';
 import { MobileFrameDock } from './MobileFrameDock';
 import { MonolithNavigation } from './MonolithNavigation';
+import { ROOT_DOCK, type DockContext } from './dockContext';
 import { DockCube } from './DockCube';
 import { useChatCubeAssembly } from './useChatCubeAssembly';
 import type { useMobileFrame } from './useMobileFrame';
@@ -41,6 +42,8 @@ export interface GlowDockProps {
   landingMonolith?: boolean;
   /** Attention work can illuminate the resting monolith before chat opens. */
   monolithWorking?: boolean;
+  /** What the monolith's dock offers: its navigation, or an open page's way back (dockContext.ts). */
+  dockContext?: DockContext;
 }
 
 // The glow home's dock (2026-10-10, direct feedback with mocks): the navigation
@@ -48,7 +51,7 @@ export interface GlowDockProps {
 // Swiping up — or the pill's assistant item — morphs the pill into the composer
 // in place (and sliding the composer back down closes it again): the page stays as it is until the first question, then gives way to
 // the thread (AgentHomePage recedes) while the composer stays at the bottom.
-export function GlowDock({ state, onOpen, onClose, composer, composerActions, thread, isWorking, threadRef, onSuggestion, orb = 'plasma', trailing, status, landingMonolith = false, monolithWorking = false }: GlowDockProps) {
+export function GlowDock({ state, onOpen, onClose, composer, composerActions, thread, isWorking, threadRef, onSuggestion, orb = 'plasma', trailing, status, landingMonolith = false, monolithWorking = false, dockContext = ROOT_DOCK }: GlowDockProps) {
   const isOpen = state.mode === 'composer';
   const assembly = useChatCubeAssembly(state.messages.length, landingMonolith && config.agent.cubeAssembly);
   const swipe = useSwipeUp<HTMLDivElement>(() => {
@@ -85,7 +88,7 @@ export function GlowDock({ state, onOpen, onClose, composer, composerActions, th
       {landingMonolith
         ? <MonolithNavigation activeTab={state.activeTab} walletTab={state.walletTab} onNavigate={state.selectTab}
           onMoney={state.openMoney} onInvestments={state.openInvestments} onOpen={onOpen}
-          isComposerOpen={isOpen} working={monolithWorking || isWorking} />
+          isComposerOpen={isOpen} working={monolithWorking || isWorking} context={dockContext} />
         : <MobileFrameDock state={dockState} variant="pill" destinationSet="glow" {...(trailing ? { trailing } : {})} />}
     </div>
     {isOpen && !isWorking && <button type="button" className={styles.dismiss} aria-label="Close assistant" onClick={onClose} />}

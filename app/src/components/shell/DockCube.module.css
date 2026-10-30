@@ -15,3 +15,22 @@
   width: var(--dock-cube-size);
   height: var(--dock-cube-size);
 }
+/* A page's own controls have taken the dock (theme/dock-context.css): the cube leaves with the navigation, second of
+   its three (after the +, before the menu's icon), and comes back with it. */
+.cube {
+  transition: opacity var(--dock-context-in-duration) var(--motion-enter-ease) var(--dock-context-in-delay),
+    scale var(--dock-context-in-duration) var(--ease-spring-soft) var(--dock-context-in-delay),
+    filter var(--dock-context-in-duration) var(--motion-enter-ease) var(--dock-context-in-delay);
+}
+:global(html:has([data-dock-context='back'])) .cube {
+  opacity: 0;
+  scale: var(--dock-item-scale);
+  filter: blur(var(--dock-morph-blur));
+  transition-duration: var(--dock-context-out-duration);
+  transition-timing-function: var(--motion-exit-ease);
+  transition-delay: var(--dock-context-stagger);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cube { transition-property: opacity; }
+  :global(html:has([data-dock-context='back'])) .cube { scale: none; filter: none; }
+}

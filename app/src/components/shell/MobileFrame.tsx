@@ -20,6 +20,7 @@ import { AgentWorkQueue } from './AgentWorkQueue';
 import { useAgentHome } from './useAgentHome';
 import { MoneyPage } from './MoneyPage';
 import { CardDetailPage } from './CardDetailPage';
+import { ROOT_DOCK } from './dockContext';
 import { WALLET_CARDS } from './cardData';
 import { ConversationModeOverlay } from './ConversationModeOverlay';
 import { ComposerModeOverlay } from './ComposerModeOverlay';
@@ -103,6 +104,8 @@ export function MobileFrame(props: MobileFrameProps) {
   const pageRecede = isGlowHome ? { 'data-glow-page': '', ...(glow.isOpen ? { 'data-receded': '', inert: true } : {}) } : {};
   const chromeInert = !hasAgentPage && state.mode !== 'idle';
   const selectedCardData = state.selectedCard && WALLET_CARDS.find((candidate) => candidate.id === state.selectedCard!.id);
+  // The monolith's dock carries an open card's way back (dockContext.ts); other docks leave it in the card's header.
+  const isMonolithDock = isAttentionHome && props.orbVariant === 'monolith';
   // Pinned to the latest content (2026-09-14, direct feedback: a settled
   // question card rendered below the fold with no way to see it besides
   // scrolling manually). justify-content: flex-end only sets the initial
@@ -152,8 +155,9 @@ export function MobileFrame(props: MobileFrameProps) {
           )}
           <div className={styles.bottomFade} aria-hidden="true" />
           {isGlowHome ? <GlowDock state={state} onOpen={glow.open} onClose={glow.close} isWorking={glow.isWorking} threadRef={composerScrollRef} onSuggestion={glow.ask} orb={isAttentionHome ? 'none' : 'plasma'}
-            landingMonolith={isAttentionHome && props.orbVariant === 'monolith'}
+            landingMonolith={isMonolithDock}
             monolithWorking={attention.tasks.length > 0 || glow.isWorking}
+            dockContext={isMonolithDock && selectedCardData && !state.isCardClosing ? { kind: 'back', label: 'Back to Money', onBack: state.requestCloseCard } : ROOT_DOCK}
             {...(isAttentionHome ? { trailing: <OrbTrigger onOpen={glow.open} variant={props.orbVariant ?? 'plasma'} working={attention.tasks.length > 0 || glow.isWorking} />, status: <AgentWorkQueue tasks={attention.tasks} variant="status" /> } : {})}
             thread={transcript.slice(glow.threadStart)} composer={<MobileFrameComposer isActionsOutside state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />}
             composerActions={<MobileFrameComposerActions state={state} onVoiceStart={startConversationVoice} voiceSupported={speech.supported} />} />
@@ -161,7 +165,8 @@ export function MobileFrame(props: MobileFrameProps) {
               onNavigate={state.selectTab} thread={transcript.slice(agent.threadStart)} isWorking={agent.isWorking} caption={agent.caption}
               activity={agent.activity} speaking={voicePlayback.isSpeaking} threadRef={conversationScrollRef} orbRef={state.assistantRef} />
               : <MobileFrameDock state={state} variant={props.navigationVariant ?? 'pill'} />}
-          {selectedCardData && <CardDetailPage card={selectedCardData} sourceRect={state.selectedCard!.sourceRect} onClose={state.closeCard} />}
+          {selectedCardData && <CardDetailPage card={selectedCardData} sourceRect={state.selectedCard!.sourceRect} isClosing={state.isCardClosing}
+            onCloseRequest={state.requestCloseCard} onClose={state.closeCard} isBackInDock={isMonolithDock} />}
           </div> )}</AccountExperience>
         {/* Over the whole phone, glow dock included: the chrome stops short of the bottom edge. */}
         {attention.openItem && <ResolutionSheet key={attention.openItem.id} item={attention.openItem} onClose={attention.close} onConfirm={attention.confirm} />}

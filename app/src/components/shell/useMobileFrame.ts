@@ -67,8 +67,12 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   // to animate out of, without re-measuring a card that's about to be
   // covered by the very overlay animating over it.
   const [selectedCard, setSelectedCard] = useState<{ id: string; sourceRect: DOMRect } | null>(null);
-  const openCard = (id: string, sourceRect: DOMRect) => setSelectedCard({ id, sourceRect });
-  const closeCard = () => setSelectedCard(null);
+  // Leaving is a request first (2026-10-30): the page plays its exit while the dock already turns back into the
+  // navigation, and the page unmounts once its exit has played (closeCard).
+  const [isCardClosing, setIsCardClosing] = useState(false);
+  const openCard = (id: string, sourceRect: DOMRect) => { setIsCardClosing(false); setSelectedCard({ id, sourceRect }); };
+  const requestCloseCard = () => setIsCardClosing(true);
+  const closeCard = () => { setSelectedCard(null); setIsCardClosing(false); };
   const [value, setValue] = useState('');
   // initialPurchaseQuery seeds a real transcript message rather than a
   // separate purchaseQuery state (2026-09-13): the buy flow now renders
@@ -175,5 +179,5 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   const openInvestments = () => { setActiveTab('assets'); setWalletTab('crypto'); setMode('idle'); };
   return { mode, setMode, activeTab, value, setValue, messages, liveTrailMessageId, inputRef, submit, recognizesVoiceScenario,
     say, decline, selectTab, openConversation, closeConversation, toggleComposer, assistantRef, closeComposer, conversationRef,
-    walletTab, setWalletTab, openMoney, openInvestments, selectedCard, openCard, closeCard };
+    walletTab, setWalletTab, openMoney, openInvestments, selectedCard, openCard, closeCard, isCardClosing, requestCloseCard };
 }

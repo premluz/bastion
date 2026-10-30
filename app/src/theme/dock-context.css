@@ -1,0 +1,20 @@
+/* Contextual dock (2026-10-30, see components/shell/dockContext.ts): structural aliases over primitives and the dock
+   morph's own tokens (shell.css), so every theme gets it without a parity entry.
+
+   The swap is live CSS transitions, not a view transition: a page arriving with it (the card view's shared-element
+   entrance) keeps animating, and a fast back-and-forth reverses from wherever it is instead of restarting. Motion
+   follows motion-language.md and Emil Kowalski's design-engineering rules: what leaves goes fast on an ease-out (and
+   to .8 with a little blur, never from nothing), right to left one short beat apart; what arrives comes a beat later,
+   a little longer, settling on the soft spring. */
+:root {
+  /* The menu and + buttons, one scale larger than the pill's toggle (2026-10-30, direct feedback): 56 → 64 px. */
+  --dock-context-button-size: var(--space-64);
+  --dock-context-out-duration: var(--dock-item-duration);
+  --dock-context-in-duration: var(--duration-320);
+  --dock-context-in-delay: var(--duration-120);
+  --dock-context-stagger: calc(var(--dock-item-stagger) * 2);
+  /* The way back arrives moving the way it points: a short slide in from the right. */
+  --dock-context-arrive-shift: var(--space-8);
+  /* Above a page that takes the whole screen (the card view sits at 10), so its way back stays on top of it. */
+  --dock-context-layer: 11;
+}
