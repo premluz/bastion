@@ -14,6 +14,7 @@ import './theme/theme.bastion.css';
 import './theme/theme.bastion-light.css';
 import './theme/theme.bastion-aura.css';
 import './theme/theme.bastion-aura-light.css';
+import './theme/theme.bastion-pastel.css';
 import './theme/aura.css';
 import './theme/shell.css';
 import { MobileFrame } from './components/shell/MobileFrame';

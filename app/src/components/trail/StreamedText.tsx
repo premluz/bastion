@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { config } from '../../config';
 import { LabelReveal } from './LabelReveal';
 
@@ -12,6 +12,25 @@ export const streamDurationMs = (text: string) => Math.min(config.streaming.maxM
 
 /** The conversation turn whose replies these are: the same words in a later turn are a new reply and stream again. */
 export const StreamScope = createContext('');
+
+/**
+ * True while the reply of this text is still printing in this turn (2026-10-31, direct feedback: the words print first,
+ * then the pane that follows them comes in). False at once when it has landed already or motion is reduced. It runs on
+ * the same clock as StreamedText's own landing, from the same commit, so the two end together.
+ */
+export function useIsPrinting(text: string) {
+  const scope = useContext(StreamScope);
+  const paragraphs = text.split('\n\n');
+  const isReduced = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const [isPrinting, setIsPrinting] = useState(!isReduced && paragraphs.some((paragraph) => !landed.has(`${scope}|${paragraph}`)));
+  const runMs = Math.max(300, ...paragraphs.map(streamDurationMs));
+  useEffect(() => {
+    if (!isPrinting) return;
+    const timer = window.setTimeout(() => setIsPrinting(false), runMs);
+    return () => window.clearTimeout(timer);
+  }, [isPrinting, runMs]);
+  return isPrinting;
+}
 
 // An assistant reply, streamed in (2026-10-28, direct request): the same feathered, even-paced stream as the trail's
 // step labels (LabelReveal, from Merlin), paced by the reply's own length. Still one text node when done.

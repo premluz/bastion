@@ -10,6 +10,7 @@ import { SendMoneyTranscript } from './SendMoneyTranscript';
 import { TopUpTranscript } from './TopUpTranscript';
 import { PaymentRequestTranscript } from './PaymentRequestTranscript';
 import { StreamedText, StreamScope } from '../trail/StreamedText';
+import { ScenarioOpening } from './ScenarioOpening';
 import type { useMobileFrame } from './useMobileFrame';
 import styles from './MobileFrame.module.css';
 
@@ -49,7 +50,7 @@ export function useTranscriptNodes(state: ReturnType<typeof useMobileFrame>, { s
   // A message with neither a live trail nor a settled one (still
   // resolving, or the resolver found no match) renders as plain text.
   const voice = state.mode === 'conversation';
-  const transcript = state.messages.map(({ id, text, scene, trail, trailElapsedMs, buyAmount, voiceFeedback, role }) => {
+  const transcript = state.messages.map(({ id, text, scene, trail, trailElapsedMs, buyAmount, voiceFeedback, role, alert }) => {
     const isLive = state.liveTrailMessageId === id;
     // The assistant speaking on its own (an agenda handover): no user turn.
     if (role === 'assistant') return (
@@ -59,6 +60,14 @@ export function useTranscriptNodes(state: ReturnType<typeof useMobileFrame>, { s
     );
     const topUpFlow = topUp.flows[id];
     const requestFlow = paymentRequest.flows[id];
+    // Opened from a home alert (2026-10-31): the alert's own line instead of a typed question; no thinking, its question first.
+    if (alert) return (
+      <StreamScope.Provider key={id} value={`turn-${id}`}>
+        <ScenarioOpening alert={alert} />
+        {topUpFlow && <TopUpTranscript state={topUpFlow} presentation={sendPresentation} fromAlert
+          dispatch={(action) => { onManualChoice(); topUp.dispatch(id, action); }} />}
+      </StreamScope.Provider>
+    );
     return (
       <StreamScope.Provider key={id} value={`turn-${id}`}>
       <div>

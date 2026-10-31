@@ -1,0 +1,63 @@
+/* A home alert into its scenario (2026-10-31, direct feedback, after trying the card growing into the page — the
+   transitions competed; then: surfaces on one level never overlap, the card moves only when something pushes it).
+   1. The rest of the home leaves through its usual staggered fade and blur (page-recede.css), quicker than usual, so
+      what sat above the card is gone before the card moves into its place.
+   2. The card waits where it was. Then the question rises in from depth under it — scaled back, blurred, starting
+      exactly where the card's old place would put it (--scenario-push, measured by scenarioPush.ts) — and both travel
+      up together, the same distance on the same curve, so the question reads as pushing the card to the top.
+   The card and the opening share one name, only while that transition runs (its type, `scenario-expand`, set by
+   useGlowHome.expand), so the browser moves the one to the other. Only the arriving picture shows: the two are the same
+   card, so there is nothing to crossfade. Without view transitions, or with reduced motion, the assistant simply opens
+   on the scenario (dockMorph.ts). */
+:root {
+  --scenario-recede-stagger: calc(var(--motion-assembly-stagger) / 3);
+  --scenario-push-delay: calc(var(--agent-recede-duration) + var(--scenario-recede-stagger) * 3);
+  --scenario-push-duration: var(--pane-enter-duration);
+  --scenario-push-ease: var(--pane-enter-ease);
+  --scenario-depth-scale: var(--pane-enter-scale);
+  --scenario-push: 0px;
+}
+/* 1. The home's recede, a third of its usual stagger apart: still in order, but over before the card moves. Transition
+   delays are fixed when a transition starts, so this lasts exactly that recede. */
+:root:active-view-transition-type(scenario-expand) { --agent-recede-stagger: var(--scenario-recede-stagger); }
+
+:root:active-view-transition-type(scenario-expand) [data-attention-item][data-expanding],
+:root:active-view-transition-type(scenario-expand) [data-scenario-opening] {
+  view-transition-name: scenario-card;
+}
+
+/* 2. The card holds its place until the push, then travels with the question. */
+::view-transition-group(scenario-card) {
+  animation-delay: var(--scenario-push-delay);
+  animation-duration: var(--scenario-push-duration);
+  animation-timing-function: var(--scenario-push-ease);
+  animation-fill-mode: both;
+}
+::view-transition-old(scenario-card) { animation: none; opacity: 0; }
+::view-transition-new(scenario-card) { animation: none; }
+
+[data-attention-item][data-expanded] { visibility: hidden; }
+/* In the conversation it is the turn's opening, not a button. */
+[data-scenario-opening] { cursor: default; }
+
+/* The conversation's own entry (GlowDock's thread rises in once the home has receded) would fade the card that is already
+   there, so on a scenario the card is exempt: only what follows it — the question — comes in, from depth, pushing. It
+   moves as a view-transition picture, not the live element: an offset on the live element would add to the thread's
+   scroll height, and the thread, kept scrolled to its end, would throw the card up and back. */
+[role='log']:has(> [data-scenario-opening]:first-child) { animation: none; }
+:root:active-view-transition-type(scenario-expand) [data-scenario-opening] + * { view-transition-name: scenario-question; }
+::view-transition-new(scenario-question) {
+  transform-origin: 50% 0;
+  animation: scenario-question-in var(--scenario-push-duration) var(--scenario-push-ease) var(--scenario-push-delay) both;
+}
+@keyframes scenario-question-in {
+  from { opacity: 0; translate: 0 var(--scenario-push); scale: var(--scenario-depth-scale); filter: blur(var(--dock-morph-blur)); }
+}
+
+/* The question sits close under the card (2026-10-31, direct feedback: the gap was too big): the flow's own top padding is
+   for a turn that follows a user bubble, and the thread's turn gap is too wide between two parts of one turn, so the
+   two sit one flow-gap (16) apart, as the flow's own parts do. */
+[data-scenario-opening] + section {
+  padding-block-start: 0;
+  margin-block-start: calc(var(--space-16) - var(--shell-gap));
+}

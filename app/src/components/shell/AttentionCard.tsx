@@ -1,13 +1,9 @@
 import { ClickableCard } from '@astryxdesign/core/ClickableCard';
-import { Icon } from '@astryxdesign/core/Icon';
-import { Text } from '@astryxdesign/core/Text';
-import { ArrowTrendingUpIcon, ExclamationCircleIcon, UserIcon } from '@heroicons/react/24/outline';
-import type { AttentionItem, AttentionKind } from '../../engine/attentionQueue';
+import type { AttentionItem } from '../../engine/attentionQueue';
+import { AttentionCardBody } from './AttentionCardBody';
 import glowStyles from '../../theme/glow.module.css';
 import { MagicBorder } from './MagicBorder';
 import styles from './AttentionCard.module.css';
-
-const KIND_ICON: Record<AttentionKind, typeof UserIcon> = { due: ExclamationCircleIcon, request: UserIcon, review: ArrowTrendingUpIcon };
 
 export interface AttentionCardProps {
   item: AttentionItem;
@@ -26,10 +22,9 @@ export interface AttentionCardProps {
 export function AttentionCard({ item, position, count, isProcessing, onOpen }: AttentionCardProps) {
   return (
     <MagicBorder isActive={isProcessing} variant="bottom" className={styles.frame}>
-      <ClickableCard className={`${styles.root} ${glowStyles.root} ${glowStyles.bottom} ${glowStyles.clipped}`} padding={6} onClick={() => onOpen(item.id)} data-attention-kind={item.kind}
+      <ClickableCard className={`${styles.root} ${glowStyles.root} ${glowStyles.bottom} ${glowStyles.clipped}`} padding={6} onClick={() => onOpen(item.id)} data-attention-kind={item.kind} data-attention-item={item.id}
         label={`${item.title}, ${position} of ${count}${isProcessing ? ', in progress' : ''}`}>
-        <span className={styles.mark}><Icon icon={KIND_ICON[item.kind]} size="sm" /></span>
-        <Text type="body" className={styles.title}>{item.title}</Text>
+        <AttentionCardBody kind={item.kind} title={item.title} action={item.action} />
       </ClickableCard>
     </MagicBorder>
   );

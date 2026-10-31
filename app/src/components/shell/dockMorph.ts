@@ -12,12 +12,13 @@ import '../../theme/dock-cube.css';
 // transition types still get the plain morph.
 const supportsTypes = typeof ViewTransition !== 'undefined' && 'types' in ViewTransition.prototype;
 
-export function morphDock(update: () => void, types: string[] = []) {
+/** The transition it started, if any — for a caller that measures the new state (useGlowHome.expand). */
+export function morphDock(update: () => void, types: string[] = []): ViewTransition | undefined {
   if (!('startViewTransition' in document) || matchMedia('(prefers-reduced-motion: reduce)').matches) {
     update();
-    return;
+    return undefined;
   }
-  startMorph(update, types);
+  return startMorph(update, types);
 }
 
 function startMorph(update: () => void, types: string[]): ViewTransition {

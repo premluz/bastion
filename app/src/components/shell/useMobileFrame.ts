@@ -169,8 +169,14 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   const selectTab = (tab: TabDestination) => { setActiveTab(tab); setMode('idle'); };
   const openConversation = () => morphDock(() => { submit(value); setMode('conversation'); }, [`to-${voiceShape}`]);
   const closeConversation = () => morphDock(() => setMode('composer'), [`from-${voiceShape}`]);
-  const toggleComposer = () => morphDock(() => setMode((current) => current === 'idle' ? 'composer' : 'idle'),
-    voiceShape === 'monolith' ? [mode === 'idle' ? 'cube-to-chat' : 'cube-to-nav'] : []);
+  // `alongside` runs inside the same transition (2026-10-31: an alert card expanding into the turn it starts), `types` add to it.
+  const toggleComposer = (alongside?: () => void, types: string[] = []) => morphDock(() => { alongside?.(); setMode((current) => current === 'idle' ? 'composer' : 'idle'); },
+    [...(voiceShape === 'monolith' ? [mode === 'idle' ? 'cube-to-chat' : 'cube-to-nav'] : []), ...types]);
+  /** A home alert's scenario, started from the alert itself: no typed question, the alert stands in for it. */
+  const submitAlert = (alert: NonNullable<TranscriptMessage['alert']>) => {
+    const id = nextId.current++;
+    setMessages((current) => [...current, { id, text: alert.title, alert, topUpRequest: { kind: 'mortgage-top-up', fromAlert: true } }]);
+  };
   const closeComposer = () => { morphDock(() => setMode('idle'), voiceShape === 'monolith' ? ['cube-to-nav'] : []); assistantRef.current?.focus(); };
   // Home's "Money" card jumps straight to the assets tab, preset to Money
   // (2026-09-15) — a real navigation, not just a tab preselect, since
@@ -178,6 +184,6 @@ export function useMobileFrame({ initialMode = 'idle', initialMessages = [], ini
   const openMoney = () => { setActiveTab('assets'); setWalletTab('money'); setMode('idle'); };
   const openInvestments = () => { setActiveTab('assets'); setWalletTab('crypto'); setMode('idle'); };
   return { mode, setMode, activeTab, value, setValue, messages, liveTrailMessageId, inputRef, submit, recognizesVoiceScenario,
-    say, decline, selectTab, openConversation, closeConversation, toggleComposer, assistantRef, closeComposer, conversationRef,
+    say, decline, selectTab, openConversation, closeConversation, toggleComposer, assistantRef, closeComposer, conversationRef, submitAlert,
     walletTab, setWalletTab, openMoney, openInvestments, selectedCard, openCard, closeCard, isCardClosing, requestCloseCard };
 }

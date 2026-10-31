@@ -16,6 +16,7 @@ import { useSwipeUp } from './useSwipeUp';
 import '../../theme/agent-dock.css';
 import '../../theme/glow-dock.css';
 import styles from './GlowDock.module.css';
+import monolithStyles from './GlowDockMonolith.module.css';
 
 export interface GlowDockProps {
   state: ReturnType<typeof useMobileFrame>;
@@ -66,7 +67,7 @@ export function GlowDock({ state, onOpen, onClose, composer, composerActions, th
   const closeSwipe = useSwipeUp<HTMLDivElement>(onClose, () => false, { direction: 'down', property: '--glow-close' });
   useLayoutEffect(() => { if (!isOpen) closeSwipe.reset(); }, [isOpen, closeSwipe.reset]);
   // The pill's own assistant item opens through the same path as the swipe.
-  const dockState = { ...state, toggleComposer: onOpen };
+  const dockState = { ...state, toggleComposer: () => { onOpen(); return undefined; } };
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') onClose(); };
@@ -94,15 +95,19 @@ export function GlowDock({ state, onOpen, onClose, composer, composerActions, th
     {isOpen && !isWorking && <button type="button" className={styles.dismiss} aria-label="Close assistant" onClick={onClose} />}
     {isOpen && <div className={styles.sheet}>
       {isWorking && <div ref={threadRef} className={styles.thread} role="log" aria-label="Assistant transcript" tabIndex={0} onClickCapture={assembly.onAction}>{thread}</div>}
-      <div className={styles.composer} {...closeSwipe.handlers}>
+      {/* On the monolith home (2026-10-31, direct feedback) the chat history leaves the bottom row for the top right, where
+          the home's avatar sits, so only the way back stays at the left. */}
+      {landingMonolith && <IconButton label="Chat history" icon={<Icon icon={ClockIcon} />} variant="ghost" className={monolithStyles.history}
+        onClick={notifyPrototypeUnavailable} data-dock-item="history" />}
+      <div className={landingMonolith ? `${styles.composer} ${monolithStyles.composer}` : styles.composer} {...closeSwipe.handlers}>
         {composer}
-        {/* Below the bar (2026-10-27, direct feedback): back and chat history on the left, the voice buttons on the right,
+        {/* Below the bar (2026-10-27, direct feedback): back on the left, the voice buttons on the right,
             and (2026-10-28) the cube in the middle, where the voice controls hold it too. */}
-        <div className={styles.actions}>
+        <div className={landingMonolith ? `${styles.actions} ${monolithStyles.actions}` : styles.actions}>
           {landingMonolith && <span className={styles.cube} data-chat-cube="" aria-hidden="true" />}
           <div className={styles.nav}>
             <IconButton label="Back" tooltip="Back" icon={<Icon icon={ArrowLeftIcon} />} variant="ghost" onClick={onClose} data-dock-item="back" />
-            <IconButton label="Chat history" icon={<Icon icon={ClockIcon} />} variant="ghost" onClick={notifyPrototypeUnavailable} data-dock-item="history" />
+            {!landingMonolith && <IconButton label="Chat history" icon={<Icon icon={ClockIcon} />} variant="ghost" onClick={notifyPrototypeUnavailable} data-dock-item="history" />}
           </div>
           <div className={styles.voice}>{composerActions}</div>
         </div>

@@ -14,7 +14,7 @@
   width: min(100%, var(--shell-frame-max-width));
   height: 100%;
   overflow: hidden;
-  background: var(--surface-0);
+  background: var(--phone-backdrop);
   color: var(--ink-primary);
   font-family: var(--face-ui);
 }
@@ -53,6 +53,8 @@
   z-index: 3;
   padding: max(var(--shell-inset), var(--shell-safe-area-top)) var(--shell-inset) var(--shell-inset);
 }
+/* The calm home (2026-10-30): the avatar sits top right, small, and nothing overlaps it; the greeting below is the page's. */
+.header[data-avatar-end] { flex-direction: row-reverse; }
 
 .headerEnd { display: flex; justify-content: flex-end; }
 /* A ghost button has no edge of its own — Astryx paints inset highlight/shade lines on it. */

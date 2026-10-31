@@ -18,6 +18,8 @@
 .swipe[data-monolith] {
   --glow-rest-opacity: 0;
   --glow-full-opacity: var(--opacity-12);
+  /* The chat's bottom row stands where the home's buttons do (GlowDockMonolith.module.css), so the landing clears it too. */
+  --glow-landing-bottom: calc(var(--dock-bar-height) + var(--dock-cube-gap) + var(--dock-controls-height) + var(--dock-bottom-inset) + var(--shell-label-gap) + var(--glow-landing-composer-gap));
 }
 /* How far the one orb has risen to the landing screen: with the finger, held while the
    landing is up (and handed back by a slide down to close). */

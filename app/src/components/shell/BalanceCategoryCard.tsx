@@ -17,6 +17,8 @@ interface BalanceCategoryCardProps {
   earningRate?: number;
   // A subtle bottom glow in the change's own colour (2026-10-23, direct feedback: Investments tile on Home).
   glow?: boolean;
+  /** Balances hidden (the home's eye toggle): the figure reads as dots. */
+  isMasked?: boolean;
   onClick?: () => void;
 }
 
@@ -31,7 +33,7 @@ interface BalanceCategoryCardProps {
 // className/padding/onClick actually apply as a real interactive
 // surface (confirmed earlier this session Card spreads ...props,
 // unlike RadioList).
-export function BalanceCategoryCard({ label, value, changeAbs, changePercent, earningRate, glow = false, onClick }: BalanceCategoryCardProps) {
+export function BalanceCategoryCard({ label, value, changeAbs, changePercent, earningRate, glow = false, isMasked = false, onClick }: BalanceCategoryCardProps) {
   const isUp = changeAbs >= 0;
   return (
     <Card className={glow ? `${styles.root} ${glowStyles.root} ${glowStyles.bottom} ${glowStyles.clipped} ${isUp ? styles.glowUp : styles.glowDown}` : `${styles.root}`} padding={6} {...(onClick ? { onClick } : {})}>
@@ -45,7 +47,7 @@ export function BalanceCategoryCard({ label, value, changeAbs, changePercent, ea
         <Icon icon={ChevronRightIcon} size="sm" color="secondary" />
       </div>
       <Text type="large" weight="medium" hasTabularNumbers className={styles.value}>
-        ${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        {isMasked ? '••••••' : `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
       </Text>
       {earningRate !== undefined ? <EarningBadge rate={earningRate} /> : <div className={styles.changeRow}>
         <Text type="supporting" hasTabularNumbers className={isUp ? styles.deltaUp : styles.deltaDown}>

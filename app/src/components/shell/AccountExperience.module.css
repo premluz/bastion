@@ -1,5 +1,5 @@
-.root { position: relative; height: 100%; isolation: isolate; overflow: hidden; background: var(--surface-0); }
-.source { position: relative; height: 100%; transform-origin: left center; transition: transform var(--account-menu-duration) var(--account-menu-ease), opacity var(--account-menu-duration) var(--account-menu-ease), border-radius var(--account-menu-duration) var(--account-menu-ease); overflow: hidden; background: var(--surface-0); }
+.root { position: relative; height: 100%; isolation: isolate; overflow: hidden; background: var(--phone-backdrop); }
+.source { position: relative; height: 100%; transform-origin: left center; transition: transform var(--account-menu-duration) var(--account-menu-ease), opacity var(--account-menu-duration) var(--account-menu-ease), border-radius var(--account-menu-duration) var(--account-menu-ease); overflow: hidden; background: var(--phone-backdrop); }
 .root[data-open='true'] .source { transform: translateX(var(--account-page-offset)) scale(var(--account-page-scale)); opacity: var(--account-page-opacity); border-radius: var(--account-page-radius); }
 .sourceBody { height: 100%; }
 .returnPage { position: absolute; inset: 0; width: 100%; border: 0; cursor: pointer; background: var(--account-page-mask); }

@@ -87,6 +87,8 @@
   --card-light: inset 0 0 0 .5px oklch(.177 .004 264.5 / .05), inset 0 -1px 1px oklch(.177 .004 264.5 / .05), inset 0 1px 1px oklch(1 0 0 / 1), inset 0 -4px 4px oklch(.177 .004 264.5 / .02), inset 0 28px 40px oklch(1 0 0 / .55);
   /* The hero photo under the balance: dimmed in dark themes; light leaves it as is (the photo is already pale, 2026-10-23, direct feedback). */
   --hero-image-wash: none;
+  /* The phone's backdrop (2026-10-30, Bastion Pastel's pastel field): the page colour here. */
+  --phone-backdrop: var(--surface-0);
   /* A gain's glow, as vivid as the accent's (2026-10-23, direct feedback): --delta-up is a text colour, too dim to light. */
   --gain-glow: oklch(.78 .2 150);
   /* Information (2026-10-26, direct feedback: a request is info, so bluish): the mark's colour, and the vivid hue its card's glow takes. */

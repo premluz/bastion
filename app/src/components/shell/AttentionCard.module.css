@@ -32,7 +32,7 @@
    full-size button (ClickableCard's click and focus target) must keep its positioning, or it drops into
    the layout and pushes the icon aside. */
 .root::after { left: 10%; width: 80%; height: 60%; bottom: -20%; filter: blur(var(--blur-64)); }
-.mark, .title { position: relative; z-index: 1; }
+.mark, .text { position: relative; z-index: 1; }
 
 .mark {
   display: grid;
@@ -45,6 +45,16 @@
   background: color-mix(in oklab, var(--attention-tone) 14%, transparent);
 }
 
+.text { display: grid; gap: var(--space-2); min-width: 0; }
 .title {
   text-wrap: balance;
+}
+
+/* The priority card (2026-10-30, direct feedback): the one warm element — a very soft peach wash on white with a 1px
+   warm edge. */
+.root[data-attention-kind='due'] {
+  border-color: color-mix(in oklab, var(--accent-signal) 30%, transparent);
+  background: color-mix(in oklab, var(--accent-signal) 5%, var(--surface-2));
+  /* Its glow quietens too, so the wash stays very soft. */
+  --glow-strength: var(--tint-subtle);
 }

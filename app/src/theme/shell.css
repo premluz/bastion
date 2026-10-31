@@ -434,7 +434,7 @@
    direct feedback: "turn off scroll bar visibility"): content still scrolls by
    finger, wheel or trackpad. */
 html { overscroll-behavior-x: none; letter-spacing: var(--tracking-interface); font-optical-sizing: auto; }
-:root:is([data-theme='bastion'], [data-theme='bastion-light'], [data-theme='bastion-aura'], [data-theme='bastion-aura-light']) {
+:root:is([data-theme='bastion'], [data-theme='bastion-light'], [data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) {
   letter-spacing: var(--tracking-bastion-interface);
   font-weight: var(--weight-bastion-body);
   --font-weight-normal: var(--weight-bastion-body);
@@ -444,7 +444,7 @@ html { overscroll-behavior-x: none; letter-spacing: var(--tracking-interface); f
   --text-display-2-weight: var(--weight-bastion-money);
   --text-display-3-weight: var(--weight-bastion-money);
 }
-:root:is([data-theme='bastion'], [data-theme='bastion-light'], [data-theme='bastion-aura'], [data-theme='bastion-aura-light']) :is(h1, h2) {
+:root:is([data-theme='bastion'], [data-theme='bastion-light'], [data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) :is(h1, h2) {
   letter-spacing: var(--tracking-display);
 }
 * { scrollbar-width: none; }

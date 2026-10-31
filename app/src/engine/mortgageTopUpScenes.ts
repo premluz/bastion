@@ -30,10 +30,11 @@ function payment(state: TopUpState, presentation: PaymentCardProps['presentation
     from: source.label, balance: usd(source.balanceCents) } };
 }
 
-export function buildTopUpScene(state: TopUpState, presentation: PaymentCardProps['presentation']) {
-  const children: SceneNode[] = [findings(state)];
+/** `fromAlert`: the alert the user tapped stands in for the findings and the explanation (TopUpRequest). */
+export function buildTopUpScene(state: TopUpState, presentation: PaymentCardProps['presentation'], fromAlert = false) {
+  const children: SceneNode[] = fromAlert ? [] : [findings(state)];
   if (state.stage !== 'checking') {
-    children.push(authored('top-up-message'));
+    if (!fromAlert) children.push(authored('top-up-message'));
     const question = authored('top-up-source');
     children.push({ ...question, props: { ...question.props, selected: state.source ?? '', isDisabled: state.stage !== 'options',
       navigationMode: 'hidden' } });

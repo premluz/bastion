@@ -54,6 +54,9 @@
   translate: 0 var(--dock-cube-drop);
 }
 .root[open] .monolithMark { view-transition-name: dock-cube; }
+/* Where the home's buttons and cube stand (--dock-bottom-inset): the chat's bottom row, the same place, so the cube stays put. */
+.root[data-monolith] { --dock-cube-drop: 0px; }
+.root[data-monolith] .controls { padding-bottom: var(--dock-bottom-inset); }
 
 .layout {
   display: flex;

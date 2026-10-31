@@ -21,6 +21,7 @@ const FILES = [
   'app/src/theme/theme.bastion-light.css',
   'app/src/theme/theme.bastion-aura.css',
   'app/src/theme/theme.bastion-aura-light.css',
+  'app/src/theme/theme.bastion-pastel.css',
 ];
 
 function customPropertyNames(path) {

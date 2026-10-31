@@ -141,6 +141,8 @@
   --glass-shadow: inset 0 1px 0 oklch(1 0 0 / .05), 0 12px 32px -14px oklch(0 0 0 / .7);
   --card-light: none;
   --hero-image-wash: brightness(.6);
+  /* The phone's backdrop (2026-10-30, Bastion Pastel's pastel field): the page colour here. */
+  --phone-backdrop: var(--surface-0);
   --gain-glow: var(--delta-up);
   /* Information (2026-10-26, direct feedback: a request is info, so bluish): the mark's colour, and the vivid hue its card's glow takes. */
   --accent-info: oklch(.76 .14 245);

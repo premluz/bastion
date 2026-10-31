@@ -34,7 +34,10 @@ export function ApprovalCard(props: ApprovalCardProps) {
   const title = useStreamingText(props.prompt, !reduced);
   const multiple = props.questionCount > 1;
   const isBare = props.chrome === 'bare';
-  return <div ref={root} data-approval-card={props.questionId}>
+  // A lone question in a card (2026-10-31, direct feedback) has no radios: tapping a row answers it, so a mark that
+  // waits for a Continue would promise a step that is not there. The sheet's bare chrome keeps them (it confirms).
+  const isTapToAnswer = !multiple && !isBare;
+  return <div ref={root} data-approval-card={props.questionId} {...(isTapToAnswer ? { 'data-approval-tap': '' } : {})}>
     {/* Delegated click on the whole row (2026-09-13, direct feedback: "hit
         area is a smaller layer inside pane... entire pane should be the
         hit area"). RadioListItem's own <label htmlFor> only covers the

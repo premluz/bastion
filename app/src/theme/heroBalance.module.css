@@ -6,7 +6,7 @@
   font-weight: 700;
 }
 
-:global(:is([data-theme='bastion'], [data-theme='bastion-light'], [data-theme='bastion-aura'], [data-theme='bastion-aura-light'])) .heroBalance {
+:global(:is([data-theme='bastion'], [data-theme='bastion-light'], [data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel'])) .heroBalance {
   font-weight: var(--weight-bastion-money);
 }
 

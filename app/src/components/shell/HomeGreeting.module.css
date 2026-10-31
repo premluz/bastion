@@ -1,0 +1,10 @@
+/* Starts on the page's own 20 px margin, in line with what is below (the header's own is 16). */
+.root { display: grid; gap: var(--space-2); align-content: center; min-width: 0; padding-inline-start: var(--space-4); }
+.date:not(#\#):not(#\#):not(#\#) { font-size: var(--text-13); }
+.hello:not(#\#):not(#\#):not(#\#) {
+  margin: 0;
+  font-size: var(--text-16);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--ink-primary);
+}

@@ -13,6 +13,7 @@ import '../app/src/theme/theme.bastion.css';
 import '../app/src/theme/theme.bastion-light.css';
 import '../app/src/theme/theme.bastion-aura.css';
 import '../app/src/theme/theme.bastion-aura-light.css';
+import '../app/src/theme/theme.bastion-pastel.css';
 import '../app/src/theme/aura.css';
 // Theme-agnostic mobile shell tokens (sizing/motion aliases shared by every
 // registered theme) — loaded here rather than from a component so the shell
@@ -42,6 +43,7 @@ const preview: Preview = {
           { value: 'bastion-light', title: 'bastion-light' },
           { value: 'bastion-aura', title: 'bastion-aura' },
           { value: 'bastion-aura-light', title: 'bastion-aura-light' },
+          { value: 'bastion-pastel', title: 'bastion-pastel' },
         ],
         dynamicTitle: true,
       },

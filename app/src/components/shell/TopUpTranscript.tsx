@@ -8,7 +8,9 @@ import styles from './SendMoneyTranscript.module.css';
 // the same delegated data-attribute listeners the send flow uses (§2.7). Tapping a
 // source selects it and moves straight on to the review (2026-10-12, direct feedback),
 // as voice always has, so there is no Continue button.
-export function TopUpTranscript({ state, presentation, dispatch }: {
+export function TopUpTranscript({ state, presentation, dispatch, fromAlert = false }: {
+  /** Opened from the home alert: the scene starts at its question (buildTopUpScene). */
+  fromAlert?: boolean;
   state: TopUpState; presentation: PaymentCardProps['presentation']; dispatch: (action: TopUpAction) => void;
 }) {
   return <section aria-label="Mortgage top-up" data-top-up-stage={state.stage} className={styles.root}
@@ -26,6 +28,6 @@ export function TopUpTranscript({ state, presentation, dispatch }: {
       const type = event.target.closest('[data-payment-action]')?.getAttribute('data-payment-action');
       if (type === 'accept' || type === 'edit' || type === 'save' || type === 'cancel') dispatch({ type });
     }}>
-    <SceneRenderer scene={buildTopUpScene(state, presentation)} />
+    <SceneRenderer scene={buildTopUpScene(state, presentation, fromAlert)} />
   </section>;
 }

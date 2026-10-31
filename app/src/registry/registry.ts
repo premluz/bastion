@@ -67,13 +67,25 @@ export const preloadApprovalCard = approvalCard.preload;
 /** True once the question card's code is in, so it renders in a host's first frame. */
 export const isApprovalCardLoaded = approvalCard.isLoaded;
 
+// The rest of what a home alert's scenario shows (the top-up's root group, its words and its payment card): loaded with the
+// question card, so the scene is whole in its first frame. The scene renders under one Suspense, so a single missing
+// chunk leaves the whole conversation empty until it arrives — and the card that is travelling into it lands low, then jumps.
+const contentGroup = preloadable(() => import('../components/nodes/ContentGroup').then((m) => m.ContentGroup));
+const textBlock = preloadable(() => import('../components/nodes/TextBlock').then((m) => m.TextBlock));
+const paymentCard = preloadable(() => import('../components/nodes/PaymentCard').then((m) => m.PaymentCard));
+const scenarioNodes = [approvalCard, contentGroup, textBlock, paymentCard];
+/** Loads every node a home alert's scenario uses, ahead of the tap. */
+export const preloadScenarioNodes = () => Promise.all(scenarioNodes.map((node) => node.preload())).then(() => undefined);
+/** True once all of them are in. */
+export const areScenarioNodesLoaded = () => scenarioNodes.every((node) => node.isLoaded());
+
 export const registry: Record<string, RegistryEntry> = {
   'thinking-findings': {
     component: lazy(() => import('../components/nodes/ThinkingFindings').then((m) => ({ default: m.ThinkingFindings }))),
     propSchema: ThinkingFindingsPropsSchema,
   },
   'payment-card': {
-    component: lazy(() => import('../components/nodes/PaymentCard').then((m) => ({ default: m.PaymentCard }))),
+    component: paymentCard.component,
     propSchema: PaymentCardPropsSchema,
   },
   'asset-row': {
@@ -85,7 +97,7 @@ export const registry: Record<string, RegistryEntry> = {
     propSchema: ProminentAssetCardPropsSchema,
   },
   'content-group': {
-    component: lazy(() => import('../components/nodes/ContentGroup').then((m) => ({ default: m.ContentGroup }))),
+    component: contentGroup.component,
     propSchema: ContentGroupPropsSchema,
   },
   'link-chips': {
@@ -130,7 +142,7 @@ export const registry: Record<string, RegistryEntry> = {
     propSchema: TimeSeriesPropsSchema,
   },
   'text-block': {
-    component: lazy(() => import('../components/nodes/TextBlock').then((m) => ({ default: m.TextBlock }))),
+    component: textBlock.component,
     propSchema: TextBlockPropsSchema,
   },
   'status-tag': {

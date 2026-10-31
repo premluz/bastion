@@ -41,7 +41,7 @@ export function MobileFrameDock({ state, variant, destinationSet = 'standard', t
     isComposerOpen={state.mode !== 'idle'} assistantRef={state.assistantRef} {...(trailing ? { trailing } : {})} />;
   return <footer className={styles.dock}>
     <TabBar activeTab={state.activeTab} onTabChange={state.selectTab} isComposerOpen={state.mode !== 'idle'}
-      isConversation={state.mode === 'conversation'} onAssistantPress={state.toggleComposer}
+      isConversation={state.mode === 'conversation'} onAssistantPress={() => state.toggleComposer()}
       assistantRef={state.assistantRef} />
   </footer>;
 }

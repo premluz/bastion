@@ -58,4 +58,10 @@ describe('mortgage top-up', () => {
     const cancelled = applyTopUpAction(atOptions(), { type: 'cancel' }, 0);
     expect(applyTopUpAction(cancelled, { type: 'source', value: 'money' }, 0)).toBe(cancelled);
   });
+
+  it('starts at the question when opened from the home alert, which has already said what is wrong', () => {
+    const fromAlert = createTopUpState(1000, 850, true);
+    expect(fromAlert).toMatchObject({ stage: 'options', dueAt: 0, amountCents: shortfallCents });
+    expect(createTopUpState(1000, 850)).toMatchObject({ stage: 'checking', dueAt: 1850 });
+  });
 });

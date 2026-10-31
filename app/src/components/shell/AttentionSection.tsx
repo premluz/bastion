@@ -4,8 +4,9 @@ import { CaughtUpCard } from './CaughtUpCard';
 import { PromoCarousel } from './PromoCarousel';
 import { SuggestionList } from './SuggestionList';
 import { PULSE_ITEMS } from '../../engine/attentionQueue';
-import { preloadApprovalCard } from '../../registry/registry';
+import { preloadScenarioNodes } from '../../registry/registry';
 import type { AttentionQueue } from './useAttentionQueue';
+import type { AttentionItem } from '../../engine/attentionQueue';
 import '../../theme/attention.css';
 import styles from './AttentionSection.module.css';
 
@@ -15,17 +16,26 @@ import styles from './AttentionSection.module.css';
 // Pulse, below, is what the assistant noticed, in the glow home's suggestion rows on a card;
 // a row hands itself to the assistant. The assistant's own work is its status line above
 // the orb (GlowDock), not part of the page.
-export function AttentionSection({ queue, onSuggestion }: { queue: AttentionQueue; onSuggestion: (text: string, prompt: string) => void }) {
-  // Every card opens a sheet of choices (the question card); loaded now, it is in the sheet's first frame,
-  // so the sheet opens at its final height instead of growing when the code arrives (2026-10-26, direct feedback).
+export interface AttentionSectionProps {
+  queue: AttentionQueue;
+  onSuggestion: (text: string, prompt: string) => void;
+  /** An item with a scenario expands into the assistant (2026-10-31); the others open the sheet of choices. */
+  onScenario: (item: AttentionItem) => void;
+}
+
+export function AttentionSection({ queue, onSuggestion, onScenario }: AttentionSectionProps) {
+  // Every card opens a sheet of choices (the question card) or a scenario in the assistant; loaded now, they are in the
+  // first frame, so the sheet opens at its final height and the card travels to where the conversation really starts,
+  // instead of both jumping when the code arrives (2026-10-26 and 2026-10-31, direct feedback).
   useEffect(() => {
-    preloadApprovalCard().catch((error: unknown) => console.error('Preloading the question card failed.', error));
+    preloadScenarioNodes().catch((error: unknown) => console.error('Preloading the scenario nodes failed.', error));
   }, []);
   return (
     <section className={styles.root} aria-label="Attention">
       {/* Each block is a step of the home's recede into the assistant (data-recede-step,
           AgentHomePage.module.css), counted from the bottom up. */}
-      {queue.caughtUp !== 'gone' && <AttentionBlock queue={queue} />}
+      {queue.caughtUp !== 'gone' && <AttentionBlock queue={queue} onScenario={onScenario} />}
+      {/* Insights (2026-10-31, direct feedback): the plain list, no pane — the same rows as the assistant's landing — every row tappable. */}
       <div className={styles.pulse}>
         <div data-recede-step="1"><SuggestionList items={PULSE_ITEMS} onSuggestion={onSuggestion} /></div>
       </div>
@@ -38,7 +48,7 @@ export function AttentionSection({ queue, onSuggestion }: { queue: AttentionQueu
 // the last is resolved, "You're caught up" takes exactly its place — laid over an invisible
 // copy of the title and a card, so nothing below moves — then sinks away, and the block closes
 // so Pulse rises into its place.
-function AttentionBlock({ queue }: { queue: AttentionQueue }) {
+function AttentionBlock({ queue, onScenario }: Pick<AttentionSectionProps, 'queue' | 'onScenario'>) {
   const count = queue.items.length;
   const isCaughtUp = queue.caughtUp === 'showing' || queue.caughtUp === 'leaving';
   const onTransitionEnd = (event: TransitionEvent<HTMLDivElement>) => {
@@ -51,7 +61,8 @@ function AttentionBlock({ queue }: { queue: AttentionQueue }) {
           <div data-recede-step="3">{count === 0 ? <div className={styles.cardSpace} />
             : <PromoCarousel aria-label="Items needing attention" variant="edge">
               {queue.items.map((item, index) => <AttentionCard key={item.id} item={item} position={index + 1} count={count}
-                isProcessing={queue.processing.includes(item.id)} onOpen={queue.open} />)}
+                isProcessing={queue.processing.includes(item.id)}
+                onOpen={() => (item.scenario ? onScenario(item) : queue.open(item.id))} />)}
             </PromoCarousel>}</div>
         </div>
         {isCaughtUp && <div className={styles.caughtUp} data-recede-step="3"><CaughtUpCard isLeaving={queue.caughtUp === 'leaving'} /></div>}

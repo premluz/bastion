@@ -12,7 +12,9 @@ export const shortfallCents = TOP_UP_DEMO.repaymentCents - TOP_UP_DEMO.accountCe
 
 export type TopUpSource = keyof typeof TOP_UP_DEMO.sources;
 export type TopUpStage = 'checking' | 'options' | 'review' | 'editing' | 'sending' | 'sent' | 'cancelled';
-export interface TopUpRequest { kind: 'mortgage-top-up' }
+/** `fromAlert`: opened from the home's alert card (2026-10-31), which has already said what is wrong — the flow starts at its
+ *  question, with no checking and no explanation. Asked in the chat, it starts by checking, as before. */
+export interface TopUpRequest { kind: 'mortgage-top-up'; fromAlert?: boolean }
 export interface TopUpState {
   stage: TopUpStage; step: number; dueAt: number; source: TopUpSource | null;
   amountCents: number; draftAmount: string; purpose: string; draftPurpose: string; error: string;
@@ -31,8 +33,8 @@ export function parseTopUpRequest(text: string): TopUpRequest | null {
   return /\bmortgage\b/i.test(text) && /\b(top|topup|top-up|up|of|cover|fund|short|pay|repay|add|deposit|transfer|move|put)\b/i.test(text) ? { kind: 'mortgage-top-up' } : null;
 }
 
-export function createTopUpState(now: number, firstStepMs: number): TopUpState {
-  return { stage: 'checking', step: 0, dueAt: now + firstStepMs, source: null, amountCents: shortfallCents,
+export function createTopUpState(now: number, firstStepMs: number, fromAlert = false): TopUpState {
+  return { stage: fromAlert ? 'options' : 'checking', step: 0, dueAt: fromAlert ? 0 : now + firstStepMs, source: null, amountCents: shortfallCents,
     draftAmount: dollars(shortfallCents), purpose: 'Today’s repayment', draftPurpose: 'Today’s repayment', error: '' };
 }
 

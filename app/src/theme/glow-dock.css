@@ -99,6 +99,10 @@
   --dock-cube-drop: calc(var(--space-8) + var(--space-4));
   --dock-bar-height: calc(var(--pill-item-size) + var(--pill-padding) * 2 + var(--pill-edge-width) * 2);
   --dock-cube-gap: var(--space-16);
+  /* How far the navigation's buttons stand from the screen's bottom: the dock's own safe-area padding, then the pill row's
+     (AgentDock.module.css, PillNavigation.module.css). The chat's bottom row and the voice controls use it too, so the
+     buttons and the cube stay level through every screen, and all follow Settings' safe-area switch. */
+  --dock-bottom-inset: calc(var(--shell-safe-area-bottom) + max(var(--pill-inset), var(--shell-safe-area-bottom)));
   --dock-cube-travel-delay: 0ms;
   --dock-cube-travel-duration: var(--duration-550);
   --dock-cube-assembly-duration: var(--duration-4800);

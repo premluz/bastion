@@ -2,6 +2,7 @@ import type { SendRequest } from '../../engine/sendMoneyState';
 import type { TopUpRequest } from '../../engine/mortgageTopUpState';
 import type { PaymentRequest } from '../../engine/paymentRequestState';
 import type { AgendaItemId } from '../../engine/agentAgenda';
+import type { AttentionKind } from '../../engine/attentionQueue';
 import type { HydratedScene } from '../../contracts/scene';
 import type { ThinkingStep } from '../../contracts/thinking';
 
@@ -40,6 +41,8 @@ export interface TranscriptMessage {
   sendRequest?: SendRequest;
   topUpRequest?: TopUpRequest;
   paymentRequest?: PaymentRequest;
+  /** Opened from the home's alert card (2026-10-31): the turn shows that card, expanded, instead of a question the user typed. */
+  alert?: { id: string; title: string; kind: AttentionKind; action?: string };
   source?: 'voice';
   voiceFeedback?: string;
   /** The assistant speaking unprompted (an agenda handover), not a user turn. */

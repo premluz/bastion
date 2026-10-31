@@ -27,8 +27,9 @@ async function readyExtent(context: CanvasRenderingContext2D, source: HTMLCanvas
 
 export async function recordChatCubeAssembly(buttonName: string) {
   const source = document.querySelector('[data-live-dock-cube] canvas');
-  const button = Array.from(document.querySelectorAll('button')).find((element) =>
-    element.getAttribute('aria-label') === buttonName || element.textContent?.trim() === buttonName);
+  // Only a button the user could press: the home behind the open composer is inert, and has its own "Send" (2026-10-30).
+  const button = Array.from(document.querySelectorAll('button')).find((element) => element.closest('[inert]') === null
+    && (element.getAttribute('aria-label') === buttonName || element.textContent?.trim() === buttonName));
   if (!(source instanceof HTMLCanvasElement) || button === undefined) throw new Error(`Cube or ${buttonName} unavailable`);
   if (document.hidden) throw new Error('Cube assembly probe requires a visible page');
   const canvas = document.createElement('canvas');

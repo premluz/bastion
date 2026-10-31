@@ -104,6 +104,8 @@
   /* Aura dark: the hero shows over more of the screen and through translucent cards, so it is dimmed further (2026-10-27,
      direct feedback: too light). */
   --hero-image-wash: brightness(.38);
+  /* The phone's backdrop (2026-10-30, Bastion Pastel's pastel field): the page colour here. */
+  --phone-backdrop: var(--surface-0);
   /* A gain's glow, as vivid as the accent's (2026-10-23, direct feedback): --delta-up is a text colour, too dim to light. */
   --gain-glow: oklch(.8 .2 150);
   /* Information (2026-10-26, direct feedback: a request is info, so bluish): the mark's colour, and the vivid hue its card's glow takes. */
@@ -183,35 +185,35 @@
   --color-shadow: oklch(0 0 0 / .6);
 }
 
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-card.panelFlat,
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-item.panelFlat {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-card.panelFlat,
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-item.panelFlat {
   border: none solid var(--edge);
   box-shadow: none;
 }
 /* The shared list card (shell.css --list-card-*: clear glass, no rim, 2026-10-12). */
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-card.panelFlat {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-card.panelFlat {
   border: 0;
   box-shadow: var(--card-light);
   background: var(--list-card-fill-clear);
   backdrop-filter: var(--list-card-backdrop);
 }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-item.panelFlat:not(:hover) {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-item.panelFlat:not(:hover) {
   background-color: var(--surface-2);
 }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-card.panelFlatNoBorder {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-card.panelFlatNoBorder {
   background-color: var(--surface-1);
   border: none;
   box-shadow: none;
 }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-card.cardSurface1 {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-card.cardSurface1 {
   border: var(--shell-edge-width) solid transparent;
   background: var(--glass-sheen) padding-box, linear-gradient(var(--surface-1), var(--surface-1)) padding-box, var(--glass-edge) border-box;
   box-shadow: none;
 }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) #astryx-app-shell-main {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) #astryx-app-shell-main {
   background-color: var(--surface-0);
 }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-chat-composer > div {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-chat-composer > div {
   border: var(--shell-edge-width) solid transparent;
   background: var(--glass-sheen) padding-box,
     linear-gradient(var(--glass-fill), var(--glass-fill)) padding-box,
@@ -219,44 +221,44 @@
   box-shadow: var(--glass-shadow), var(--composer-glow);
   backdrop-filter: var(--surface-material);
 }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-text-input:not(#\#):not(#\#):not(#\#) {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-text-input:not(#\#):not(#\#):not(#\#) {
   border-color: transparent;
   background: var(--glass-sheen) padding-box, linear-gradient(var(--field-glass-fill, var(--glass-fill)), var(--field-glass-fill, var(--glass-fill))) padding-box, var(--glass-edge) border-box;
   box-shadow: var(--glass-shadow);
   backdrop-filter: var(--field-backdrop, var(--surface-material));
 }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-text-input:focus-within:not(#\#):not(#\#):not(#\#) {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-text-input:focus-within:not(#\#):not(#\#):not(#\#) {
   background: var(--glass-sheen) padding-box, linear-gradient(var(--field-glass-fill, var(--glass-fill)), var(--field-glass-fill, var(--glass-fill))) padding-box, var(--glass-edge-accent) border-box;
   box-shadow: var(--glass-shadow), 0 0 0 var(--shell-edge-width) oklch(from var(--accent-signal) l c h / .45);
 }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-chat-message-bubble.filled,
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-token.default {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-chat-message-bubble.filled,
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-token.default {
   background-color: var(--surface-2);
 }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-segmented-control:not(#\#):not(#\#):not(#\#) {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-segmented-control:not(#\#):not(#\#):not(#\#) {
   background-color: var(--surface-2) !important;
 }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-segmented-control-item.selected:not(#\#):not(#\#):not(#\#) {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-segmented-control-item.selected:not(#\#):not(#\#):not(#\#) {
   background-color: var(--surface-3) !important;
 }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-tooltip {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-tooltip {
   color: var(--surface-1-solid);
 }
 
 /* Primary actions paint with the theme's action fill and ink (2026-10-23; per theme). */
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-button.primary:not(#\#):not(#\#):not(#\#) {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-button.primary:not(#\#):not(#\#):not(#\#) {
   background: var(--action-fill);
   color: var(--action-ink);
   font-weight: 600;
 }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-button.primary:not(:disabled):hover:not(#\#):not(#\#):not(#\#) {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-button.primary:not(:disabled):hover:not(#\#):not(#\#):not(#\#) {
   background: var(--action-fill-hover);
 }
 
 /* A disabled primary action is plainly inactive (2026-10-24, direct feedback): not the action
    fill at half opacity, which let the page show through it, but a solid, quiet pill (a touch
    of ink over the page colour) with muted ink; the backdrop blur keeps anything behind it soft. */
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) .astryx-button.primary:disabled:not(#\#):not(#\#):not(#\#) {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) .astryx-button.primary:disabled:not(#\#):not(#\#):not(#\#) {
   opacity: 1;
   background: color-mix(in oklab, var(--ink-primary) 9%, var(--surface-0));
   color: var(--ink-muted);
@@ -269,8 +271,8 @@
    with a mock) the body sans at a lighter tracking and muted ink, not the wide mono. Elements opt in with the `data-eyebrow` role marker; other themes
    leave them as they were. Descendants included so a heading's link label
    follows; specificity matches Astryx's inflated text rules. */
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-eyebrow]:not(#\#):not(#\#):not(#\#),
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-eyebrow] :is(span, a, button):not(#\#):not(#\#):not(#\#) {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) [data-eyebrow]:not(#\#):not(#\#):not(#\#),
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) [data-eyebrow] :is(span, a, button):not(#\#):not(#\#):not(#\#) {
   font-family: var(--font-inter);
   /* Aura: the size of body text (2026-10-27, direct feedback); 14 px is the card titles' own. */
   font-size: var(--text-14);

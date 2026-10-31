@@ -1,0 +1,40 @@
+/* How a question or confirmation pane arrives in a conversation (2026-10-31, direct feedback, from the home alert's
+   scenario: "this is the way any question or confirmation pane should appear"): out of the depth of the screen — faded in,
+   scaled back and blurred, settling to its place — not rising from below, so it never adds to the thread's scroll height.
+   Panes of the same level never overlap: the pane makes its own room in the flow, pushing what is already there. The renderer's own assembly animation
+   (renderer/assembly.module.css) does the work; this only feeds it, for the nodes that are panes (SceneRenderer's
+   data-node-type, the same two it holds back for the reply before them) inside a conversation (role log: the chat
+   thread, the composer's and the voice mode's transcripts).
+   The home alert's scenario (scenario-expand.css) uses the same values for the question it pushes in. */
+:root {
+  --pane-enter-scale: .94;
+  --pane-enter-blur: var(--dock-morph-blur);
+  --pane-enter-duration: var(--duration-480);
+  --pane-enter-ease: var(--ease-float);
+}
+/* A pane is its own grid row that grows from nothing, so the content above it is pushed up as it arrives (the stack's
+   24 px gap is cancelled by a negative margin until it has grown), and it comes in only once the words before it have
+   finished printing (renderer/AfterReply.tsx). Clipped while it grows, free at rest so its shadow is not cut. */
+[role='log'] [data-node-type='approval-card'],
+[role='log'] [data-node-type='payment-card'] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 1fr;
+  --reveal-rise: 0px;
+  --reveal-blur: var(--pane-enter-blur);
+  --reveal-scale: var(--pane-enter-scale);
+  --reveal-duration: var(--pane-enter-duration);
+  --reveal-ease: var(--pane-enter-ease);
+  --reveal-rows-from: 0fr;
+  --reveal-margin-from: calc(var(--space-24) * -1);
+  --reveal-overflow: clip;
+  transform-origin: 50% 0;
+}
+[role='log'] [data-node-type='approval-card'] > *,
+[role='log'] [data-node-type='payment-card'] > * { min-height: 0; }
+/* The home alert's own question arrives through its transition's picture (scenario-expand.css), not by growing. */
+[data-scenario-opening] + section [data-node-type='approval-card'] { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  [role='log'] [data-node-type='approval-card'],
+  [role='log'] [data-node-type='payment-card'] { animation: none; }
+}

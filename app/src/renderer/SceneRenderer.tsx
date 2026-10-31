@@ -1,7 +1,9 @@
+import '../theme/pane-entry.css';
 import { Suspense, createElement, type ComponentType, type ReactNode } from 'react';
 import type { HydratedScene, SceneNode } from '../contracts/scene';
 import { registry } from '../registry/registry';
 import { resolveBindings } from './bindings';
+import { AfterReply } from './AfterReply';
 import { FallbackNode } from './FallbackNode';
 import styles from './assembly.module.css';
 
@@ -13,7 +15,10 @@ export function SceneRenderer({ scene }: SceneRendererProps) {
   return <Suspense fallback={null}>{renderNode(scene.layout, scene.data)}</Suspense>;
 }
 
-function renderNode(node: SceneNode, data: HydratedScene['data']): ReactNode {
+// The panes that wait for the reply before them (theme/pane-entry.css names the same two for their entrance).
+const PANES_AFTER_REPLY = new Set(['approval-card', 'payment-card']);
+
+function renderNode(node: SceneNode, data: HydratedScene['data'], previous?: SceneNode): ReactNode {
   const entry = registry[node.type];
   if (!entry) {
     return wrap(node, <FallbackNode reason="unknown-type" detail={`Unknown node type "${node.type}"`} />);
@@ -40,7 +45,7 @@ function renderNode(node: SceneNode, data: HydratedScene['data']): ReactNode {
     );
   }
 
-  const children = node.children?.map((child) => renderNode(child, data));
+  const children = node.children?.map((child, index) => renderNode(child, data, node.children?.[index - 1]));
   // The registry necessarily erases each entry's specific prop type down to
   // `never` so heterogeneous nodes can share one map (see registry.ts) —
   // propSchema.safeParse just above is what actually guarantees these props
@@ -48,7 +53,9 @@ function renderNode(node: SceneNode, data: HydratedScene['data']): ReactNode {
   // already checked.
   const Component = entry.component as ComponentType<Record<string, unknown>>;
   const finalProps = { ...(parsed.data as Record<string, unknown>), children };
-  return wrap(node, createElement(Component, finalProps));
+  const pane = wrap(node, createElement(Component, finalProps));
+  const reply = previous?.type === 'text-block' ? previous.props?.text : undefined;
+  return PANES_AFTER_REPLY.has(node.type) && typeof reply === 'string' ? <AfterReply key={node.id} text={reply}>{pane}</AfterReply> : pane;
 }
 
 function wrap(node: SceneNode, element: ReactNode): ReactNode {
@@ -56,6 +63,7 @@ function wrap(node: SceneNode, element: ReactNode): ReactNode {
     <div
       key={node.id}
       className={styles.nodeWrapper}
+      data-node-type={node.type}
       style={{ '--reveal-index': node.reveal ?? 0 } as React.CSSProperties}
     >
       {element}

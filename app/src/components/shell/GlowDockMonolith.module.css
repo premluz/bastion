@@ -1,0 +1,60 @@
+/* The glow chat on the monolith home (2026-10-31, direct feedback): its bottom row stands exactly where the home's buttons
+   and cube do — the navigation's own clearance (--dock-bottom-inset, which follows Settings' safe-area switch) — and its
+   buttons are the home's glass circles, not ghost icons. Applied only there (GlowDock.tsx); the doubled and tripled
+   selectors out-rank GlowDock.module.css's rules for the same boxes whatever order the sheets load in. */
+.composer.composer {
+  padding-bottom: var(--dock-bottom-inset);
+  /* The home's cube sits level with its buttons, not nudged below them. */
+  --dock-cube-drop: 0px;
+}
+.actions.actions { min-height: var(--dock-context-button-size); }
+
+/* The menu's and the + button's material and size (PillNavigation.module.css `.toggle`, MonolithNavigation.module.css). */
+.actions button:not(#\#):not(#\#):not(#\#):not(#\#),
+.history:not(#\#):not(#\#):not(#\#):not(#\#) {
+  padding: 0;
+  border: var(--shell-edge-width) solid transparent;
+  border-radius: var(--radius-full);
+  background: var(--glass-sheen) padding-box, linear-gradient(var(--glass-fill-clear), var(--glass-fill-clear)) padding-box, var(--glass-edge) border-box;
+  color: var(--ink-primary);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--shell-header-backdrop);
+  transition: scale var(--press-release-duration) var(--press-release-ease);
+}
+.actions button:not(#\#):not(#\#):not(#\#):not(#\#) {
+  width: var(--dock-context-button-size);
+  height: var(--dock-context-button-size);
+  min-width: var(--dock-context-button-size);
+  min-height: var(--dock-context-button-size);
+}
+.actions button:not(#\#):not(#\#):not(#\#):not(#\#):active,
+.history:not(#\#):not(#\#):not(#\#):not(#\#):active {
+  scale: var(--press-active-scale);
+  transition-duration: var(--press-in-duration);
+  transition-timing-function: var(--press-in-ease);
+}
+@media (hover: hover) {
+  .actions button:not(#\#):not(#\#):not(#\#):not(#\#):hover,
+  .history:not(#\#):not(#\#):not(#\#):not(#\#):hover { scale: var(--press-hover-scale); }
+}
+
+/* The menu's icon size, so the marks read the same on the home and here: the glyph and the box Astryx sizes it in. */
+.actions button :where(span, div):has(> svg):not(#\#):not(#\#):not(#\#):not(#\#),
+.history :where(span, div):has(> svg):not(#\#):not(#\#):not(#\#):not(#\#) { width: var(--space-24); height: var(--space-24); }
+.actions button svg:not(#\#):not(#\#):not(#\#):not(#\#),
+.history svg:not(#\#):not(#\#):not(#\#):not(#\#) { width: var(--space-24); height: var(--space-24); max-width: none; }
+
+/* Chat history, top right, where the home's avatar is: a smaller circle of the same glass, arriving with the bottom row's controls. */
+.history:not(#\#):not(#\#):not(#\#):not(#\#) {
+  position: absolute;
+  top: max(var(--shell-inset), var(--shell-safe-area-top));
+  inset-inline-end: var(--shell-inset);
+  z-index: 1;
+  width: var(--space-48);
+  height: var(--space-48);
+  min-width: var(--space-48);
+  min-height: var(--space-48);
+  animation: history-in var(--dock-item-in-duration) var(--motion-enter-ease) var(--dock-controls-in-delay) both;
+}
+@keyframes history-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .history:not(#\#):not(#\#):not(#\#):not(#\#) { animation: none; } }

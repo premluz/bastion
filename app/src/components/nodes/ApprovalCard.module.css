@@ -40,9 +40,13 @@
    the single hover + hit surface. */
 .card :global(.astryx-radio-list-item .astryx-item:hover) { background-color: transparent; }
 .card :global(.astryx-radio) { flex-shrink: 0; }
-:global([data-approval-card='send-recipient']) .card :global(.astryx-radio-list-item div:has(> input[type='radio'])) { position: absolute; width: var(--space-2); height: var(--space-2); overflow: hidden; }
-:global([data-approval-card='send-recipient']) .card :global(.astryx-radio-list-item .astryx-radio) { display: none; }
-:global([data-approval-card='send-recipient']) .card :global(.astryx-radio-list-item:has(input:focus-visible)) { outline: var(--shell-edge-width) solid var(--accent-signal); }
+/* The input stays in the row for keyboards and assistive tech; only its mark is hidden (the send recipients' rule, now shared with every lone question in a card). */
+:global([data-approval-card='send-recipient']) .card :global(.astryx-radio-list-item div:has(> input[type='radio'])),
+:global([data-approval-tap]) .card :global(.astryx-radio-list-item div:has(> input[type='radio'])) { position: absolute; width: var(--space-2); height: var(--space-2); overflow: hidden; }
+:global([data-approval-card='send-recipient']) .card :global(.astryx-radio-list-item .astryx-radio),
+:global([data-approval-tap]) .card :global(.astryx-radio-list-item .astryx-radio) { display: none; }
+:global([data-approval-card='send-recipient']) .card :global(.astryx-radio-list-item:has(input:focus-visible)),
+:global([data-approval-tap]) .card :global(.astryx-radio-list-item:has(input:focus-visible)) { outline: var(--shell-edge-width) solid var(--accent-signal); }
 .card :global(.astryx-radio-list-item label) { white-space: normal; }
 .footer { display: flex; align-items: center; justify-content: space-between; gap: var(--approval-gap); flex-wrap: wrap; margin-top: var(--approval-footer-gap); }
 .pagination, .actions { display: flex; align-items: center; gap: var(--approval-option-gap); }

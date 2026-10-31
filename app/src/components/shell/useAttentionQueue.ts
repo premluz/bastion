@@ -19,6 +19,8 @@ export interface AttentionQueue {
   confirm: (choice: string) => void;
   /** The caught-up card's exit has played: the section closes for good. */
   finishCaughtUp: () => void;
+  /** Resolved elsewhere (its scenario, in the assistant): the item leaves the queue. Idempotent. */
+  resolve: (id: string) => void;
 }
 
 // The attention home's state (2026-10-23): resolving an item adds it to the assistant's work,
@@ -59,5 +61,6 @@ export function useAttentionQueue(): AttentionQueue {
   }, [isEmpty]);
   const open = useCallback((id: string) => { if (!processing.includes(id)) setOpenId(id); }, [processing]);
   return { items, processing, openItem, tasks, caughtUp, open, close: useCallback(() => setOpenId(null), []), confirm,
-    finishCaughtUp: useCallback(() => setCaughtUp('gone'), []) };
+    finishCaughtUp: useCallback(() => setCaughtUp('gone'), []),
+    resolve: useCallback((id: string) => setItems((current) => (current.some((item) => item.id === id) ? current.filter((item) => item.id !== id) : current)), []) };
 }

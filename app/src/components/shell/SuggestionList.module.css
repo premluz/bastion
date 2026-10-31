@@ -30,3 +30,20 @@
   background: var(--list-accessory-fill);
   color: var(--list-accessory-ink);
 }
+
+/* The home's insights (2026-10-30, direct feedback: hairline dividers between rows, the icon on its own — no tinted disc),
+   in the cards' own surface since 2026-10-31 (direct feedback: the cards and this pane should look like the attention
+   card): its rounding, rim, soft glass and shadow. The rows inside stay flat, their corners following the pane's. */
+.list[data-variant='list'] {
+  --insights-radius: calc(var(--list-card-radius) - var(--shell-edge-width));
+  border: var(--shell-edge-width) solid var(--card-rim);
+  border-radius: var(--list-card-radius);
+  background: var(--list-card-fill-raised);
+  backdrop-filter: var(--list-card-backdrop);
+  box-shadow: var(--card-light);
+}
+.list[data-variant='list'] .item:not(#\#):not(#\#):not(#\#) { border-radius: 0; }
+.list[data-variant='list'] .item:not(:first-child) { border-top: var(--shell-edge-width) solid var(--edge); }
+.list[data-variant='list'] .item:first-child:not(#\#):not(#\#):not(#\#) { border-radius: var(--insights-radius) var(--insights-radius) 0 0; }
+.list[data-variant='list'] .item:last-child:not(#\#):not(#\#):not(#\#) { border-radius: 0 0 var(--insights-radius) var(--insights-radius); }
+.list[data-variant='list'] .icon { border: 0; background: none; }

@@ -7,7 +7,7 @@
    plus the padding around it, and a row inside a card is the card's radius less the card's inset. Change
    the padding and every radius follows.
    `:root:is(...)` outranks the `:root` blocks of shell.css and attention.css whatever order they load in. */
-:root:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) {
+:root:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) {
   /* A little more room than Bastion's (24 on tiles, 12–16 around the Pulse icons). */
   --aura-card-padding: var(--space-20);
   --list-card-radius: calc(var(--list-accessory-size) / 2 + var(--aura-card-padding));
@@ -31,34 +31,34 @@
 }
 
 /* No "Needs you" / "Pulse" headings on the home (2026-10-27, direct feedback): the cards speak for themselves. */
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-section-heading] { display: none; }
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) [data-section-heading] { display: none; }
 
 /* Money and Investments: 5:4 tiles (2026-10-27, direct feedback: not square, and not the earlier short strip either), the
    label at the top and the value centred in the space below it (auto margins centre the value and its last line as one group). */
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-balance-tiles] > * { aspect-ratio: 5 / 4; }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-balance-tiles] > * > :nth-child(2) { margin-block-start: auto; }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-balance-tiles] > * > :last-child { margin-block-end: auto; }
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) [data-balance-tiles] > * { aspect-ratio: 5 / 4; }
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) [data-balance-tiles] > * > :nth-child(2) { margin-block-start: auto; }
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) [data-balance-tiles] > * > :last-child { margin-block-end: auto; }
 
 /* No search in the header (2026-10-27, direct feedback). */
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) button[aria-label='Search'] { display: none; }
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) button[aria-label='Search'] { display: none; }
 
 /* No wallet buttons around the cards (2026-10-27, direct feedback): "Manage cards" beside the deck, and the Add money /
    Send / Withdraw row (Money page and card detail). Hidden, not removed, so other themes keep them. */
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) :is([data-manage-cards], [data-money-actions]) { display: none; }
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) :is([data-manage-cards], [data-money-actions]) { display: none; }
 
 /* On a card's page the balance carries only "Earning N%" (2026-10-27, direct feedback): no APY line, token, info icon or
    estimated annual earnings. */
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-apy-row] { display: none; }
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-earning-only] { display: block; }
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) [data-apy-row] { display: none; }
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) [data-earning-only] { display: block; }
 
 /* The attention card's padding is Astryx's (24), set by prop; Aura's padding replaces it. */
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-attention-kind]:not(#\#):not(#\#):not(#\#) {
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) [data-attention-kind]:not(#\#):not(#\#):not(#\#) {
   padding: var(--aura-card-padding);
 }
 
 /* The navigation's selected item as liquid glass (2026-10-27, direct feedback with a reference): a translucent bubble,
    lit at its top edge and from within, with a soft drop; it keeps the existing stretch as it slides between items. */
-:root[data-theme='bastion-aura-light'] {
+:root:is([data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) {
   --tab-active-fill: linear-gradient(oklch(1 0 0 / .7), oklch(.97 .006 70 / .45));
   --tab-active-ink: var(--ink-primary);
   --tab-active-edge: inset 0 1px 1px oklch(1 0 0 / 1), inset 0 -1px 2px oklch(.4 .03 60 / .1), inset 0 0 0 1px oklch(1 0 0 / .6),
@@ -73,4 +73,15 @@
 
 /* Eyebrow headings keep their descenders (2026-10-27, direct feedback: "Trending", "Perps" were cut off): the cap-to-baseline
    trim in ExploreComponents.module.css is sized for 10 px capitals and clips the g/p tails of Aura's 14 px normal-case text. */
-:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light']) [data-eyebrow] span:not(#\#):not(#\#):not(#\#):not(#\#) { text-box: normal; }
+:is([data-theme='bastion-aura'], [data-theme='bastion-aura-light'], [data-theme='bastion-pastel']) [data-eyebrow] span:not(#\#):not(#\#):not(#\#):not(#\#) { text-box: normal; }
+
+/* Bastion Pastel's soft glass (2026-10-30, the wallet-home brief): blur 24 and saturate 140% on the raised cards, rather
+   than Aura's heavier 40 / 180% — the pastel field should tint a card faintly, never show a shape through it. */
+:root[data-theme='bastion-pastel'] {
+  --list-card-backdrop: blur(var(--blur-24)) saturate(1.4);
+  /* No photo behind the hero copy, so no scrim to read it over: the copy sits on the pastel field itself. */
+  --promo-hero-scrim: none;
+}
+/* …nor a fade dissolving a photo into the page: the field already fades to the grey base on its own. Inflated to outrank
+   the attention home's own setting on the same element (AgentHomePage.module.css). */
+:root[data-theme='bastion-pastel'] [data-hero][data-hero][data-hero] { --promo-bleed-fade-bottom: none; }

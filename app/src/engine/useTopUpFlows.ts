@@ -4,7 +4,7 @@ import { topUpStepDurations } from './mortgageTopUpScenes';
 import { useFlowRunner, type ScenarioKind } from './useFlowRunner';
 
 const topUpKind: ScenarioKind<TopUpRequest, TopUpState, TopUpAction> = {
-  create: (_request, now) => createTopUpState(now, topUpStepDurations[0] ?? 0),
+  create: (request, now) => createTopUpState(now, topUpStepDurations[0] ?? 0, request.fromAlert === true),
   apply: applyTopUpAction,
   tick: (state, now) => tickTopUp(state, now, topUpStepDurations),
   deadline: (state) => isTopUpWaiting(state) ? state.dueAt : null,

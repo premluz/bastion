@@ -10,10 +10,17 @@
     opacity: 0;
     transform: translateY(var(--reveal-rise, 4px));
     filter: blur(var(--reveal-blur, 0px));
+    scale: var(--reveal-scale, 1);
+    /* A pane that makes room as it arrives (theme/pane-entry.css): its row grows from nothing, and its margin cancels the
+       stack's gap until it has, so the content above is pushed up rather than a hole waiting to be filled. */
+    grid-template-rows: var(--reveal-rows-from, 1fr);
+    margin-block-start: var(--reveal-margin-from, 0px);
+    overflow: var(--reveal-overflow, visible);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+    overflow: var(--reveal-overflow, visible);
   }
 }
 

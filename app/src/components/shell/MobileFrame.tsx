@@ -20,6 +20,8 @@ import { AgentWorkQueue } from './AgentWorkQueue';
 import { useAgentHome } from './useAgentHome';
 import { MoneyPage } from './MoneyPage';
 import { CardDetailPage } from './CardDetailPage';
+import { CalmHomePage } from './CalmHomePage';
+import { useAlertResolution } from './useAlertResolution';
 import { ROOT_DOCK } from './dockContext';
 import { WALLET_CARDS } from './cardData';
 import { ConversationModeOverlay } from './ConversationModeOverlay';
@@ -31,6 +33,7 @@ import { useMobileFrame, type MobileFrameProps } from './useMobileFrame';
 import { SceneRenderer } from '../../renderer/SceneRenderer';
 import { useAutoScrollBottom } from './useAutoScrollBottom';
 import { useTranscriptNodes } from './useTranscriptNodes';
+import { HomeGreeting } from './HomeGreeting';
 import { useSpeechRecognition } from './useSpeechRecognition';
 import { useVoiceNarration } from './useVoiceNarration';
 import { useScenarioThread } from './useScenarioThread';
@@ -111,6 +114,10 @@ export function MobileFrame(props: MobileFrameProps) {
   // scrolling manually). justify-content: flex-end only sets the initial
   // resting position — it never reacts to the container growing taller
   // once mounted, which is exactly when a card/message lands.
+  // A scenario item expands into the assistant; the others open the sheet (2026-10-31). Done once its top-up is sent.
+  useAlertResolution(state.messages, thread.topUp.flows, attention.resolve);
+  const attentionSection = <AttentionSection queue={attention} onSuggestion={glow.ask}
+    onScenario={(item) => glow.expand({ id: item.id, title: item.title, kind: item.kind, ...(item.action ? { action: item.action } : {}) })} />;
   const composerScrollRef = useAutoScrollBottom();
   const conversationScrollRef = useAutoScrollBottom();
   return (
@@ -119,10 +126,10 @@ export function MobileFrame(props: MobileFrameProps) {
       <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode} data-home={isAttentionHome ? 'glow' : props.homeVariant ?? 'assets'}>
         <AccountExperience initialView={props.initialAccountView ?? 'closed'}>{(openAccounts) => (
         <div className={styles.chrome} inert={chromeInert} aria-hidden={chromeInert}>
-          <header className={styles.header} aria-label="Asset search">
-            <Button label="Open account menu" variant="ghost" icon={<Avatar {...avatarProps(USER_NAME)} size="medium" />} isIconOnly onClick={openAccounts} />
+          <header className={styles.header} aria-label="Asset search" data-avatar-end={isMonolithDock ? '' : undefined}>
+            <Button label="Open account menu" variant="ghost" icon={<Avatar {...avatarProps(USER_NAME)} size={isMonolithDock ? 40 : 'medium'} />} isIconOnly onClick={openAccounts} />
             {/* Agent home moves Explore into the dock's menu; the spacer keeps the avatar its own size. */}
-            {isMonolithVoice ? <span aria-hidden="true" /> : isGlowHome ? <span className={styles.headerEnd}>
+            {isMonolithVoice ? (isHome ? <HomeGreeting /> : <span aria-hidden="true" />) : isGlowHome ? <span className={styles.headerEnd}>
               <IconButton label="Search" icon={<Icon icon="search" />} variant="ghost" onClick={notifyPrototypeUnavailable} />
             </span>
               : hasAgentPage ? <span aria-hidden="true" />
@@ -137,9 +144,11 @@ export function MobileFrame(props: MobileFrameProps) {
           <div className={styles.topFade} aria-hidden="true" />
           {isHome ? (
             <main key="home" className={styles.page} aria-label="Home" tabIndex={0}>
-              {hasAgentPage ? <AgentHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments}
+              {isMonolithDock ? <CalmHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments} isReceding={glow.isOpen}
+                attention={attentionSection} />
+                : hasAgentPage ? <AgentHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments}
                 onSuggestion={isGlowHome ? glow.ask : agent.ask} isReceding={isAgentHome ? agent.isWorking : glow.isOpen} heroBleed={isGlowHome}
-                {...(isAttentionHome ? { attention: <AttentionSection queue={attention} onSuggestion={glow.ask} /> } : {})} />
+                {...(isAttentionHome ? { attention: attentionSection } : {})} />
                 : <AssetsHomePage onSelectMoney={state.openMoney} onSelectInvestments={state.openInvestments} />}
             </main>
           ) : state.activeTab === 'assets' ? (

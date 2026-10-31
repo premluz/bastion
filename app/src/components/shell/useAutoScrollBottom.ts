@@ -22,15 +22,26 @@ import { useCallback, useRef } from 'react';
 // thread mounts only once there is a command, long after this hook first ran,
 // so an effect reading ref.current on mount never saw it. The observer now
 // attaches whenever an element arrives and detaches when it leaves.
+//
+// It also follows the content's own growth (2026-10-31, direct feedback: a pane makes room as it arrives, its row growing
+// over half a second): a ResizeObserver on the container's children re-pins the bottom on every frame the content changes
+// size, which a childList mutation alone would only see once, at the pane's first, empty, frame.
 export function useAutoScrollBottom() {
-  const observer = useRef<MutationObserver | null>(null);
+  const watch = useRef<{ disconnect: () => void } | null>(null);
   return useCallback((element: HTMLDivElement | null) => {
-    observer.current?.disconnect();
-    observer.current = null;
+    watch.current?.disconnect();
+    watch.current = null;
     if (!element) return;
     const scrollToBottom = () => element.scrollTo({ top: element.scrollHeight });
+    const resizes = new ResizeObserver(scrollToBottom);
+    const watchChildren = () => {
+      resizes.disconnect();
+      for (const child of element.children) resizes.observe(child);
+    };
+    const mutations = new MutationObserver(() => { watchChildren(); scrollToBottom(); });
+    watchChildren();
     scrollToBottom();
-    observer.current = new MutationObserver(scrollToBottom);
-    observer.current.observe(element, { childList: true, subtree: true, characterData: true });
+    mutations.observe(element, { childList: true, subtree: true, characterData: true });
+    watch.current = { disconnect: () => { mutations.disconnect(); resizes.disconnect(); } };
   }, []);
 }
