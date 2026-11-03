@@ -1,37 +1,11 @@
 import { LIQUID_ORB_FRAGMENT_SHADER, LIQUID_ORB_VERTEX_SHADER } from './liquidOrbShaders';
-
-type Rgb = readonly [number, number, number];
+import { compileShader, readCssColor } from './webglHelpers';
 
 export interface LiquidOrbRenderer {
   resize: () => void;
   render: (time: number) => void;
   updatePalette: () => void;
   dispose: () => void;
-}
-
-const FALLBACK_COLOR: Rgb = [1, 1, 1];
-
-function compileShader(gl: WebGL2RenderingContext, type: number, source: string) {
-  const shader = gl.createShader(type);
-  if (!shader) throw new Error('Liquid orb could not create a shader.');
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const log = gl.getShaderInfoLog(shader) ?? 'unknown shader error';
-    gl.deleteShader(shader);
-    throw new Error(`Liquid orb shader compilation failed: ${log}`);
-  }
-  return shader;
-}
-
-function readCssColor(value: string, context: CanvasRenderingContext2D): Rgb {
-  context.clearRect(0, 0, 1, 1);
-  context.fillStyle = 'transparent';
-  context.fillStyle = value.trim();
-  context.fillRect(0, 0, 1, 1);
-  const [red = 0, green = 0, blue = 0] = context.getImageData(0, 0, 1, 1).data;
-  if (red === 0 && green === 0 && blue === 0 && value.trim() !== 'black') return FALLBACK_COLOR;
-  return [red / 255, green / 255, blue / 255];
 }
 
 // The unbounded glow is a big, soft, feathered light: a fraction of the device
@@ -65,8 +39,8 @@ export function createLiquidOrbRenderer(canvas: HTMLCanvasElement, options: Liqu
   if (!colorContext) throw new Error('Liquid orb could not create a color parser.');
   const parser: CanvasRenderingContext2D = colorContext;
 
-  const vertexShader = compileShader(gl, gl.VERTEX_SHADER, LIQUID_ORB_VERTEX_SHADER);
-  const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, LIQUID_ORB_FRAGMENT_SHADER);
+  const vertexShader = compileShader(gl, gl.VERTEX_SHADER, LIQUID_ORB_VERTEX_SHADER, 'Liquid orb');
+  const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, LIQUID_ORB_FRAGMENT_SHADER, 'Liquid orb');
   const program = gl.createProgram();
   if (!program) throw new Error('Liquid orb could not create a shader program.');
   gl.attachShader(program, vertexShader);

@@ -63,14 +63,22 @@
         "type": "payment-card",
         "props": {
           "title": "Pay Priya Nair",
-          "recipient": "Priya Nair",
+          "to": {
+            "name": "Priya Nair"
+          },
           "amount": "240.00",
           "purpose": "Lumen Studio · INV-2041",
-          "from": "Money balance",
-          "fee": "No fees",
-          "arrival": "Today",
-          "balance": "$3,475.45",
-          "isEditable": false
+          "details": [
+            {
+              "label": "Arrives",
+              "value": "Today"
+            },
+            {
+              "label": "Network fee",
+              "value": "No fees"
+            }
+          ],
+          "balance": "$3,475.45"
         }
       },
       {

@@ -49,12 +49,3 @@
 .title {
   text-wrap: balance;
 }
-
-/* The priority card (2026-10-30, direct feedback): the one warm element — a very soft peach wash on white with a 1px
-   warm edge. */
-.root[data-attention-kind='due'] {
-  border-color: color-mix(in oklab, var(--accent-signal) 30%, transparent);
-  background: color-mix(in oklab, var(--accent-signal) 5%, var(--surface-2));
-  /* Its glow quietens too, so the wash stays very soft. */
-  --glow-strength: var(--tint-subtle);
-}

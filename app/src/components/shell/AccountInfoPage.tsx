@@ -4,6 +4,7 @@ import { Switch } from '@astryxdesign/core/Switch';
 import { useShowTouchesStore } from '../../engine/stores/showTouchesStore';
 import { useTooltipsStore } from '../../engine/stores/tooltipsStore';
 import { useSafeAreaPaddingStore } from '../../engine/stores/safeAreaPaddingStore';
+import { useSubtleCentsStore } from '../../engine/stores/subtleCentsStore';
 import { useAppearanceStore } from '../../engine/stores/appearanceStore';
 import type { HistoryEntry } from '../../contracts/props/history-item';
 import type { AccountScreen, PreviewAccount } from './accountTypes';
@@ -25,6 +26,7 @@ export function AccountInfoPage({ screen, account, entry, update }: {
   const showTouches = useShowTouchesStore();
   const tooltips = useTooltipsStore();
   const safeAreaPadding = useSafeAreaPaddingStore();
+  const subtleCents = useSubtleCentsStore();
   const appearance = useAppearanceStore();
   return <div className={styles.body}>
     {screen === 'addresses' && <><Text color="secondary">Demo addresses for {account.name}</Text>
@@ -33,6 +35,8 @@ export function AccountInfoPage({ screen, account, entry, update }: {
     {screen === 'settings' && <>
       <Switch label="Dark mode" description="Turn off for the light theme."
         value={appearance.appearance === 'dark'} onChange={(dark) => appearance.setAppearance(dark ? 'dark' : 'light')} />
+      <Switch label="Subtle cents" description="Show the decimals of an amount smaller and quieter."
+        value={subtleCents.enabled} onChange={subtleCents.setEnabled} />
       <Switch label="Account notifications" value={account.notifications}
         onChange={(notifications) => update({ notifications })} />
       <Switch label="Show touches" description="Draw a dot under each finger, for demos and recordings."

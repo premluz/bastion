@@ -7,3 +7,20 @@
    in the body ink, where Astryx's button sets medium. The inflated selector matches Astryx's own text rules. */
 .choices .choice:not(#\#):not(#\#):not(#\#),
 .choices .choice :is(span, div):not(#\#):not(#\#):not(#\#) { font-weight: 400; color: var(--ink-primary); }
+
+/* Once answered, the top-up's source question folds away (2026-10-31, direct feedback: its choices only repeated what the
+   confirmation's From row says): its grid row closes (theme/pane-entry.css makes each pane one), taking the stack's 24 px
+   gap with it, and it fades. A transition, not an animation, so a transcript mounted after the choice starts folded. */
+.root[data-top-up-stage] [data-node-type='approval-card'] {
+  transition: grid-template-rows var(--pane-enter-duration) var(--pane-enter-ease),
+    margin-block-end var(--pane-enter-duration) var(--pane-enter-ease),
+    opacity var(--motion-exit-duration) var(--motion-exit-ease), visibility 0s linear var(--pane-enter-duration);
+}
+.root[data-top-up-stage]:not([data-top-up-stage='options']) [data-node-type='approval-card'] {
+  grid-template-rows: 0fr;
+  margin-block-end: calc(var(--space-24) * -1);
+  overflow: clip;
+  opacity: 0;
+  visibility: hidden;
+}
+@media (prefers-reduced-motion: reduce) { .root[data-top-up-stage] [data-node-type='approval-card'] { transition: none; } }

@@ -86,6 +86,9 @@ export const config = {
   agent: {
     // Retained for later: replay piece assembly on chat messages and transcript actions.
     cubeAssembly: false,
+    // The wave of light rising up the screen as the chat opens (ChatSweep, 2026-10-31). Off (same day, direct feedback:
+    // hide it, keep the code): unmounted, so no canvas, no WebGL context and no frame loop. Flip to true to bring it back.
+    chatSweep: false,
     // After a scenario finishes (send, top-up…) the agent used to go straight on to
     // the next recommended action by itself (2026-10-09). Off (2026-10-14, direct
     // feedback): a finished scenario ends there; the home's suggestions are the way

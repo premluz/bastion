@@ -7,8 +7,8 @@
    to .8 with a little blur, never from nothing), right to left one short beat apart; what arrives comes a beat later,
    a little longer, settling on the soft spring. */
 :root {
-  /* The menu and + buttons, one scale larger than the pill's toggle (2026-10-30, direct feedback): 56 → 64 px. */
-  --dock-context-button-size: var(--space-64);
+  /* The menu and + buttons at iOS's own toolbar-button size (2026-10-31, direct feedback with Safari's for reference): 64 → 48 px. */
+  --dock-context-button-size: var(--space-48);
   --dock-context-out-duration: var(--dock-item-duration);
   --dock-context-in-duration: var(--duration-320);
   --dock-context-in-delay: var(--duration-120);

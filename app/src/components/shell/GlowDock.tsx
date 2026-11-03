@@ -3,6 +3,7 @@ import { Icon } from '@astryxdesign/core/Icon';
 import { IconButton } from '@astryxdesign/core/IconButton';
 import { ArrowLeftIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { notifyPrototypeUnavailable } from './PrototypeNotice';
+import { ChatSweep } from './ChatSweep';
 import { GlowLight, type GlowOrbStyle } from './GlowLight';
 import { config } from '../../config';
 import { AssistantLanding } from './AssistantLanding';
@@ -82,6 +83,7 @@ export function GlowDock({ state, onOpen, onClose, composer, composerActions, th
       data-monolith={landingMonolith ? '' : undefined} data-landing={config.landing.orbRises && isOpen && !isWorking ? '' : undefined} {...(isOpen ? {} : swipe.handlers)}>
       {isOpen && <div className={styles.shade} aria-hidden="true" />}
       <GlowLight isOpen={isOpen} orb={orb} />
+      {config.agent.chatSweep && <ChatSweep isOpen={isOpen} />}
       <AssistantLanding isOpen={isOpen} isAway={isWorking} onSuggestion={onSuggestion} />
       {/* Beside the dock, not inside it (2026-10-23): hanging out of the dock's box, its glass
           could not blur the page behind it. */}

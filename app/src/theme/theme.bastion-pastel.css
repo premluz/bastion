@@ -4,8 +4,8 @@
    - Page: a cool grey base (F4F4F7 in the brief) with a soft pastel field (blue, peach, lavender) strongest behind the header and
      fading toward the cards — no photo (--phone-backdrop; the hero banner's photo is hidden by --hero-image-wash).
    - Ink: 1A1A1F text (the brief's); labels at 70% and muted text at 65% of it over the page, both above 4.5:1.
-   - Soft glass only where it features or floats: cards and nav buttons are white 80% (+ blur 24, saturate 140%,
-     aura.css), a 1px white 70% edge, a white top highlight and a soft low shadow — no grey inner shade.
+   - Soft glass only where it features or floats: nav buttons white 80%, cards white 94% (+ blur 24, saturate 140%,
+     aura.css), no edge, a white top highlight and a soft shadow pooled underneath — no grey ring, no grey inner shade.
    Everything not listed here is Aura Light's own value. */
 [data-theme='bastion-pastel'] {
   /* 2026-10-23: the page is near-white (direct feedback), cards pure white with their rims.
@@ -71,19 +71,21 @@
   /* Same light as the raised cards (Perps, balance tiles): the nav pill, + and header glass (2026-10-21). */
   --glass-fill-clear: oklch(1 0 0 / .8);
   --glass-sheen: none;
-  --glass-edge: linear-gradient(oklch(1 0 0 / .7), oklch(1 0 0 / .7));
-  /* Subtle rims on paper (2026-10-23, direct feedback): about half the earlier alpha. */
-  --card-rim: oklch(1 0 0 / .7);
+  /* No edge at all, as iOS's own buttons and cards (2026-10-31, direct feedback): a 70% white edge sat under the 80% fill,
+     so the inside read 94% white and the edge, 70%, as a grey ring. */
+  --glass-edge: linear-gradient(transparent, transparent);
+  --card-rim: transparent;
   --glass-edge-accent: linear-gradient(to bottom, oklch(.6 .17 54 / .45), oklch(.6 .17 54 / .22) 48%, oklch(.6 .17 54 / .08));
   /* Inner light instead of borders (2026-10-23, direct feedback with a reference): controls get a
      bright 1px top line, darker 1px sides, a faint bottom reflection and a soft inner glow; cards
      a top highlight and a broad soft glow under their top edge. No visible stroke. */
   /* Aura: glass is edged by light only (2026-10-27, direct feedback: the nav pill's dark outline). No dark inset sides;
      a light rim, a top highlight, a soft inner glow and a diffuse shadow below, as the cards. */
-  --glass-shadow: inset 0 1px 0 oklch(1 0 0), 0 4px 16px oklch(0 0 0 / .08);
-  /* Aura: edges are light, never a grey line. A white rim and top highlight inside, a soft inner glow, and a
-     diffuse warm shadow below so the card floats over the page rather than sitting on it. */
-  --card-light: inset 0 1px 0 oklch(1 0 0), 0 8px 24px oklch(0 0 0 / .06);
+  /* The shadow pools under the surface, pulled in by a negative spread, so it never traces the edge as a dark outline
+     (2026-10-31, direct feedback: iOS's buttons have none). Reach below is unchanged (offset + blur + spread = 32). */
+  --glass-shadow: inset 0 1px 0 oklch(1 0 0), 0 8px 32px -8px oklch(0 0 0 / .12);
+  /* Aura: edges are light, never a grey line. A top highlight inside and a diffuse shadow below, under the card only. */
+  --card-light: inset 0 1px 0 oklch(1 0 0), 0 12px 32px -12px oklch(0 0 0 / .1);
   /* The hero photo under the balance: dimmed in dark themes; light leaves it as is (the photo is already pale, 2026-10-23, direct feedback). */
   --hero-image-wash: opacity(0);
   /* The pastel field the soft glass takes its colour from (2026-10-30; placed 2026-10-31, direct feedback): peach top right, lavender
@@ -135,8 +137,9 @@
   --approval-option-fill: oklch(1 0 0 / .8);
   /* Raised cards (Perps, balance tiles, transactions) on paper: whiter than the page and
      mostly opaque, or they vanish into it (2026-10-21, direct feedback). */
-  /* Aura: translucent, so the colour behind shows through the card (blurred by --list-card-backdrop). */
-  --list-card-fill-raised: oklch(1 0 0 / .8);
+  /* Near-opaque white (2026-10-31, direct feedback: the cards' darkish inner shading): at 80% the blurred, saturated field
+     showed through as grey patches toward the edges; iOS's light cards are white. */
+  --list-card-fill-raised: oklch(1 0 0 / .94);
 
   --motion-enter-duration: var(--duration-200);
   --motion-enter-ease: var(--ease-standard);

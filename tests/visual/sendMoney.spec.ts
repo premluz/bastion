@@ -43,17 +43,11 @@ test('visible checks, internal consolidation, then explicit transfer approval', 
   await expect(flow(page).getByRole('button', { name: 'Confirm', exact: true })).toHaveCount(0);
 });
 
-test('edit validates amount plus fee and returns to review; cancel keeps consolidation', async ({ page }) => {
+// The confirmation offers Not now and Confirm only (2026-10-31, direct feedback: no Edit).
+test('not now cancels the review and keeps consolidation', async ({ page }) => {
   await consolidate(page);
-  await flow(page).getByRole('button', { name: 'Edit', exact: true }).click();
-  await flow(page).getByRole('textbox', { name: 'Amount in USD', exact: true }).fill('62');
-  await expect(flow(page).getByRole('alert')).toContainText('$0.08');
-  await expect(flow(page).getByRole('button', { name: 'Review changes', exact: true })).toBeDisabled();
-  await flow(page).getByRole('textbox', { name: 'Amount in USD', exact: true }).fill('45');
-  await flow(page).getByRole('textbox', { name: 'Payment note', exact: true }).fill('Coffee and cake');
-  await flow(page).getByRole('button', { name: 'Review changes', exact: true }).click();
-  await expect(flow(page)).toContainText('Transfer to Daniel Smith');
-  await flow(page).getByRole('button', { name: 'Cancel', exact: true }).click();
+  await expect(flow(page).getByRole('button', { name: 'Edit', exact: true })).toHaveCount(0);
+  await flow(page).getByRole('button', { name: 'Not now', exact: true }).click();
   await expect(flow(page).getByRole('status')).toHaveText('Transfer cancelled');
   await expect(flow(page).getByText('Transfer cancelled. Consolidated funds remain in Main.', { exact: true })).toBeVisible();
 });
@@ -68,7 +62,7 @@ test('typed request stays inline and mode switching retains the same review', as
   const active = page.getByRole('dialog', { name: 'Assistant conversation' }).getByRole('region', { name: 'Send money conversation' });
   await expect(active).toHaveCount(1);
   await expect(active).toContainText('Transfer to Daniel Smith');
-  await active.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await active.getByRole('button', { name: 'Not now', exact: true }).click();
   await expect(active).toContainText('Transfer cancelled. Consolidated funds remain in Main.');
 });
 

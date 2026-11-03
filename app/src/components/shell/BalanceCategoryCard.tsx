@@ -3,6 +3,7 @@ import { Icon } from '@astryxdesign/core/Icon';
 import { Text } from '@astryxdesign/core/Text';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import { TrendDelta } from '../nodes/TrendDelta';
+import { MoneyText } from '../trail/MoneyText';
 import { EarningBadge } from './EarningBadge';
 import glowStyles from '../../theme/glow.module.css';
 import styles from './BalanceCategoryCard.module.css';
@@ -47,7 +48,7 @@ export function BalanceCategoryCard({ label, value, changeAbs, changePercent, ea
         <Icon icon={ChevronRightIcon} size="sm" color="secondary" />
       </div>
       <Text type="large" weight="medium" hasTabularNumbers className={styles.value}>
-        {isMasked ? '••••••' : `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+        <MoneyText text={isMasked ? '••••••' : `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} />
       </Text>
       {earningRate !== undefined ? <EarningBadge rate={earningRate} /> : <div className={styles.changeRow}>
         <Text type="supporting" hasTabularNumbers className={isUp ? styles.deltaUp : styles.deltaDown}>

@@ -21,6 +21,7 @@ import { MobileFrame } from './components/shell/MobileFrame';
 import { startAppearance } from './engine/stores/appearanceStore';
 import { startTooltips } from './engine/stores/tooltipsStore';
 import { startSafeAreaPadding } from './engine/stores/safeAreaPaddingStore';
+import { startSubtleCents } from './engine/stores/subtleCentsStore';
 
 // The app shell — the one place a screen is mounted from application code
 // (CLAUDE.md §2.1). Theme is set statically on <html> in index.html
@@ -32,6 +33,7 @@ import { startSafeAreaPadding } from './engine/stores/safeAreaPaddingStore';
 startAppearance();
 startTooltips();
 startSafeAreaPadding();
+startSubtleCents();
 const root = document.getElementById('root');
 if (!root) throw new Error('index.html is missing its #root mount point.');
 createRoot(root).render(

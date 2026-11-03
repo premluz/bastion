@@ -94,12 +94,16 @@
         "type": "payment-card",
         "props": {
           "title": "Top up Mortgage account",
-          "recipient": "Mortgage account",
+          "from": {
+            "name": "Money",
+            "icon": "wallet"
+          },
+          "to": {
+            "name": "Mortgage",
+            "icon": "house"
+          },
           "amount": "190.00",
           "purpose": "Today’s repayment",
-          "from": "Money balance",
-          "fee": "No fees",
-          "arrival": "Instantly",
           "balance": "$3,475.45"
         }
       },

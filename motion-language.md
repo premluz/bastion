@@ -39,6 +39,10 @@ overlay, dimensionality).
 | Sheet in / out | `--sheet-enter-*` / `--sheet-exit-*` | 480ms float / 250ms standard |
 | Detail page out | `--detail-exit-*` | 270ms, scale .9, sections ½-stride apart |
 | Recede into the assistant | `--agent-recede-duration` + stride | 320ms per element |
+| A pane arriving in a conversation | `--pane-enter-*` (pane-entry.css) | 480ms float, from scale .94 and 8px blur |
+| A home alert becoming its conversation | `--scenario-*` (scenario-expand.css) | recede at ⅓ stride, then the pane's own push |
+| A value or label changing | `RollingText` (components/trail) | 320ms float, 30ms per changed character |
+| The sweep on opening the assistant | `--chat-sweep-*` (chat-sweep.css) | the recede's own span (recede + 7 strides), linear, 20% strength, then a 200ms fade |
 
 **Curves.** `--ease-float` for arrivals that should feel placed; `--ease-standard` for state
 changes and exits; the springs only where something is physically pushed or released.
@@ -64,7 +68,44 @@ from the bottom edge, a card from its deck.
   fast: the whole page shrinks back toward the point it came from and fades, its sections
   leaving bottom-up half a stride apart. The page, not the card, returns, because the user may be
   scrolled far from the card.
-- **Press.** Hover or press scales to .95; release springs back.
+- **Press.** Hover scales to .95 (`--press-hover-scale`), a press to .88 (`--press-active-scale`);
+  release springs back. The whole control answers, surface and icon together.
+
+### Conversations (2026-10-31)
+
+- **Panes arrive from depth and push.** A question or confirmation pane in a conversation
+  (approval-card, payment-card) fades in from scale .94 and blur, settling in place: it never
+  rises from below. It is its own grid row growing from nothing, so what is above it is pushed
+  up as it arrives; surfaces on one level never overlap (`theme/pane-entry.css`).
+- **Words first, then the pane.** A pane that follows the assistant's reply waits until the reply
+  has finished printing (`renderer/AfterReply.tsx`), then grows in. The thread follows it down
+  (`useAutoScrollBottom` re-pins on every resize).
+- **An alert becomes its conversation.** Tapping a home alert: the rest of the home recedes on a
+  third of its usual stride; the card holds its place; then the question rises from depth under
+  it and both travel up together, the question visibly pushing the card to the top. The card is
+  never a container that grows into the page (`theme/scenario-expand.css`, `scenarioPush.ts`).
+- **Opening the assistant sends a wave of light up the screen** (off for now: `config.agent.chatSweep`). A faint iridescent band in the
+  theme's prism colours (a fifth of its full strength) rises bottom to top, its crest bowed and
+  waving, timed from the recede's own tokens so it passes each block as that block blurs out; the
+  conversation then arrives as before. It is decoration over the choreography, never a curtain: it blocks no tap
+  and is absent under reduced motion (`ChatSweep`, a WebGL port of glimm's sweep shader).
+- **What is answered folds away.** Once its choice is made, a question's row closes with its
+  gap and fades, so the next step stands where it stood. Done as a transition, so a transcript
+  mounted later starts folded (SendMoneyTranscript.module.css).
+- **The result stays on screen.** When a transfer lands, its parties converge into the check
+  mark; a caption under a party, where a flow has one, rolls to its outcome and stays. Nothing
+  that tells the user what happened is tidied away.
+
+### Values and controls
+
+- **Every change moves; only what changed.** Changing text rolls (`RollingText`): paired from
+  the right like figures, the last changed digit first, unchanged characters still; characters
+  only in the new text open their room, only in the old close it. Per-character spans exist only
+  while it moves; then it is one plain text node again (balance hide/show, transfer captions).
+- **A control keeps its place when its job changes.** The dock's menu becomes the way back in the
+  same cell: the glass button stays, only the icon changes; what leaves goes fast, right to left
+  one short beat apart, and what arrives comes a beat later on the soft spring
+  (`theme/dock-context.css`).
 
 ## Rules of thumb
 
@@ -74,7 +115,12 @@ from the bottom edge, a card from its deck.
 - A stagger never runs past about five beats. Long lists stagger the first few rows and bring
   the rest in together.
 - Animate `transform`, `opacity` and `filter` only, never layout properties, so motion stays on
-  the compositor.
+  the compositor. Two sanctioned exceptions, both because the room itself is the message: a pane
+  growing its grid row to push what is above it, and a rolling character opening or closing its
+  column. Both are short and one element at a time; the pane clips only while it grows, and
+  rolling text never clips (a clip would move its baseline).
+- A layout-moving exception must not add to a scroll container's height mid-flight: move the
+  picture (a view transition), not the live element, when the thread is pinned to its end.
 - Anything that unmounts after an exit waits for the exit's own `animationend` or
   `transitionend`, or for a constant named after the token it mirrors, never a bare magic number.
 - Every new motion ships with its reduced-motion branch.
@@ -95,5 +141,8 @@ from the bottom edge, a card from its deck.
 - Emil Kowalski, animations.dev: easing and duration choice, springs, performance, knowing when
   not to animate. Community summaries of his guidance give the duration tiers above and the
   ease-out default.
+- Stageshow (Benji Taylor's skill, `~/.claude/skills/stageshow`, `references/motion.md`): every
+  change moves and only what changed; result follows press feedback; the result is left on screen;
+  an object keeps its identity when it changes; landings decelerate with no bounce.
 - Zero To Mastery, *Learn Motion Design*: easing; offset and delay; parenting; transformation;
   masking; overlay; obscuration; parallax; dimensionality.

@@ -1,0 +1,7 @@
+/* Subtle cents (2026-11-03, direct request): the decimals of an amount are smaller and quieter than its whole part, so the
+   figure reads at a glance. On by default; Settings turns it off (subtleCentsStore.ts sets data-subtle-cents="off" on the root).
+   Structural aliases over primitives, so every theme gets it without a parity entry. */
+:root {
+  --cents-scale: .62em;
+  --cents-ink: var(--ink-muted);
+}

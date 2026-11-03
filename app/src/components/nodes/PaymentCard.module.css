@@ -1,28 +1,41 @@
 .root { display: flex; flex-direction: column; gap: var(--space-16); min-width: 0; color: var(--ink-primary); }
+/* The route and the captions under it share three columns: an end, the lane, an end. An end is a disc wide, so the discs
+   hug the lane; with captions (2026-10-31, an internal transfer's before → after) the two ends share the card's width,
+   so each caption centres under its disc. */
+.root { --payment-end: var(--send-avatar-size); --payment-inset: 0px; }
+.root[data-captioned] { --payment-end: minmax(0, 1fr); --payment-inset: var(--space-16); }
+.route, .ends { display: grid; grid-template-columns: var(--payment-end) var(--send-lane-width) var(--payment-end); justify-content: center; padding-inline: var(--payment-inset); }
 .card:global(.astryx-card) { overflow: hidden; border: var(--approval-edge-width) solid var(--approval-edge); outline: none; box-shadow: var(--card-light); border-radius: var(--approval-radius); background: var(--send-pane-wash); }
 .root[data-payment-card='sent'] .card:global(.astryx-card) { background: var(--send-pane-wash-done); }
 .header { padding: var(--space-16); }
 /* No clipping here: the success mark's glow must fall off into the card,
    which clips at its own rounded edge (2026-10-06: a hard cut-off showed). */
-.route { position: relative; display: flex; align-items: center; justify-content: center; min-height: calc(var(--space-64) * 2); }
-.ripple { position: absolute; width: calc(var(--space-64) * 2 - var(--space-16)); height: calc(var(--space-64) * 2 - var(--space-16)); border: var(--shell-edge-width) solid var(--send-ripple-color); border-radius: var(--radius-full); opacity: 0; animation: payment-ripple var(--send-ripple-period) var(--ease-decel) infinite; }
+.route { position: relative; place-items: center; min-height: calc(var(--space-64) * 2); }
+.ripple { position: absolute; place-self: center; width: calc(var(--space-64) * 2 - var(--space-16)); height: calc(var(--space-64) * 2 - var(--space-16)); border: var(--shell-edge-width) solid var(--send-ripple-color); border-radius: var(--radius-full); opacity: 0; animation: payment-ripple var(--send-ripple-period) var(--ease-decel) infinite; }
 .ripple + .ripple { animation-delay: calc(var(--send-ripple-period) / -3); }
 .ripple + .ripple + .ripple { animation-delay: calc(var(--send-ripple-period) / -1.5); }
-.party { position: relative; z-index: 1; display: grid; place-items: center; width: var(--send-avatar-size); height: var(--send-avatar-size); border-radius: var(--radius-full); background: var(--surface-2); transition: translate var(--send-converge-duration) var(--send-converge-ease), scale var(--send-converge-duration) var(--send-converge-ease), opacity var(--send-converge-duration) var(--send-converge-ease); }
+.party { position: relative; z-index: 1; display: grid; place-items: center; justify-self: stretch; transition: translate var(--send-converge-duration) var(--send-converge-ease), scale var(--send-converge-duration) var(--send-converge-ease), opacity var(--send-converge-duration) var(--send-converge-ease); }
+.disc { display: grid; place-items: center; width: var(--send-avatar-size); height: var(--send-avatar-size); border-radius: var(--radius-full); background: var(--surface-2); color: var(--ink-primary); }
+.accountIcon { width: var(--space-32); height: var(--space-32); }
 .chevrons { display: flex; justify-content: center; gap: var(--space-4); width: var(--send-lane-width); color: var(--ink-primary); transition: opacity var(--send-color-duration) var(--motion-exit-ease); }
 .chevron { width: var(--space-20); height: var(--space-20); opacity: var(--send-chevron-rest); }
 .route[data-pending] .chevron { animation: payment-chevron var(--send-chevron-period) var(--motion-enter-ease) infinite; }
 .route[data-pending] .chevron + .chevron { animation-delay: var(--send-chevron-step); }
 .route[data-pending] .chevron + .chevron + .chevron { animation-delay: calc(var(--send-chevron-step) * 2); }
-.mark { position: absolute; z-index: 2; display: grid; place-items: center; width: var(--send-mark-size); height: var(--send-mark-size); border-radius: var(--radius-full); background: var(--accent-ok); box-shadow: var(--send-mark-glow); color: var(--surface-0); }
+.mark { position: absolute; z-index: 2; place-self: center; display: grid; place-items: center; width: var(--send-mark-size); height: var(--send-mark-size); border-radius: var(--radius-full); background: var(--accent-ok); box-shadow: var(--send-mark-glow); color: var(--surface-0); }
 .route[data-inline][data-success] .chevrons { opacity: 0; }
 .route[data-inline][data-success] .party { scale: var(--send-mark-from-scale); opacity: 0; }
-.route[data-inline][data-success] .party[data-side='from'] { translate: calc((var(--send-lane-width) + var(--send-avatar-size)) / 2) 0; }
-.route[data-inline][data-success] .party[data-side='to'] { translate: calc((var(--send-lane-width) + var(--send-avatar-size)) / -2) 0; }
+/* Each end meets the other at the lane's centre: half its own column, plus half the lane. */
+.route[data-inline][data-success] .party[data-side='from'] { translate: calc(50% + var(--send-lane-width) / 2) 0; }
+.route[data-inline][data-success] .party[data-side='to'] { translate: calc(-50% - var(--send-lane-width) / 2) 0; }
 .route[data-inline][data-success] .mark { animation: payment-mark-in var(--send-mark-duration) var(--send-mark-ease) var(--send-mark-delay) backwards; }
 .check { width: var(--send-check-size); height: var(--send-check-size); }
 .check path { fill: none; stroke: var(--surface-0); stroke-width: var(--send-check-width); stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
 .route[data-inline][data-success] .check path { animation: payment-check-draw var(--send-check-duration) var(--ease-decel) var(--send-check-delay) backwards; }
+/* Close under the discs: the route's room below them (sized for the sending ripples) less the 8 px between. */
+.ends { margin-block-start: calc(var(--space-24) * -1); }
+.end { display: grid; gap: var(--space-2); justify-items: center; text-align: center; text-wrap: balance; }
+.end[data-side='to'] { grid-column: 3; }
 .inlineLabel { display: flex; justify-content: center; padding: var(--space-16) var(--space-16) 0; }
 .inlineLabelText { display: inline-block; background-image: linear-gradient(90deg, var(--ink-primary) 0%, var(--ink-primary) 35%, var(--payment-label-highlight, var(--accent-signal)) 50%, var(--ink-primary) 65%, var(--ink-primary) 100%); background-size: 250% 100%; background-clip: text; -webkit-background-clip: text; color: transparent; animation: payment-label-reveal var(--duration-480) var(--ease-standard) both, payment-label-shimmer var(--duration-480) linear both; }
 .root[data-payment-card='sent'] .inlineLabelText { --payment-label-highlight: var(--accent-ok); }
@@ -33,6 +46,7 @@
 /* Quiet details (2026-10-28, direct feedback): labels and values one size, the values in the secondary ink and the labels
    a step under it (Astryx reads its secondary-text variable, so the label sets it to the muted ink). */
 .metaLabel { --color-text-secondary: var(--ink-muted); }
+.metaValue { text-align: end; }
 .fields { display: grid; gap: var(--space-16); padding: var(--space-16); }
 .actionsViewport { display: grid; grid-template-rows: minmax(0, 1fr); transition: grid-template-rows var(--duration-480) var(--ease-float), opacity var(--duration-200) var(--motion-exit-ease); }
 .actionsViewport[data-hidden] { grid-template-rows: minmax(0, 0fr); opacity: 0; pointer-events: none; }

@@ -1,0 +1,9 @@
+.cents {
+  font-size: var(--cents-scale);
+  color: var(--cents-ink);
+}
+
+:global(:root[data-subtle-cents='off']) .cents {
+  font-size: inherit;
+  color: inherit;
+}

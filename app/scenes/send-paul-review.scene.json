@@ -92,12 +92,21 @@
         "reveal": 1,
         "props": {
           "title": "Transfer to Daniel Smith",
-          "recipient": "Daniel Smith",
+          "to": {
+            "name": "Daniel Smith"
+          },
           "amount": "50.00",
           "purpose": "Coffee",
-          "from": "Main USDT (after consolidation)",
-          "fee": "$0.08",
-          "arrival": "Instantly",
+          "details": [
+            {
+              "label": "Arrives",
+              "value": "Instantly"
+            },
+            {
+              "label": "Network fee",
+              "value": "$0.08"
+            }
+          ],
           "balance": "$62.00",
           "note": ""
         }

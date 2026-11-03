@@ -1,0 +1,35 @@
+/* RollingText: a changed character rolls up out of its place as the new one rolls up into it; one only in the new text
+   opens its room as it arrives, one only in the old closes its room as it leaves. Translate and fade, no clip: a clip
+   would give the inline boxes a new baseline. The shift is a fraction of the text's own size, so it reads the same on a
+   caption and on a hero figure. */
+.root {
+  --roll-duration: var(--duration-320);
+  --roll-ease: var(--ease-float);
+  --roll-stagger: calc(var(--duration-120) / 4);
+  --roll-shift: .6em;
+}
+.root [data-order='1'] { --roll-order: 1; }
+.root [data-order='2'] { --roll-order: 2; }
+.root [data-order='3'] { --roll-order: 3; }
+.root [data-order='4'] { --roll-order: 4; }
+.root [data-order='5'] { --roll-order: 5; }
+.root [data-order='6'] { --roll-order: 6; }
+.root [data-order='7'] { --roll-order: 7; }
+.root [data-order='8'] { --roll-order: 8; }
+
+.roll { position: relative; display: inline-block; white-space: pre; }
+.next, .prev, .enter, .leave { animation-duration: var(--roll-duration); animation-timing-function: var(--roll-ease);
+  animation-delay: calc(var(--roll-order, 0) * var(--roll-stagger)); animation-fill-mode: both; }
+.next { display: inline-block; animation-name: roll-in; }
+.prev { position: absolute; inset-inline: 0; inset-block-start: 0; text-align: center; animation-name: roll-out; }
+.enter, .leave { display: inline-grid; white-space: pre; }
+.enter { grid-template-columns: minmax(0, 1fr); animation-name: roll-open; }
+.leave { grid-template-columns: minmax(0, 0fr); opacity: 0; animation-name: roll-close; }
+
+@keyframes roll-in { from { opacity: 0; translate: 0 var(--roll-shift); } }
+@keyframes roll-out { to { opacity: 0; translate: 0 calc(var(--roll-shift) * -1); } }
+@keyframes roll-open { from { grid-template-columns: minmax(0, 0fr); opacity: 0; translate: 0 var(--roll-shift); } }
+@keyframes roll-close {
+  from { grid-template-columns: minmax(0, 1fr); opacity: 1; }
+  to { translate: 0 calc(var(--roll-shift) * -1); }
+}

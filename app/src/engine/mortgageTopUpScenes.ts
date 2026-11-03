@@ -1,7 +1,7 @@
 import topUpJson from '../../scenes/mortgage-top-up.scene.json';
 import { HydratedSceneSchema, type SceneNode } from '../contracts/scene';
-import type { PaymentCardProps } from '../contracts/props/payment-card';
-import { TOP_UP_DEMO, type TopUpState } from './mortgageTopUpState';
+import type { PaymentCardProps, PaymentParty } from '../contracts/props/payment-card';
+import { TOP_UP_DEMO, type TopUpSource, type TopUpState } from './mortgageTopUpState';
 
 export const topUpScene = HydratedSceneSchema.parse(topUpJson);
 export const topUpStepDurations = topUpScene.thinking.map((step) => step.durationMs);
@@ -14,6 +14,15 @@ function authored(id: string): SceneNode {
 
 const dollars = (cents: number) => (cents / 100).toFixed(2);
 const usd = (cents: number) => `$${(cents / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const units = (cents: number) => (cents / 100).toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+// Both ends are the user's own accounts (2026-10-31, direct feedback): drawn as their icons, not as people.
+const ACCOUNTS: Record<TopUpSource, PaymentParty> = { money: { name: 'Money', icon: 'wallet' }, usdc: { name: 'USDC', icon: 'coin' } };
+
+/** The confirmation says no more than the amount (2026-11-01, direct feedback: no before → after captions, no From / To /
+ *  Arrives rows). An internal move has no network fee; paying from USDC, its conversion is the one line that matters. */
+const topUpDetails = (source: TopUpSource, amountCents: number) =>
+  source === 'usdc' ? [{ label: 'Conversion', value: `${units(amountCents)} USDC → ${usd(amountCents)} · no fee` }] : [];
 
 function findings(state: TopUpState): SceneNode {
   const node = authored('top-up-findings');
@@ -23,11 +32,12 @@ function findings(state: TopUpState): SceneNode {
 
 function payment(state: TopUpState, presentation: PaymentCardProps['presentation']): SceneNode {
   const node = authored('top-up-payment');
-  const source = TOP_UP_DEMO.sources[state.source ?? 'money'];
+  const source = state.source ?? 'money';
   return { ...node, props: { ...node.props, presentation, mode: state.stage, error: state.error,
     amount: state.stage === 'editing' ? state.draftAmount : dollars(state.amountCents),
     purpose: state.stage === 'editing' ? state.draftPurpose : state.purpose,
-    from: source.label, balance: usd(source.balanceCents) } };
+    from: ACCOUNTS[source], to: { name: 'Mortgage', icon: 'house' }, details: topUpDetails(source, state.amountCents),
+    balance: usd(TOP_UP_DEMO.sources[source].balanceCents) } };
 }
 
 /** `fromAlert`: the alert the user tapped stands in for the findings and the explanation (TopUpRequest). */

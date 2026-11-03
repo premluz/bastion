@@ -48,11 +48,10 @@ export function buildPaymentScene(state: SendState, presentation: PaymentCardPro
   const payment = sendReview.layout.children?.find((node) => node.id === 'payment');
   if (!payment) throw new Error('Send review scene is missing its payment card');
   return { ...sendReview, layout: { ...payment, props: { ...payment.props,
-    title, amount, recipient: funding ? 'Main balance' : name, mode: state.stage,
+    title, amount, to: { name: funding ? 'Main balance' : name }, mode: state.stage,
     presentation: funding ? 'overlay' : presentation,
     purpose: funding ? 'Fund your transfer' : state.stage === 'editing' ? state.draftPurpose : state.purpose,
-    from: funding ? state.funding === 'swap' ? 'ETH balance' : 'Visa •• 4242'
-      : state.consolidated ? 'Main USDT (after consolidation)' : 'Main USDT',
-    fee: funding ? 'No fees' : '$0.08', balance: `$${dollars(state.balanceCents)}`, error: state.error,
+    details: [{ label: 'Arrives', value: 'Instantly' }, { label: 'Network fee', value: funding ? 'No fees' : '$0.08' }],
+    balance: `$${dollars(state.balanceCents)}`, error: state.error,
   } } };
 }

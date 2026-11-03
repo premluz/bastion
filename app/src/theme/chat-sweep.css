@@ -1,0 +1,29 @@
+/* The chat sweep (2026-10-31, direct request with glimm's sweep for reference): opening the assistant, an iridescent band
+   in the theme's prism colours (--prism-blue → violet → pink) rises up the screen with the home's contents as they leave
+   bottom-up, waving, and fades. Decoration over the existing choreography: it never blocks a tap. Structural aliases over
+   primitives, so every theme gets it without a parity entry; the colours are each theme's own.
+   Tuned the same day (direct feedback): bottom to top in sync with the recede, a waving crest, 20% of its first strength. */
+
+/* Registered as a time so the calc below resolves to one value the renderer can read (cssDuration.ts). */
+@property --chat-sweep-duration { syntax: '<time>'; inherits: true; initial-value: 0s; }
+
+:root {
+  /* As long as the recede itself (AgentHomePage.module.css): its lowest block starts at once, its highest (index 7) one
+     stride per index later, each fading over the recede's duration. The scenario's quicker stride (scenario-expand.css)
+     shortens it in step. */
+  --chat-sweep-duration: calc(var(--agent-recede-duration) + var(--agent-recede-stagger) * 7);
+  /* Even travel, as the recede's stride is even: the crest stays on the block that is leaving. */
+  --chat-sweep-ease: linear;
+  --chat-sweep-fade: var(--duration-200);
+  --chat-sweep-fade-ease: ease-in-out;
+  /* A fifth of the band's full colour: a breath of light, not a curtain. */
+  --chat-sweep-strength: .2;
+  /* Above everything in the phone, the dock's contextual way back (11) included: the band crosses the whole screen. */
+  --chat-sweep-layer: calc(var(--dock-context-layer) + 1);
+}
+
+/* Opening the assistant is a view transition (dockMorph.ts): the band is its own group, drawn live above every other one,
+   and shown as it is rather than cross-faded in (it is only present in the new state). */
+::view-transition-group(chat-sweep) { z-index: var(--chat-sweep-layer); animation: none; }
+::view-transition-new(chat-sweep) { animation: none; }
+::view-transition-old(chat-sweep) { display: none; }

@@ -50,7 +50,7 @@ describe('send money simulation', () => {
     expect(applySendAction(sent, { type: 'followUp', value: 'balance' }, 0, 850)).toMatchObject({ followUp: 'balance', balanceCents: 1192 });
     expect(PaymentCardPropsSchema.safeParse(buildPaymentScene(review).layout.props).success).toBe(true);
     expect(buildPaymentScene(review, 'inline').layout.props).toMatchObject({ presentation: 'inline', mode: 'review' });
-    expect(buildPaymentScene(review, 'inline').layout.props).toMatchObject({ recipient: 'Daniel Smith' });
+    expect(buildPaymentScene(review, 'inline').layout.props).toMatchObject({ to: { name: 'Daniel Smith' } });
     expect(buildPaymentScene(sending, 'inline').layout.props).toMatchObject({ presentation: 'inline', mode: 'sending' });
     expect(buildPaymentScene(sent, 'inline').layout.props).toMatchObject({ presentation: 'inline', mode: 'sent' });
     expect(buildSendTransferScene(sent, 'inline').layout.children?.some((node) => node.id === 'send-outcome')).toBe(false);

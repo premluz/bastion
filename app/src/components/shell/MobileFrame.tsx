@@ -123,10 +123,10 @@ export function MobileFrame(props: MobileFrameProps) {
   return (
     <PrototypeNoticeProvider>
     <div className={styles.stage}>
-      <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode} data-home={isAttentionHome ? 'glow' : props.homeVariant ?? 'assets'}>
+      <div className={styles.phone} data-testid="mobile-shell" data-mode={state.mode} data-home={isAttentionHome ? 'glow' : props.homeVariant ?? 'assets'} data-headerless={isMonolithDock && !isHome ? '' : undefined}>
         <AccountExperience initialView={props.initialAccountView ?? 'closed'}>{(openAccounts) => (
         <div className={styles.chrome} inert={chromeInert} aria-hidden={chromeInert}>
-          <header className={styles.header} aria-label="Asset search" data-avatar-end={isMonolithDock ? '' : undefined}>
+          {(isHome || !isMonolithDock) && <header className={styles.header} aria-label="Asset search" data-avatar-end={isMonolithDock ? '' : undefined}>
             <Button label="Open account menu" variant="ghost" icon={<Avatar {...avatarProps(USER_NAME)} size={isMonolithDock ? 40 : 'medium'} />} isIconOnly onClick={openAccounts} />
             {/* Agent home moves Explore into the dock's menu; the spacer keeps the avatar its own size. */}
             {isMonolithVoice ? (isHome ? <HomeGreeting /> : <span aria-hidden="true" />) : isGlowHome ? <span className={styles.headerEnd}>
@@ -134,7 +134,7 @@ export function MobileFrame(props: MobileFrameProps) {
             </span>
               : hasAgentPage ? <span aria-hidden="true" />
               : <TextInput label="Search assets" isLabelHidden startIcon="search" value="" placeholder="Search assets" isDisabled />}
-          </header>
+          </header>}
           {/* Independent overlay elements, not .header/.dock pseudo-elements
               (2026-09-14, direct feedback: header painted under its own
               shadow, and the bottom shadow sat at the dock's own edge

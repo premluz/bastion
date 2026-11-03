@@ -80,7 +80,7 @@
    direct feedback): top-lit edge, sheen, clear fill over the header's
    deep blur, and the glass shadow. Same height as the search (2026-10-06,
    direct feedback), with a medium (48px) avatar filling it. */
-.header > :first-child {
+.header > button:first-child {
   --_button-radius: var(--radius-full);
   --size-element-md: var(--shell-search-height);
   border: var(--shell-edge-width) solid transparent;
@@ -202,7 +202,7 @@
      content starts below them rather than immediately underneath —
      scrolling is what slides content under the chrome, not the initial
      layout (2026-09-14, direct feedback). */
-  padding-top: var(--shell-header-height);
+  padding-top: var(--page-top-inset, var(--shell-header-height));
   padding-bottom: calc(var(--shell-nav-height) + var(--shell-safe-area-bottom));
   /* The fade belongs to the scrolling page, not the header (2026-09-13,
      direct feedback: "maybe the shade gradient should not be part of the
@@ -357,3 +357,6 @@
 /* The agent dock (orb + greeting) stands taller than the nav pill. */
 .phone[data-home='agent'] .page,
 .phone[data-home='glow'] .page { padding-bottom: var(--agent-dock-height); }
+
+/* No header off the home (2026-11-01, direct feedback): content starts at the safe area. */
+.phone[data-headerless] { --page-top-inset: max(var(--shell-inset), var(--shell-safe-area-top)); }

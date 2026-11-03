@@ -8,6 +8,7 @@ import { resolveAssetsHomeSummary } from '../../engine/assetsHome';
 import { homeAccounts } from '../../engine/homeAccounts';
 import { BalanceCategoryCard } from './BalanceCategoryCard';
 import { HomePromos } from './HomePromos';
+import { MoneyText } from '../trail/MoneyText';
 import { MONEY_PLACEHOLDER } from './moneySummary';
 import heroBalanceStyles from '../../theme/heroBalance.module.css';
 import agentStyles from './AgentHomePage.module.css';
@@ -40,7 +41,7 @@ export function CalmHomePage({ onSelectMoney, onSelectInvestments, isReceding, a
             icon={<Icon icon={isHidden ? EyeSlashIcon : EyeIcon} size="sm" />} aria-pressed={isHidden} onClick={() => setIsHidden((value) => !value)} />
         </div>
         {/* The same figure style as the Money and Investments pages' main balance (2026-10-31, direct feedback). */}
-        <Heading level={2} type="display-1" className={heroBalanceStyles.heroBalance}>{isHidden ? '••••••' : usd(accounts.total)}</Heading>
+        <Heading level={2} type="display-1" className={heroBalanceStyles.heroBalance}><MoneyText text={isHidden ? '••••••' : usd(accounts.total)} /></Heading>
       </section>
       <div className={styles.accounts} data-recede-step="5">
         <BalanceCategoryCard label="Money" value={accounts.money} changeAbs={MONEY_PLACEHOLDER.changeAbs} changePercent={MONEY_PLACEHOLDER.changePercent}
